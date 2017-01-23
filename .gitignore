@@ -2,3 +2,5 @@
 .jsbeautifyrc
 s.bat
 s.sh
+m.bat
+data/
