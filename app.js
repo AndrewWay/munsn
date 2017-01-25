@@ -6,18 +6,18 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var mongoClient = require('mongodb').MongoClient,
 	assert = require('assert');
-var url = 'mongodb://localhost:27017/testdb';
+var url = 'mongodb://localhost:27017/server';
 
 mongoClient.connect(url, function(err, db) {
 	assert.equal(null, err);
 	console.log("Connected to mongo server");
-	insertDocuments(db, function() {
+	//insertDocuments(db, function() {
 		findDocuments(db, function() {
 			db.close();
 		});
-	});
+	//});
 });
-
+/*
 var insertDocuments = function(db, callback) {
 	// Get the documents collection
 	var collection = db.collection('testdb');
@@ -39,10 +39,10 @@ var insertDocuments = function(db, callback) {
 		callback(result);
 	});
 };
-
+*/
 var findDocuments = function(db, callback) {
 	// Get the documents collection
-	var collection = db.collection('testdb');
+	var collection = db.collection('testC');
 	// Find some documents
 	collection.find({}).toArray(function(err, docs) {
 		assert.equal(err, null);
