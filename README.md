@@ -19,7 +19,9 @@ Karl Chiasson
 ## 2. Starting The Server
 
 1. Start the mongod process:
-  - Worth putting the following into a script -> "C:\Program Files\MongoDB\Server\3.4\bin\mongod" --storageEngine="mmapv1" --dbpath="C:\Coding\4770_server\app\data". Start the mongod process with that storage engine and point it towards where ever the database is (should be app/data).
+  - Worth putting the following into a script  
+  `"C:\Program Files\MongoDB\Server\3.4\bin\mongod" --storageEngine="mmapv1" --dbpath="C:\Coding\4770_server\app\data"`  
+  Start the mongod process with that storage engine and point it towards where ever the database is (should be app/data).
   
 2. Start the node server
   - Two ways to start the server (doesn't matter which one, and also worth putting into scripts):
