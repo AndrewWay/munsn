@@ -9,11 +9,11 @@
 
 ## 1. Contributors
 
-Andrew Way
-Devin Marsh
-Kyle Hall
-John Hollett
-Karl Chiasson
+Andrew Way  
+Devin Marsh  
+Kyle Hall  
+John Hollett  
+Karl Chiasson  
 
 
 ## 2. Starting The Server
