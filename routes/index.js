@@ -10,7 +10,13 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/', function(req, res, next) {
-    
+    if (req.body.user == "test") {
+        console.log("username successful");
+        if (req.body.pass == "test123") {
+            console.log("pass successful");
+            res.render('index', {title: "req.body.user"});
+        }
+    }
 });
 
 module.exports = router;
