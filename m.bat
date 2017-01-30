@@ -1,1 +1,1 @@
-"C:\Program Files\MongoDB\Server\3.4\bin\mongod" --storageEngine="mmapv1" --dbpath="C:\Coding\4770_server\app\data"
+mongod --storageEngine="mmapv1" --dbpath=".\data"
