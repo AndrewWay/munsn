@@ -4,20 +4,22 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var session = require('express-session');
+var mongoStore = require('connect-mongo')(session);
 var mongoClient = require('mongodb').MongoClient,
 	assert = require('assert');
-var url = 'mongodb://localhost:27017/server';
+var dbURL = 'mongodb://localhost:27017/db';
 
-mongoClient.connect(url, function(err, db) {
+mongoClient.connect(dbURL, function(err, db) {
 	assert.equal(null, err);
 	console.log("Connected to mongo server");
-	//insertDocuments(db, function() {
+	insertDocuments(db, function() {
 		findDocuments(db, function() {
 			db.close();
 		});
-	//});
+	});
 });
-/*
+
 var insertDocuments = function(db, callback) {
 	// Get the documents collection
 	var collection = db.collection('testdb');
@@ -39,7 +41,7 @@ var insertDocuments = function(db, callback) {
 		callback(result);
 	});
 };
-*/
+
 var findDocuments = function(db, callback) {
 	// Get the documents collection
 	var collection = db.collection('testC');
@@ -55,7 +57,17 @@ var findDocuments = function(db, callback) {
 var index = require('./routes/index');
 var users = require('./routes/users');
 
+
 var app = express();
+
+app.use(session({
+	secret: 'faeb4453e5d14fe6f6d04637f78077c76c73d1b4',
+	proxy: true,
+	resave: true,
+	saveUninitialized: true,
+	store: new mongoStore({ url: dbURL })
+	})
+);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
