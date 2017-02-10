@@ -10,7 +10,7 @@ var colUser;
 var db = mongoClient.connect(dbURL, function(err, db) {
 	assert.equal(null, err);
 	console.log("Connected to mongo server: " + dbURL);
-    colUser = db.collection("user");
+    colUser = db.collection("users");
 });
 
 //Insert one user into the user collection
