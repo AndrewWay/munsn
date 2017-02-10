@@ -4,11 +4,28 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var session = require('express-session');
+var mongoStore = require('connect-mongo')(session);
+var mongoClient = require('mongodb').MongoClient;
+var assert = require('assert');
+var db = require('./utils/db');
 
+//Routers
 var index = require('./routes/index');
 var users = require('./routes/users');
+var api = require('./routes/api');
 
 var app = express();
+
+//Session
+app.use(session({
+	secret: 'faeb4453e5d14fe6f6d04637f78077c76c73d1b4',
+	proxy: true,
+	resave: true,
+	saveUninitialized: true,
+	store: new mongoStore({ url: db.dbURL })
+	})
+);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -24,6 +41,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
 app.use('/users', users);
+app.use('/api', api);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
