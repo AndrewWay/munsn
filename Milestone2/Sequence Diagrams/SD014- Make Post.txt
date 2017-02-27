@@ -1,0 +1,36 @@
+title SD14: Make Post
+
+User->+Browser:View content
+Browser->+Server:Request content
+Server->+Database:Retrieve data
+Database->-Server:Return data
+Server->-Browser:Send content
+alt Can post
+Browser->User:Display content
+User->Browser:Select post(to object)
+Browser->User:Display post form
+User->Browser:Enters comment
+opt Submit
+User->Browser:Submit
+Browser->Browser:Validate post
+alt Valid
+Browser->+Server: Send post
+Server->+Database:Append post
+Database-->-Server:Response
+Server->+Database:Retrieve data
+Database->-Server:Return data
+Server->-Browser:Send content
+Browser->User:Remove post form
+Browser->User:Display content
+else Invalid
+Browser->User:Display post form
+Browser->User:Display invalid entry
+end
+end
+opt Cancel
+User->Browser:Cancel
+Browser->User:Remove poll form
+end 
+else Can not post
+Browser->User:Display content
+end

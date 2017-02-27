@@ -1,0 +1,30 @@
+title SQ07: Create group
+
+User->+Browser: Create group
+Browser->-User:Display form
+
+Loop until valid form or canceled
+opt cancel
+User->+Browser: cancel
+Browser->-User:Remove form
+end
+User->+Browser:Enter information
+User->Browser:Submit
+Browser->+Server:Submit form
+Server->Server:Validate form
+Server->+Database:Check group name
+Database-->-Server:Response
+
+alt Valid form
+Server->+Database:Create group
+Database-->-Server:Response
+Server->Browser:Valid form
+Browser->Server:Request group content
+Server->+Database:Retrieve group content
+Database->-Server:Return group content
+Server->Browser:Send group content
+Browser->User:Display group
+
+else Invalid form
+Server->-Browser: Invalid form
+Browser->-User:Display invalid form details

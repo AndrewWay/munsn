@@ -1,0 +1,19 @@
+title Login 
+
+User->+Browser: Give credentials
+Browser->Browser:Verify Input
+Browser->Browser:Encode Input
+Browser->+Server:Send user credentisls
+Server->+Database:Verify user credentials
+Database-->-Server:Response
+alt succesful case
+Server->Server:Create Session Token
+Server->Browser:Send session token
+Server->+Database:Retrieve content data
+Database->-Server:Return content data
+Server->Browser:Send content
+Browser->User:Display content
+else failure case
+Server->-Browser:Invalid user credentials
+Browser->User:Display Login form 
+Browser->User:Display invalid credentials

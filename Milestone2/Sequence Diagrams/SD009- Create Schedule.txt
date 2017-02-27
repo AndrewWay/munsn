@@ -1,0 +1,41 @@
+title SD09: Create Schedule
+
+User->+Browser:Create Schedule
+Browser->User:Display form
+User->Browser:Select start date
+Browser->Browser:Validate start date
+User->Browser:Select end date
+Browser->Browser:Validate end date
+User->Browser:Select start time
+Browser->Browser:Validate start time
+User->Browser:Select end time
+Browser->Browser:Validate end time
+User->Browser:Select applicable days
+User->Browser:Enter title
+
+opt
+User->Browser:Enter comment
+User->Browser:Enter location
+end
+
+opt Submit
+User->Browser:Submit
+Browser->+Server:Send form
+Server->+Database:Add calender event
+Database-->-Server:Response
+Server->-Browser:Event added
+Browser->+Server:Request calendar content
+Server->+Database:Retrive calendar content
+Database->-Server:Return calendar content
+Server->-Browser:Send calendar content
+Browser->User:Remove form
+Browser->User:Display Calendar
+end
+
+opt Cancel
+User->Browser:Cancel
+Browser->-User:Remove form
+end
+
+
+

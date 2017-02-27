@@ -1,0 +1,45 @@
+title SD10: Modify Schedule
+
+User->+Browser: Select day
+User->Browser: Select event
+User->Browser: Select edit
+Browser->+Server:Request calendar event
+Server->+Database: Retrieve calendar event
+Database->-Server:Return calendar content
+Server->-Browser:Send calendar content
+Browser->User:Display form
+Browser->User:Populate field data
+User->Browser:Select start date
+Browser->Browser:Validate start date
+User->Browser:Select end date
+Browser->Browser:Validate end date
+User->Browser:Select start time
+Browser->Browser:Validate start time
+User->Browser:Select end time
+Browser->Browser:Validate end time
+User->Browser:Select applicable days
+User->Browser:Enter title
+
+opt Optional form conent
+User->Browser:Enter comment
+User->Browser:Enter location
+end
+
+opt Submit
+User->Browser:Submit
+Browser->+Server:Send form
+Server->+Database:Update calender event
+Database-->-Server:Response
+Server->-Browser:Event Updated
+Browser->+Server:Request calendar content
+Server->+Database:Retrive calendar content
+Database->-Server:Return calendar content
+Server->-Browser:Send calendar content
+Browser->User:Remove form
+Browser->User:Display Calendar
+end
+
+opt Cancel
+User->Browser:Cancel
+Browser->User:Remove form
+end

@@ -1,0 +1,115 @@
+title SD12: Modify group 
+
+User->+Browser:Select group
+Browser->+Server:Request group content
+Server->+Database:Retrive group content
+Database->-Server:Return group content
+alt notAdmin
+Server->Browser:Send group content
+Browser->User:Display group content
+else isAdmin
+Server->-Browser:Send group admin content
+User->Browser: Select modify group
+Browser->User:Display options menu
+opt Add admin
+Browser->+Server:Rquest group user list
+Server->+Database:Retrieve group user list
+Database->-Server: Return group user list
+Server->-Browser:Send group user list
+Browser->User:Display group user list
+User->Browser: Select users
+opt Submit
+User->Browser:Submit
+Browser->+Server:Send selection
+Server->-Database:Append group admin list
+end
+opt Cancel 
+User->Browser:Cancel
+Browser->User:Display options menu
+end
+end
+opt Remove admin
+Browser->+Server:Rquest group admin list
+Server->+Database:Retrieve group admin list
+Database->-Server: Return group admin list
+Server->-Browser:Send group admin list
+Browser->User:Display admin user list
+User->Browser: Select users
+opt Submit
+User->Browser:Submit
+Browser->+Server:Send selection
+Server->-Database:Append group admin list
+end
+opt Cancel 
+User->Browser:Cancel
+Browser->User:Display options menu
+end
+end
+opt Add member
+Browser->User:Display search bar
+User->Browser:Enter query
+Browser->+Server:Rquest search query
+Server->+Database:Query user list
+Database->-Server:Return query results
+Server->-Browser:Send query results
+Browser->User:Display query
+User->Browser:Select users
+opt Submit
+User->Browser:Submit
+Browser->+Server:Send selection
+Server->-Database:Append group user list
+end
+opt Cancel
+User->Browser:Cancel
+Browser->User:Display options menu
+end
+end
+opt Remove member
+Browser->+Server:Rquest group user list
+Server->+Database:Retrieve group user list
+Database->-Server: Return group user list
+Server->-Browser:Send group user list
+Browser->User:Display group user list
+User->Browser: Select users
+opt Submit
+User->Browser:Submit
+Browser->+Server:Send selection
+Server->-Database:Append group user list
+end
+opt Cancel 
+User->Browser:Cancel
+Browser->User:Display options menu
+end
+end
+opt Modify name
+Browser->User:Display form
+Loop until valid form or canceled
+opt cancel
+User->Browser: cancel
+Browser->User:Remove form
+end
+User->Browser:Enter group name
+User->Browser:Enter discription
+opt Submit
+User->Browser:Submit
+Browser->+Server:Submit form
+Server->Server:Validate form
+Server->+Database:Check group name
+Database-->-Server:Response
+end
+
+alt Valid form
+Server->+Database:Create group
+Database-->-Server:Response
+Server->Browser:Valid form
+Browser->Server:Request group content
+Server->+Database:Retrieve group content
+Database->-Server:Return group content
+Server->Browser:Send group content
+Browser->User:Display group
+else Invalid form
+Server->-Browser: Invalid form
+Browser->-User:Display invalid form details
+end
+end
+end

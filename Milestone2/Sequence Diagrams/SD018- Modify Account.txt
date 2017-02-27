@@ -1,0 +1,49 @@
+title SD18: Modify Account
+User->+Browser:Selects account modification
+Browser->+Server:Request account content
+Server->-Browser:Request authentication
+Browser->User:Display login form
+User->Browser:Enters credentials
+opt Submit
+User->Browser:Submit
+Browser->Browser:Validates form
+Alt Valid entry
+Browser->Browser:Encodes form
+Browser->+Server:Sends credentials
+Server->+Database:Varifies credentials
+Database-->-Server:Response
+Alt Valid user
+Server->+Database:Request user data
+Database->-Server:Return user data
+Server->Browser:Send profile option content
+Browser->User:Display user profile options
+User->Browser:Enter new email
+User->Browser:Enter new password
+User->Browser:Enter new password
+User->Browser:Change date of birth
+User->Browser:Change gender
+User->Browser:Select new photo
+Browser->Browser:Validate form
+Browser->Browser:Load photo
+opt Sumbit
+User->Browser:Submit
+Browser->Server:Send profile data
+Server->Database:Update user profile
+Database-->Server:Responce
+Server->Database:Retrieve user data
+Database->Server:Return user data
+Server->Browser:Send profile option content
+Browser->User:Display user profile options
+end
+else Invalid user
+Server->-Browser:Invalid credentials
+Browser->User:Display login form
+Browser->User:Display invalid input
+end 
+else Invalid entry
+Browser->User:Display login form
+Browser->User:Display invalid input
+end
+end
+opt Cancel
+Browser->User:Remove login form

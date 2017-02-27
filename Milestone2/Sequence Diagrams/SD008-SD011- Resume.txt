@@ -1,0 +1,44 @@
+title SD012:Resume
+
+User->Browser: View resume
+activate Browser
+Browser->Server:Content request
+activate Server
+Server->Database:Retrieve content
+activate Database
+
+Alt no resume
+Database-->Server:Responce
+Server-->Browser:Content responce
+Browser->User:no document found
+else has resume
+Database-->Server:Responce
+Database->Server:Return content
+deactivate Database
+Server-->Browser:Content responce
+Server->Browser:Send content
+deactivate Server
+Browser->User:display document
+deactivate Browser
+end
+
+opt Upload Rsume
+User->Browser: Upload resume
+activate Browser
+Browser->Browser:Validate document
+alt Valid document
+Browser->Server:Send content
+activate Server
+Server->Database:Store content
+activate Database
+Database-->Server:Response
+deactivate Database
+Server-->Browser:Response
+deactivate Server
+Browser->User:Display document
+else Invalid document
+Browser->User: Invalid document
+deactivate Browser
+
+end
+

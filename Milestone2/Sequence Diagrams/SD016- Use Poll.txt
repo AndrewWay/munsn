@@ -1,0 +1,20 @@
+title SD16: Use Poll
+
+User->+Browser:Select poll
+Browser->+Server:Request poll content
+Server->+Database:Retrieve poll data
+Database->-Server:Return poll data
+Server->-Browser:Send poll content
+Browser->User:Display poll 
+User->Browser:Select poll option
+
+opt Submit
+User->Browser:Submit
+Browser->+Server:Send poll data
+Server->-Database:Append poll data
+end
+
+opt Cancel
+User->Browser:Cancel
+Browser->User:Remove poll
+end

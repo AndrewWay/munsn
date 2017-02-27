@@ -1,0 +1,15 @@
+title SD13: View Group
+User->+Browser:View profile
+Browser->+Server:Request profile
+Server->+Database:Retrieve profile content
+Database->-Server:Return profile content
+Server->-Browser:Send profile 
+Browser->-User:Display profile
+User->+Browser:Select group list
+Browser->User:Display groups
+User->Browser:Select group
+Browser->+Server:Request group content
+Server->+Database:Retrieve group content
+Database->-Server:Return group content
+Server->-Browser: Send group content
+Browser->-User:Display group

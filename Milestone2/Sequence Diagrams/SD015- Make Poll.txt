@@ -1,0 +1,27 @@
+title SD15: Make Poll
+User->+Browser:Selects course
+Browser->+Server:Request course content
+Server->+Database:Retrieve course data
+Database->-Server:Return course data
+Server->-Browser:Sends course content
+Browser->User:Display course content
+User->Browser:Create poll
+Browser->User:Display poll form
+User->Browser:Enters poll title
+User->Browser:Enters poll option
+opt Submit
+User->Browser: Submit
+Browser->Browser:Validate form
+Browser->+Server:Send form
+Server->+Database:Store corse poll 
+Database-->-Server:Response
+Server->+Database:Retrieve course data
+Database->-Server:Return course data
+Server->-Browser:Send course content
+Browser->User:Remove poll form
+Browser->User:Display course content
+end
+opt Cancel
+User->Browser:Cancel
+Browser->User:Remove poll form
+end
