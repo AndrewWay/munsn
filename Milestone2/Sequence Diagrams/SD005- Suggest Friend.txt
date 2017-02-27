@@ -1,0 +1,27 @@
+title SD005: Suggest Friend
+
+#Skips everything besides the suggested friends requests
+
+User->+Web Browser: Request web page
+
+Web Browser->+Server: Request web page
+
+Server->+Database: Request user info
+Database->Database: Get user info
+Database-->Server: Deliver user info
+
+Server->Server: Determine suggestion criteria
+
+Server->Database: Query with criteria
+Database->Database: Select criteria and non friend
+Database-->Server: Deliver suggestion list info
+
+Server->Database: Request other required info
+Database-->-Server: Deliver other info
+
+#Info includes suggested friends
+Server-->-Web Browser:Deliver web page info
+
+Web Browser->Web Browser: Update page
+
+Web Browser-->-User: Display web page

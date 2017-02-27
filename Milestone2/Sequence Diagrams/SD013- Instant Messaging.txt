@@ -1,0 +1,72 @@
+title SD013: Instant Messaging
+
+#This only works for sending a message. Not for receiving. It is thoroughly incomplete really.
+#Should have loop when open to always check for new messages
+
+User->+Web Browser: Select friend from menu
+Web Browser->Web Browser: Open messenger display
+
+Web Browser->Web Browser: Encode user and recipient
+
+#Shouldn't check for unavailable here? It could, but it would still need to return the log if existing
+Web Browser->+Server: Parse user and recipient
+
+Server->+Database: Search for chat log
+Database->Database: Search for log
+
+alt Existing log
+    Database-->Server: Deliver chat log
+    Server-->Web Browser: Deliver chat log
+    Web Browser->Web Browser: Update log in messenger display
+#Essentially the same, really
+else Log does not exist
+    Database-->Server: Deliver no log message
+    Server-->Web Browser: Deliver no log message
+end
+
+
+Web Browser-->User: Display messenger display
+
+loop Until user closes display
+
+User->Web Browser: Input message
+User-> Web Browser: Click send
+
+Web Browser->Web Browser: Encode message and recipient
+
+Web Browser->Server: Send message and recipient
+
+Web Browser->Web Browser: Clear input field
+
+Server->Server: Parse recipient and text
+Server->Database: Send recipient and user
+
+
+
+#MAy be blocked, not accepting messages, etc.
+Database->Database: Check that recipient is accepting
+
+alt Chat is unavailable
+    Database-->Server: Chat unavailable message
+    Server-->Web Browser: Deliver chat unavailable message
+    Web Browser->Web Browser: Update messenger display
+    Web Browser-->User: Display "Unavailable" message
+else Chat is available
+    Database->Database:Check if existing log between users
+    
+    alt Existing log
+        Database->Database: Append message to log
+
+    else Log does not exist
+        Database->Database: Create log and append message
+    
+    end
+    
+    Database-->-Server: Message stored message
+    Server-->Web Browser: Message sent message
+    Server->-Recipient Browser: Send message contents to display
+    Web Browser->Web Browser: Add message to messenger display
+    Web Browser-->-User: Display updated log
+end
+
+end

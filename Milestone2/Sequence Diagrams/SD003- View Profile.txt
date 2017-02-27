@@ -1,0 +1,21 @@
+title SD003: View Profile
+
+User->+Web Browser: Request profile
+Web Browser->Web Browser: Get request information
+Web Browser->+Server: Send profile request
+Server->+Database: Request profile information
+Database->Database: Search for account
+
+alt Account exists
+    Database-->Server: Send profile information
+    Server-->Web Browser: Send profile page 
+
+else Account does not exist
+    Database-->Server: Error message
+    Server->Server: Parse error message
+    Server-->Web Browser: Send error page
+
+end
+
+Web Browser->Web Browser: Refresh and update page
+Web Browser-->User: Display updated page

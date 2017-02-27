@@ -1,0 +1,41 @@
+title SD001: User Registration
+
+User->+Web Browser: Request registration form
+
+Web Browser->+Server: Request registration form
+Server->-Web Browser: Send registration form
+
+Web Browser->-User: Display registration form
+
+User->+Web Browser: Input information
+User->Web Browser: Submit form
+
+Web Browser->+Server: Send submitted information
+Server->Server: Check submitted information
+
+alt Invalid info
+    Server->Web Browser: Rejected form message
+    Web Browser->User: Display reject message
+else Valid info
+    
+    Server->+Database: Send information
+    Database->Database: Check against existing
+    alt Account exists
+        Database->Server: Account exists message
+        Server->Web Browser: Account exists message
+        Web Browser->User: Display account exists message
+    else Account does not exist
+        Database->Server: Account created message
+        Server->User: Send verification email
+        User->Server: Confirm verification
+        Server->Database: Confirm verification
+        Database->Database: Account verified
+        Database->-Server: Confirm
+        Server->-Web Browser: Send account confirm message
+        Web Browser->-User: Display account confirm message
+        
+    end    
+end
+
+
+

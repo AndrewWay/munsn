@@ -1,0 +1,40 @@
+title SD002: User Update Profile
+
+
+User->+Web Browser: Select edit option
+Web Browser->Web Browser: Open edit prompt
+alt Done in page
+    User->Web Browser: Submit
+else Requires Upload
+    User->Web Browser: Upload new info
+    Web Browser->Web Browser: Check validity of upload
+
+    opt Is invalid
+    Web Browser->Web Browser: Clear field
+    Web Browser-->-User: Display invalid message
+    
+    end
+    
+end
+
+Web Browser->+Web Browser: Encode information
+Web Browser->+Server: Send encoded information
+
+Web Browser->Web Browser:Wait
+
+opt Size Limit Exceeded
+    Server->Server:Compress file
+end
+
+Server->+Database: Send encoded data
+Database->Database: Update user information
+Database-->Server: Send storage confirmation
+Server->Database: Request profile info
+Database-->-Server: Send profile info
+Server->-Web Browser: Send updated profile
+Web Browser->Web Browser:Update web page
+Web Browser-->-User: Display updated information 
+    
+
+
+

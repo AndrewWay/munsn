@@ -1,0 +1,36 @@
+title SD004: Add Friend
+
+alt Through profile
+User->+Web Browser: User requests profile
+Web Browser-->User: Display profile
+User->Web Browser: Select add friend
+else Through suggested friends
+Web Browser->User: Display suggested friends
+User->Web Browser: Select add suggested friend
+end
+
+Web Browser->+Server: Send friend request
+Server-->Web Browser: Request info
+Web Browser->Server: Send friend info
+
+Server->+Database: Request friend info
+Database->Database: Search for friend
+
+#Assume friend exists
+
+Database-->Server: Send friend info
+
+Server->+Friend: Send request
+Friend-->-Server: Respond to request
+
+alt Accept request
+    Server->Database: Send friendship acceptance
+    Database->Database: Apply update to profiles
+    Database-->-Server: Confirm update
+    Server-->Web Browser: Accepted message
+else Decline request
+    Server-->-Web Browser: Declined message
+end
+
+Web Browser->Web Browser: Update page
+Web Browser->-User: Notify of response

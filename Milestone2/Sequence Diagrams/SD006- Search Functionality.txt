@@ -1,0 +1,29 @@
+title SD006: Search Functionality
+
+#Done in real time?
+
+User->+Web Browser: User activates search bar
+Web Browser-->User: Display text field
+User->Web Browser: Input search text
+User->Web Browser: Submit search
+
+Web Browser->Web Browser: Parse search
+Web Browser->+Server: Send search criteria
+
+#To avoid just searching for EVERYTHING equal to, user user info to refine
+#Should refininf come later?
+Server->+Database: Request user info
+Database-->Server: Deliver user info
+
+Server->Server: Determine refined criteria
+
+Server->Database: Send search query
+Database->Database: Select from criteria
+Database-->-Server: Deliver selected list
+
+Server->Server: Determine priority of results
+
+Server-->-Web Browser: Send search results
+Web Browser->Web Browser: Update page
+
+Web Browser-->User: Display search results
