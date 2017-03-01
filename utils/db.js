@@ -14,8 +14,9 @@ var db = mongoClient.connect(dbURL, function(err, db) {
 });
 
 //Insert one user into the user collection
-exports.insertUser = function(user) {
+exports.insertUser = function(user, callback) {
     colUser.insert(user);
+    callback("User account created.");
 };
 
 //Find the first user from the user collection

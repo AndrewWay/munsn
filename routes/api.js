@@ -14,4 +14,26 @@ router.get('/users', function(req, res, next) {
     }
 });
 
+router.post('/register', function(req, res, next) {
+    var user = {
+        user: req.body.user,
+        pass: req.body.pass,
+        email: req.body.email
+    };
+    db.insertUser(user, function(result) {
+        console.log(result);
+    });
+});
+
+router.post('/login', function(req, res, next) {
+    var userReq = {
+        user: req.query.user,
+        pass: req.query.pass
+    };
+    db.findUser(user, function(userRes) {
+        res.render('index', {title: userRes.user});
+    });
+});
+
+
 module.exports = router;
