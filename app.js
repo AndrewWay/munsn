@@ -9,9 +9,20 @@ var mongoStore = require('connect-mongo')(session);
 var mongoClient = require('mongodb').MongoClient,
 	assert = require('assert');
 var db = require('./utils/db');
+var ems = require('./utils/ems');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
+
+var email = {
+    subject: "Welcome to MUNSoN",
+    to: "Andrew <arw405@mun.ca>, John <jh2587@mun.ca>",
+    text: "Welcome to Mun Social Network (MUNSoN)"
+};
+
+ems.sendEmail(email, function(text) {
+    console.log(text);
+});
 
 
 var app = express();
