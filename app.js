@@ -8,51 +8,7 @@ var session = require('express-session');
 var mongoStore = require('connect-mongo')(session);
 var mongoClient = require('mongodb').MongoClient,
 	assert = require('assert');
-var dbURL = 'mongodb://localhost:27017/db';
-
-mongoClient.connect(dbURL, function(err, db) {
-	assert.equal(null, err);
-	console.log("Connected to mongo server");
-	insertDocuments(db, function() {
-		findDocuments(db, function() {
-			db.close();
-		});
-	});
-});
-
-var insertDocuments = function(db, callback) {
-	// Get the documents collection
-	var collection = db.collection('testdb');
-	// Insert some documents
-	collection.insertMany([{
-			a: 1
-		},
-		{
-			a: 2
-		},
-		{
-			a: 3
-		}
-	], function(err, result) {
-		assert.equal(err, null);
-		assert.equal(3, result.result.n);
-		assert.equal(3, result.ops.length);
-		console.log("Inserted 3 documents into the collection");
-		callback(result);
-	});
-};
-
-var findDocuments = function(db, callback) {
-	// Get the documents collection
-	var collection = db.collection('testC');
-	// Find some documents
-	collection.find({}).toArray(function(err, docs) {
-		assert.equal(err, null);
-		console.log("Found the following records");
-		console.log(docs)
-		callback(docs);
-	});
-};
+var db = require('./utils/db');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
@@ -65,7 +21,7 @@ app.use(session({
 	proxy: true,
 	resave: true,
 	saveUninitialized: true,
-	store: new mongoStore({ url: dbURL })
+	store: new mongoStore({ url: db.dbURL })
 	})
 );
 
