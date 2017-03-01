@@ -13,19 +13,25 @@ var colFriend;
 var db = mongoClient.connect(dbURL, function(err, db) {
 	assert.equal(null, err);
 	console.log("Connected to mongo server: " + dbURL);
-    colUser = db.createCollection("users", {validator: 
-        {$and: [{user: {$type: $string}},
-                {pass: {$type: $string}},
-                {email: {$regex: /@mun\.ca$/}}
-    ]}});
+    //Restricts and denies documents so they have a user, email from mun.ca, and pass
+    db.createCollection("users", 
+        {validator: 
+            {$and: [{user: {$type: "string"}},
+                    {pass: {$type: "string"}},
+                    {email: {$regex: /@mun\.ca$/}}]},
+        validationLevel: "strict",
+        validationAction: "error"});
+
+    colUser = db.collection("users");
     colRegAuth = db.collection("regauths");
     colFriend = db.collection("friends");
 });
 
 //Insert one user into the user collection
 exports.insertUser = function(user, callback) {
-    colUser.insertOne(user);
-    callback("User account created.");
+    colUser.insert(user, function(result) {
+        callback(result.toJSON());
+    });
 };
 
 //Find a user by unique object id

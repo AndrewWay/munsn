@@ -7,10 +7,9 @@
   <body>
     <h1>{{ title }}</h1>
     <p>Welcome to {{ title }}</p>
-    <form method="post" action="/api/users/update">
+    <form method="post" action="/api/register">
         USERNAME: <input type="text" name="user"><br>
         PASSWORD: <input type="text" name="pass"><br>
-        <input type="hidden" name="id" value="58b663404f84b7294470b5ec">
         <input type="submit" name="Login">
     </form>
 
