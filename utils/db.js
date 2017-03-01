@@ -6,23 +6,56 @@ exports.dbURL = dbURL;
 
 //Collections
 var colUser;
+var colRegAuth;
+var colFriend;
 
+//Connect to the database
 var db = mongoClient.connect(dbURL, function(err, db) {
 	assert.equal(null, err);
 	console.log("Connected to mongo server: " + dbURL);
-    colUser = db.collection("users");
+    colUser = db.createCollection("users", {validator: 
+        {$and: [{user: {$type: $string}},
+                {pass: {$type: $string}},
+                {email: {$regex: /@mun\.ca$/}}
+    ]}});
+    colRegAuth = db.collection("regauths");
+    colFriend = db.collection("friends");
 });
 
 //Insert one user into the user collection
 exports.insertUser = function(user, callback) {
-    colUser.insert(user);
+    colUser.insertOne(user);
     callback("User account created.");
 };
 
-//Find the first user from the user collection
-exports.findUser = function(user, callback) {
-    colUser.find(user).limit(1).toArray(function(err, users) {
+//Find a user by unique object id
+exports.findUserById = function(id, callback) {
+    colUser.find({_id: id}).limit(1).toArray(function(err, users) {
         assert.equal(1, users.length);
         callback(users[0]);
+    });
+};
+
+//Updates the user
+exports.updateUser = function(id, updates, callback) {
+    colUser.update({_id: id}, {$set: updates}, function(err, obj) {
+        if (err) {
+            console.warn(err);
+        }
+        else {
+            callback(obj.result);
+        }
+    });
+};
+
+//Removes the user
+exports.removeUser = function(id, callback) {
+    colUser.remove({_id: id}, {single: true}, function(err, obj) {
+        if (err) {
+            console.warn(err);
+        }
+        else {
+            callback(obj.result);
+        }
     });
 };
