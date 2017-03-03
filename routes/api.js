@@ -72,12 +72,14 @@ router.post('/register', function(req, res, next) {
     });
     //Send auth email to the user with the auth link
     var email = {
+        subject: "MUNSON - Confirmation Email",
         to: req.body.email,
         text: "Welcome to MUNSON! In order to continue using the site as a registered user, please confirm your registration by clicking the link: http://localhost:3000/auth?key=" + authkey + ". We are glad you can join us! Once registered you can fully access the website!"
     };
     ems.sendEmail(email, function(result) {
         console.log(result);
     });
+    res.redirect('/');
 });
 
 router.post('/login', function(req, res, next) {

@@ -46,7 +46,7 @@ router.get('/', function(req, res, next) {
                         //Get user's email address
                         db.findUserById(id, function(userResult) {
                             var email = {
-                                subject: "MUNSON Confrimation Email",
+                                subject: "MUNSON - New Confirmation Email",
                                 to: userResult.email,
                                 text: "Looks like your old confirmation email expired. Here's a new one: http://localhost:3000/auth?key=" + authkey
                             };
@@ -59,6 +59,7 @@ router.get('/', function(req, res, next) {
                 }
             }
         });
+        res.redirect('/');
     }
 });
 
