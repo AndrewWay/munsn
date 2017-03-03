@@ -13,7 +13,7 @@ var colFriend;
 var db = mongoClient.connect(dbURL, function(err, db) {
 	assert.equal(null, err);
 	console.log("Connected to mongo server: " + dbURL);
-    //Restricts and denies documents so they have a user, email from mun.ca, and pass
+    //Restricts and denies user documents so they have a user, email from mun.ca, and pass
     db.createCollection("users", 
         {validator: 
             {$and: [{user: {$type: "string"}},
@@ -24,19 +24,32 @@ var db = mongoClient.connect(dbURL, function(err, db) {
         validationLevel: "strict",
         validationAction: "error"});
 
-    colUser = db.collection("users");
-
-    //Restricts and denies documents so that there is an authkey
+    //Restricts and denies regauth documents so that there is an authkey
     db.createCollection("regauths",
     {validator:
         {$and: [{authkey: {$type: "string"}},
                 {userId: {$type: "string"}},
-                {expiry: {$type: "number"}}]}});
+                {expiry: {$type: "number"}}]},
+        validationLevel: "strict",
+        validationAction: "error"});
 
+    //Restricts and denies friend documents so that there is from/to, and accepted
+    db.createCollection("friends",
+    {validator:
+        {$and: [{from: {$type: "string"}},
+                {to: {$type: "string"}},
+                {accepted: {$type: "bool"}}]},
+        validationLevel: "strict",
+        validationAction: "error"});
+
+    //Variables set to mongo collections
     colRegAuth = db.collection("regauths");
-
+    colUser = db.collection("users");
     colFriend = db.collection("friends");
 });
+
+//USERS
+//======================================================================================================
 
 //Insert one user into the user collection
 exports.insertUser = function(user, callback) {
@@ -76,6 +89,9 @@ exports.removeUser = function(id, callback) {
     });
 };
 
+//AUTH
+//======================================================================================================
+
 //Add an authkey to regauths
 exports.addAuthKey = function(userId, authkey, expiry, callback) {
     var regAuth = {
@@ -103,4 +119,19 @@ exports.deleteAuthKey = function(key, callback) {
             callback(obj.result);
         }
     });
+};
+
+//FRIENDS
+//======================================================================================================
+
+//Add a friendship
+exports.addFriendship = function(from, to, callback) {
+    colFriend.insert({from: from, to: to, accepted: false}, function(result) {
+        callback(result);
+    });
+};
+
+//Remove friendship
+exports.deleteFriendship = function() {
+
 };
