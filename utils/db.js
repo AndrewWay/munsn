@@ -30,7 +30,8 @@ var db = mongoClient.connect(dbURL, function(err, db) {
     db.createCollection("regauths",
     {validator:
         {$and: [{authkey: {$type: "string"}},
-                {userId: {$type: "string"}}]}});
+                {userId: {$type: "string"}},
+                {expiry: {$type: "number"}}]}});
 
     colRegAuth = db.collection("regauths");
 
@@ -77,24 +78,25 @@ exports.removeUser = function(id, callback) {
 };
 
 //Add an authkey to regauths
-exports.addAuthKey = function(userKey, callback) {
-    colRegAuth.insert(userKey, function(result) {
+exports.addAuthKey = function(userId, authkey, expiry, callback) {
+    var regAuth = {
+        userId: userId,
+        authkey: authkey,
+        expiry: expiry
+    };
+    colRegAuth.insert(regAuth, function(result) {
         callback(result);
     });
 };
 
-exports.checkAuthKey = function(userKey, callback) {
-    var document = colRegAuth.findOne(userKey);
-    if (document) {
-        callback(document);
-    }
-    else {
-        callback(null);
-    }
+exports.checkAuthKey = function(key, callback) {
+    colRegAuth.findOne({authkey: key}, function(err, result) {
+        callback(result);
+    });
 };
 
-exports.deleteAuthKey = function(userKey, callback) {
-    colRegAuth.remove(userKey, {single: true}, function(err, obj) {
+exports.deleteAuthKey = function(key, callback) {
+    colRegAuth.remove({authkey: key}, {single: true}, function(err, obj) {
         if (err) {
             console.warn(err);
         }

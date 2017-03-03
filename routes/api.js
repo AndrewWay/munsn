@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var db = require('../utils/db');
 var ems = require('../utils/ems');
+var utils = require('../utils/utils');
 
 /*
     GET one user based on id
@@ -56,7 +57,7 @@ router.post('/register', function(req, res, next) {
         pass: req.body.pass,
         email: req.body.email,
         auth: false,
-        _id: getIdFromEmail(req.body.email)
+        _id: utils.getIdFromEmail(req.body.email)
     };
     //Insert user with false auth into colUsers
     db.insertUser(user, function(result) {
@@ -64,17 +65,15 @@ router.post('/register', function(req, res, next) {
     });
     //Create auth key and store it in colAuths
     var date = new Date();
-    var userKey = {
-        userId: user._id,
-        authkey: user._id + date.valueOf()
-    };
-    db.addAuthKey(userKey, function(result) {
-        console.log(result);
+    var authkey = user._id + date.getTime();
+    var mins = 1;
+    db.addAuthKey(user._id, authkey, utils.addMinsToDate(date, mins).getTime(), function(result) {
+        console.log("[API] /register: Added authkey with result\n" + result);
     });
     //Send auth email to the user with the auth link
     var email = {
         to: req.body.email,
-        text: "Welcome to MUNSON! In order to continue using the site as a registered user, please confirm your registration by clicking the link: http://localhost:3000/auth?key=" + userKey.authkey + ". We are glad you can join us! Once registered you can fully access the website!"
+        text: "Welcome to MUNSON! In order to continue using the site as a registered user, please confirm your registration by clicking the link: http://localhost:3000/auth?key=" + authkey + ". We are glad you can join us! Once registered you can fully access the website!"
     };
     ems.sendEmail(email, function(result) {
         console.log(result);
@@ -90,10 +89,5 @@ router.post('/login', function(req, res, next) {
         res.render('index', {title: userRes.user});
     });
 });
-
-var getIdFromEmail = function(email) {
-    var id = email.substring(0, email.indexOf("@"));
-    return id;
-};
 
 module.exports = router;
