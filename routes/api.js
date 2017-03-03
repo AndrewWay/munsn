@@ -82,14 +82,4 @@ router.post('/register', function(req, res, next) {
     res.redirect('/');
 });
 
-router.post('/login', function(req, res, next) {
-    var userReq = {
-        user: req.query.user,
-        pass: req.query.pass
-    };
-    db.findUser(userReq, function(userRes) {
-        res.render('index', {title: userRes.user});
-    });
-});
-
 module.exports = router;

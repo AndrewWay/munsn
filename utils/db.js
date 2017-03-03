@@ -48,7 +48,6 @@ exports.insertUser = function(user, callback) {
 //Find a user by unique object id
 exports.findUserById = function(id, callback) {
     colUser.find({_id: id}).limit(1).toArray(function(err, users) {
-        assert.equal(1, users.length);
         callback(users[0]);
     });
 };
