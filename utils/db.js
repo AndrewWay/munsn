@@ -18,19 +18,29 @@ var db = mongoClient.connect(dbURL, function(err, db) {
         {validator: 
             {$and: [{user: {$type: "string"}},
                     {pass: {$type: "string"}},
-                    {email: {$regex: /@mun\.ca$/}}]},
+                    {email: {$type: /@mun\.ca$/}},
+                    {auth: {$type: "bool"}},
+                    {_id: {$type: "string"}}]},
         validationLevel: "strict",
         validationAction: "error"});
 
     colUser = db.collection("users");
+
+    //Restricts and denies documents so that there is an authkey
+    db.createCollection("regauths",
+    {validator:
+        {$and: [{authkey: {$type: "string"}},
+                {userId: {$type: "string"}}]}});
+
     colRegAuth = db.collection("regauths");
+
     colFriend = db.collection("friends");
 });
 
 //Insert one user into the user collection
 exports.insertUser = function(user, callback) {
     colUser.insert(user, function(result) {
-        callback(result.toJSON());
+        callback(result);
     });
 };
 
@@ -57,6 +67,34 @@ exports.updateUser = function(id, updates, callback) {
 //Removes the user
 exports.removeUser = function(id, callback) {
     colUser.remove({_id: id}, {single: true}, function(err, obj) {
+        if (err) {
+            console.warn(err);
+        }
+        else {
+            callback(obj.result);
+        }
+    });
+};
+
+//Add an authkey to regauths
+exports.addAuthKey = function(userKey, callback) {
+    colRegAuth.insert(userKey, function(result) {
+        callback(result);
+    });
+};
+
+exports.checkAuthKey = function(userKey, callback) {
+    var document = colRegAuth.findOne(userKey);
+    if (document) {
+        callback(document);
+    }
+    else {
+        callback(null);
+    }
+};
+
+exports.deleteAuthKey = function(userKey, callback) {
+    colRegAuth.remove(userKey, {single: true}, function(err, obj) {
         if (err) {
             console.warn(err);
         }

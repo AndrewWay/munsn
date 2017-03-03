@@ -11,9 +11,10 @@ var mongoClient = require('mongodb').MongoClient,
 var db = require('./utils/db');
 var ems = require('./utils/ems');
 
-var index = require('./routes/index');
-var users = require('./routes/users');
-var api = require('./routes/api');
+var routerIndex = require('./routes/index');
+var routerUsers = require('./routes/users');
+var routerApi = require('./routes/api');
+var routerAuth = require('./routes/auth');
 
 /*
 var email = {
@@ -52,9 +53,10 @@ app.use(bodyParser.urlencoded({
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', index);
-app.use('/users', users);
-app.use('/api', api);
+app.use('/', routerIndex);
+app.use('/users', routerUsers);
+app.use('/api', routerApi);
+app.use('/auth', routerAuth);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

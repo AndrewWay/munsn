@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var db = require('../utils/db');
+var ems = require('../utils/ems');
 
 /*
     GET one user based on id
@@ -49,12 +50,33 @@ router.post('/users/remove', function(req, res, next) {
 });
 
 router.post('/register', function(req, res, next) {
+    //Create user
     var user = {
         user: req.body.user,
         pass: req.body.pass,
-        email: req.body.email
+        email: req.body.email,
+        auth: false,
+        _id: getIdFromEmail(req.body.email)
     };
+    //Insert user with false auth into colUsers
     db.insertUser(user, function(result) {
+        console.log(result);
+    });
+    //Create auth key and store it in colAuths
+    var date = new Date();
+    var userKey = {
+        userId: user._id,
+        authkey: user._id + date.valueOf()
+    };
+    db.addAuthKey(userKey, function(result) {
+        console.log(result);
+    });
+    //Send auth email to the user with the auth link
+    var email = {
+        to: req.body.email,
+        text: "Welcome to MUNSON! In order to continue using the site as a registered user, please confirm your registration by clicking the link: http://localhost:3000/auth?key=" + userKey.authkey + ". We are glad you can join us! Once registered you can fully access the website!"
+    };
+    ems.sendEmail(email, function(result) {
         console.log(result);
     });
 });
@@ -69,5 +91,9 @@ router.post('/login', function(req, res, next) {
     });
 });
 
+var getIdFromEmail = function(email) {
+    var id = email.substring(0, email.indexOf("@"));
+    return id;
+};
 
 module.exports = router;
