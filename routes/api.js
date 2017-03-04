@@ -1,13 +1,11 @@
 var express = require('express');
 var router = express.Router();
-var db = require('../utils/db');
-var ems = require('../utils/ems');
+var DB = require('../utils/db');
+var EMS = require('../utils/ems');
 var utils = require('../utils/utils');
 
-/*
-    GET one user based on id
-*/
-router.get('/users', function(req, res, next) {
+//GET the user by userId
+router.get('/get/user', function(req, res, next) {
     if (req.query.id == undefined) {
         res.json({error: "undefined"});
     }
@@ -15,13 +13,14 @@ router.get('/users', function(req, res, next) {
         res.json({error: "null"});
     }
     else {
-        db.findUserById(req.query.id, function(user) {
+        DB.users_findUserById(req.query.id, function(user) {
             res.json(user);
         });
     }
 });
 
-router.post('/users/update', function(req, res, next) {
+//POST update the user
+router.post('/post/updateUser', function(req, res, next) {
     if (req.body.id == undefined) {
         res.json({error: "undefined"});
     }
@@ -30,13 +29,14 @@ router.post('/users/update', function(req, res, next) {
     }
     else {
         var pass = {pass: req.body.pass};
-        db.updateUser(req.body.id, pass, function(result) {
+        DB.users_updateUser(req.body.id, pass, function(result) {
             console.log(result);
         });
     }
 });
 
-router.post('/users/remove', function(req, res, next) {
+//POST remove the user
+router.post('/post/removeUser', function(req, res, next) {
     if (req.body.id == undefined) {
         res.json({error: "undefined"});
     }
@@ -44,13 +44,14 @@ router.post('/users/remove', function(req, res, next) {
         res.json({error: "null"});
     }
     else {
-        db.removeUser(req.body.id, function(result) {
+        DB.users_removeUser(req.body.id, function(result) {
             console.log(result);
         });
     }
 });
 
-router.post('/register', function(req, res, next) {
+//POST register the user
+router.post('/post/register', function(req, res, next) {
     //Create user
     var user = {
         user: req.body.user,
@@ -60,14 +61,14 @@ router.post('/register', function(req, res, next) {
         _id: utils.getIdFromEmail(req.body.email)
     };
     //Insert user with false auth into colUsers
-    db.insertUser(user, function(result) {
+    DB.users_addUser(user, function(result) {
         console.log(result);
     });
     //Create auth key and store it in colAuths
     var date = new Date();
     var authkey = user._id + date.getTime();
     var mins = 1;
-    db.addAuthKey(user._id, authkey, utils.addMinsToDate(date, mins).getTime(), function(result) {
+    DB.auth_addAuthKey(user._id, authkey, utils.addMinsToDate(date, mins).getTime(), function(result) {
         console.log("[API] /register: Added authkey with result\n" + result);
     });
     //Send auth email to the user with the auth link
@@ -76,7 +77,7 @@ router.post('/register', function(req, res, next) {
         to: req.body.email,
         text: "Welcome to MUNSON! In order to continue using the site as a registered user, please confirm your registration by clicking the link: http://localhost:3000/auth?key=" + authkey + ". We are glad you can join us! Once registered you can fully access the website!"
     };
-    ems.sendEmail(email, function(result) {
+    EMS.sendEmail(email, function(result) {
         console.log(result);
     });
     res.redirect('/');

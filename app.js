@@ -8,26 +8,16 @@ var session = require('express-session');
 var mongoStore = require('connect-mongo')(session);
 var mongoClient = require('mongodb').MongoClient,
 	assert = require('assert');
-var db = require('./utils/db');
-var ems = require('./utils/ems');
+var DB = require('./utils/db');
+var EMS = require('./utils/ems');
 
+//Routers
 var routerIndex = require('./routes/index');
 var routerUsers = require('./routes/users');
 var routerApi = require('./routes/api');
 var routerAuth = require('./routes/auth');
 
-/*
-var email = {
-    subject: "Welcome to MUNSoN",
-    to: "Andrew <arw405@mun.ca>, John <jh2587@mun.ca>",
-    text: "Welcome to Mun Social Network (MUNSoN)"
-};
-
-ems.sendEmail(email, function(text) {
-    console.log(text);
-});
-*/
-
+//Node Express app
 var app = express();
 
 app.use(session({
@@ -35,7 +25,7 @@ app.use(session({
 	proxy: true,
 	resave: true,
 	saveUninitialized: true,
-	store: new mongoStore({ url: db.dbURL })
+	store: new mongoStore({ url: DB.DB_URL })
 	})
 );
 
