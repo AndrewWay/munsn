@@ -72,7 +72,7 @@ router.post('/post/register', function(req, res, next) {
         console.log("[API] /register: Added authkey with result\n" + result);
     });
     //Send auth email to the user with the auth link
-    EMS.sendConfirmationEmail(user, function(result) {
+    EMS.sendConfirmationEmail(user, authkey, function(result) {
         console.log(result);
     });
     res.redirect('/');
@@ -87,6 +87,7 @@ router.get('/get/friends', function(req, res, next) {
     }
 });
 
+/*
 //POST add friendId to userId
 router.post('/post/addFriend', function(req, res, next) {
     if (req.body.userId && req.body.friendId) {
@@ -96,6 +97,25 @@ router.post('/post/addFriend', function(req, res, next) {
         });
     }
 });
+*/
+
+router.post('/post/sendFriendRequest', function(req, res, next) {
+    var userId = req.body.userId;
+    var friendId = req.body.friendId;
+    if (userId && friendId) {
+        DB.users_findUsers({_id: {$in: [userId, friendId]}}, function(findResult) {
+            //Found both users
+            if (findResult.length == 2) {
+                DB.friendRequest_addRequest(userId, friendId, function(requestResult) {
+                    
+                }) 
+            }
+            console.log(findResult);
+            res.json(findResult);
+        });
+    }
+});
+
 
 //POST remove friendId from userId
 //Return json response

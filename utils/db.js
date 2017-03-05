@@ -68,12 +68,24 @@ exports.users_addUser = function(user, callback) {
 
 //Find a user by unique object id
 exports.users_findUserById = function(id, callback) {
-    collectionUsers.findOne({_id: id}, function(err, results) {
+    collectionUsers.findOne({_id: id}, function(err, result) {
         if (err) {
             console.warn(err);
         }
         //Returns null if error occured
-        callback(results);
+        callback(result);
+    });
+};
+
+//Find users matching query
+exports.users_findUsers = function(query, callback) {
+    collectionUsers.find(query).toArray(function(err, results) {
+        if (err) {
+            console.warn(err);
+        }
+        else {
+            callback(results);
+        }
     });
 };
 

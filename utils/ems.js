@@ -9,8 +9,8 @@ var emsSender = {
 
 //Server details
 var emsServer  = email.server.connect({
-   user:    sender.address, 
-   password: sender.pass, 
+   user:    emsSender.address, 
+   password: emsSender.pass, 
    host:    "smtp.gmail.com", 
    ssl:     true
 });
@@ -40,7 +40,7 @@ exports.sendConfirmationEmail = function(user, authkey, callback) {
             console.log(err);
         }
         else {
-            console.log(message);
+            console.log(result);
         }
         callback("[EMS] sent email! ");
     });
@@ -58,7 +58,7 @@ exports.sendAdditionalConfirmationEmail = function(user, authkey, callback) {
             console.log(err);
         }
         else {
-            console.log(message);
+            console.log(result);
         }
         callback("[EMS] sent email! ");
     });

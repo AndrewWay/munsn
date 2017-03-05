@@ -7,7 +7,7 @@
   <body>
     <h1>{{ title }}</h1>
     <p>Welcome to {{ title }}</p>
-    <form method="post" action="/api/register">
+    <form method="post" action="/api/post/register">
         USERNAME: <input type="text" name="user"><br>
         PASSWORD: <input type="text" name="pass"><br>
         EMAIL: <input type="text" name="email"><br>        
