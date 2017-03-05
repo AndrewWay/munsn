@@ -7,9 +7,9 @@
   <body>
     <h1>{{ title }}</h1>
     <p>Welcome to {{ title }}</p>
-    <form method="post" action="/login">
-        USERNAME: <input type="text" name="user"><br>
-        PASSWORD: <input type="text" name="pass"><br>
+    <form method="post" action="/api/post/removeFriend">
+        USERNAME: <input type="text" name="userId"><br>
+        PASSWORD: <input type="text" name="friendId"><br>
         <input type="submit" name="Login">
     </form>
 
