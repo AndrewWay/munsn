@@ -45,13 +45,8 @@ router.get('/', function(req, res, next) {
                         });
                         //Get user's email address
                         DB.users_findUserById(id, function(userResult) {
-                            var email = {
-                                subject: "MUNSON - New Confirmation Email",
-                                to: userResult.email,
-                                text: "Looks like your old confirmation email expired. Here's a new one: http://localhost:3000/auth?key=" + authkey
-                            };
                             //Send a new confirmation email
-                            EMS.sendEmail(email, function(emailResult) {
+                            EMS.sendAdditionalConfirmationEmail(userResult, function(emailResult) {
                                 console.log(emailResult);
                             });
                         });
