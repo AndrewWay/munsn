@@ -141,16 +141,29 @@ exports.auth_deleteAuthKey = function(key, callback) {
 //FRIENDS
 //======================================================================================================
 
-//Initialize documents for the friends collection with userId as primary key, and an empty friends array
-exports.friendRequest_initFriendsForUser = function(userId, callback) {
-    collectionFriends.insert({_id: userId, friends: []}, function(result) {
+//Adds the friendId to the userId's friend list
+exports.friends_addFriendToUser = function(userId, friendId, callback) {
+    collectionFriends.update({_id: userId}, {$push: {friends: friendId}}, {upsert: true}, function(err, result) {
+        if (err) {
+            console.warn(err);
+        }
         callback(result);
     });
 };
 
-//Adds the friendId to the userId's friend list
-exports.friends_addFriendToUser = function(userId, friendId, callback) {
-    collectionFriends.update({_id: userId}, {$push: {friends: friendId}}, function(err, result) {
+//Finds all friends of a userId and returns it as an array
+exports.friends_findAllFriendsForUser = function(userId, callback) {
+    collectionFriends.find({_id: userId}, {"friends": true}).toArray(function(err, result) {
+        if (err) {
+            console.warn(err);
+        }
+        callback(result);
+    });
+};
+
+//Removes the selected friendId from the specified userId
+exports.friends_deleteFriendFromUser = function(userId, friendId, callback) {
+    collectionFriends.update({_id: userId}, {$pull: {friends: friendId}}, function(err, result) {
         if (err) {
             console.warn(err);
         }
