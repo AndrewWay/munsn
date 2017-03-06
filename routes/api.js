@@ -132,6 +132,17 @@ router.post('/post/sendFriendRequest', function(req, res, next) {
     }
 });
 
+//GET get friend requests for a specified user
+router.get('/get/getFriendRequestsForUser', function(req, res, next) {
+    //Declare query variables
+    var userId = req.query.userId;
+    if (userId) {
+        DB.friendRequest_findRequestsByUser(userId, function(result) {
+            res.json(result);
+        });
+    }
+});
+
 
 //POST remove friendId from userId
 //Return json response

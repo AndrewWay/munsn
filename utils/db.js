@@ -199,7 +199,7 @@ exports.friendRequest_addRequest = function(userId, friendId, callback) {
 
 //Find all friend requests from a user
 exports.friendRequest_findRequestsByUser = function(user, callback) {
-    collectionFriendRequests.find({_id: user}).toArray(function(err, result) {
+    collectionFriendRequests.find({userId: user}).toArray(function(err, result) {
         if (err) {
             console.warn(err);
         }
