@@ -99,19 +99,35 @@ router.post('/post/addFriend', function(req, res, next) {
 });
 */
 
+//POST send a friend request
+// xyz
+// x is 
 router.post('/post/sendFriendRequest', function(req, res, next) {
+    //Declare body variables
     var userId = req.body.userId;
     var friendId = req.body.friendId;
+    //Check if body variables are not null, or undefined
     if (userId && friendId) {
+        //Check to see if both users exist
         DB.users_findUsers({_id: {$in: [userId, friendId]}}, function(findResult) {
-            //Found both users
+            //If they both exist, add request
             if (findResult.length == 2) {
                 DB.friendRequest_addRequest(userId, friendId, function(requestResult) {
-                    
-                }) 
+                    //Operation successfully completed
+                    if (requestResult != null) {
+                        res.json({result: "000", operation: "sendFriendRequest", text: "Sent friend request"});
+                    }
+                    //Error with collection friendRequest
+                    else{
+                        res.json({result: "001", operation: "sendFriendRequest", text: "Error with collection friendRequest"});
+                    }
+                });
             }
-            console.log(findResult);
-            res.json(findResult);
+            //Else return result json
+            else {
+                console.log("\x1b[32m%s\x1b[0m%s", "[API]",  " /post/sendFriendRequest: userId: " + userId + ", friendId: " + friendId + ", dbResult: " + JSON.stringify(findResult));
+                res.json({result: "010", operation: "sendFriendRequest", text: "One or more users could not be found"});
+            }
         });
     }
 });

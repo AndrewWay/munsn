@@ -189,7 +189,10 @@ exports.friends_deleteFriendFromUser = function(userId, friendId, callback) {
 
 //Add a friend request
 exports.friendRequest_addRequest = function(userId, friendId, callback) {
-    collectionFriendRequests.insert({userId: userId, friendId: friendId}, function(result) {
+    collectionFriendRequests.insert({userId: userId, friendId: friendId}, function(err, result) {
+        if (err) {
+            console.warn(err);
+        }        
         callback(result);
     });
 };
