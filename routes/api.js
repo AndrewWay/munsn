@@ -154,6 +154,18 @@ router.get('/get/getFriendRequestsRecievedByUser', function(req, res, next) {
     }
 });
 
+//Removes friend request
+router.post('/post/removeFriendRequest', function(req, res, next) {
+    //Declare body variables
+    var userId = req.body.userId;
+    var friendId = req.body.friendId;
+    if (userId && friendId) {
+        DB.friendRequest_deleteRequest(userId, friendId, function(result) {
+            res.json(result);
+        });
+    }
+});
+
 //POST remove friendId from userId
 //Return json response
 //Result: xy, where x is 0 for no error, 1 for error, y is 0 for successful deletion, 1 for unsuccessful deletion
