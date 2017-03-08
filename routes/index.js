@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var db = require('../utils/db');
+var DB = require('../utils/db');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -16,7 +16,7 @@ router.post('/login', function(req, res, next) {
         user: req.body.user,
         pass: req.body.pass
     };
-    db.findUserById(userReq.user, function(userRes) {
+    DB.findUserById(userReq.user, function(userRes) {
         res.render('index', {title: userRes.user});
     });
 });

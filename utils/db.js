@@ -1,20 +1,21 @@
 var mongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
 
-var dbURL = 'mongodb://localhost:27017/db';
-exports.dbURL = dbURL;
+var DB_URL = 'mongodb://localhost:27017/db';
+exports.DB_URL = DB_URL;
 
 //Collections
-var colUser;
-var colRegAuth;
-var colFriend;
+var collectionUsers;
+var collectionAuths;
+var collectionFriends;
+var collectionFriendRequests;
 
 //Connect to the database
-var db = mongoClient.connect(dbURL, function(err, db) {
+var DB = mongoClient.connect(DB_URL, function(err, DB) {
 	assert.equal(null, err);
-	console.log("Connected to mongo server: " + dbURL);
-    //Restricts and denies documents so they have a user, email from mun.ca, and pass
-    db.createCollection("users", 
+	console.log("Connected to mongo server: " + DB_URL);
+    //Restricts and denies user documents so they have a user, email from mun.ca, and pass
+    DB.createCollection("users", 
         {validator: 
             {$and: [{user: {$type: "string"}},
                     {pass: {$type: "string"}},
@@ -24,37 +25,73 @@ var db = mongoClient.connect(dbURL, function(err, db) {
         validationLevel: "strict",
         validationAction: "error"});
 
-    colUser = db.collection("users");
+    //Restricts and denies regauth documents so that there is an authkey
+    DB.createCollection("regauths",
+        {validator:
+            {$and: [{authkey: {$type: "string"}},
+                    {userId: {$type: "string"}},
+                    {expiry: {$type: "number"}}]},
+        validationLevel: "strict",
+        validationAction: "error"});
 
-    //Restricts and denies documents so that there is an authkey
-    db.createCollection("regauths",
-    {validator:
-        {$and: [{authkey: {$type: "string"}},
-                {userId: {$type: "string"}},
-                {expiry: {$type: "number"}}]}});
+    //Restricts and denies friend documents so that there is from/to, and accepted
+    DB.createCollection("friends",
+        {validator:
+            {$and: [{_id: {$type: "string"}},
+                    {friends: {$type: "array"}}]},
+        validationLevel: "strict",
+        validationAction: "error"});
 
-    colRegAuth = db.collection("regauths");
+    DB.createCollection("friendRequests",
+        {validator:
+            {$and: [{userId: {$type: "string"}},
+                    {friendId: {$type: "string"}}]},
+        validationLevel: "strict",
+        validationAction: "error"});
 
-    colFriend = db.collection("friends");
+    //Variables set to mongo collections
+    collectionAuths = DB.collection("regauths");
+    collectionUsers = DB.collection("users");
+    collectionFriends = DB.collection("friends");
+    collectionFriendRequests = DB.collection("friendRequests");
 });
 
+//USERS
+//======================================================================================================
+
 //Insert one user into the user collection
-exports.insertUser = function(user, callback) {
-    colUser.insert(user, function(result) {
+exports.users_addUser = function(user, callback) {
+    collectionUsers.insert(user, function(result) {
         callback(result);
     });
 };
 
 //Find a user by unique object id
-exports.findUserById = function(id, callback) {
-    colUser.find({_id: id}).limit(1).toArray(function(err, users) {
-        callback(users[0]);
+exports.users_findUserById = function(id, callback) {
+    collectionUsers.findOne({_id: id}, function(err, result) {
+        if (err) {
+            console.warn(err);
+        }
+        //Returns null if error occured
+        callback(result);
+    });
+};
+
+//Find users matching query
+exports.users_findUsers = function(query, callback) {
+    collectionUsers.find(query).toArray(function(err, results) {
+        if (err) {
+            console.warn(err);
+        }
+        else {
+            callback(results);
+        }
     });
 };
 
 //Updates the user
-exports.updateUser = function(id, updates, callback) {
-    colUser.update({_id: id}, {$set: updates}, function(err, obj) {
+exports.users_updateUser = function(id, updates, callback) {
+    collectionUsers.update({_id: id}, {$set: updates}, {upsert: true}, function(err, obj) {
         if (err) {
             console.warn(err);
         }
@@ -65,8 +102,8 @@ exports.updateUser = function(id, updates, callback) {
 };
 
 //Removes the user
-exports.removeUser = function(id, callback) {
-    colUser.remove({_id: id}, {single: true}, function(err, obj) {
+exports.users_removeUser = function(id, callback) {
+    collectionUsers.remove({_id: id}, {single: true}, function(err, obj) {
         if (err) {
             console.warn(err);
         }
@@ -76,31 +113,103 @@ exports.removeUser = function(id, callback) {
     });
 };
 
+//AUTH
+//======================================================================================================
+
 //Add an authkey to regauths
-exports.addAuthKey = function(userId, authkey, expiry, callback) {
+exports.auth_addAuthKey = function(userId, authkey, expiry, callback) {
     var regAuth = {
         userId: userId,
         authkey: authkey,
         expiry: expiry
     };
-    colRegAuth.insert(regAuth, function(result) {
+    collectionAuths.insert(regAuth, function(result) {
         callback(result);
     });
 };
 
-exports.checkAuthKey = function(key, callback) {
-    colRegAuth.findOne({authkey: key}, function(err, result) {
+//Check for an existing authkey
+exports.auth_findAuthKey = function(key, callback) {
+    collectionAuths.findOne({authkey: key}, function(err, result) {
+        if (err) {
+            console.warn(err);
+        }
         callback(result);
     });
 };
 
-exports.deleteAuthKey = function(key, callback) {
-    colRegAuth.remove({authkey: key}, {single: true}, function(err, obj) {
+//Delete authkey
+exports.auth_deleteAuthKey = function(key, callback) {
+    collectionAuths.remove({authkey: key}, {single: true}, function(err, obj) {
         if (err) {
             console.warn(err);
         }
         else {
             callback(obj.result);
         }
+    });
+};
+
+//FRIENDS
+//======================================================================================================
+
+//Adds the friendId to the userId's friend list
+exports.friends_addFriendToUser = function(userId, friendId, callback) {
+    collectionFriends.update({_id: userId}, {$push: {friends: friendId}}, {upsert: true}, function(err, result) {
+        if (err) {
+            console.warn(err);
+        }
+        callback(result);
+    });
+};
+
+//Finds all friends of a userId and returns it as an array
+exports.friends_findAllFriendsForUser = function(userId, callback) {
+    collectionFriends.find({_id: userId}, {"friends": true}).toArray(function(err, result) {
+        if (err) {
+            console.warn(err);
+        }
+        callback(result);
+    });
+};
+
+//Removes the selected friendId from the specified userId
+exports.friends_deleteFriendFromUser = function(userId, friendId, callback) {
+    collectionFriends.update({_id: userId}, {$pull: {friends: friendId}}, function(err, result) {
+        if (err) {
+            console.warn(err);
+        }
+        callback(result);
+    });
+};
+
+
+//FRIEND REQUESTS
+//======================================================================================================
+
+//Add a friend request
+exports.friendRequest_addRequest = function(userId, friendId, callback) {
+    collectionFriendRequests.insert({userId: userId, friendId: friendId}, function(err, result) {
+        if (err) {
+            console.warn(err);
+        }        
+        callback(result);
+    });
+};
+
+//Find all friend requests from a user
+exports.friendRequest_findRequestsByUser = function(query, callback) {
+    collectionFriendRequests.find(query).toArray(function(err, result) {
+        if (err) {
+            console.warn(err);
+        }
+        callback(result);
+    });
+};
+
+//Remove friend request
+exports.friendRequest_deleteRequest = function(userId, friendId, callback) {
+    collectionFriendRequests.remove({userId: userId, friendId: friendId}, function(result) {
+        callback(result);
     });
 };
