@@ -9,6 +9,8 @@ var collectionUsers;
 var collectionAuths;
 var collectionFriends;
 var collectionFriendRequests;
+var collectionGroups;
+var collectionGroupMembers;
 
 //Connect to the database
 var DB = mongoClient.connect(DB_URL, function(err, DB) {
@@ -49,11 +51,27 @@ var DB = mongoClient.connect(DB_URL, function(err, DB) {
         validationLevel: "strict",
         validationAction: "error"});
 
+    DB.createCollection("groups", 
+        {validator:
+            {$and: [{name: {$type: "string"}},
+                    {creatorId: {$type: "string"}},
+                    {dateCreated: {$type: "date"}}]},
+        validationLevel: "strict",
+    validationAction: "error"});
+
+    DB.createCollection("groupMembers", 
+        {validator:
+            {$and: [{members: {$type: "array"}}]},
+        validationLevel: "strict",
+    validationAction: "error"});
+
     //Variables set to mongo collections
     collectionAuths = DB.collection("regauths");
     collectionUsers = DB.collection("users");
     collectionFriends = DB.collection("friends");
     collectionFriendRequests = DB.collection("friendRequests");
+    collectionGroups = DB.collection("groups");
+    collectionGroupMembers = DB.collection("groupMembers");
 });
 
 //USERS
@@ -210,6 +228,81 @@ exports.friendRequest_findRequestsByUser = function(query, callback) {
 //Remove friend request
 exports.friendRequest_deleteRequest = function(userId, friendId, callback) {
     collectionFriendRequests.remove({userId: userId, friendId: friendId}, function(result) {
+        callback(result);
+    });
+};
+
+//GROUPS
+//======================================================================================================
+
+//Add a group
+exports.group_addGroup = function(creatorId, name, callback) {
+    var date = new Date();
+    collectionGroups.insert({creatorId: creatorId, name: name, dateCreated: date}, function(err, result) {
+        if (err) {
+            console.warn(err);
+        }
+        callback(result);
+    });
+};
+
+//Find a group by user
+exports.group_findGroupsByUser = function(userId, callback) {
+    collectionGroups.find({creatorId: userId}).toArray(function(err, result) {
+        if (err) {
+            console.warn(err);
+        }
+        callback(result);
+    });
+};
+
+//Find group based on query
+exports.group_findGroupsByQuery = function(query, callback) {
+    collectionGroups.find(query, function(err, result) {
+        if (err) {
+            console.warn(err);
+        }
+        callback(result);
+    });;
+};
+
+//Remove a group
+exports.group_removeGroup = function(objectId, callback) {
+    collectionGroups.remove({_id: objectId}, function(result) {
+        callback(result);
+    });
+};
+
+
+//GROUP MEMBERS
+//======================================================================================================
+
+//Add member to group
+exports.groupMembers_addMember= function(groupId, memberId, callback) {
+    collectionGroupMembers.update({_id: groupId}, {$push: {members: memberId}}, {upsert: true}, function(err, result) {
+        if (err) {
+            console.warn(err);
+        }
+        callback(result);
+    });
+};
+
+//Finds all members of a group and returns it as an array
+exports.groupMembers_findAllMembers = function(groupId, callback) {
+    collectionGroupMembers.find({_id: groupId}, {"members": true}).toArray(function(err, result) {
+        if (err) {
+            console.warn(err);
+        }
+        callback(result);
+    });
+};
+
+//Removes member from group
+exports.groupMembers_removeMember = function(groupId, memberId, callback) {
+    collectionGroupMembers.update({_id: groupId}, {$pull: {members: memberId}}, function(err, result) {
+        if (err) {
+            console.warn(err);
+        }
         callback(result);
     });
 };
