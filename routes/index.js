@@ -19,6 +19,8 @@ router.post('/login', function(req, res, next) {
     db.findUserById(userReq.user, function(userRes) {
         res.render('index', {title: userRes.user});
     });
+});
+
 
 
 module.exports = router;

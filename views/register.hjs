@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{{ title }}</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <h1>{{ title }}</h1>
+    <p>Welcome to {{ title }}</p>
+    <form method="post" action="/api/register">
+        USERNAME: <input type="text" name="user"><br>
+        PASSWORD: <input type="text" name="pass"><br>
+        EMAIL: <input type="text" name="email"><br>        
+        <input type="submit" name="Register">
+    </form>
+
+  </body>
+</html>
