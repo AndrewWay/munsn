@@ -15,6 +15,7 @@ var routerIndex = require('./routes/index');
 var routerUsers = require('./routes/users');
 var routerApi = require('./routes/api');
 var routerAuth = require('./routes/auth');
+var routerUpload = require('./routes/upload');
 var busboy = require('connect-busboy');
 /*
 var email = {
@@ -29,7 +30,7 @@ ems.sendEmail(email, function(text) {
 */
 
 var app = express();
-
+app.use(busboy());
 app.use(session({
 	secret: 'faeb4453e5d14fe6f6d04637f78077c76c73d1b4',
 	proxy: true,
@@ -57,7 +58,7 @@ app.use('/', routerIndex);
 app.use('/users', routerUsers);
 app.use('/api', routerApi);
 app.use('/auth', routerAuth);
-app.use('/upload', upload);
+app.use('/upload', routerUpload);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
