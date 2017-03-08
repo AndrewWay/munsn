@@ -8,9 +8,10 @@
     <h1>{{ title }}</h1>
     <p>Welcome to {{ title }}</p>
     <form method="post">
+        MUNID: <input type="text" name="uid"><br>
         USERNAME: <input type="text" name="user"><br>
         PASSWORD: <input type="text" name="pass"><br>
-        <input type="submit" name="Login">
+        <input type="submit" name="Register">
     </form>
 
   </body>

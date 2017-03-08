@@ -9,10 +9,24 @@ var mongoStore = require('connect-mongo')(session);
 var mongoClient = require('mongodb').MongoClient,
 	assert = require('assert');
 var db = require('./utils/db');
+var ems = require('./utils/ems');
 
-var index = require('./routes/index');
-var users = require('./routes/users');
+var routerIndex = require('./routes/index');
+var routerUsers = require('./routes/users');
+var routerApi = require('./routes/api');
+var routerAuth = require('./routes/auth');
+var busboy = require('connect-busboy');
+/*
+var email = {
+    subject: "Welcome to MUNSoN",
+    to: "Andrew <arw405@mun.ca>, John <jh2587@mun.ca>",
+    text: "Welcome to Mun Social Network (MUNSoN)"
+};
 
+ems.sendEmail(email, function(text) {
+    console.log(text);
+});
+*/
 
 var app = express();
 
@@ -39,8 +53,11 @@ app.use(bodyParser.urlencoded({
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', index);
-app.use('/users', users);
+app.use('/', routerIndex);
+app.use('/users', routerUsers);
+app.use('/api', routerApi);
+app.use('/auth', routerAuth);
+app.use('/upload', upload);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

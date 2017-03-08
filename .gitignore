@@ -5,3 +5,5 @@ s.sh
 m.bat
 data/
 npm-debug.log
+/node_modules/
+.vscode/
