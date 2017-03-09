@@ -2,7 +2,7 @@
 
 <head>
 	<title> {{ title }} </title>
-	<link rel="stylesheet" type="text/css" href="../css/login.css">
+	<link rel="stylesheet" type="text/css" href="/stylesheets/login.css">
 	
 	<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
 	<meta content="utf-8" http-equiv="encoding">
@@ -24,7 +24,7 @@
 					<input class="logButton" type="submit" value="Login"> <input class="logButton" type="button" value="Register"><br>
 					<input class="logButton" id="forPass" type="button" value="Forgot Password"><br>
 					
-					<img src="../img/MUNLOGO.gif" alt="Provehito in Altum" title="Provehito in Altum">
+					<img src="/img/MUNLOGO.gif" alt="Provehito in Altum" title="Provehito in Altum">
 				</form>
 			</div>
 		
