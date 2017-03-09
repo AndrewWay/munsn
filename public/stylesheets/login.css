@@ -76,6 +76,8 @@ body, html {
 	border-radius: 50% / 5%;
 	/*border-radius: 20px;*/
 	
+	z-index: 2;
+	
 }
 
 #loginFields img{
@@ -96,7 +98,7 @@ body, html {
 
 .logButton {
 	float: left;
-	background-color: #efefef;
+	background-color: #fcfcfc;
 	border-radius: 5px;
 	cursor: pointer;
 	text-align: center;
@@ -150,7 +152,7 @@ body, html {
 .regButton {
 	position: relative;
 	left: 25%;
-	background-color: #efefef;
+	background-color: #fcfcfc;
 	border-radius: 5px;
 	cursor: pointer;
 	text-align: center;

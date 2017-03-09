@@ -58,15 +58,16 @@
 					
 					<div class="spacerDiv"></div>
 					
-					<div class="regText"><img src="/img/SEAHAWK_SIL.jpg"></div>
-					<div id="profilePic"><input type="file" name="pic" accept="image/*"></div><br>
+					<div class="regText"><img id="picDisp" src="/img/SEAHAWK_SIL.jpg"></div>
+					<div id="profilePic"><input id="picUp" type="file" name="pic" accept="image/*"></div><br>
 					
 					<div class="spacerDiv"></div>
 					
 					<div id="tosText"><input type="checkbox" name="checkTOS">I HAVE READ AND AGREED TO THE TERMS OF SERVICE</div><br>
 					
 					<input class="regButton" type="button" value="Terms of Service"><br>
-					<input class="regButton" type="submit" value="Register">
+					<input class="regButton" type="submit" value="Register"><br>
+					<input class="regButton" id="closeReg" type="button" value="Back">
 				</form>
 			</div>
 		
