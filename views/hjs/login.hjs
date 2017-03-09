@@ -1,0 +1,53 @@
+<html>
+
+<head>
+	<title> {{ title }} </title>
+	<link rel="stylesheet" type="text/css" href="../css/login.css">
+	
+	<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+	<meta content="utf-8" http-equiv="encoding">
+</head>
+
+<body onload="document.loginForm.reset()">
+	<div id="sideBar">
+			
+	</div>
+		
+
+	<div id="wrapper">
+		<div id="leftPanel">
+
+			<div id="loginPanel">
+				<form id="loginFields" name="loginForm" method="post">
+					USERNAME: <input class="logField" type="text" name="user"><br>
+					PASSWORD: <input class="logField" type="password" name="pass"><br>
+					<input class="logButton" type="submit" value="Login"> <input class="logButton" type="button" value="Register"><br>
+					<input class="logButton" id="forPass" type="button" value="Forgot Password"><br>
+					
+					<img src="../img/MUNLOGO.gif" alt="Provehito in Altum" title="Provehito in Altum">
+				</form>
+			</div>
+		
+		</div>
+	
+		<div id="rightPanel">
+			<div id="postTemp">
+				<span>POSTS GO HERE</span><br>
+				<span>POSTS GO HERE</span><br>
+				<span>POSTS GO HERE</span><br>
+				<span>POSTS GO HERE</span><br>
+				<span>POSTS GO HERE</span><br>
+				<span>POSTS GO HERE</span><br>
+				<span>POSTS GO HERE</span><br>
+				<span>SHOULDN'T BE SEEN</span><br>
+			</div>
+			<div id="postTemp">
+				<span> POSTS GO HERE </span><br>
+			</div>
+		</div>
+	</div>
+</body>
+
+
+
+</html>
