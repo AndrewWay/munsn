@@ -22,7 +22,11 @@ body, html {
 	width: 150px;
 	top: 0;
 	left: 0;
-	background: #dddddd;
+	background: #eeeeee;
+	
+	-webkit-box-shadow: inset -5px -1px 5px #bbbbbb;
+    -moz-box-shadow: inset -5px -1px 5px #bbbbbb;
+	box-shadow: inset -5px -1px 5px #bbbbbb;
 }
 
 #leftPanel {
