@@ -8,7 +8,7 @@
     <h1>{{ title }}</h1>
     <p>Welcome to {{ title }}</p>
     <img src="content/image/profile/test"/>
-    <form action="/content/image/user/test" method="post" enctype="multipart/form-data">
+    <form action="content/image/profile/test" method="post" enctype="multipart/form-data">
       <input type="file" name="datafile"><br>
       <input type="submit" name="Submit"><br>
     </form>
