@@ -17,12 +17,7 @@ var routerUsers = require('./routes/users');
 var routerApi = require('./routes/api');
 var routerAuth = require('./routes/auth');
 var routerUpload = require('./routes/upload');
-<<<<<<< HEAD
 var routerContent = require('./routes/content');
-=======
-var busboy = require('connect-busboy');
->>>>>>> branch 'master' of https://github.com/AndrewWay/munsn.git
-
 var app = express();
 
 app.use(busboy());
