@@ -6,25 +6,67 @@
 	
 	<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
 	<meta content="utf-8" http-equiv="encoding">
+	
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+	<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+	<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+
+	<script src="/js/login.js"></script>
 </head>
 
-<body onload="document.loginForm.reset()">
+<body onload="document.loginForm.reset(); document.regForm.reset();">
 	<div id="sideBar">
 			
 	</div>
 		
 
 	<div id="wrapper">
+	<div id="obscure">
+	</div>
 		<div id="leftPanel">
 
 			<div id="loginPanel">
 				<form id="loginFields" name="loginForm" method="post">
 					USERNAME: <input class="logField" type="text" name="user"><br>
 					PASSWORD: <input class="logField" type="password" name="pass"><br>
-					<input class="logButton" type="submit" value="Login"> <input class="logButton" type="button" value="Register"><br>
+					<input class="logButton" type="submit" value="Login"> <input class="logButton" id="regBtn" type="button" value="Register"><br>
 					<input class="logButton" id="forPass" type="button" value="Forgot Password"><br>
 					
 					<img src="/img/MUNLOGO.gif" alt="Provehito in Altum" title="Provehito in Altum">
+				</form>
+				<form id="regFields" name="regForm" method="post">
+					<div class="regText">MUN EMAIL:</div>
+					<input class="regField" type="text" name="munmail"><br>
+					<div class="regText">NAME:</div>
+					<input class="regName" type="text" name="gname">
+					<input class="regName" type="text" name="sname"><br>
+					<div class="regText">PASSWORD:</div>
+					<input class="regField" type="password" name="regPass"><br>
+					<div class="regText">CONFIRM:</div>
+					<input class="regField" type="password" name="regPassConf"><br>
+					<div class="regText">BIRTHDATE:</div> 
+					<input type="text" class="regField" id="datePick"><br>
+					
+					<!-- <select required id="bYear" class="bDate"><option class="placeholder" value="YYYY" selected disabled>YYYY</option></select> -->
+					<!-- <select required id="bMonth" class="bDate"><option class="placeholder" value="MMMM" selected disabled>MMMM</option></select> -->
+					<!-- <select required id="bDay" class="bDate"><option class="placeholder" value="DD" selected disabled>DD</option></select><br> -->
+					<div class="regText">GENDER:</div> 
+					<input type="radio" name="gender" value="male" checked> Male
+					<input type="radio" name="gender" value="female"> Female
+					<input type="radio" name="gender" value="other"> Other<br>
+					
+					<div class="spacerDiv"></div>
+					
+					<div class="regText"><img src="/img/SEAHAWK_SIL.jpg"></div>
+					<div id="profilePic"><input type="file" name="pic" accept="image/*"></div><br>
+					
+					<div class="spacerDiv"></div>
+					
+					<div id="tosText"><input type="checkbox" name="checkTOS">I HAVE READ AND AGREED TO THE TERMS OF SERVICE</div><br>
+					
+					<input class="regButton" type="button" value="Terms of Service"><br>
+					<input class="regButton" type="submit" value="Register">
 				</form>
 			</div>
 		
