@@ -4,6 +4,10 @@ body, html {
 	height: 100%;
 	width: 100%;
 	min-width: 1000px;
+	
+	/*REMOVE IF CAUSES ISSUES*/
+	display: flex;
+	flex-direction: column;
 }
 
 
@@ -14,6 +18,10 @@ body, html {
 	margin:0;
 	left:0;
 	top:0;
+	
+	/*REMOVE IF CAUSES ISSUES*/
+	display: flex;
+	flex-direction: column;
 }
 
 #sideBar {
@@ -49,12 +57,16 @@ body, html {
 	padding:0;
 	margin:0;
 	
+	/*REMOVE IF CAUSES ISSUES*/
+	display: flex;
+	flex-direction: column;
 }
 
 #loginPanel {
 	position: absolute;
 	top: 15%;
-	right: 10px;
+	right: 4%;
+	/*right: 10px;*/
 	width: 200px;
 	height: 400px;
 	background: #eeeeee;
@@ -66,7 +78,7 @@ body, html {
 	
 }
 
-#loginPanel img{
+#loginFields img{
 
 	width: 150px;
 	left: 25px;
@@ -102,6 +114,87 @@ body, html {
 	width: 150px;
 }
 
+#regFields {
+	position: absolute;
+	display: none;
+	top: 15%;
+	left: 12%;
+}
+
+#regFields img {
+	width: 100px;
+	height: 100px;
+	border-radius: 10px;
+}
+
+.regText {
+	display: inline-block;
+	/*float: left; is another option*/
+	width: 100px;
+}
+
+.regField {
+	position: static;
+	width: 198px;
+	border-radius: 4px;
+	margin-top: 5px;
+}
+
+.regName {
+	position: static;
+	width: 97px;
+	border-radius: 4px;
+	margin-top: 5px;
+}
+
+.regButton {
+	position: relative;
+	left: 25%;
+	background-color: #efefef;
+	border-radius: 5px;
+	cursor: pointer;
+	text-align: center;
+	width: 150px;
+	padding: 5px;
+	margin-top: 5px;
+}
+
+.bDate {
+	width: 66px;
+	border-radius: 4px;
+	margin-top: 5px;
+}
+
+.spacerDiv {
+	min-height: 10px;
+	height: 10px;
+}
+
+#regFields [type=radio] {
+	margin-top: 5px;
+}
+
+#profilePic {
+	display: inline-block;
+	/*float: left; is another option*/
+	width: 198px;
+	/*Change these to move all elements below. Change top in input to match*/
+	height: 1px;
+	min-height: 1px;
+}
+
+#profilePic input {
+	position: relative;
+	top: -4800%;
+}
+
+#tosText {
+	position: relative;
+	display: inline-block;
+	/*float: left; is another option*/
+	font-size: 10px;
+	left: 5%;
+}
 
 #postTemp {
 	position: static;
@@ -110,11 +203,16 @@ body, html {
 	min-height: 100px;
 	max-height: 200px;
 	
+	/*Maybe not, must consider what else could be done*/
+	width: 100%;
+	
 	border-radius: 5px;
 	
 	-webkit-box-shadow: inset 0 0 5ox 5px #bbbbbb;
     -moz-box-shadow: inset 0 0 5px 5px #bbbbbb;
 	box-shadow: inset 0 0 5px 5px #bbbbbb;
+	
+	z-index: -1;
 	
 	display: flex;
 	flex-direction: column;
@@ -127,4 +225,14 @@ body, html {
     -ms-flex: 1;
     flex: 1;
 	margin: 4px 10px 4px 10px;
+}
+
+#obscure {
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 100%;
+	background: rgba(0,0,0,0.5);
+	display: none;
 }
