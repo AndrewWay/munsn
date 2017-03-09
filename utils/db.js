@@ -263,8 +263,20 @@ exports.group_findGroupsByQuery = function(query, callback) {
             console.warn(err);
         }
         callback(result);
-    });;
+    });
 };
+
+//Update group 
+exports.group_updateGroup = function(groupId, updates, callback) {
+    collectionGroups.update({_id: groupId}, {$set: updates}, {upsert: true}, function(err, obj) {
+        if (err) {
+            console.warn(err);
+        }
+        else {
+            callback(obj.result);
+        }
+    });
+}
 
 //Remove a group
 exports.group_removeGroup = function(objectId, callback) {
