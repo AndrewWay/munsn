@@ -10,33 +10,24 @@ var mongoClient = require('mongodb').MongoClient,
 	assert = require('assert');
 var db = require('./utils/db');
 var ems = require('./utils/ems');
+var busboy = require('connect-busboy');
 
 var routerIndex = require('./routes/index');
 var routerUsers = require('./routes/users');
 var routerApi = require('./routes/api');
 var routerAuth = require('./routes/auth');
 var routerUpload = require('./routes/upload');
-var busboy = require('connect-busboy');
-/*
-var email = {
-    subject: "Welcome to MUNSoN",
-    to: "Andrew <arw405@mun.ca>, John <jh2587@mun.ca>",
-    text: "Welcome to Mun Social Network (MUNSoN)"
-};
-
-ems.sendEmail(email, function(text) {
-    console.log(text);
-});
-*/
+var routerContent = require('./routes/content');
 
 var app = express();
+
 app.use(busboy());
 app.use(session({
 	secret: 'faeb4453e5d14fe6f6d04637f78077c76c73d1b4',
 	proxy: true,
 	resave: true,
 	saveUninitialized: true,
-	store: new mongoStore({ url: db.dbURL })
+	store: new mongoStore({ url: db.DB_URL })
 	})
 );
 
@@ -59,6 +50,7 @@ app.use('/users', routerUsers);
 app.use('/api', routerApi);
 app.use('/auth', routerAuth);
 app.use('/upload', routerUpload);
+app.use('/content', routerContent);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
