@@ -26,7 +26,7 @@ body, html {
 
 #sideBar {
 	position: absolute;
-	height: 100%;
+	height: 150%;
 	width: 150px;
 	top: 0;
 	left: 0;
@@ -161,12 +161,6 @@ body, html {
 	margin-top: 5px;
 }
 
-.bDate {
-	width: 66px;
-	border-radius: 4px;
-	margin-top: 5px;
-}
-
 .spacerDiv {
 	min-height: 10px;
 	height: 10px;
@@ -188,6 +182,7 @@ body, html {
 #profilePic input {
 	position: relative;
 	top: -4800%;
+	width: 198px;
 }
 
 #tosText {
@@ -206,7 +201,7 @@ body, html {
 	max-height: 200px;
 	
 	/*Maybe not, must consider what else could be done*/
-	width: 100%;
+	width: 98%;
 	
 	border-radius: 5px;
 	

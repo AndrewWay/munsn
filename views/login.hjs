@@ -47,10 +47,6 @@
 					<input class="regField" type="password" name="regPassConf"><br>
 					<div class="regText">BIRTHDATE:</div> 
 					<input type="text" class="regField" id="datePick"><br>
-					
-					<!-- <select required id="bYear" class="bDate"><option class="placeholder" value="YYYY" selected disabled>YYYY</option></select> -->
-					<!-- <select required id="bMonth" class="bDate"><option class="placeholder" value="MMMM" selected disabled>MMMM</option></select> -->
-					<!-- <select required id="bDay" class="bDate"><option class="placeholder" value="DD" selected disabled>DD</option></select><br> -->
 					<div class="regText">GENDER:</div> 
 					<input type="radio" name="gender" value="male" checked> Male
 					<input type="radio" name="gender" value="female"> Female
@@ -63,7 +59,7 @@
 					
 					<div class="spacerDiv"></div>
 					
-					<div id="tosText"><input type="checkbox" name="checkTOS">I HAVE READ AND AGREED TO THE TERMS OF SERVICE</div><br>
+					<div id="tosText"><input type="checkbox" name="checkTOS">I HAVE READ AND AGREE TO THE TERMS OF SERVICE</div><br>
 					
 					<input class="regButton" type="button" value="Terms of Service"><br>
 					<input class="regButton" type="submit" value="Register"><br>
