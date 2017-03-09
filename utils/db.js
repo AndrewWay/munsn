@@ -11,6 +11,7 @@ var collectionFriends;
 var collectionFriendRequests;
 var collectionGroups;
 var collectionGroupMembers;
+var collectionPosts;
 
 //Connect to the database
 var DB = mongoClient.connect(DB_URL, function(err, DB) {
@@ -59,7 +60,7 @@ var DB = mongoClient.connect(DB_URL, function(err, DB) {
         validationLevel: "strict",
     validationAction: "error"});
 
-    DB.createCollection("groupMembers", 
+    DB.createCollection("posts", 
         {validator:
             {$and: [{members: {$type: "array"}}]},
         validationLevel: "strict",
@@ -72,6 +73,7 @@ var DB = mongoClient.connect(DB_URL, function(err, DB) {
     collectionFriendRequests = DB.collection("friendRequests");
     collectionGroups = DB.collection("groups");
     collectionGroupMembers = DB.collection("groupMembers");
+    collectionPosts = DB.collection("posts");
 });
 
 //USERS
