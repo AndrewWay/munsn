@@ -201,7 +201,9 @@ router.post('/post/createGroup', function(req, res, next) {
     var groupName = req.body.groupName;
     if (creatorId && groupName) {
         DB.group_addGroup(creatorId, groupName, function(result) {
-            res.json(result);
+            DB.groupMembers_addMember(result.ops[0]._id, creatorId, function(memberResult) {
+                res.json(memberResult);
+            });
         });
     }
 });
@@ -216,9 +218,9 @@ router.post('/post/removeGroup', function(req, res, next) {
     }
 });
 
-//Remove a group
-router.post('/post/findGroupsByUser', function(req, res, next) {
-    var userId = req.body.userId;
+//find groups by userid
+router.get('/get/findGroupsByUser', function(req, res, next) {
+    var userId = req.query.userId;
     if (userId) {
         DB.group_findGroupsByUser(userId, function(result) {
             res.json(result);
