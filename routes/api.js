@@ -195,4 +195,78 @@ router.post('/post/removeFriend', function(req, res, next) {
     }
 });
 
+//Create a group
+router.post('/post/createGroup', function(req, res, next) {
+    var creatorId = req.body.creatorId;
+    var groupName = req.body.groupName;
+    if (creatorId && groupName) {
+        DB.group_addGroup(creatorId, groupName, function(result) {
+            res.json(result);
+        });
+    }
+});
+
+//Remove a group
+router.post('/post/removeGroup', function(req, res, next) {
+    var groupId = req.body.groupId;
+    if (groupId) {
+        DB.group_removeGroup(groupId, function(result) {
+            res.json(result);
+        });
+    }
+});
+
+//Remove a group
+router.post('/post/findGroupsByUser', function(req, res, next) {
+    var userId = req.body.userId;
+    if (userId) {
+        DB.group_findGroupsByUser(userId, function(result) {
+            res.json(result);
+        });
+    }
+});
+
+//Update a group
+router.post('/post/updateGroup', function(req, res, next) {
+    var groupId = req.body.groupId;
+    var updates = req.body.updates;
+    if (groupId && updates) {
+        DB.group_updateGroup(groupId, updates, function(result) {
+            res.json(result);
+        });
+    }
+});
+
+//Add member to group 
+router.post('/post/addGroupMember', function(req, res, next) {
+    var groupId = req.body.groupId;
+    var userId = req.body.userId;
+    if (groupId && userId) {
+        DB.groupMembers_addMember(groupId, userId, function(result) {
+            res.json(result);
+        });
+    }
+});
+
+//Remove member from group 
+router.post('/post/removeGroupMember', function(req, res, next) {
+    var groupId = req.body.groupId;
+    var userId = req.body.userId;
+    if (groupId && userId) {
+        DB.groupMembers_removeMember(groupId, userId, function(result) {
+            res.json(result);
+        });
+    }
+});
+
+//Find members for group
+router.get('/get/getGroupMembers', function(req, res, next) {
+    var groupId = req.body.groupId;
+    if (groupId) {
+        DB.groupMembers_findAllMembers(groupId, function(result) {
+            res.json(result);
+        });
+    }
+});
+
 module.exports = router;
