@@ -226,10 +226,10 @@ body, html {
 
 #obscure {
 	position: absolute;
-	top: 0;
-	left: 0;
-	height: 100%;
-	width: 100%;
+	top: -10%;
+	left: -10%;
+	height: 150%;
+	width: 150%;
 	background: rgba(0,0,0,0.5);
 	display: none;
 }
