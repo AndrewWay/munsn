@@ -20,6 +20,7 @@ var routerUpload = require('./routes/upload');
 var routerContent = require('./routes/content');
 var app = express();
 
+//Busboy used for file uploading to the server
 app.use(busboy());
 app.use(session({
 	secret: 'faeb4453e5d14fe6f6d04637f78077c76c73d1b4',
@@ -34,7 +35,7 @@ app.use(session({
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hjs');
 
-// uncomment after placing your favicon in /public
+//uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -42,13 +43,20 @@ app.use(bodyParser.urlencoded({
 	extended: false
 }));
 app.use(cookieParser());
+//Public folder accessible everywhere
 app.use(express.static(path.join(__dirname, 'public')));
 
+//Index Page
 app.use('/', routerIndex);
+// ?
 app.use('/users', routerUsers);
+//API Calls
 app.use('/api', routerApi);
+//Auth Server
 app.use('/auth', routerAuth);
+//Upload Example
 app.use('/upload', routerUpload);
+//Content Server
 app.use('/content', routerContent);
 
 // catch 404 and forward to error handler

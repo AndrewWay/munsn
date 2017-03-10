@@ -30,7 +30,7 @@ router.post('/image/profile/:uid', function(req, res, next) {
 });
 
 /**
- * Upload a Group profile image base don the groupid
+ * Upload a Group profile image based on the groupid
  * HTMLForm Example: action='/content/image/group/test123' 
  */
 router.post('/image/group/:gid', function(req, res, next) {
