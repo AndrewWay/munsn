@@ -1,6 +1,9 @@
-var fs = require('fs-extra');
+var fs = require('fs');
 var path = require('path');
 var mime = require('mime');
+const imagemin = require('image-min');
+const imageminMozjpeg = require('imagemin-mozjpeg');
+const imageminPngquant = require('imagemin-pngquant');
 /**
  * Extracts the ID from an emailstring
  * @param String email - The string representation of the email
@@ -38,6 +41,7 @@ function* findFiles(filter,directory) {
 		var filename = path.join(directory,files[i]);
 		var stat = fs.lstatSync(filename);
 		if(!stat.isDirectory() && filename.indexOf(filter) >= 0) {
+			console.log(filename);
 			yield filename;
 		}
 	}
@@ -67,35 +71,62 @@ function download(req, res, file){
 /**
  * Receives a file from the POST http request
  * @param HTTPRequest req - The request this file comes from
- * @param String name - The name to give this file when saving it
  * @param String dest - The relative path to 'content/images/%dest%'
+ * @param String name - The name to give this file when saving it (optional)
  * @returns void
  */
-function uploadImage(req, name, dest){
+function upload(req, dest, name){
 	var fstream;
     req.pipe(req.busboy);
     req.busboy.on('file', function (fieldname, file, filename) {
-    	var dir = path.join(__dirname, '../content/images/' + dest + '/');
+    	var dir = path.join(__dirname, '../content/' + dest);
+
+    	//File extension
     	var fext = path.extname(filename);
         console.log("Uploading: " + filename);
-        //Path where image will be uploaded
+        //Path where file will be uploaded
         fs.exists(dir,function(exist){
+        	//Create the directory if it doesn't exist
         	if(!exist)
         		fs.mkdirSync(dir);
         	else
-        		for (var f of findFiles(name, dir)){
+        		//If it does exist, find files by the name given and delete them
+        		//
+        		for (var f of findFiles((name ? name : filename), dir)){
         			if (f !== undefined)
         				fs.unlinkSync(f);
-        		}        		
-        	//fstream = fs.createWriteStream(path.join(dir,filename));
-        	//gm(file,filename).write(fstream,function(err) {if (err) throw err;});
-            fstream = fs.createWriteStream(path.join(dir, name + fext));
-            file.pipe(fstream);
-            fstream.on('close', function () {    
-                console.log("Uploaded: " + filename); 
-            });
+        		}  
+        	//If upload(req,dest) then change set name to filename
+        	if(!name)
+        		name = filename;
+        	else
+        		name = name + fext;
+        	fstream = fs.createWriteStream(path.join(dir, name));
+        	fstream.on('close', function () {    
+        		console.log("Uploaded: " + filename); 
+        	});
+        	switch(fext.toLowerCase()) {
+        		case '.jpg':
+        		case '.png':
+        			//I have no idea how to make these images work with imagemin. 
+        			//There's literally no usage guide that makes sense to me
+        			//The API for all this stuff is teeeeerrrrible 
+        		default:
+        			file.pipe(fstream);
+        			break;
+        	}
         });
     });
+};
+/**
+ * Generic upload function
+ * @param HTTPRequest req - The request this file comes from
+ * @param String name - The name to give this file when saving it
+ * @param String dest - The relative path to 'content/%dest%'
+ * @returns void
+ */
+function uploadImage(req, dest, name){
+	upload(req, 'images/'+dest, name);
 };
 // Exports
 exports.getIdFromEmail = getIdFromEmail;

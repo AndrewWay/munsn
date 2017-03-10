@@ -17,7 +17,7 @@ router.get('/image/profile/:uid', function(req, res, next) {
  */
 router.get('/image/group/:gid', function(req, res, next) {
 	var file = findFiles('group',path.join(__dirname, '../content/images/group/'+req.params.gid)).next().value;
-	download(req,res,file);
+	utils.download(req,res,file);
 });
 
 /**
@@ -25,7 +25,7 @@ router.get('/image/group/:gid', function(req, res, next) {
  * HTMLForm Example: action='/content/image/user/user123'
  */
 router.post('/image/profile/:uid', function(req, res, next) {
-	utils.uploadImage(req, 'profile', 'user/'+req.params.uid);
+	utils.uploadImage(req, 'user/'+req.params.uid, 'profile');
     res.redirect('back');           
 });
 
@@ -34,7 +34,7 @@ router.post('/image/profile/:uid', function(req, res, next) {
  * HTMLForm Example: action='/content/image/group/test123' 
  */
 router.post('/image/group/:gid', function(req, res, next) {
-	utils.uploadImage(req, 'group/'+req.params.gid);
+	utils.uploadImage(req, 'group/'+req.params.gid, 'group');
     res.redirect('back');   
 });
 
