@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+	<meta charset="UTF-8">
+	<title>{{Title}}</title>
+	<link href="css/blank.css" rel="stylesheet"/>
+
+</head>
+<body>
+	<nav>
+	<div class="navbar">
+
+		<div class="menu">
+		<ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Groups</a></li>
+            <li><a href="#">Friends</a></li>
+        </ul>
+        </div>
+            
+        <div class="search">
+	        <form>
+			  	<input type="search" name="sitesearch" placeholder="Search MunSN"><button class="searchbtn">Search</button>			  	
+			</form>
+		</div>
+
+		<a href="#"><img id="cog" src="img/settings.png"></a>
+		<a href="#"><img id="cog" src="img/logout.png"></a>
+		<a href="#"><img id="not" src="img/notification-red.png"></a>
+	</div>
+	</nav>
+
+	<div class="container">
+	<div class="section-left">
+		<div class="content-1">
+		</div>
+		<div class="content-2">
+		</div>
+	</div>
+	<div class="timeline">
+	</div>
+	<div class="section-right">
+		<div class= "content-1">
+		</div>
+		<div class ="content-2">
+		</div>
+	</div>
+	</div>
+</body>
+</html>

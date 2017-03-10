@@ -1,0 +1,112 @@
+body {
+	margin: 0;
+	padding: 0;
+	font-size: 15px;
+}
+
+.navbar {
+	background-color: #333;
+	overflow: hidden;
+	position: fixed;
+	top:0;
+	width: 100%;
+	display: inline-block;
+}
+
+.menu{
+	float:left;
+	display:inline-block;
+	width:27%;
+	margin-left: 10px;
+
+}
+
+.menu a:hover{
+	background-color: #444;
+}
+
+.menu ul{
+	display: inline-block;
+	margin: 0;
+	padding: 0;
+} 
+
+.menu ul li {
+	display: inline-block;
+	list-style-type: none;
+}
+
+.menu > ul > li > a {
+	color: #aaa;
+	background-color: #333;
+	display: block;
+	line-height: 3em;
+	padding: 0.5em,0.5em;
+	text-decoration: none;
+}
+
+.search{
+	display: inline-block;
+	line-height: 3em;
+	width:45%;	
+}
+
+.search input{
+	border-bottom-left-radius: 9px;
+	border-top-left-radius: 9px;
+	padding-left:10px;
+	width:85%;
+	border-style: none;
+	height: 1.75em
+}
+
+.search button{
+	border-top-right-radius: 9px;
+	border-bottom-right-radius: 9px;
+	border-style: none;
+	height:1.75em;
+}
+
+
+.navbar a{
+	display: inline-block;
+	line-height: 3em;
+	margin-right: 10px;
+	float:right;
+}
+
+#cog{
+	vertical-align: middle;
+	padding-bottom: 3px;
+}
+
+#not{
+	vertical-align: middle;
+	padding-bottom: 2px;
+}
+
+.section-left, .section-right{
+	width: 16%;
+	position:fixed;
+	padding-bottom:100%;
+	background-color: grey;
+	margin-top: 3.1em;
+	z-index: -1;
+}
+
+.section-left{
+	left:0;
+	
+}
+
+.section-right{
+	right:0;
+}
+
+.timeline{
+
+}
+
+.container{
+	
+}
