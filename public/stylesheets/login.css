@@ -111,7 +111,13 @@ body, html {
 
 .logField {
 	width: 150px;
+	height: 30px;
 	border-radius: 4px;
+	margin-top: 5px;
+}
+
+.logField:hover {
+	background-color: #f1f1f1;
 }
 
 #forPass {
@@ -139,16 +145,25 @@ body, html {
 
 .regField {
 	position: static;
-	width: 198px;
+	width: 300px;
+	/*width: 198px;*/
 	border-radius: 4px;
 	margin-top: 5px;
 }
 
+.regField:hover {
+	background-color: #f1f1f1;
+}
+
 .regName {
 	position: static;
-	width: 97px;
+	width: 148px;
 	border-radius: 4px;
 	margin-top: 5px;
+}
+
+.regName:hover {
+	background-color: #f1f1f1;
 }
 
 .regButton {
