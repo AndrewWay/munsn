@@ -1,7 +1,7 @@
 
 $(function() {
             $( "#datePick" ).datepicker({changeMonth: true,
-            changeYear: true, yearRange: "-100:+0"});
+            changeYear: true, yearRange: "-100:-16", defaultDate: "-16y-m-d"});
          });
 
 
