@@ -370,9 +370,6 @@ exports.post_updatePost = function(postId, updates, callback) {
     });
 };
 
-
-    collectionFriends.update({_id: userId}, {$push: {friends: friendId}}, {upsert: true}, function(err, result) {
-
 //POST COMMENTS
 //======================================================================================================
 

@@ -1,3 +1,4 @@
+//Required modules/middleware
 var express = require('express');
 var router = express.Router();
 var DB = require('../utils/db');
@@ -24,40 +25,65 @@ var delGroup = '/group/remove/:gid';
 var updateGroup = '/group/update';
 var addGroupUser = '/group/add/user';
 var delGroupUser = '/group/remove/user';
-//GET the user by userId
+
+//USERS
+//======================================================================================================
+
 /**
- * Returns the JSON object representing a user from the database
+ * Get User 
+ * 
+ * Descript:
+ *      - Gets the user object from the database if they exist
+ * Method: 
+ *      - GET
+ * Params:
+ *      - uid: The user id to get
+ * Errors:
+ *      - JSON object with "result" field as "undefined"
+ * Returns:
+ *      - JSON user object
  */
 router.get(getUserInfo, function(req, res, next) {
-    if (req.params.uid == undefined) {
-        res.json({error: "undefined"});
-    }
-    else if (req.params.uid == null) {
-        res.json({error: "null"});
+    var uid = req.params.uid;
+    //Check to see if params are not undefined or null
+    if (uid) {
+        DB.users_findUserById(uid, function(result) {
+            console.log(result);
+            res.json(result);
+        });
     }
     else {
-        DB.users_findUserById(req.params.uid, function(user) {
-            res.json(user);
-        });
+        res.json({result: "undefined"});
     }
 });
 
-//POST update the user
 /**
- * ???
+ * Update User 
+ * 
+ * Descript:
+ *      - Updates the specified user with the specified changes
+ * Method: 
+ *      - POST
+ * Params:
+ *      - uid: The user id that needs to be updated
+ *      - updates: The changes that needs to be updated for the user
+ * Errors:
+ *      - JSON object with "result" field as "undefined"
+ * Returns:
+ *      - JSON object with "result" field as "success"
  */
 router.post(updateUser, function(req, res, next) {
-    if (req.params.uid == undefined) {
-        res.json({error: "undefined"});
-    }
-    else if (req.params.uid == null) {
-        res.json({error: "null"});
+    var uid = req.params.uid;
+    var updates = req.params.updates;
+    //Check to see if params are not undefined or null
+    if (uid && updates) {
+         DB.users_updateUser(uid, updates, function(result) {
+            console.log(result);
+            res.json({result: "success"});
+        });
     }
     else {
-        var pass = {pass: req.body.pass};
-        DB.users_updateUser(req.params.uid, pass, function(result) {
-            console.log(result);
-        });
+        res.json({result: "undefined"});
     }
 });
 
@@ -110,6 +136,9 @@ router.post(registerUser, function(req, res, next) {
     });
     res.redirect('/');
 });
+
+//FRIENDS
+//======================================================================================================
 
 //GET list of friends from userId
 router.get(getFriends, function(req, res, next) {
@@ -227,6 +256,9 @@ router.post(delFriend, function(req, res, next) {
         });
     }
 });
+
+//GROUPS
+//======================================================================================================
 
 //Create a group
 router.post(createGroup, function(req, res, next) {
