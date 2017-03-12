@@ -35,17 +35,81 @@ $("#picUp").change(function(){
 /*****************************************************
 *Handler for registration form submit.
 *
-*@params e : The form submit event
+*@params: null
 *
-*Takes a submitted form and changes the action to include the uid.
-******************************************************/
-$("#regFields").submit( function(e) {
-	e.preventDefault();
-	var uid = $('input[name="munmail"]').val().split('@')[0];
-	$("#regFields").attr("action", "/api/user/register?uid="+uid);
-	console.log("/api/user/register?uid="+uid);
-	//e.submit();
-	$(this).unbind('submit').submit();
+*Checks that form is complete, then submits it.
+*****************************************************/
+
+$("#regSubmit").click( function() {
+	$('#regFields input[name="user"]').val($('input[name="email"]').val().split('@')[0]);	//This is only need because user isn't parsed on server
+	if(!($("#regFields input").filter(function () {		//If field is empty highlight it.
+		return $.trim($(this).val()).length === 0
+	}).length === 0)) {
+		
+		$("#regFields input").filter(function () {
+			return $.trim($(this).val()).length === 0
+		}).effect( "highlight", {color: "#ffb6c1"}, 500);
+		
+	} else {		
+		var jqxhr = $.post("/api/user/register", 
+			{
+				user: $('#regFields input[name="user"]').val(),
+				pass: $('#regFields input[name="pass"]').val(),
+				email: $('#regFields input[name="email"]').val()
+			}, //Should really include the other fields
+			function() {console.log("post");}
+				)
+			.done( function() {
+				console.log("success");
+				$("#regFields")[0].reset();
+				//$("#someDiv").val("Check yo email");
+			})
+			.fail( function () {
+				console.log("failure");
+				//$("#someDiv").val("Is no good");
+				//Maybe change some colours depending on failure?
+			})
+	}
+		
+});
+
+/*****************************************************
+*Handler for login form submit.
+*
+*@params: null
+*
+*Checks that form is complete, then submits it.
+*****************************************************/
+
+$("#logSubmit").click( function() {
+	if(!($("#loginFields input").filter(function () {		//If field is empty highlight it.
+		return $.trim($(this).val()).length === 0
+	}).length === 0)) {
+		
+		$("#loginFields input").filter(function () {
+			return $.trim($(this).val()).length === 0
+		}).effect( "highlight", {color: "#ffb6c1"}, 500);
+		
+	} else {
+		var jqxhr = $.post("/login", 
+			{
+				user: $('#loginFields input[name="user"]').val(),
+				pass: $('#loginFields input[name="pass"]').val(),
+			},
+			function() {console.log("post");}
+				)
+			.done( function() {
+				console.log("success");
+				$("#regFields")[0].reset();
+				//$("#someDiv").val("Check yo email");
+			})
+			.fail( function () {
+				console.log("failure");
+				//$("#someDiv").val("Is no good");
+				//Maybe change some colours depending on failure?
+			})		
+	}
+
 });
 
 });

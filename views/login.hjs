@@ -9,7 +9,7 @@
 	<meta content="utf-8" http-equiv="encoding">
 	
 
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
 	<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 	<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
 
@@ -31,13 +31,15 @@
 				<form id="loginFields" name="loginForm" method="post" action="/">
 					<input class="logField" type="text" name="user" placeholder="Username"><br>
 					<input class="logField" type="password" name="pass" placeholder="Password"><br>
-					<input class="logButton" type="submit" value="Login"> <input class="logButton" id="regBtn" type="button" value="Register"><br>
+					<input class="logButton" id="logSubmit" type="button" value="Login"> 
+					<input class="logButton" id="regBtn" type="button" value="Register"><br>
 					<input class="logButton" id="forPass" type="button" value="Forgot Password"><br>
 					
-					<img src="/img/MUNLOGO.gif" alt="Provehito in Altum" title="Provehito in Altum">
+					<img src="../img/MUNLOGO.gif" alt="Provehito in Altum" title="Provehito in Altum">
 				</form>
-				<form id="regFields" name="regForm" method="post" action="/">
-					<input class="regField" type="text" name="munmail" placeholder="MUN E-mail"><br>
+				<form id="regFields" name="regForm" method="post" action="/api/user/register">
+					<input type="hidden" name="user">
+					<input class="regField" type="text" name="email" placeholder="MUN E-mail"><br>
 					<input class="regName" type="text" name="gname" placeholder="Given name">
 					<input class="regName" type="text" name="sname" placeholder="Surname"><br>
 					<input class="regField" type="password" name="regPass" placeholder="Password"><br>
@@ -50,7 +52,7 @@
 					
 					<div class="spacerDiv"></div>
 					
-					<div class="regText"><img id="picDisp" src="/img/SEAHAWK_SIL.jpg"></div>
+					<div class="regText"><img id="picDisp" src="../img/SEAHAWK_SIL.jpg"></div>
 					<div id="profilePic"><input id="picUp" type="file" name="pic" accept="image/*"></div><br>
 					
 					<div class="spacerDiv"></div>
@@ -58,7 +60,7 @@
 					<div id="tosText"><input type="checkbox" name="checkTOS">I HAVE READ AND AGREE TO THE TERMS OF SERVICE</div><br>
 					
 					<input class="regButton" type="button" value="Terms of Service"><br>
-					<input class="regButton" type="submit" value="Register"><br>
+					<input class="regButton" id="regSubmit" type="button" value="Register"><br>
 					<input class="regButton" id="closeReg" type="button" value="Back">
 				</form>
 			</div>
@@ -71,7 +73,7 @@
 			<div class="postTemp">
 				<div class="postInfo">
 					<div class="postPic">
-						<img src="/img/SEAHAWK_SIL.jpg">
+						<img src="../img/SEAHAWK_SIL.jpg">
 					</div> 
 					<div class="postName">
 						<a href="{{ POST:LINK }}"> {{ POST:NAME }} </a> <br>
@@ -79,7 +81,7 @@
 					</div>
 				</div>
 				<div class="postCont">
-					<p> {{ POST:TEXT }}</p><img src="../img/postImg.png">
+					<p> {{ POST:TEXT }}</p><img src="/img/postImg.png">
 				</div>
 				
 				<div class="postComm">
@@ -114,7 +116,7 @@
 					</div>
 				</div>
 				<div class="postCont">
-					<p> TEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERE</p><img src="../img/postImg.png">
+					<p> TEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERE</p><img src="/img/postImg.png">
 				</div>
 				
 				<div class="postComm">

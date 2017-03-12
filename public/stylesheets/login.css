@@ -68,6 +68,8 @@ body, html {
 
 }
 
+/*Start of login panel css*/
+
 #loginPanel {
 	position: absolute;
 	top: 15%;
@@ -217,6 +219,8 @@ body, html {
 	font-size: 10px;
 	left: 5%;
 }
+
+/*End of login panel css (unless want to include the obscure?*/
 
 /*Maybe just use wrapper and change it's background to this. But how to animate?*/
 #obscure {
