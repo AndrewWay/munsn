@@ -6,8 +6,8 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
 var mongoStore = require('connect-mongo')(session);
-var mongoClient = require('mongodb').MongoClient,
-	assert = require('assert');
+var mongoClient = require('mongodb').MongoClient;
+var assert = require('assert');
 var db = require('./utils/db');
 var ems = require('./utils/ems');
 var busboy = require('connect-busboy');
@@ -16,7 +16,7 @@ var routerIndex = require('./routes/index');
 var routerUsers = require('./routes/users');
 var routerApi = require('./routes/api');
 var routerAuth = require('./routes/auth');
-var routerUpload = require('./routes/upload');
+var routerTest = require('./routes/test');
 var routerContent = require('./routes/content');
 var app = express();
 
@@ -55,7 +55,7 @@ app.use('/api', routerApi);
 //Auth Server
 app.use('/auth', routerAuth);
 //Upload Example
-app.use('/upload', routerUpload);
+app.use('/test', routerTest);
 //Content Server
 app.use('/content', routerContent);
 

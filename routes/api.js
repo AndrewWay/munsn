@@ -62,9 +62,7 @@ router.post(updateUser, function(req, res, next) {
 });
 
 //POST remove the user
-/**
- * Remove the user by userid
- */
+
 router.post(deleteUser, function(req, res, next) {
     if (req.params.uid == undefined) {
         res.json({error: "undefined"});
@@ -84,15 +82,22 @@ router.post(deleteUser, function(req, res, next) {
  * Register the user by HTMLForm.
  */
 router.post(registerUser, function(req, res, next) {
+    if(!Object.keys(req.body).length){
+        console.log("[ROUTER] /api/user/register: Empty Body");
+    }
     //Create user
-    var user = {
-        user: req.body.user,
-        pass: req.body.pass,
-        email: req.body.email,
-        auth: false,
-        //_id: utils.getIdFromEmail(req.body.email)
-        _id: req.body.uid
-    };
+    try{
+        var user = {
+            user: req.body.user,
+            pass: req.body.pass,
+            email: req.body.email,
+            auth: false,
+            _id: utils.getIdFromEmail(req.body.email)
+        //_id: req.body.uid
+        };
+    } catch(err){
+       console.log("[ROUTER] /api/user/register: Body Field Error");
+    }
     //Insert user with false auth into colUsers
     DB.users_addUser(user, function(result) {
         console.log(result);
@@ -101,13 +106,10 @@ router.post(registerUser, function(req, res, next) {
     var date = new Date();
     var authkey = user._id + date.getTime();
     var mins = 1;
-    DB.auth_addAuthKey(user._id, authkey, utils.addMinsToDate(date, mins).getTime(), function(result) {
+    DB.auth_addAuthKey(user, authkey, utils.addMinsToDate(date, mins).getTime(), function(result) {
         console.log("[API] /register: Added authkey with result\n" + result);
     });
-    //Send auth email to the user with the auth link
-    EMS.sendConfirmationEmail(user, authkey, function(result) {
-        console.log(result);
-    });
+
     res.redirect('/');
 });
 
@@ -134,7 +136,7 @@ router.post('/post/addFriend', function(req, res, next) {
 
 //POST send a friend request
 // xyz
-// x is 
+// x is
 router.post(addFriendReq, function(req, res, next) {
     //Declare body variables
     var userId = req.body.uid;
@@ -214,7 +216,7 @@ router.post(delFriend, function(req, res, next) {
             if (dbResult == null) {
                 console.log("\x1b[31m%s\x1b[0m%s", "[API]",  " /post/removeFriend: userId: " + userId + ", friendId: " + friendId + ", dbResult: " + JSON.stringify(dbResult));
                 res.json({result: "10", operation: "deleteFriend", text: "Database error"});
-            }   
+            }
             else {
                 console.log("\x1b[32m%s\x1b[0m%s", "[API]",  " /post/removeFriend: userId: " + userId + ", friendId: " + friendId + ", dbResult: " + JSON.stringify(dbResult));
                 if (dbResult.ok == 1 && dbResult.nModified == 1) {
@@ -222,8 +224,8 @@ router.post(delFriend, function(req, res, next) {
                 }
                 else if (dbResult.ok == 1 && dbResult.nModified == 0) {
                     res.json({result: "01", operation: "deleteFriend", text: "Could not remove friend from user"});
-                }   
-            }  
+                }
+            }
         });
     }
 });
@@ -272,7 +274,7 @@ router.post(updateGroup, function(req, res, next) {
     }
 });
 
-//Add member to group 
+//Add member to group
 router.post(addGroupUser, function(req, res, next) {
     var groupId = req.body.gid;
     var userId = req.body.uid;
@@ -283,7 +285,7 @@ router.post(addGroupUser, function(req, res, next) {
     }
 });
 
-//Remove member from group 
+//Remove member from group
 router.post(delGroupUser, function(req, res, next) {
     var groupId = req.body.gid;
     var userId = req.body.uid;

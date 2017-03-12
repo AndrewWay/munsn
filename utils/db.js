@@ -1,5 +1,7 @@
 var mongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
+var path = require('path');
+var EMS = require('./ems');
 
 var DB_URL = 'mongodb://localhost:27017/db';
 exports.DB_URL = DB_URL;
@@ -18,8 +20,8 @@ var DB = mongoClient.connect(DB_URL, function(err, DB) {
 	assert.equal(null, err);
 	console.log("Connected to mongo server: " + DB_URL);
     //Restricts and denies user documents so they have a user, email from mun.ca, and pass
-    DB.createCollection("users", 
-        {validator: 
+    DB.createCollection("users",
+        {validator:
             {$and: [{user: {$type: "string"}},
                     {pass: {$type: "string"}},
                     {email: {$type: /@mun\.ca$/}},
@@ -52,7 +54,7 @@ var DB = mongoClient.connect(DB_URL, function(err, DB) {
         validationLevel: "strict",
         validationAction: "error"});
 
-    DB.createCollection("groups", 
+    DB.createCollection("groups",
         {validator:
             {$and: [{name: {$type: "string"}},
                     {creatorId: {$type: "string"}},
@@ -60,7 +62,7 @@ var DB = mongoClient.connect(DB_URL, function(err, DB) {
         validationLevel: "strict",
     validationAction: "error"});
 
-    DB.createCollection("posts", 
+    DB.createCollection("posts",
         {validator:
             {$and: [{members: {$type: "array"}}]},
         validationLevel: "strict",
@@ -137,17 +139,37 @@ exports.users_removeUser = function(id, callback) {
 //======================================================================================================
 
 //Add an authkey to regauths
-exports.auth_addAuthKey = function(userId, authkey, expiry, callback) {
+exports.auth_addAuthKey = function(user, authkey, expiry, callback) {
     var regAuth = {
-        userId: userId,
+        userId: user._id,
         authkey: authkey,
         expiry: expiry
     };
     collectionAuths.insert(regAuth, function(result) {
         callback(result);
     });
+    //Send auth email to the user with the auth link
+    EMS.sendAuthEmail(user, authkey, function(result) {
+        console.log(result);
+    });
 };
-
+exports.auth_updateAuthKey = function (user, authkey, expiry, callback) {
+    var regAuth = {
+        authkey: authkey,
+        expiry: expiry
+    };
+    collectionAuths.update({userId: user._id}, {$set: regAuth}, {upsert: true}, function(err, obj) {
+        if (err) {
+            console.warn(err);
+        }
+        else {
+            callback(obj.result);
+        }
+    });
+    EMS.resendAuthEmail(user, authkey, function(result) {
+        console.log(result);
+    });
+};
 //Check for an existing authkey
 exports.auth_findAuthKey = function(key, callback) {
     collectionAuths.findOne({authkey: key}, function(err, result) {
@@ -157,6 +179,7 @@ exports.auth_findAuthKey = function(key, callback) {
         callback(result);
     });
 };
+
 
 //Delete authkey
 exports.auth_deleteAuthKey = function(key, callback) {
@@ -212,7 +235,7 @@ exports.friendRequest_addRequest = function(userId, friendId, callback) {
     collectionFriendRequests.insert({userId: userId, friendId: friendId}, function(err, result) {
         if (err) {
             console.warn(err);
-        }        
+        }
         callback(result);
     });
 };
@@ -268,7 +291,7 @@ exports.group_findGroupsByQuery = function(query, callback) {
     });
 };
 
-//Update group 
+//Update group
 exports.group_updateGroup = function(groupId, updates, callback) {
     collectionGroups.update({_id: groupId}, {$set: updates}, {upsert: true}, function(err, obj) {
         if (err) {

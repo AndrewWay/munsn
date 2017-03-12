@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+    	$("#get").click(
+		function(){
+			$.get("/api/user/info/jh2587",function(data){
+        			$("#div1").text(JSON.stringify(data));
+			});
+	    	}
+	);
+    	$("#post").click(
+		function(){
+			$.post("/api/user/register",
+				{
+					user: "Test",
+            			pass: "Test",
+           			email: "jh2587@mun.ca"
+				}
+			);
+		}
+	);
+});
+
+</script>
+</head>
+<body>
+
+
+<button id="get">GET STUFF</button>
+<button id="post">POST STUFF</button>
+
+<br>
+<br><div id="div1"><h2>GET DATA WILL APPEAR HERE</h2></div>
+<br><div id="div2"><h2>POST DATA HERE</h2></div>
+</body>
+</html>
