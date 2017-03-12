@@ -1,0 +1,104 @@
+.postTemp {
+	position: static;
+	margin: 10px;
+	background: #fafafa;
+	min-height: 100px; /*Shouldn't be necessary once everything is loaded in*/
+	
+	/*Maybe not, must consider what else could be done*/
+	width: 80%;
+	min-width: 80%;
+	
+	border-radius: 5px;
+	
+	-webkit-box-shadow: inset 0 0 2px 2px #bbbbbb;
+    -moz-box-shadow: inset 0 0 2px 2px #bbbbbb;
+	box-shadow: inset 0 0 2px 2px #bbbbbb;
+	
+	margin-left: auto;
+	margin-right: auto;
+	
+	display: flex;
+	flex-direction: column;
+	flex-shrink: 0;
+}
+
+.postTemp span {
+	position: relative;
+	-webkit-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+	margin: 4px 10px 4px 10px;
+}
+
+.postInfo, .commInfo {
+	position: relative;
+	height: 50px;
+	width: 90%;
+	margin: 5px;
+	display: inline-block;
+}
+
+.postComm {
+	margin: 10px 20px 20px 20px;
+	background-color: #dddddd;
+	border-radius: 5px;
+}
+
+.postPic, .commPic {
+	position: relative;
+	width: 50px;
+	height: inherit;
+	display: inline-block;
+	top: 0;
+	left: 0;
+	border-radius: 5px;
+	overflow: hidden;
+	
+	border-style: outset;
+	border-width: 2px;
+	border-color: #aaaaaa #7f1734 #7f1734 #aaaaaa;
+}
+
+.postName, .commName {
+	position: relative;
+	width: 150px;
+	display: inline-block;
+	top: -18px;
+}
+
+.postPic img, .commPic img {
+	width: 50px;
+}
+
+.postName a, .commName a {
+	position: relative;
+	font-family: Arial Black;
+	color: #7f1734;
+	text-decoration: none;
+}
+
+.postName a:hover, .commName a:hover {
+	cursor: pointer;
+	color: #9c2542;
+}
+
+.postName span, .commName span {
+	margin: 10px;
+	font-size: 10px;
+}
+
+.postCont, .commCont {
+	position: relative;
+	margin: auto;
+	width: 90%;
+}
+
+.postCont img, .commCont img {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	max-width: 100%;
+	min-width: 100%;
+	border-style: solid;
+	border-width: 1px;
+}
