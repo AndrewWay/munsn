@@ -1,17 +1,17 @@
-var fs = require('fs');
-var path = require('path');
-var mime = require('mime');
-var imagemin = require('image-min');
-var imageminMozjpeg = require('imagemin-mozjpeg');
-var imageminPngquant = require('imagemin-pngquant');
+var fs = require("fs");
+var path = require("path");
+var mime = require("mime");
+var imagemin = require("image-min");
+var imageminMozjpeg = require("imagemin-mozjpeg");
+var imageminPngquant = require("imagemin-pngquant");
 /**
  * Extracts the ID from an emailstring
  * @param {string} email - The string representation of the email
  * @returns {string} - Userid
  */
 function getIdFromEmail(email) {
-    var id = email.substring(0, email.indexOf('@'));
-    return id;
+	var id = email.substring(0, email.indexOf("@"));
+	return id;
 }
 
 /**
@@ -22,7 +22,7 @@ function getIdFromEmail(email) {
  * @returns {Date} with added minutes
  */
 function addMinsToDate(date, mins) {
-    return new Date(date.getTime() + mins * 60000);
+	return new Date(date.getTime() + mins * 60000);
 }
 
 /**
@@ -31,19 +31,19 @@ function addMinsToDate(date, mins) {
  * @param {string} directory - The full path to search
  */
 function* findFiles(filter, directory) {
-    if (!fs.existsSync(directory)) {
-        console.log('ERR: ' + directory + ' does not exist');
-        return;
-    }
-    var files = fs.readdirSync(directory);
-    for (var i = 0; i < files.length; ++i) {
-        var filename = path.join(directory, files[i]);
-        var stat = fs.lstatSync(filename);
-        if (!stat.isDirectory() && filename.indexOf(filter) >= 0) {
-            console.log(filename);
-            yield filename;
-        }
-    }
+	if (!fs.existsSync(directory)) {
+		console.log("ERR: " + directory + " does not exist");
+		return;
+	}
+	var files = fs.readdirSync(directory);
+	for (var i = 0; i < files.length; ++i) {
+		var filename = path.join(directory, files[i]);
+		var stat = fs.lstatSync(filename);
+		if (!stat.isDirectory() && filename.indexOf(filter) >= 0) {
+			console.log(filename);
+			yield filename;
+		}
+	}
 }
 /**
  * Pipes a file back to the GET Http request
@@ -53,18 +53,18 @@ function* findFiles(filter, directory) {
  * @returns {void}
  */
 function download(req, res, file) {
-    fs.exists(file, function(exist) {
-        if (exist) {
-            var filename = path.basename(file);
-            var mimetype = mime.lookup(file);
-            res.setHeader('Content-disposition', 'attachment; filename=', filename);
-            res.setHeader('Content-type', mimetype);
-            var fstream = fs.createReadStream(file);
-            fstream.pipe(res);
-        } else {
-            res.status(404).send('Content not found');
-        }
-    });
+	fs.exists(file, function (exist) {
+		if (exist) {
+			var filename = path.basename(file);
+			var mimetype = mime.lookup(file);
+			res.setHeader("Content-disposition", "attachment; filename=", filename);
+			res.setHeader("Content-type", mimetype);
+			var fstream = fs.createReadStream(file);
+			fstream.pipe(res);
+		} else {
+			res.status(404).send("Content not found");
+		}
+	});
 }
 
 /**
@@ -75,48 +75,48 @@ function download(req, res, file) {
  * @returns {void}
  */
 function upload(req, dest, name) {
-    var fstream;
-    req.pipe(req.busboy);
-    req.busboy.on('file', function(fieldname, file, filename) {
-        var dir = path.join(__dirname, '../content/' + dest);
-        //File extension
-        var fext = path.extname(filename);
-        console.log('Uploading: ' + filename);
-        //Path where file will be uploaded
-        fs.exists(dir, function(exist) {
-            //Create the directory if it doesn't exist
-            if (!exist) {
-                fs.mkdirSync(dir);
-            } else {
-                //If it does exist, find files by the name given and delete them
-                for (var f of findFiles(name ? name : filename, dir)) {
-                    if (f !== undefined) {
-                        fs.unlinkSync(f);
-                    }
-                }
-            }
-            //If upload(req,dest) then change set name to filename
-            if (!name) {
-                name = filename;
-            } else {
-                name = name + fext;
-            }
-            fstream = fs.createWriteStream(path.join(dir, name));
-            fstream.on('close', function() {
-                console.log('Uploaded: ' + filename);
-            });
-            switch (fext.toLowerCase()) {
-                case '.jpg':
-                case '.png':
-                //I have no idea how to make these images work with imagemin.
-                //There's literally no usage guide that makes sense to me
-                //The API for all this stuff is teeeeerrrrible
-                default:
-                    file.pipe(fstream);
-                    break;
-            }
-        });
-    });
+	var fstream;
+	req.pipe(req.busboy);
+	req.busboy.on("file", function (fieldname, file, filename) {
+		var dir = path.join(__dirname, "../content/" + dest);
+		//File extension
+		var fext = path.extname(filename);
+		console.log("Uploading: " + filename);
+		//Path where file will be uploaded
+		fs.exists(dir, function (exist) {
+			//Create the directory if it doesn't exist
+			if (!exist) {
+				fs.mkdirSync(dir);
+			} else {
+				//If it does exist, find files by the name given and delete them
+				for (var f of findFiles(name ? name : filename, dir)) {
+					if (f !== undefined) {
+						fs.unlinkSync(f);
+					}
+				}
+			}
+			//If upload(req,dest) then change set name to filename
+			if (!name) {
+				name = filename;
+			} else {
+				name = name + fext;
+			}
+			fstream = fs.createWriteStream(path.join(dir, name));
+			fstream.on("close", function () {
+				console.log("Uploaded: " + filename);
+			});
+			switch (fext.toLowerCase()) {
+				case ".jpg":
+				case ".png":
+					//I have no idea how to make these images work with imagemin.
+					//There's literally no usage guide that makes sense to me
+					//The API for all this stuff is teeeeerrrrible
+				default:
+					file.pipe(fstream);
+					break;
+			}
+		});
+	});
 }
 
 /**
@@ -126,7 +126,7 @@ function upload(req, dest, name) {
  * @param {string} name - The name to rename this file to; can be optionally left undefined
  */
 function uploadImage(req, dest, name) {
-    upload(req, 'images/' + dest, name);
+	upload(req, "images/" + dest, name);
 }
 // Exports
 exports.getIdFromEmail = getIdFromEmail;
