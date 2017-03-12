@@ -5,11 +5,11 @@ var path = require('path');
 
 /* GET Test upload page. */
 router.get('/upload', function(req, res, next) {
-	res.render('upload', {
-		title : 'Uploader'
-	});
+    res.render('upload', {
+        title: 'Uploader'
+    });
 });
 router.get('/jqueryTest', function(req, res, next) {
-	res.render('jqueryTest');
+    res.render('jqueryTest');
 });
 module.exports = router;

@@ -4,11 +4,11 @@ var DB = require('../utils/db');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('login', { title: 'Login' });
+    res.render('login', { title: 'Login' });
 });
 
 router.get('/register', function(req, res, next) {
-  res.render('register', { title: 'Register' });
+    res.render('register', { title: 'Register' });
 });
 
 router.post('/login', function(req, res, next) {
@@ -17,10 +17,8 @@ router.post('/login', function(req, res, next) {
         pass: req.body.pass
     };
     DB.findUserById(userReq.user, function(userRes) {
-        res.render('index', {title: userRes.user});
+        res.render('index', { title: userRes.user });
     });
 });
-
-
 
 module.exports = router;

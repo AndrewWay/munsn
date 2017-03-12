@@ -17,10 +17,10 @@
             <li><a href="#">Friends</a></li>
         </ul>
         </div>
-            
+
         <div class="search">
 	        <form>
-			  	<input type="search" name="sitesearch" placeholder="Search MunSN"><button class="searchbtn">Search</button>			  	
+			  	<input type="search" name="sitesearch" placeholder="Search MunSN"><button class="searchbtn">Search</button>
 			</form>
 		</div>
 
