@@ -14,6 +14,7 @@ var collectionFriendRequests;
 var collectionGroups;
 var collectionGroupMembers;
 var collectionPosts;
+var collectionComments;
 
 //Connect to the database
 var DB = mongoClient.connect(DB_URL, function(err, DB) {
@@ -64,7 +65,10 @@ var DB = mongoClient.connect(DB_URL, function(err, DB) {
 
     DB.createCollection("posts",
         {validator:
-            {$and: [{members: {$type: "array"}}]},
+            {$and: [{authorId: {$type: "string"}},
+                    {dateCreated: {$type: "date"}},
+                    {dataType: {$type: "string"}},
+                    {data: {$type: "string"}}]},
         validationLevel: "strict",
     validationAction: "error"});
 
@@ -76,6 +80,7 @@ var DB = mongoClient.connect(DB_URL, function(err, DB) {
     collectionGroups = DB.collection("groups");
     collectionGroupMembers = DB.collection("groupMembers");
     collectionPosts = DB.collection("posts");
+    collectionComments = DB.collection("comments");
 });
 
 //USERS
@@ -301,7 +306,7 @@ exports.group_updateGroup = function(groupId, updates, callback) {
             callback(obj.result);
         }
     });
-}
+};
 
 //Remove a group
 exports.group_removeGroup = function(objectId, callback) {
@@ -341,5 +346,96 @@ exports.groupMembers_removeMember = function(groupId, memberId, callback) {
             console.warn(err);
         }
         callback(result);
+    });
+};
+
+
+//POSTS
+//======================================================================================================
+
+//Add a post
+exports.post_addPost = function(authorId, dataType, data, callback) {
+    var date = new Date();
+    collectionPosts.insert({authorId: authorId, dateCreated: date, dataType: dataType, data: data}, function(err, result) {
+        if (err) {
+            console.warn(err);
+        }
+        callback(result);
+    });
+};
+
+//Remove a post
+exports.post_removePost = function(objectId, callback) {
+    collectionPosts.remove({_id: objectId}, function(result) {
+        callback(result);
+    });
+};
+
+//Get posts per user
+exports.post_getPostsByUserId = function(userId, callback) {
+    collectionPosts.find({authorId: userId}).toArray(function(err, results) {
+        if (err) {
+            console.warn(err);
+        }
+        callback(results);
+    });
+};
+
+//Update post 
+exports.post_updatePost = function(postId, updates, callback) {
+    collectionPosts.update({_id: postId}, {$set: updates}, {upsert: true}, function(err, obj) {
+        if (err) {
+            console.warn(err);
+        }
+        else {
+            callback(obj.result);
+        }
+    });
+};
+
+
+    collectionFriends.update({_id: userId}, {$push: {friends: friendId}}, {upsert: true}, function(err, result) {
+
+//POST COMMENTS
+//======================================================================================================
+
+//Add a comment
+exports.comment_addComment = function(postId, authorId, data, callback) {
+    var date = new Date();
+    var comment = {commentId: authorId + date.getTime(), authorId: authorId, dateCreated: dateCreated, dataHistory: [{data: data}] };
+    collectionComments.update({_id: postId}, {$push: {comments: comment}}, {upsert: true}, function(err, result) {
+        if (err) {
+            console.warn(err);
+        }
+        callback(result);
+    });
+};
+
+//Remove a comment using commentId
+exports.comment_removeCommentByCommentId = function(postId, commentId, callback) {
+    collectionComments.remove({_id: postId, comments: {commentId: commentId}}, function(result) {
+        callback(result);
+    });
+};
+
+//Get comments per postId
+exports.comment_getCommentsByPostId = function(userId, callback) {
+    collectionComments.find({authorId: userId}).toArray(function(err, results) {
+        if (err) {
+            console.warn(err);
+        }
+        callback(results);
+    });
+};
+
+//Update comment 
+exports.comment_updateComment = function(postId, updates, callback) {
+    collectionComments.update({_id: postId}, {$set: updates}, {upsert: true}, function(err, obj) {
+        if (err) {
+            console.warn(err);
+        }
+        else {
+            callback(obj.result);
+        }
     });
 };
