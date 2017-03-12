@@ -35,7 +35,7 @@
 					<input class="logButton" id="regBtn" type="button" value="Register"><br>
 					<input class="logButton" id="forPass" type="button" value="Forgot Password"><br>
 					
-					<img src="../img/MUNLOGO.gif" alt="Provehito in Altum" title="Provehito in Altum">
+					<img src="/img/MUNLOGO.gif" alt="Provehito in Altum" title="Provehito in Altum">
 				</form>
 				<form id="regFields" name="regForm" method="post" action="/api/user/register">
 					<input type="hidden" name="user">
@@ -52,7 +52,7 @@
 					
 					<div class="spacerDiv"></div>
 					
-					<div class="regText"><img id="picDisp" src="../img/SEAHAWK_SIL.jpg"></div>
+					<div class="regText"><img id="picDisp" src="/img/SEAHAWK_SIL.jpg"></div>
 					<div id="profilePic"><input id="picUp" type="file" name="pic" accept="image/*"></div><br>
 					
 					<div class="spacerDiv"></div>
@@ -73,7 +73,7 @@
 			<div class="postTemp">
 				<div class="postInfo">
 					<div class="postPic">
-						<img src="../img/SEAHAWK_SIL.jpg">
+						<img src="/img/SEAHAWK_SIL.jpg">
 					</div> 
 					<div class="postName">
 						<a href="{{ POST:LINK }}"> {{ POST:NAME }} </a> <br>
