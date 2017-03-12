@@ -8,7 +8,7 @@ router.get('/', function (req, res, next) {
     } else {
         console.log(req.query.key);
         aks.validate(req.query.key, function (success,authResult) {
-            if (success){
+            if (success) {
                 res.redirect('/');
             } else {
                 // TODO: FILL THESE WITH THE APPROPRIATE FRONTEND DATA
