@@ -381,7 +381,7 @@ exports.post_getPostsByUserId = function(userId, callback) {
     });
 };
 
-//Update post 
+//Update post
 exports.post_updatePost = function(postId, updates, callback) {
     collectionPosts.update({_id: postId}, {$set: updates}, {upsert: true}, function(err, obj) {
         if (err) {
@@ -392,9 +392,6 @@ exports.post_updatePost = function(postId, updates, callback) {
         }
     });
 };
-
-
-    collectionFriends.update({_id: userId}, {$push: {friends: friendId}}, {upsert: true}, function(err, result) {
 
 //POST COMMENTS
 //======================================================================================================
@@ -428,7 +425,7 @@ exports.comment_getCommentsByPostId = function(userId, callback) {
     });
 };
 
-//Update comment 
+//Update comment
 exports.comment_updateComment = function(postId, updates, callback) {
     collectionComments.update({_id: postId}, {$set: updates}, {upsert: true}, function(err, obj) {
         if (err) {

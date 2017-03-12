@@ -109,8 +109,7 @@ router.post(registerUser, function(req, res, next) {
     DB.auth_addAuthKey(user, authkey, utils.addMinsToDate(date, mins).getTime(), function(result) {
         console.log("[API] /register: Added authkey with result\n" + result);
     });
-
-    res.redirect('/');
+    res.send({redirect: '../..'});
 });
 
 //GET list of friends from userId
