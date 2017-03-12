@@ -1,7 +1,7 @@
 
 $(function() {
             $( "#datePick" ).datepicker({changeMonth: true,
-            changeYear: true, yearRange: "-100:-16", defaultDate: "-16y-m-d"});
+            changeYear: true, yearRange: "-100:-16", defaultDate: "-16y-1-1"});
          });
 
 
@@ -32,5 +32,20 @@ $("#picUp").change(function(){
 	$("#picDisp").attr("src", window.URL.createObjectURL(this.files[0]));
 });
 
+/*****************************************************
+*Handler for registration form submit.
+*
+*@params e : The form submit event
+*
+*Takes a submitted form and changes the action to include the uid.
+******************************************************/
+$("#regFields").submit( function(e) {
+	e.preventDefault();
+	var uid = $('input[name="munmail"]').val().split('@')[0];
+	$("#regFields").attr("action", "/api/user/register?uid="+uid);
+	console.log("/api/user/register?uid="+uid);
+	//e.submit();
+	$(this).unbind('submit').submit();
+});
 
 });
