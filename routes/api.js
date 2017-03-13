@@ -68,10 +68,6 @@ router.post(deleteUser, function (req, res, next) {
 		res.json({
 			error: "undefined"
 		});
-	} else if (req.params.uid == null) {
-		res.json({
-			error: "null"
-		});
 	} else {
 		DB.users_removeUser(req.params.uid, function (result) {
 			console.log(result);
