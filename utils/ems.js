@@ -1,13 +1,13 @@
 var email = require('emailjs/email');
 
-//Sender details
+//The MUNSN email used to send emails to users
 var emsSender = {
 	name: 'Mun Social Network',
 	address: 'munsocialnetwork@gmail.com',
 	pass: 'comp4770'
 };
 
-//Server details
+//Email server information
 var emsServer = email.server.connect({
 	user: emsSender.address,
 	password: emsSender.pass,
@@ -15,7 +15,13 @@ var emsServer = email.server.connect({
 	ssl: true
 });
 
-//Send a general email
+/**
+ * A generic Email function.
+ * @param {object} email - A JSON object that has the fields: to, from, text, subject
+ * @param {function} callback - A function that currently passes a string to log
+
+ }} callback - Currently
+ */
 var sendEmail = function (email, callback) {
 	emsServer.send({
 			subject: email.subject,
@@ -30,7 +36,12 @@ var sendEmail = function (email, callback) {
 	);
 };
 
-//Send a confirmation email
+/**
+ * Sends an authorization email to the user object passed to this function
+ * @param {object} user - The row containing the user information from the database
+ * @param {string} authkey - The authorization key sent to the user
+ * @param {function} callback - A function that currently passes a string to log
+ */
 var sendAuthEmail = function (user, authkey, callback) {
 	var email = {
 		subject: 'MUNSON - Confirmation Email',
@@ -45,7 +56,12 @@ var sendAuthEmail = function (user, authkey, callback) {
 	sendEmail(email, callback);
 };
 
-//Send a confirmation email
+/**
+ * Resends an authorization email to the user object passed to this function
+ * @param {object} user - The row containing the user information from the database
+ * @param {string} authkey - The authorization key sent to the user
+ * @param {function} callback - A function that currently passes a string to log
+ */
 var resendAuthEmail = function (user, authkey, callback) {
 	var email = {
 		subject: 'MUNSON - Confirmation Email',

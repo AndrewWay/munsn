@@ -12,16 +12,20 @@ var db = require('./utils/db');
 var ems = require('./utils/ems');
 var busboy = require('connect-busboy');
 
+//Routes
 var routerIndex = require('./routes/index');
 var routerUsers = require('./routes/users');
 var routerApi = require('./routes/api');
 var routerAuth = require('./routes/auth');
 var routerTest = require('./routes/test');
 var routerContent = require('./routes/content');
+
+//Beyond this point is all the code needed to start the server.
 var app = express();
 
 //Busboy used for file uploading to the server
 app.use(busboy());
+
 app.use(
 	session({
 		secret: 'faeb4453e5d14fe6f6d04637f78077c76c73d1b4',
@@ -50,7 +54,6 @@ app.use(
 app.use(cookieParser());
 //Public folder accessible everywhere
 app.use(express.static(path.join(__dirname, 'public')));
-
 //Index Page
 app.use('/', routerIndex);
 // ?
