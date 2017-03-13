@@ -17,16 +17,18 @@
             <li><a href="#">Friends</a></li>
         </ul>
         </div>
-
+            
         <div class="search">
 	        <form>
-			  	<input type="search" name="sitesearch" placeholder="Search MunSN"><button class="searchbtn">Search</button>
+			  	<input type="search" name="sitesearch" placeholder="Search MunSN"><button class="searchbtn">Search</button>			  	
 			</form>
 		</div>
 
-		<a href="#"><img id="cog" src="img/settings.png"></a>
-		<a href="#"><img id="cog" src="img/logout.png"></a>
-		<a href="#"><img id="not" src="img/notification-red.png"></a>
+		<div class="buttons">
+			<a href="#"><img id="not" src="img/notification-red.png"></a>
+			<a href="#"><img id="cog" src="img/logout.png"></a>
+			<a href="#"><img id="cog" src="img/settings.png"></a>
+		</div>
 	</div>
 	</nav>
 
