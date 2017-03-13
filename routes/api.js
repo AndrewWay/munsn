@@ -3,37 +3,92 @@ var router = express.Router();
 var DB = require("../utils/db");
 var EMS = require("../utils/ems");
 var utils = require("../utils/utils");
-
-//GET VERBS
-var getUserInfo = "/user/info/:uid";
-var getFriends = "/user/friends/:uid";
-var getFriendSentReq = "/user/friends/sent/:uid";
-var getFriendReceivedReq = "/user/friends/received/:uid";
-var getGroupsByUID = "/user/groups/:uid";
-var getGroupUsers = "/group/users/:gid";
-var getGroupInfo = "/group/info/:gid";
-//POST VERBS
+//TODO: JOHN AND DEVIN WILL POPULATE THE TOP OF THIS FILE WITH ALL THE IMPLEMENTATION SEMANTICS
+//==============================GET VERBS=============================
+/**
+ * URL: "%server%/api/user/info/:uid"
+ */
+var findUserById = "/user/info/:uid";
+/**
+ * URL: "%server%/api/user/friends/:uid"
+ */
+var findFriendsById = "/user/friends/:uid";
+/**
+ * URL: "%server%/api/user/friends/sent/:uid"
+ */
+var findFriendSent = "/user/friends/sent/:uid";
+/**
+ * URL: "%server%/api/user/friends/received/:uid"
+ */
+var findFriendReceived = "/user/friends/received/:uid";
+/**
+ * URL: "%server%/api/user/groups/:uid"
+ */
+var findGroupsByID = "/user/groups/:uid";
+/**
+ * URL: "%server%/api/group/users/:gid"
+ */
+var findGroupUsers = "/group/users/:gid";
+/**
+ * URL: "%server%/api/group/info/:gid"
+ */
+var findGroupById = "/group/info/:gid";
+//=============================POST VERBS=============================
+/**
+ * URL: "%server%/api/user/update/:uid"
+ */
 var updateUser = "/user/update/:uid";
+/**
+ * URL: "%server%/api/user/remove/:uid"
+ */
 var deleteUser = "/user/remove/:uid";
+/**
+ * URL: "%server%/api/user/register"
+ */
 var registerUser = "/user/register";
+/**
+ * URL: "%server%/api/user/add/request"
+ */
 var addFriendReq = "/user/add/request";
+/**
+ * URL: "%server%/api/user/remove/request"
+ */
 var delFriendReq = "/user/remove/request";
+/**
+ * URL: "%server%/api/user/remove/friend"
+ */
 var delFriend = "/user/remove/friend";
+/**
+ * URL: "%server%/api/group/create"
+ */
 var createGroup = "/group/create";
+/**
+ * URL: "%server%/api/group/remove/:gid"
+ */
 var delGroup = "/group/remove/:gid";
+/**
+ * URL: "%server%/api/group/update"
+ */
 var updateGroup = "/group/update";
+/**
+ * URL: "%server%/api/group/add/user"
+ */
 var addGroupUser = "/group/add/user";
+/**
+ * URL: "%server%/api/group/remove/user"
+ */
 var delGroupUser = "/group/remove/user";
+//==========================================================================================
 /**
  * Returns the JSON object representing a user from the database
  */
-router.get(getUserInfo, function (req, res, next) {
+router.get(findUserById, function (req, res, next) {
 	if (req.params.uid == undefined) {
 		res.json({
 			error: "undefined"
 		});
 	} else {
-		DB.users_findUserById(req.params.uid, function (user) {
+		DB.Users.findById(req.params.uid, function (user) {
 			res.json(user);
 		});
 	}
@@ -51,7 +106,7 @@ router.post(updateUser, function (req, res, next) {
 		var pass = {
 			pass: req.body.pass
 		};
-		DB.users_updateUser(req.params.uid, pass, function (result) {
+		DB.Users.update(req.params.uid, pass, function (result) {
 			console.log(result);
 		});
 	}
@@ -65,7 +120,7 @@ router.post(deleteUser, function (req, res, next) {
 			error: "undefined"
 		});
 	} else {
-		DB.users_removeUser(req.params.uid, function (result) {
+		DB.Users.remove(req.params.uid, function (result) {
 			console.log(result);
 		});
 	}
@@ -77,15 +132,15 @@ router.post(deleteUser, function (req, res, next) {
  */
 router.post(registerUser, function (req, res, next) {
 	//Insert user with false auth into colUsers
-	DB.users_addUser(req.body, function (result) {
+	DB.Users.add(req.body, function (result) {
 		console.log(result);
 	});
 });
 
 //GET list of friends from userId
-router.get(getFriends, function (req, res, next) {
+router.get(findFriendsById, function (req, res, next) {
 	if (req.params.uid) {
-		DB.users_getFriends(req.params.uid, function (result) {
+		DB.Friends.find(req.params.uid, function (result) {
 			res.json(result[0]);
 		});
 	}
@@ -111,7 +166,7 @@ router.post(addFriendReq, function (req, res, next) {
 	//Check if body variables are not null, or undefined
 	if (userId && friendId) {
 		//Check to see if both users exist
-		DB.users_findUsers({
+		DB.Users.find({
 				_id: {
 					$in: [userId, friendId]
 				}
@@ -119,7 +174,7 @@ router.post(addFriendReq, function (req, res, next) {
 			function (findResult) {
 				//If they both exist, add request
 				if (findResult.length == 2) {
-					DB.users_requestFriend(userId, friendId, function (requestResult) {
+					DB.Friends.addRequest(userId, friendId, function (requestResult) {
 						//Operation successfully completed
 						if (requestResult != null) {
 							res.json({
@@ -151,11 +206,11 @@ router.post(addFriendReq, function (req, res, next) {
 });
 
 //GET get friend requests for a specified user
-router.get(getFriendSentReq, function (req, res, next) {
+router.get(findFriendSent, function (req, res, next) {
 	//Declare query variables
 	var userId = req.params.uid;
 	if (userId) {
-		DB.friendRequest_findRequestsByUser({
+		DB.Friends.findRequests({
 				userId: userId
 			},
 			function (result) {
@@ -166,11 +221,11 @@ router.get(getFriendSentReq, function (req, res, next) {
 });
 
 //GET get recieved friend requests for a specified user
-router.get(getFriendReceivedReq, function (req, res, next) {
+router.get(findFriendReceived, function (req, res, next) {
 	//Declare query variables
 	var userId = req.params.uid;
 	if (userId) {
-		DB.users_getFriendRequests({
+		DB.Friends.findRequests({
 				friendId: userId
 			},
 			function (result) {
@@ -186,7 +241,7 @@ router.post(delFriendReq, function (req, res, next) {
 	var userId = req.body.uid;
 	var friendId = req.body.fid;
 	if (userId && friendId) {
-		DB.friendRequest_deleteRequest(userId, friendId, function (result) {
+		DB.Friends.removeRequest(userId, friendId, function (result) {
 			res.json(result);
 		});
 	}
@@ -201,7 +256,7 @@ router.post(delFriend, function (req, res, next) {
 	var friendId = req.body.fid;
 	//Check if body variables are not null, or undefined
 	if (userId && friendId) {
-		DB.friends_deleteFriendFromUser(userId, friendId, function (result) {
+		DB.Friends.remove(userId, friendId, function (result) {
 			var dbResult = result.result;
 			//Check for database error
 			if (dbResult == null) {
@@ -236,8 +291,8 @@ router.post(createGroup, function (req, res, next) {
 	var creatorId = req.body.gid;
 	var groupName = req.body.name;
 	if (creatorId && groupName) {
-		DB.group_addGroup(creatorId, groupName, function (result) {
-			DB.groupMembers_addMember(result.ops[0]._id, creatorId, function (memberResult) {
+		DB.Groups.add(creatorId, groupName, function (result) {
+			DB.Groups.add(result.ops[0]._id, creatorId, function (memberResult) {
 				res.json(memberResult);
 			});
 		});
@@ -248,7 +303,7 @@ router.post(createGroup, function (req, res, next) {
 router.post(delGroup, function (req, res, next) {
 	var groupId = req.params.gid;
 	if (groupId) {
-		DB.group_removeGroup(groupId, function (result) {
+		DB.Groups.remove(groupId, function (result) {
 			res.json(result);
 		});
 	}
@@ -258,7 +313,7 @@ router.post(delGroup, function (req, res, next) {
 router.get(getGroupsByUID, function (req, res, next) {
 	var userId = req.params.uid;
 	if (userId) {
-		DB.group_findGroupsByUser(userId, function (result) {
+		DB.Groups.findByUserId(userId, function (result) {
 			res.json(result);
 		});
 	}
@@ -269,7 +324,7 @@ router.post(updateGroup, function (req, res, next) {
 	var groupId = req.body.gid;
 	var updates = req.body.updates;
 	if (groupId && updates) {
-		DB.group_updateGroup(groupId, updates, function (result) {
+		DB.Groups.update(groupId, updates, function (result) {
 			res.json(result);
 		});
 	}
@@ -280,7 +335,7 @@ router.post(addGroupUser, function (req, res, next) {
 	var groupId = req.body.gid;
 	var userId = req.body.uid;
 	if (groupId && userId) {
-		DB.groupMembers_addMember(groupId, userId, function (result) {
+		DB.Groups.add(groupId, userId, function (result) {
 			res.json(result);
 		});
 	}
@@ -291,17 +346,17 @@ router.post(delGroupUser, function (req, res, next) {
 	var groupId = req.body.gid;
 	var userId = req.body.uid;
 	if (groupId && userId) {
-		DB.groupMembers_removeMember(groupId, userId, function (result) {
+		DB.GroupMembers.remove(groupId, userId, function (result) {
 			res.json(result);
 		});
 	}
 });
 
 //Find members for group
-router.get(getGroupUsers, function (req, res, next) {
+router.get(findGroupUsers, function (req, res, next) {
 	var groupId = req.params.gid;
 	if (groupId) {
-		DB.groupMembers_findAllMembers(groupId, function (result) {
+		DB.GroupMembers.find(groupId, function (result) {
 			res.json(result);
 		});
 	}

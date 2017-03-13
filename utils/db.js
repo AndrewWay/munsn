@@ -10,8 +10,7 @@ var DBUsers = {};
 var DBFriends = {};
 var DBGroupMembers = {};
 var DBComments = {};
-var DB_URL = 'mongodb://localhost:27017/db';
-exports.DB_URL = DB_URL;
+var dbURL = 'mongodb://localhost:27017/db';
 
 //Collections
 var collectionUsers;
@@ -25,9 +24,9 @@ var collectionPosts;
 var collectionComments;
 
 //Connect to the database
-var DB = mongoClient.connect(DB_URL, function (err, DB) {
+var DB = mongoClient.connect(dbURL, function (err, DB) {
 	assert.equal(null, err);
-	console.log('Connected to mongo server: ' + DB_URL);
+	console.log('Connected to mongo server: ' + dbURL);
 	//Restricts and denies user documents so they have a user, email from mun.ca, and pass
 	DB.createCollection('users', {
 		validator: {
@@ -733,45 +732,14 @@ DBComments.update = function (postId, updates, callback) {
 		}
 	});
 };
-exports.users_addUser = DBUsers.add;
-exports.users_findUserById = DBUsers.findById;
-exports.users_findUsers = DBUsers.find;
-exports.users_removeUser = DBUsers.remove;
-exports.users_addFriend = DBFriends.add;
-exports.users_getFriendRequests = DBFriends.findRequests;
-exports.users_addFriendRequest = DBFriends.addRequest;
-exports.users_getFriends = DBFriends.find;
-exports.users_deleteFriendRequest = DBFriends.removeRequest;
-exports.users_removeFriend = DBFriends.remove;
-exports.users_updateUser = DBUsers.update;
-exports.groups_addGroup = DBGroups.add;
-exports.groups_findGroupsByQuery = DBGroups.find;
-exports.groups_findGroupsByUser = DBGroups.findByUserId;
-exports.groups_removeGroup = DBGroups.remove;
-exports.groups_updateGroup = DBGroups.update;
-exports.groupMembers_addMember = DBGroupMembers.add;
-exports.groupMembers_findAllMembers = DBGroupMembers.find;
-exports.groupMembers_removeMember = DBGroupMembers.remove;
-//groupAdmins
-exports.post_addPost = DBPosts.add;
-exports.post_getByUserId = DBPosts.findByUserId;
-exports.post_removePost = DBPosts.remove;
-exports.post_updatePost = DBPosts.update;
-exports.comment_addComment = DBComments.add;
-exports.comment_deleteById = DBComments.removeById;
-exports.comment_getByPostId = DBComments.findByPostId;
-exports.comment_updateComment = DBComments.update;
-exports.auth_addAuthKey = DBAuth.add;
-exports.auth_deleteAuthKey = DBAuth.remove;
-exports.auth_findAuthKey = DBAuth.find;
-exports.auth_updateAuthKey = DBAuth.update;
 
-/*exports.DB = {
+exports = {
 	Auth: DBAuth,
 	Posts: DBPosts,
 	Groups: DBGroups,
 	Users: DBUsers,
 	Friends: DBFriends,
 	GroupMembers: DBGroupMembers,
-	Comments: DBComments
-};*/
+	Comments: DBComments,
+	DB_URL: dbURL
+};
