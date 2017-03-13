@@ -3,12 +3,13 @@
 <head>
 	<title> {{ title }} </title>
 	<link rel="stylesheet" type="text/css" href="/stylesheets/login.css">
+	<link rel="stylesheet" type="text/css" href="/stylesheets/post.css">
 	
 	<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
 	<meta content="utf-8" http-equiv="encoding">
 	
 
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
 	<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 	<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
 
@@ -27,16 +28,18 @@
 		<div id="leftPanel">
 
 			<div id="loginPanel">
-				<form id="loginFields" name="loginForm" method="post">
+				<form id="loginFields" name="loginForm" method="post" action="/">
 					<input class="logField" type="text" name="user" placeholder="Username"><br>
 					<input class="logField" type="password" name="pass" placeholder="Password"><br>
-					<input class="logButton" type="submit" value="Login"> <input class="logButton" id="regBtn" type="button" value="Register"><br>
+					<input class="logButton" id="logSubmit" type="button" value="Login"> 
+					<input class="logButton" id="regBtn" type="button" value="Register"><br>
 					<input class="logButton" id="forPass" type="button" value="Forgot Password"><br>
 					
 					<img src="/img/MUNLOGO.gif" alt="Provehito in Altum" title="Provehito in Altum">
 				</form>
-				<form id="regFields" name="regForm" method="post">
-					<input class="regField" type="text" name="munmail" placeholder="MUN E-mail"><br>
+				<form id="regFields" name="regForm" method="post" action="/api/user/register">
+					<input type="hidden" name="user">
+					<input class="regField" type="text" name="email" placeholder="MUN E-mail"><br>
 					<input class="regName" type="text" name="gname" placeholder="Given name">
 					<input class="regName" type="text" name="sname" placeholder="Surname"><br>
 					<input class="regField" type="password" name="regPass" placeholder="Password"><br>
@@ -57,7 +60,7 @@
 					<div id="tosText"><input type="checkbox" name="checkTOS">I HAVE READ AND AGREE TO THE TERMS OF SERVICE</div><br>
 					
 					<input class="regButton" type="button" value="Terms of Service"><br>
-					<input class="regButton" type="submit" value="Register"><br>
+					<input class="regButton" id="regSubmit" type="button" value="Register"><br>
 					<input class="regButton" id="closeReg" type="button" value="Back">
 				</form>
 			</div>
@@ -65,19 +68,79 @@
 		</div>
 	
 		<div id="rightPanel">
-			<div id="postTemp">
-				<span>POSTS GO HERE</span><br>
-				<span>POSTS GO HERE</span><br>
-				<span>POSTS GO HERE</span><br>
-				<span>POSTS GO HERE</span><br>
-				<span>POSTS GO HERE</span><br>
-				<span>POSTS GO HERE</span><br>
-				<span>POSTS GO HERE</span><br>
-				<span>SHOULDN'T BE SEEN</span><br>
+			
+			<!-- Basic Post Structure -->
+			<div class="postTemp">
+				<div class="postInfo">
+					<div class="postPic">
+						<img src="/img/SEAHAWK_SIL.jpg">
+					</div> 
+					<div class="postName">
+						<a href="{{ POST:LINK }}"> {{ POST:NAME }} </a> <br>
+						<span>{{ POST:TIME }}</span>
+					</div>
+				</div>
+				<div class="postCont">
+					<p> {{ POST:TEXT }}</p><img src="/img/postImg.png">
+				</div>
+				
+				<div class="postComm">
+					<div class="commTemp">
+						<div class="commInfo">
+							<div class="commPic">
+								<img src="/img/SEAHAWK_SIL.jpg">
+							</div>
+							<div class="commName">
+								<a href="{{ COMM:LINK }}"> {{ COMM:NAME }} </a> <br>
+								<span>{{ COMM:TIME }}</span>
+							</div>
+						</div>
+						<div class="commCont">
+							<p> {{ COMM:TEXT }} </p>
+						</div>
+					</div>
+					<div class="commField">
+						<!--Text field for comments to be posted, followed by a submit button -->
+					</div>
+				</div>
 			</div>
-			<div id="postTemp">
-				<span> POSTS GO HERE </span><br>
+			
+			<div class="postTemp">
+				<div class="postInfo">
+					<div class="postPic">
+						<img src="/img/SEAHAWK_SIL.jpg">
+					</div> 
+					<div class="postName">
+						<a href=""> {{ POST:NAME }} </a> <br>
+						<span>{{ POST:TIME }}</span>
+					</div>
+				</div>
+				<div class="postCont">
+					<p> TEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERETEXT GOES HERE</p><img src="/img/postImg.png">
+				</div>
+				
+				<div class="postComm">
+					<div class="commTemp">
+						<div class="commInfo">
+							<div class="commPic">
+								<img src="/img/SEAHAWK_SIL.jpg">
+							</div>
+							<div class="commName">
+								<a href=""> {{ COMM:NAME }} </a> <br>
+								<span>{{ COMM:TIME }}</span>
+							</div>
+						</div>
+						<div class="commCont">
+							<p> COMMENT COMMENT COMMENT COMMENT COMMENT COMMENT COMMENT COMMENT COMMENT COMMENT COMMENT COMMENT COMMENT COMMENT COMMENT COMMENT COMMENT COMMENT COMMENT COMMENT COMMENT COMMENT COMMENT COMMENT COMMENT COMMENT COMMENT COMMENT COMMENT COMMENT COMMENT COMMENT COMMENT COMMENT COMMENT COMMENT COMMENT COMMENT COMMENT COMMENT COMMENT COMMENT  </p>
+						</div>
+					</div>
+					<div class="commField">
+						<!--Text field for comments to be posted, followed by a submit button -->
+					</div>
+				</div>
 			</div>
+			
+			
 		</div>
 	</div>
 </body>
