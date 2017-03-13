@@ -1,0 +1,34 @@
+<div class="postTemp">
+				<div class="postInfo">
+					<div class="postPic">
+						<img src="../img/SEAHAWK_SIL.jpg">
+					</div> 
+					<div class="postName">
+						<a href="{{ POST:LINK }}"> {{ POST:NAME }} </a> <br>
+						<span>{{ POST:TIME }}</span>
+					</div>
+				</div>
+				<div class="postCont">
+					<p> {{ POST:TEXT }}</p><img src="../img/postImg.png">
+				</div>
+				
+				<div class="postComm">
+					<div class="commTemp">
+						<div class="commInfo">
+							<div class="commPic">
+								<img src="../img/SEAHAWK_SIL.jpg">
+							</div>
+							<div class="commName">
+								<a href="{{ COMM:LINK }}"> {{ COMM:NAME }} </a> <br>
+								<span>{{ COMM:TIME }}</span>
+							</div>
+						</div>
+						<div class="commCont">
+							<p> {{ COMM:TEXT }} </p>
+						</div>
+					</div>
+					<div class="commField">
+						<!--Text field for comments to be posted, followed by a submit button -->
+					</div>
+				</div>
+			</div>
