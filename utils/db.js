@@ -2,7 +2,14 @@ var mongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
 var path = require('path');
 var EMS = require('./ems');
-
+var utils = require('./utils');
+var DBAuth = {};
+var DBPosts = {};
+var DBGroups = {};
+var DBUsers = {};
+var DBFriends = {};
+var DBGroupMembers = {};
+var DBComments = {};
 var DB_URL = 'mongodb://localhost:27017/db';
 exports.DB_URL = DB_URL;
 
@@ -13,6 +20,7 @@ var collectionFriends;
 var collectionFriendRequests;
 var collectionGroups;
 var collectionGroupMembers;
+var collectionGroupAdmins;
 var collectionPosts;
 var collectionComments;
 
@@ -24,11 +32,27 @@ var DB = mongoClient.connect(DB_URL, function (err, DB) {
 	DB.createCollection('users', {
 		validator: {
 			$and: [{
-				user: {
+				fname: {
+					$type: 'string'
+				}
+			}, {
+				lname: {
 					$type: 'string'
 				}
 			}, {
 				pass: {
+					$type: 'string'
+				}
+			}, {
+				dob: {
+					$type: 'string'
+				}
+			}, {
+				address: {
+					$type: 'string'
+				}
+			}, {
+				gender: {
 					$type: 'string'
 				}
 			}, {
@@ -50,14 +74,14 @@ var DB = mongoClient.connect(DB_URL, function (err, DB) {
 	});
 
 	//Restricts and denies regauth documents so that there is an authkey
-	DB.createCollection('regauths', {
+	DB.createCollection('auth', {
 		validator: {
 			$and: [{
-				authkey: {
+				key: {
 					$type: 'string'
 				}
 			}, {
-				userId: {
+				userid: {
 					$type: 'string'
 				}
 			}, {
@@ -87,14 +111,14 @@ var DB = mongoClient.connect(DB_URL, function (err, DB) {
 		validationAction: 'error'
 	});
 
-	DB.createCollection('friendRequests', {
+	DB.createCollection('fRequests', {
 		validator: {
 			$and: [{
-				userId: {
+				userid: {
 					$type: 'string'
 				}
 			}, {
-				friendId: {
+				friendid: {
 					$type: 'string'
 				}
 			}]
@@ -103,18 +127,29 @@ var DB = mongoClient.connect(DB_URL, function (err, DB) {
 		validationAction: 'error'
 	});
 
-	DB.createCollection('groups', {
+	DB.createCollection('group', {
 		validator: {
 			$and: [{
+				//GroupName
 				name: {
 					$type: 'string'
 				}
 			}, {
-				creatorId: {
+				//Foreign key for userid
+				creatorid: {
 					$type: 'string'
 				}
 			}, {
-				dateCreated: {
+				//Foreign key for userid
+				ownerid: {
+					$type: 'string'
+				}
+			}, {
+				courses: {
+					$type: 'array'
+				}
+			}, {
+				created: {
 					$type: 'date'
 				}
 			}]
@@ -122,19 +157,58 @@ var DB = mongoClient.connect(DB_URL, function (err, DB) {
 		validationLevel: 'strict',
 		validationAction: 'error'
 	});
-
-	DB.createCollection('posts', {
+	DB.createCollection('gMembers', {
 		validator: {
 			$and: [{
-				authorId: {
+				//Group _id
+				_id: {
 					$type: 'string'
 				}
 			}, {
-				dateCreated: {
+				//Array of userids
+				members: {
+					$type: 'array'
+				}
+			}]
+		},
+		validationLevel: 'strict',
+		validationAction: 'error'
+	});
+	DB.createCollection('gAdmins', {
+		validator: {
+			$and: [{
+				//Group _id
+				_id: {
+					$type: 'string'
+				}
+			}, {
+				//Array of userids
+				admins: {
+					$type: 'array'
+				}
+			}]
+		},
+		validationLevel: 'strict',
+		validationAction: 'error'
+	});
+	DB.createCollection('posts', {
+		validator: {
+			$and: [{
+				//Foreign key for userid
+				authorid: {
+					$type: 'string'
+				}
+			}, {
+				created: {
 					$type: 'date'
 				}
 			}, {
-				dataType: {
+				modified: {
+					$type: 'date'
+				}
+			}, {
+				//What is this?
+				dType: {
 					$type: 'string'
 				}
 			}, {
@@ -148,12 +222,13 @@ var DB = mongoClient.connect(DB_URL, function (err, DB) {
 	});
 
 	//Variables set to mongo collections
-	collectionAuths = DB.collection('regauths');
+	collectionAuths = DB.collection('auth');
 	collectionUsers = DB.collection('users');
 	collectionFriends = DB.collection('friends');
-	collectionFriendRequests = DB.collection('friendRequests');
+	collectionFriendRequests = DB.collection('fRequests');
 	collectionGroups = DB.collection('groups');
-	collectionGroupMembers = DB.collection('groupMembers');
+	collectionGroupMembers = DB.collection('gMembers');
+	collectionGroupAdmins = DB.collection('gAdmins');
 	collectionPosts = DB.collection('posts');
 	collectionComments = DB.collection('comments');
 });
@@ -162,14 +237,41 @@ var DB = mongoClient.connect(DB_URL, function (err, DB) {
 //======================================================================================================
 
 //Insert one user into the user collection
-exports.users_addUser = function (user, callback) {
-	collectionUsers.insert(user, function (result) {
-		callback(result);
-	});
+DBUsers.add = function (user, callback) {
+	if (!Object.keys(user).length) {
+		console.log("[DB] Registration: no data");
+	} else {
+		//Create user
+		try {
+			var row = {
+				fname: user.fname,
+				lname: user.lname,
+				pass: user.pass,
+				dob: user.dob,
+				address: user.address,
+				gender: user.gender,
+				email: user.email,
+				auth: false,
+				_id: utils.getIdFromEmail(user.email)
+				//_id: req.body.uid
+			};
+
+			//Create auth key and store it in auths
+			DBAuth.add(row, function (result) {
+				callback("[DB] Registration: Added authkey with result\n" + result);
+			});
+			collectionUsers.insert(row, function (result) {
+				callback(result);
+			});
+		} catch (err) {
+			callback("[DB] Registration: Missing fields");
+		}
+	}
+
 };
 
 //Find a user by unique object id
-exports.users_findUserById = function (id, callback) {
+DBUsers.findById = function (id, callback) {
 	collectionUsers.findOne({
 		_id: id
 	}, function (err, result) {
@@ -182,7 +284,7 @@ exports.users_findUserById = function (id, callback) {
 };
 
 //Find users matching query
-exports.users_findUsers = function (query, callback) {
+DBUsers.find = function (query, callback) {
 	collectionUsers.find(query).toArray(function (err, results) {
 		if (err) {
 			console.warn(err);
@@ -193,7 +295,7 @@ exports.users_findUsers = function (query, callback) {
 };
 
 //Updates the user
-exports.users_updateUser = function (id, updates, callback) {
+DBUsers.update = function (id, updates, callback) {
 	collectionUsers.update({
 		_id: id
 	}, {
@@ -210,7 +312,7 @@ exports.users_updateUser = function (id, updates, callback) {
 };
 
 //Removes the user
-exports.users_removeUser = function (id, callback) {
+DBUsers.remove = function (id, callback) {
 	collectionUsers.remove({
 		_id: id
 	}, {
@@ -228,27 +330,32 @@ exports.users_removeUser = function (id, callback) {
 //======================================================================================================
 
 //Add an authkey to regauths
-exports.auth_addAuthKey = function (user, authkey, expiry, callback) {
-	var regAuth = {
-		userId: user._id,
-		authkey: authkey,
+DBAuth.add = function (row, callback) {
+	var date = new Date();
+	var authkey = row._id + date.getTime();
+	var mins = 1;
+	var expiry = utils.addMinsToDate(date, mins).getTime();
+	//user, authkey, utils.addMinsToDate(date, mins).getTime()
+	var auth = {
+		userid: row._id,
+		key: authkey,
 		expiry: expiry
 	};
-	collectionAuths.insert(regAuth, function (result) {
+	collectionAuths.insert(auth, function (result) {
 		callback(result);
 	});
 	//Send auth email to the user with the auth link
-	EMS.sendAuthEmail(user, authkey, function (result) {
-		console.log(result);
+	EMS.sendAuthEmail(row, auth, function (result) {
+		callback(result);
 	});
 };
-exports.auth_updateAuthKey = function (user, authkey, expiry, callback) {
+DBAuth.update = function (user, authkey, expiry, callback) {
 	var regAuth = {
-		authkey: authkey,
+		key: authkey,
 		expiry: expiry
 	};
 	collectionAuths.update({
-		userId: user._id
+		userid: user._id
 	}, {
 		$set: regAuth
 	}, {
@@ -265,9 +372,9 @@ exports.auth_updateAuthKey = function (user, authkey, expiry, callback) {
 	});
 };
 //Check for an existing authkey
-exports.auth_findAuthKey = function (key, callback) {
+DBAuth.find = function (authkey, callback) {
 	collectionAuths.findOne({
-		authkey: key
+		key: authkey
 	}, function (err, result) {
 		if (err) {
 			console.warn(err);
@@ -277,9 +384,9 @@ exports.auth_findAuthKey = function (key, callback) {
 };
 
 //Delete authkey
-exports.auth_deleteAuthKey = function (key, callback) {
+DBAuth.remove = function (authkey, callback) {
 	collectionAuths.remove({
-		authkey: key
+		key: authkey
 	}, {
 		single: true
 	}, function (err, obj) {
@@ -295,7 +402,7 @@ exports.auth_deleteAuthKey = function (key, callback) {
 //======================================================================================================
 
 //Adds the friendId to the userId's friend list
-exports.users_addFriend = function (userId, friendId, callback) {
+DBFriends.add = function (userId, friendId, callback) {
 	collectionFriends.update({
 		_id: userId
 	}, {
@@ -313,7 +420,7 @@ exports.users_addFriend = function (userId, friendId, callback) {
 };
 
 //Finds all friends of a userId and returns it as an array
-exports.users_getFriends = function (userId, callback) {
+DBFriends.find = function (userId, callback) {
 	collectionFriends.find({
 		_id: userId
 	}, {
@@ -327,7 +434,7 @@ exports.users_getFriends = function (userId, callback) {
 };
 
 //Removes the selected friendId from the specified userId
-exports.users_removeFriend = function (userId, friendId, callback) {
+DBFriends.remove = function (userId, friendId, callback) {
 	collectionFriends.update({
 		_id: userId
 	}, {
@@ -346,10 +453,10 @@ exports.users_removeFriend = function (userId, friendId, callback) {
 //======================================================================================================
 
 //Add a friend request
-exports.users_requestFriend = function (userId, friendId, callback) {
+DBFriends.addRequest = function (userId, friendId, callback) {
 	collectionFriendRequests.insert({
-		userId: userId,
-		friendId: friendId
+		userid: userId,
+		friendid: friendId
 	}, function (err, result) {
 		if (err) {
 			console.warn(err);
@@ -359,7 +466,7 @@ exports.users_requestFriend = function (userId, friendId, callback) {
 };
 
 //Find all friend requests from a user
-exports.users_getFriendRequests = function (query, callback) {
+DBFriends.findRequests = function (query, callback) {
 	collectionFriendRequests.find(query).toArray(function (err, result) {
 		if (err) {
 			console.warn(err);
@@ -369,10 +476,10 @@ exports.users_getFriendRequests = function (query, callback) {
 };
 
 //Remove friend request
-exports.users_deleteFriendRequest = function (userId, friendId, callback) {
+DBFriends.removeRequest = function (userId, friendId, callback) {
 	collectionFriendRequests.remove({
-		userId: userId,
-		friendId: friendId
+		userid: userId,
+		friendid: friendId
 	}, function (result) {
 		callback(result);
 	});
@@ -382,12 +489,14 @@ exports.users_deleteFriendRequest = function (userId, friendId, callback) {
 //======================================================================================================
 
 //Add a group
-exports.group_addGroup = function (creatorId, name, callback) {
+DBGroups.add = function (group, callback) {
 	var date = new Date();
 	collectionGroups.insert({
-		creatorId: creatorId,
-		name: name,
-		dateCreated: date
+		name: group.name,
+		creatorid: group.creatorid,
+		ownerid: group.ownerid,
+		courses: group.courses,
+		created: group.created
 	}, function (err, result) {
 		if (err) {
 			console.warn(err);
@@ -397,9 +506,9 @@ exports.group_addGroup = function (creatorId, name, callback) {
 };
 
 //Find a group by user
-exports.group_findGroupsByUser = function (userId, callback) {
+DBGroups.findByUserId = function (userId, callback) {
 	collectionGroups.find({
-		creatorId: userId
+		creatorid: userId
 	}).toArray(function (err, result) {
 		if (err) {
 			console.warn(err);
@@ -409,7 +518,7 @@ exports.group_findGroupsByUser = function (userId, callback) {
 };
 
 //Find group based on query
-exports.group_findGroupsByQuery = function (query, callback) {
+DBGroups.find = function (query, callback) {
 	collectionGroups.find(query, function (err, result) {
 		if (err) {
 			console.warn(err);
@@ -419,7 +528,7 @@ exports.group_findGroupsByQuery = function (query, callback) {
 };
 
 //Update group
-exports.group_updateGroup = function (groupId, updates, callback) {
+DBGroups.update = function (groupId, updates, callback) {
 	collectionGroups.update({
 		_id: groupId
 	}, {
@@ -436,9 +545,9 @@ exports.group_updateGroup = function (groupId, updates, callback) {
 };
 
 //Remove a group
-exports.group_removeGroup = function (objectId, callback) {
+DBGroups.remove = function (groupid, callback) {
 	collectionGroups.remove({
-		_id: objectId
+		_id: groupid
 	}, function (result) {
 		callback(result);
 	});
@@ -448,7 +557,7 @@ exports.group_removeGroup = function (objectId, callback) {
 //======================================================================================================
 
 //Add member to group
-exports.groupMembers_addMember = function (groupId, memberId, callback) {
+DBGroupMembers.add = function (groupId, memberId, callback) {
 	collectionGroupMembers.update({
 		_id: groupId
 	}, {
@@ -466,7 +575,7 @@ exports.groupMembers_addMember = function (groupId, memberId, callback) {
 };
 
 //Finds all members of a group and returns it as an array
-exports.groupMembers_findAllMembers = function (groupId, callback) {
+DBGroupMembers.find = function (groupId, callback) {
 	collectionGroupMembers.find({
 		_id: groupId
 	}, {
@@ -480,7 +589,7 @@ exports.groupMembers_findAllMembers = function (groupId, callback) {
 };
 
 //Removes member from group
-exports.groupMembers_removeMember = function (groupId, memberId, callback) {
+DBGroupMembers.remove = function (groupId, memberId, callback) {
 	collectionGroupMembers.update({
 		_id: groupId
 	}, {
@@ -499,13 +608,14 @@ exports.groupMembers_removeMember = function (groupId, memberId, callback) {
 //======================================================================================================
 
 //Add a post
-exports.post_addPost = function (authorId, dataType, data, callback) {
+DBPosts.add = function (post, callback) {
 	var date = new Date();
 	collectionPosts.insert({
-		authorId: authorId,
-		dateCreated: date,
-		dataType: dataType,
-		data: data
+		authorid: post.authorId,
+		created: post.created,
+		modified: post.modified,
+		dType: post.dType,
+		data: post.data
 	}, function (err, result) {
 		if (err) {
 			console.warn(err);
@@ -515,7 +625,7 @@ exports.post_addPost = function (authorId, dataType, data, callback) {
 };
 
 //Remove a post
-exports.post_removePost = function (objectId, callback) {
+DBPosts.remove = function (objectId, callback) {
 	collectionPosts.remove({
 		_id: objectId
 	}, function (result) {
@@ -524,9 +634,9 @@ exports.post_removePost = function (objectId, callback) {
 };
 
 //Get posts per user
-exports.post_getByUserId = function (userId, callback) {
+DBPosts.findByUserId = function (userId, callback) {
 	collectionPosts.find({
-		authorId: userId
+		authorid: userId
 	}).toArray(function (err, results) {
 		if (err) {
 			console.warn(err);
@@ -536,7 +646,7 @@ exports.post_getByUserId = function (userId, callback) {
 };
 
 //Update post
-exports.post_updatePost = function (postId, updates, callback) {
+DBPosts.update = function (postId, updates, callback) {
 	collectionPosts.update({
 		_id: postId
 	}, {
@@ -556,13 +666,14 @@ exports.post_updatePost = function (postId, updates, callback) {
 //======================================================================================================
 
 //Add a comment
-exports.comment_addComment = function (postId, authorId, data, callback) {
+DBComments.add = function (postId, authorId, data, callback) {
 	var date = new Date();
 	var comment = {
-		commentId: authorId + date.getTime(),
-		authorId: authorId,
-		dateCreated: dateCreated,
-		dataHistory: [{
+		commentid: authorId + date.getTime(),
+		authorid: authorId,
+		created: date,
+		modified: date,
+		history: [{
 			data: data
 		}]
 	};
@@ -583,7 +694,7 @@ exports.comment_addComment = function (postId, authorId, data, callback) {
 };
 
 //Remove a comment using commentId
-exports.comment_deleteById = function (postId, commentId, callback) {
+DBComments.removeById = function (postId, commentId, callback) {
 	collectionComments.remove({
 		_id: postId,
 		comments: {
@@ -595,9 +706,9 @@ exports.comment_deleteById = function (postId, commentId, callback) {
 };
 
 //Get comments per postId
-exports.comment_getByPostId = function (userId, callback) {
+DBComments.findByPostId = function (userId, callback) {
 	collectionComments.find({
-		authorId: userId
+		authorid: userId
 	}).toArray(function (err, results) {
 		if (err) {
 			console.warn(err);
@@ -607,7 +718,7 @@ exports.comment_getByPostId = function (userId, callback) {
 };
 
 //Update comment
-exports.comment_updateComment = function (postId, updates, callback) {
+DBComments.update = function (postId, updates, callback) {
 	collectionComments.update({
 		_id: postId
 	}, {
@@ -622,3 +733,45 @@ exports.comment_updateComment = function (postId, updates, callback) {
 		}
 	});
 };
+exports.users_addUser = DBUsers.add;
+exports.users_findUserById = DBUsers.findById;
+exports.users_findUsers = DBUsers.find;
+exports.users_removeUser = DBUsers.remove;
+exports.users_addFriend = DBFriends.add;
+exports.users_getFriendRequests = DBFriends.findRequests;
+exports.users_addFriendRequest = DBFriends.addRequest;
+exports.users_getFriends = DBFriends.find;
+exports.users_deleteFriendRequest = DBFriends.removeRequest;
+exports.users_removeFriend = DBFriends.remove;
+exports.users_updateUser = DBUsers.update;
+exports.groups_addGroup = DBGroups.add;
+exports.groups_findGroupsByQuery = DBGroups.find;
+exports.groups_findGroupsByUser = DBGroups.findByUserId;
+exports.groups_removeGroup = DBGroups.remove;
+exports.groups_updateGroup = DBGroups.update;
+exports.groupMembers_addMember = DBGroupMembers.add;
+exports.groupMembers_findAllMembers = DBGroupMembers.find;
+exports.groupMembers_removeMember = DBGroupMembers.remove;
+//groupAdmins
+exports.post_addPost = DBPosts.add;
+exports.post_getByUserId = DBPosts.findByUserId;
+exports.post_removePost = DBPosts.remove;
+exports.post_updatePost = DBPosts.update;
+exports.comment_addComment = DBComments.add;
+exports.comment_deleteById = DBComments.removeById;
+exports.comment_getByPostId = DBComments.findByPostId;
+exports.comment_updateComment = DBComments.update;
+exports.auth_addAuthKey = DBAuth.add;
+exports.auth_deleteAuthKey = DBAuth.remove;
+exports.auth_findAuthKey = DBAuth.find;
+exports.auth_updateAuthKey = DBAuth.update;
+
+/*exports.DB = {
+	Auth: DBAuth,
+	Posts: DBPosts,
+	Groups: DBGroups,
+	Users: DBUsers,
+	Friends: DBFriends,
+	GroupMembers: DBGroupMembers,
+	Comments: DBComments
+};*/

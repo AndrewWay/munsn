@@ -32,10 +32,6 @@ router.get(getUserInfo, function (req, res, next) {
 		res.json({
 			error: "undefined"
 		});
-	} else if (req.params.uid == null) {
-		res.json({
-			error: "null"
-		});
 	} else {
 		DB.users_findUserById(req.params.uid, function (user) {
 			res.json(user);
@@ -80,36 +76,9 @@ router.post(deleteUser, function (req, res, next) {
  * Register the user by HTMLForm.
  */
 router.post(registerUser, function (req, res, next) {
-	if (!Object.keys(req.body).length) {
-		console.log("[ROUTER] /api/user/register: Empty Body");
-	}
-	//Create user
-	try {
-		var user = {
-			user: req.body.user,
-			pass: req.body.pass,
-			email: req.body.email,
-			auth: false,
-			_id: utils.getIdFromEmail(req.body.email)
-			//_id: req.body.uid
-		};
-		//Insert user with false auth into colUsers
-		DB.users_addUser(user, function (result) {
-			console.log(result);
-		});
-		//Create auth key and store it in colAuths
-		var date = new Date();
-		var authkey = user._id + date.getTime();
-		var mins = 1;
-		DB.auth_addAuthKey(user, authkey, utils.addMinsToDate(date, mins).getTime(), function (result) {
-			console.log("[API] /register: Added authkey with result\n" + result);
-		});
-	} catch (err) {
-		console.log("[ROUTER] /api/user/register: Body Field Error");
-	}
-
-	res.send({
-		redirect: "../.."
+	//Insert user with false auth into colUsers
+	DB.users_addUser(req.body, function (result) {
+		console.log(result);
 	});
 });
 
