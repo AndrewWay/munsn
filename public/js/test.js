@@ -15,6 +15,4 @@ function Test(){
 	var template = Hogan.compile("{{#list}} Your name is {{name}} and email is {{email}} <br/>{{/list}}");
 	var output = template.render(data);
 	jQuery('#data').html(output);
-	jQuery('#get').text('Test');
-	alert('test');
 }
