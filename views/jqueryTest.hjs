@@ -2,32 +2,36 @@
 <html>
 <head>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="http://twitter.github.com/hogan.js/builds/3.0.1/hogan-3.0.1.js"></script>
+<script src="/js/test.js"></script>
 <script>
-$(document).ready(function(){
-    	$("#get").click(
+	$(document).ready(
 		function(){
-			$.get("/api/user/info/jh2587",function(data){
-        			$("#div1").text(JSON.stringify(data));
-			});
-	    	}
-	);
-    	$("#post").click(
-		function(){
-			$.post("/api/user/register",
-				{
-					user: "Test",
-            			pass: "Test",
-           			email: "jh2587@mun.ca"
-				},
-				function(data){
-					alert(JSON.stringify(data));
-					window.location = data.redirect;
+			$("#get").click(
+				function(){
+					$.get("/api/user/info/jh2587",function(data){
+							$("#div1").text(JSON.stringify(data));
+					});
+					}
+			);
+			$("#post").click(
+				function(){
+					$.post("/api/user/register",
+						{
+							user: "Test",
+								pass: "Test",
+							email: "jh2587@mun.ca"
+						},
+						function(data){
+							alert(JSON.stringify(data));
+							window.location = data.redirect;
+						}
+					);
 				}
 			);
+			$("#template").click(Test);
 		}
 	);
-});
-
 </script>
 </head>
 <body>
@@ -35,9 +39,11 @@ $(document).ready(function(){
 
 <button id="get">GET STUFF</button>
 <button id="post">POST STUFF</button>
+<button id="template">TEMPLATES</button>
 
 <br>
 <br><div id="div1"><h2>GET DATA WILL APPEAR HERE</h2></div>
 <br><div id="div2"><h2>POST DATA HERE</h2></div>
+<div id="data">Test</div>
 </body>
 </html>
