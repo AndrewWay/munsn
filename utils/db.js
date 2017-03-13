@@ -295,7 +295,7 @@ exports.auth_deleteAuthKey = function (key, callback) {
 //======================================================================================================
 
 //Adds the friendId to the userId's friend list
-exports.friends_addFriendToUser = function (userId, friendId, callback) {
+exports.users_addFriend = function (userId, friendId, callback) {
 	collectionFriends.update({
 		_id: userId
 	}, {
@@ -313,7 +313,7 @@ exports.friends_addFriendToUser = function (userId, friendId, callback) {
 };
 
 //Finds all friends of a userId and returns it as an array
-exports.friends_findAllFriendsForUser = function (userId, callback) {
+exports.users_getFriends = function (userId, callback) {
 	collectionFriends.find({
 		_id: userId
 	}, {
@@ -327,7 +327,7 @@ exports.friends_findAllFriendsForUser = function (userId, callback) {
 };
 
 //Removes the selected friendId from the specified userId
-exports.friends_deleteFriendFromUser = function (userId, friendId, callback) {
+exports.users_removeFriend = function (userId, friendId, callback) {
 	collectionFriends.update({
 		_id: userId
 	}, {
@@ -346,7 +346,7 @@ exports.friends_deleteFriendFromUser = function (userId, friendId, callback) {
 //======================================================================================================
 
 //Add a friend request
-exports.friendRequest_addRequest = function (userId, friendId, callback) {
+exports.users_requestFriend = function (userId, friendId, callback) {
 	collectionFriendRequests.insert({
 		userId: userId,
 		friendId: friendId
@@ -359,7 +359,7 @@ exports.friendRequest_addRequest = function (userId, friendId, callback) {
 };
 
 //Find all friend requests from a user
-exports.friendRequest_findRequestsByUser = function (query, callback) {
+exports.users_getFriendRequests = function (query, callback) {
 	collectionFriendRequests.find(query).toArray(function (err, result) {
 		if (err) {
 			console.warn(err);
@@ -369,7 +369,7 @@ exports.friendRequest_findRequestsByUser = function (query, callback) {
 };
 
 //Remove friend request
-exports.friendRequest_deleteRequest = function (userId, friendId, callback) {
+exports.users_deleteFriendRequest = function (userId, friendId, callback) {
 	collectionFriendRequests.remove({
 		userId: userId,
 		friendId: friendId
@@ -524,7 +524,7 @@ exports.post_removePost = function (objectId, callback) {
 };
 
 //Get posts per user
-exports.post_getPostsByUserId = function (userId, callback) {
+exports.post_getByUserId = function (userId, callback) {
 	collectionPosts.find({
 		authorId: userId
 	}).toArray(function (err, results) {
@@ -583,7 +583,7 @@ exports.comment_addComment = function (postId, authorId, data, callback) {
 };
 
 //Remove a comment using commentId
-exports.comment_removeCommentByCommentId = function (postId, commentId, callback) {
+exports.comment_deleteById = function (postId, commentId, callback) {
 	collectionComments.remove({
 		_id: postId,
 		comments: {
@@ -595,7 +595,7 @@ exports.comment_removeCommentByCommentId = function (postId, commentId, callback
 };
 
 //Get comments per postId
-exports.comment_getCommentsByPostId = function (userId, callback) {
+exports.comment_getByPostId = function (userId, callback) {
 	collectionComments.find({
 		authorId: userId
 	}).toArray(function (err, results) {

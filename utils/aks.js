@@ -1,7 +1,15 @@
 var DB = require('./db');
 var utils = require('./utils');
 
-exports.validate = function (key, callback) {
+/**
+ * This function takes a key and validates it, reacts accordingly.
+ * If the key is not found, nothing happens.
+ * If the key is found, and is expired, a new one is made and sent via email.
+ * If the key is found, isn't expired, the user is registered and the authkey row is dropped
+ * @param {string} key
+ * @param {function} callback
+ */
+var validate = function (key, callback) {
 	//Check if auth key exists
 	DB.auth_findAuthKey(key, function (checkResult) {
 		//console.log(JSON.stringify(checkResult));
@@ -44,3 +52,4 @@ exports.validate = function (key, callback) {
 		}
 	});
 };
+exports.validate = validate;

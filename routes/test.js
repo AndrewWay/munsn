@@ -9,6 +9,7 @@ router.get('/upload', function (req, res, next) {
 		title: 'Uploader'
 	});
 });
+/* GET jqueryTest page. */
 router.get('/jqueryTest', function (req, res, next) {
 	res.render('jqueryTest');
 });

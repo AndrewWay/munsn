@@ -24,7 +24,6 @@ var delGroup = "/group/remove/:gid";
 var updateGroup = "/group/update";
 var addGroupUser = "/group/add/user";
 var delGroupUser = "/group/remove/user";
-//GET the user by userId
 /**
  * Returns the JSON object representing a user from the database
  */
@@ -44,7 +43,6 @@ router.get(getUserInfo, function (req, res, next) {
 	}
 });
 
-//POST update the user
 /**
  * ???
  */
@@ -52,10 +50,6 @@ router.post(updateUser, function (req, res, next) {
 	if (req.params.uid == undefined) {
 		res.json({
 			error: "undefined"
-		});
-	} else if (req.params.uid == null) {
-		res.json({
-			error: "null"
 		});
 	} else {
 		var pass = {
@@ -73,10 +67,6 @@ router.post(deleteUser, function (req, res, next) {
 	if (req.params.uid == undefined) {
 		res.json({
 			error: "undefined"
-		});
-	} else if (req.params.uid == null) {
-		res.json({
-			error: "null"
 		});
 	} else {
 		DB.users_removeUser(req.params.uid, function (result) {
@@ -126,7 +116,7 @@ router.post(registerUser, function (req, res, next) {
 //GET list of friends from userId
 router.get(getFriends, function (req, res, next) {
 	if (req.params.uid) {
-		DB.friends_findAllFriendsForUser(req.params.uid, function (result) {
+		DB.users_getFriends(req.params.uid, function (result) {
 			res.json(result[0]);
 		});
 	}
@@ -144,9 +134,7 @@ router.post('/post/addFriend', function(req, res, next) {
 });
 */
 
-//POST send a friend request
-// xyz
-// x is
+
 router.post(addFriendReq, function (req, res, next) {
 	//Declare body variables
 	var userId = req.body.uid;
@@ -162,7 +150,7 @@ router.post(addFriendReq, function (req, res, next) {
 			function (findResult) {
 				//If they both exist, add request
 				if (findResult.length == 2) {
-					DB.friendRequest_addRequest(userId, friendId, function (requestResult) {
+					DB.users_requestFriend(userId, friendId, function (requestResult) {
 						//Operation successfully completed
 						if (requestResult != null) {
 							res.json({
@@ -213,7 +201,7 @@ router.get(getFriendReceivedReq, function (req, res, next) {
 	//Declare query variables
 	var userId = req.params.uid;
 	if (userId) {
-		DB.friendRequest_findRequestsByUser({
+		DB.users_getFriendRequests({
 				friendId: userId
 			},
 			function (result) {

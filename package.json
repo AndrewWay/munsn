@@ -22,6 +22,7 @@
 		"imagemin-pngquant": "5.0.0",
 		"connect-busboy": "0.0.2",
 		"fs-extra": "2.0.0",
-		"mime": "1.3.4"
+		"mime": "1.3.4",
+		"emailjs": "1.0.8"
 	}
 }

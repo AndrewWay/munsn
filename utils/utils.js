@@ -1,7 +1,7 @@
 var fs = require("fs");
 var path = require("path");
 var mime = require("mime");
-var imagemin = require("image-min");
+var imagemin = require("imagemin");
 var imageminMozjpeg = require("imagemin-mozjpeg");
 var imageminPngquant = require("imagemin-pngquant");
 /**
@@ -10,8 +10,7 @@ var imageminPngquant = require("imagemin-pngquant");
  * @returns {string} - Userid
  */
 function getIdFromEmail(email) {
-	var id = email.substring(0, email.indexOf("@"));
-	return id;
+	return email.substring(0, email.indexOf("@"));
 }
 
 /**
