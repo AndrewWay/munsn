@@ -45,7 +45,7 @@
 }
 
 .postPic, .commPic {
-	position: relative;
+	position: absolute;
 	width: 50px;
 	height: inherit;
 	display: inline-block;
@@ -60,10 +60,11 @@
 }
 
 .postName, .commName {
-	position: relative;
-	width: 150px;
+	position: absolute;
+	left: 60px;
+	margin: 2px;
+	width: 200px;
 	display: inline-block;
-	top: -18px;
 }
 
 .postPic img, .commPic img {
