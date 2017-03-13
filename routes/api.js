@@ -310,7 +310,7 @@ router.post(delGroup, function (req, res, next) {
 });
 
 //find groups by userid
-router.get(getGroupsByUID, function (req, res, next) {
+router.get(findGroupsByID, function (req, res, next) {
 	var userId = req.params.uid;
 	if (userId) {
 		DB.Groups.findByUserId(userId, function (result) {

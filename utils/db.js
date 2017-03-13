@@ -733,7 +733,7 @@ DBComments.update = function (postId, updates, callback) {
 	});
 };
 
-exports = {
+module.exports = {
 	Auth: DBAuth,
 	Posts: DBPosts,
 	Groups: DBGroups,
