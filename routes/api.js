@@ -374,49 +374,23 @@ router.post('/post/addFriend', function(req, res, next) {
 
 
 router.post(addFriendReq, function (req, res, next) {
-	//Declare body variables
-	var userId = req.body.uid;
-	var friendId = req.body.fid;
-	//Check if body variables are not null, or undefined
-	if (userId && friendId) {
-		//Check to see if both users exist
-		DB.Users.find({
-				_id: {
-					$in: [userId, friendId]
-				}
-			},
-			function (findResult) {
-				//If they both exist, add request
-				if (findResult.length == 2) {
-					DB.Friends.addRequest(userId, friendId, function (requestResult) {
-						//Operation successfully completed
-						if (requestResult != null) {
-							res.json({
-								result: "000",
-								operation: "sendFriendRequest",
-								text: "Sent friend request"
-							});
-						} else {
-							//Error with collection friendRequest
-							res.json({
-								result: "001",
-								operation: "sendFriendRequest",
-								text: "Error with collection friendRequest"
-							});
-						}
-					});
-				} else {
-					//Else return result json
-					console.log("\x1b[32m%s\x1b[0m%s", "[API]", " /post/sendFriendRequest: userId: " + userId + ", friendId: " + friendId + ", dbResult: " + JSON.stringify(findResult));
-					res.json({
-						result: "010",
-						operation: "sendFriendRequest",
-						text: "One or more users could not be found"
-					});
-				}
-			}
-		);
-	}
+	DB.Friends.addRequest(req, res, function (requestResult) {
+		//Operation successfully completed
+		if (requestResult != null) {
+			res.json({
+				result: "000",
+				operation: "sendFriendRequest",
+				text: "Sent friend request"
+			});
+		} else {
+			//Error with collection friendRequest
+			res.json({
+				result: "001",
+				operation: "sendFriendRequest",
+				text: "Error with collection friendRequest"
+			});
+		}
+	});
 });
 
 //GET get friend requests for a specified user
@@ -477,10 +451,7 @@ router.post(delFriend, function (req, res, next) {
 //Create a group
 router.post(createGroup, function (req, res, next) {
 	DB.Groups.add(req, res, function (result) {
-		//DEVIN: Make this part of the Groups.add stuff
-		DB.GroupMembers.add(result.ops[0]._id, req.body.gid, function (memberResult) {
-			res.json(memberResult);
-		});
+		res.json(result);
 	});
 });
 

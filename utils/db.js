@@ -479,16 +479,40 @@ DBFriends.remove = function (req, res, callback) {
 //======================================================================================================
 
 //Add a friend request
-DBFriends.addRequest = function (userId, friendId, callback) {
-	collectionFriendRequests.insert({
-		userid: userId,
-		friendid: friendId
-	}, function (err, result) {
-		if (err) {
-			console.warn(err);
-		}
-		callback(result);
-	});
+DBFriends.addRequest = function (req, res, callback) {
+	//Declare body variables
+	var userId = req.body.uid;
+	var friendId = req.body.fid;
+	//Check if body variables are not null, or undefined
+	if (userId && friendId) {
+		//Check to see if both users exist
+		DB.Users.find({
+				_id: {
+					$in: [userId, friendId]
+				}
+			},
+			function (findResult) {
+				if (findResult.length == 2) {
+					collectionFriendRequests.insert({
+						userid: userId,
+						friendid: friendId
+					}, function (err, result) {
+						if (err) {
+							console.warn(err);
+						}
+						callback(result);
+					});
+				}
+			});
+	} else {
+		//Else return result json
+		console.log("\x1b[32m%s\x1b[0m%s", "[API]", " /post/sendFriendRequest: userId: " + userId + ", friendId: " + friendId + ", dbResult: " + JSON.stringify(findResult));
+		res.json({
+			result: "010",
+			operation: "sendFriendRequest",
+			text: "One or more users could not be found"
+		});
+	}
 };
 
 //Find all friend requests from a user
@@ -551,8 +575,22 @@ DBGroups.add = function (req, res, callback) {
 		}, function (err, result) {
 			if (err) {
 				console.warn(err);
+			} else {
+				collectionGroupMembers.update({
+					_id: result.ops[0]._id
+				}, {
+					$push: {
+						members: creatorId
+					}
+				}, {
+					upsert: true
+				}, function (err, result) {
+					if (err) {
+						console.warn(err);
+					}
+					callback(result);
+				});
 			}
-			callback(result);
 		});
 	}
 };
