@@ -13,16 +13,18 @@ var DBComments = {};
 var dbURL = 'mongodb://localhost:27017/db';
 
 //Collections
-var collectionUsers;
-var collectionAuths;
-var collectionFriends;
-var collectionFriendRequests;
-var collectionGroups;
-var collectionGroupMembers;
-var collectionGroupAdmins;
-var collectionPosts;
-var collectionComments;
+var collectionUsers; //Good
+var collectionAuths; //Good
+var collectionFriends; //Good
+var collectionFriendRequests; //Good
+var collectionGroups; //Good
+var collectionGroupMembers; //Good
+var collectionGroupAdmins; //DEVIN: Missing ALL Methods!!
+var collectionPosts; //DEVIN: Completion!!
+var collectionComments; //DEVIN: Completion!!
 
+//DEVIN: TESTING
+//DEVIN: CALLBACKS
 //Connect to the database
 var DB = mongoClient.connect(dbURL, function (err, DB) {
 	assert.equal(null, err);
@@ -219,6 +221,8 @@ var DB = mongoClient.connect(dbURL, function (err, DB) {
 		validationLevel: 'strict',
 		validationAction: 'error'
 	});
+	//DEVIN: COMPLETE THIS
+	//DB.createCollection('comments');
 
 	//Variables set to mongo collections
 	collectionAuths = DB.collection('auth');
@@ -620,6 +624,7 @@ DBGroups.find = function (query, callback) {
 		callback(result);
 	});
 };
+
 
 //Update group
 DBGroups.update = function (req, res, callback) {
