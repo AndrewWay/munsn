@@ -5,83 +5,315 @@ var EMS = require("../utils/ems");
 var utils = require("../utils/utils");
 //TODO: JOHN AND DEVIN WILL POPULATE THE TOP OF THIS FILE WITH ALL THE IMPLEMENTATION SEMANTICS
 //==============================GET VERBS=============================
+
 /**
- * URL: "%server%/api/user/info/:uid"
+ * findUserById
+ * 
+ * URL:
+ * 		- %server%/api/user/info/:uid
+ * Descript:
+ *      - Gets the user object from the database if they exist
+ * Method: 
+ *      - GET
+ * Params:
+ *      - uid: The user id to get
+ * Returns:
+ *      - JSON user object
  */
 var findUserById = "/user/info/:uid";
+
 /**
- * URL: "%server%/api/user/friends/:uid"
+ * findFriendsById
+ * 
+ * URL:
+ * 		- %server%/api/user/friends/:uid
+ * Descript:
+ *      - Gets the friends for a given uid
+ * Method: 
+ *      - GET
+ * Params:
+ *      - uid: The user id to get
+ * Returns:
+ *      - JSON array containing user objects
  */
 var findFriendsById = "/user/friends/:uid";
+
 /**
- * URL: "%server%/api/user/friends/sent/:uid"
+ * findFriendSent
+ * 
+ * URL:
+ * 		- %server%/api/user/friends/sent/:uid
+ * Descript:
+ *      - Gets the friend requests sent from a user
+ * Method: 
+ *      - GET
+ * Params:
+ *      - uid: The user id to get requests sent from
+ * Returns:
+ *      - JSON array containing friend request objects
  */
 var findFriendSent = "/user/friends/sent/:uid";
+
 /**
- * URL: "%server%/api/user/friends/received/:uid"
+ * findFriendReceived
+ * 
+ * URL:
+ * 		- %server%/api/user/friends/received/:uid
+ * Descript:
+ *      - Gets the friend requests recieved from a user
+ * Method: 
+ *      - GET
+ * Params:
+ *      - uid: The user id to get requests recieved from
+ * Returns:
+ *      - JSON array containing friend request objects
  */
 var findFriendReceived = "/user/friends/received/:uid";
+
 /**
- * URL: "%server%/api/user/groups/:uid"
+ * findGroupsByID
+ * 
+ * URL:
+ * 		- %server%/api/user/groups/:uid
+ * Descript:
+ *      - Gets all groups that the user is in
+ * Method: 
+ *      - GET
+ * Params:
+ *      - uid: The user id to get groups from
+ * Returns:
+ *      - JSON array containing group objects
  */
 var findGroupsByID = "/user/groups/:uid";
+
 /**
- * URL: "%server%/api/group/users/:gid"
+ * findGroupsUsers
+ * 
+ * URL:
+ * 		- %server%/api/group/users/:gid
+ * Descript:
+ *      - Gets all users in a group
+ * Method: 
+ *      - GET
+ * Params:
+ *      - gid: The group id to get users from
+ * Returns:
+ *      - JSON array containing user objects
  */
 var findGroupUsers = "/group/users/:gid";
+
 /**
- * URL: "%server%/api/group/info/:gid"
+ * findGroupById
+ * 
+ * URL:
+ * 		- %server%/api/group/info/:gid
+ * Descript:
+ *      - Gets group from a group id
+ * Method: 
+ *      - GET
+ * Params:
+ *      - gid: The group id
+ * Returns:
+ *      - JSON group object
  */
 var findGroupById = "/group/info/:gid";
+
+
 //=============================POST VERBS=============================
+
 /**
- * URL: "%server%/api/user/update/:uid"
+ * updateUser
+ * 
+ * URL:
+ * 		- %server%/api/user/update/:uid
+ * Descript:
+ *      - Updates an user's fields
+ * Method: 
+ *      - POST
+ * Params:
+ *      - uid: The user id
+ * 		- email: The email address
+ * 		- pass: The password
+ * Returns:
+ *      - JSON updated user object
  */
 var updateUser = "/user/update/:uid";
+
 /**
- * URL: "%server%/api/user/remove/:uid"
+ * deleteUser
+ * 
+ * URL:
+ * 		- %server%/api/user/remove/:uid
+ * Descript:
+ *      - Deletes a user from the server
+ * Method: 
+ *      - POST
+ * Params:
+ *      - uid: The user id
+ * Returns:
+ *      - JSON user object before deletion
  */
 var deleteUser = "/user/remove/:uid";
+
 /**
- * URL: "%server%/api/user/register"
+ * registerUser
+ * 
+ * URL:
+ * 		- %server%/api/user/register
+ * Descript:
+ *      - Registers a user
+ * Method: 
+ *      - POST
+ * Params:
+ * 		- fName: First name
+ * 		- lName: Last name
+ * 		- gender: gender
+ * 		- dob: Birthdate
+ * 		- email: Email address from @mun.ca
+ * 		- pass: Password
+ * 		- address: Address
+ * Returns:
+ *      - JSON user object after creation
  */
 var registerUser = "/user/register";
+
 /**
- * URL: "%server%/api/user/add/request"
+ * addFriendReq
+ * 
+ * URL:
+ * 		- %server%/api/user/add/request
+ * Descript:
+ *      - Send a friend request from one user to another
+ * Method: 
+ *      - POST
+ * Params:
+ *      - uid: The user id to send the request from
+ * 		- fid: The friend id to send the request to
+ * Returns:
+ *      - JSON friend request object
  */
 var addFriendReq = "/user/add/request";
+
 /**
- * URL: "%server%/api/user/remove/request"
+ * delFriendReq
+ * 
+ * URL:
+ * 		- %server%/api/user/remove/request
+ * Descript:
+ *      - Delete a friend request from one user to another
+ * Method: 
+ *      - POST
+ * Params:
+ *      - uid: The user id to delete the request from
+ * 		- fid: The friend id to delete the request to
+ * Returns:
+ *      - JSON friend request object after deletion
  */
 var delFriendReq = "/user/remove/request";
+
 /**
- * URL: "%server%/api/user/remove/friend"
+ * delFriend
+ * 
+ * URL:
+ * 		- %server%/api/user/remove/friend
+ * Descript:
+ *      - Delete a friend
+ * Method: 
+ *      - POST
+ * Params:
+ *      - uid: The user id to delete the friend from
+ * 		- fid: The friend id to delete the friendship from
+ * Returns:
+ *      - devin?
  */
 var delFriend = "/user/remove/friend";
+
 /**
- * URL: "%server%/api/group/create"
+ * createGroup
+ * 
+ * URL:
+ * 		- %server%/api/group/create
+ * Descript:
+ *      - Create a group
+ * Method: 
+ *      - POST
+ * Params:
+ *      - uid: The user id that is creating the group
+ * 		- name: The group name
+ * Returns:
+ *      - JSON group object after creation
  */
 var createGroup = "/group/create";
+
 /**
- * URL: "%server%/api/group/remove/:gid"
+ * delGroup
+ * 
+ * URL:
+ * 		- %server%/api/group/remove/:gid
+ * Descript:
+ *      - Delete a group
+ * Method: 
+ *      - POST
+ * Params:
+ *      - gid: The group id to be deleted
+ * Returns:
+ *      - JSON group object after deletion
  */
 var delGroup = "/group/remove/:gid";
+
 /**
- * URL: "%server%/api/group/update"
+ * updateGroup
+ * 
+ * URL:
+ * 		- %server%/api/group/update
+ * Descript:
+ *      - Update a group
+ * Method: 
+ *      - POST
+ * Params:
+ *      - gid: The group id to be updated
+ * 		- name: The group name
+ * 		- descrip: The group description
+ * Returns:
+ *      - JSON group object after update
  */
 var updateGroup = "/group/update";
+
 /**
- * URL: "%server%/api/group/add/user"
+ * addGroupUser
+ * 
+ * URL:
+ * 		- %server%/api/group/add/user
+ * Descript:
+ *      - Add a user to a group
+ * Method: 
+ *      - POST
+ * Params:
+ *      - gid: The group id
+ * 		- uid: The user id to be added
+ * Returns:
+ *      - JSON group users object after creation
  */
 var addGroupUser = "/group/add/user";
+
 /**
- * URL: "%server%/api/group/remove/user"
+ * delGroupUser
+ * 
+ * URL:
+ * 		- %server%/api/group/remove/user
+ * Descript:
+ *      - Delete a user from a group
+ * Method: 
+ *      - POST
+ * Params:
+ *      - gid: The group id
+ * 		- uid: The user id to be deleted
+ * Returns:
+ *      - JSON group users object after deletion
  */
 var delGroupUser = "/group/remove/user";
 //==========================================================================================
-/**
- * Returns the JSON object representing a user from the database
- */
+
 router.get(findUserById, function (req, res, next) {
 	if (req.params.uid == undefined) {
 		res.json({
