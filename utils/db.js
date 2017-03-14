@@ -268,14 +268,14 @@ DBUsers.add = function (user, callback) {
 };
 
 //Find a user by unique object id
-DBUsers.findById = function (route, callback) {
+DBUsers.findById = function (req, res, callback) {
 	if (req.params.uid == undefined) {
 		res.json({
 			error: "undefined"
 		});
 	} else {
 		collectionUsers.findOne({
-			_id: id
+			_id: req.params.uid
 		}, function (err, result) {
 			if (err) {
 				console.warn(err);
@@ -304,8 +304,9 @@ DBUsers.update = function (req, res, callback) {
 			error: "undefined"
 		});
 	} else {
+		var updates = {};
 		collectionUsers.update({
-			_id: id
+			_id: req.params.uid
 		}, {
 			$set: updates
 		}, {
@@ -438,7 +439,7 @@ DBFriends.add = function (userId, friendId, callback) {
 DBFriends.find = function (req, res, callback) {
 	if (req.params.uid) {
 		collectionFriends.find({
-			_id: userId
+			_id: req.params.uid
 		}, {
 			friends: true
 		}).toArray(function (err, result) {
@@ -542,11 +543,11 @@ DBGroups.add = function (req, res, callback) {
 	if (creatorId && groupName) {
 		var date = new Date();
 		collectionGroups.insert({
-			name: group.name,
-			creatorid: group.creatorid,
-			ownerid: group.ownerid,
-			courses: group.courses,
-			created: group.created
+			name: groupName,
+			creatorid: creatorId,
+			ownerid: creatorId,
+			courses: undefined,
+			created: new Date()
 		}, function (err, result) {
 			if (err) {
 				console.warn(err);
