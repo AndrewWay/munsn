@@ -254,7 +254,6 @@ DBUsers.add = function (user, callback) {
 				_id: utils.getIdFromEmail(user.email)
 				//_id: req.body.uid
 			};
-
 			//Create auth key and store it in auths
 			DBAuth.add(row, function (result) {
 				callback("[DB] Registration: Added authkey with result\n" + result);
@@ -266,20 +265,25 @@ DBUsers.add = function (user, callback) {
 			callback("[DB] Registration: Missing fields");
 		}
 	}
-
 };
 
 //Find a user by unique object id
-DBUsers.findById = function (id, callback) {
-	collectionUsers.findOne({
-		_id: id
-	}, function (err, result) {
-		if (err) {
-			console.warn(err);
-		}
-		//Returns null if error occured
-		callback(result);
-	});
+DBUsers.findById = function (route, callback) {
+	if (req.params.uid == undefined) {
+		res.json({
+			error: "undefined"
+		});
+	} else {
+		collectionUsers.findOne({
+			_id: id
+		}, function (err, result) {
+			if (err) {
+				console.warn(err);
+			}
+			//Returns null if error occured
+			callback(result);
+		});
+	}
 };
 
 //Find users matching query
@@ -294,35 +298,47 @@ DBUsers.find = function (query, callback) {
 };
 
 //Updates the user
-DBUsers.update = function (id, updates, callback) {
-	collectionUsers.update({
-		_id: id
-	}, {
-		$set: updates
-	}, {
-		upsert: true
-	}, function (err, obj) {
-		if (err) {
-			console.warn(err);
-		} else {
-			callback(obj.result);
-		}
-	});
+DBUsers.update = function (req, res, callback) {
+	if (req.params.uid == undefined) {
+		res.json({
+			error: "undefined"
+		});
+	} else {
+		collectionUsers.update({
+			_id: id
+		}, {
+			$set: updates
+		}, {
+			upsert: true
+		}, function (err, obj) {
+			if (err) {
+				console.warn(err);
+			} else {
+				callback(obj.result);
+			}
+		});
+	}
 };
 
 //Removes the user
-DBUsers.remove = function (id, callback) {
-	collectionUsers.remove({
-		_id: id
-	}, {
-		single: true
-	}, function (err, obj) {
-		if (err) {
-			console.warn(err);
-		} else {
-			callback(obj.result);
-		}
-	});
+DBUsers.remove = function (req, res, callback) {
+	if (req.params.uid == undefined) {
+		res.json({
+			error: "undefined"
+		});
+	} else {
+		collectionUsers.remove({
+			_id: req.params.id
+		}, {
+			single: true
+		}, function (err, obj) {
+			if (err) {
+				console.warn(err);
+			} else {
+				callback(obj.result);
+			}
+		});
+	}
 };
 
 //AUTH
@@ -419,33 +435,43 @@ DBFriends.add = function (userId, friendId, callback) {
 };
 
 //Finds all friends of a userId and returns it as an array
-DBFriends.find = function (userId, callback) {
-	collectionFriends.find({
-		_id: userId
-	}, {
-		friends: true
-	}).toArray(function (err, result) {
-		if (err) {
-			console.warn(err);
-		}
-		callback(result);
-	});
+DBFriends.find = function (req, res, callback) {
+	if (req.params.uid) {
+		collectionFriends.find({
+			_id: userId
+		}, {
+			friends: true
+		}).toArray(function (err, result) {
+			if (err) {
+				console.warn(err);
+			}
+			callback(result);
+		});
+	}
 };
 
 //Removes the selected friendId from the specified userId
-DBFriends.remove = function (userId, friendId, callback) {
-	collectionFriends.update({
-		_id: userId
-	}, {
-		$pull: {
-			friends: friendId
-		}
-	}, function (err, result) {
-		if (err) {
-			console.warn(err);
-		}
-		callback(result);
-	});
+DBFriends.remove = function (req, res, callback) {
+	//Declare body variables
+	var userId = req.body.uid;
+	var friendId = req.body.fid;
+	//Check if body variables are not null, or undefined
+	if (userId && friendId) {
+		collectionFriends.update({
+			_id: userId
+		}, {
+			$pull: {
+				friends: friendId
+			}
+		}, function (err, result) {
+			if (err) {
+				console.warn(err);
+			}
+			callback(result);
+		});
+	} else {
+		//DEVIN: Wheres the rest of this logic?
+	}
 };
 
 //FRIEND REQUESTS
@@ -465,55 +491,85 @@ DBFriends.addRequest = function (userId, friendId, callback) {
 };
 
 //Find all friend requests from a user
-DBFriends.findRequests = function (query, callback) {
-	collectionFriendRequests.find(query).toArray(function (err, result) {
-		if (err) {
-			console.warn(err);
-		}
-		callback(result);
-	});
+DBFriends.findRequests = function (req, res, callback) {
+	var userId = req.params.uid;
+	var friendId = req.params.fid;
+	//Declare query variables
+	var query;
+	if (friendId) {
+		query = {
+			friendid: friendId
+		};
+	} else if (userId) {
+		query = {
+			userid: req.params.uid
+		};
+	} else {
+		query = undefined;
+	}
+	if (query) {
+		collectionFriendRequests.find(query).toArray(function (err, result) {
+			if (err) {
+				console.warn(err);
+			}
+			callback(result);
+		});
+	}
 };
 
 //Remove friend request
-DBFriends.removeRequest = function (userId, friendId, callback) {
-	collectionFriendRequests.remove({
-		userid: userId,
-		friendid: friendId
-	}, function (result) {
-		callback(result);
-	});
+DBFriends.removeRequest = function (req, res, callback) {
+	//Declare body variables
+	var userId = req.body.uid;
+	var friendId = req.body.fid;
+	if (userId && friendId) {
+		collectionFriendRequests.remove({
+			userid: userId,
+			friendid: friendId
+		}, function (result) {
+			callback(result);
+		});
+	}
 };
 
 //GROUPS
 //======================================================================================================
 
 //Add a group
-DBGroups.add = function (group, callback) {
-	var date = new Date();
-	collectionGroups.insert({
-		name: group.name,
-		creatorid: group.creatorid,
-		ownerid: group.ownerid,
-		courses: group.courses,
-		created: group.created
-	}, function (err, result) {
-		if (err) {
-			console.warn(err);
-		}
-		callback(result);
-	});
+DBGroups.add = function (req, res, callback) {
+	var creatorId = req.body.gid;
+	var groupName = req.body.name;
+	if (creatorId && groupName) {
+		var date = new Date();
+		collectionGroups.insert({
+			name: group.name,
+			creatorid: group.creatorid,
+			ownerid: group.ownerid,
+			courses: group.courses,
+			created: group.created
+		}, function (err, result) {
+			if (err) {
+				console.warn(err);
+			}
+			callback(result);
+		});
+	}
 };
 
+
 //Find a group by user
-DBGroups.findByUserId = function (userId, callback) {
-	collectionGroups.find({
-		creatorid: userId
-	}).toArray(function (err, result) {
-		if (err) {
-			console.warn(err);
-		}
-		callback(result);
-	});
+DBGroups.findByUserId = function (req, res, callback) {
+	var userId = req.params.uid;
+	if (userId) {
+		collectionGroups.find({
+			creatorid: userId
+		}).toArray(function (err, result) {
+			if (err) {
+				console.warn(err);
+			}
+			callback(result);
+		});
+	}
 };
 
 //Find group based on query
@@ -527,80 +583,99 @@ DBGroups.find = function (query, callback) {
 };
 
 //Update group
-DBGroups.update = function (groupId, updates, callback) {
-	collectionGroups.update({
-		_id: groupId
-	}, {
-		$set: updates
-	}, {
-		upsert: true
-	}, function (err, obj) {
-		if (err) {
-			console.warn(err);
-		} else {
-			callback(obj.result);
-		}
-	});
+DBGroups.update = function (req, res, callback) {
+	var groupId = req.body.gid;
+	var updates = req.body.updates;
+	if (groupId && updates) {
+		collectionGroups.update({
+			_id: groupId
+		}, {
+			$set: updates
+		}, {
+			upsert: true
+		}, function (err, obj) {
+			if (err) {
+				console.warn(err);
+			} else {
+				callback(obj.result);
+			}
+		});
+	}
+
 };
 
 //Remove a group
-DBGroups.remove = function (groupid, callback) {
-	collectionGroups.remove({
-		_id: groupid
-	}, function (result) {
-		callback(result);
-	});
+DBGroups.remove = function (req, res, callback) {
+	var groupid = req.params.gid;
+	if (groupid) {
+		collectionGroups.remove({
+			_id: groupid
+		}, function (result) {
+			callback(result);
+		});
+	}
 };
 
 //GROUP MEMBERS
 //======================================================================================================
 
 //Add member to group
-DBGroupMembers.add = function (groupId, memberId, callback) {
-	collectionGroupMembers.update({
-		_id: groupId
-	}, {
-		$push: {
-			members: memberId
-		}
-	}, {
-		upsert: true
-	}, function (err, result) {
-		if (err) {
-			console.warn(err);
-		}
-		callback(result);
-	});
+DBGroupMembers.add = function (req, res, callback) {
+	var groupId = req.body.gid;
+	var memberId = req.body.uid;
+	if (groupId && memberId) {
+		collectionGroupMembers.update({
+			_id: groupId
+		}, {
+			$push: {
+				members: memberId
+			}
+		}, {
+			upsert: true
+		}, function (err, result) {
+			if (err) {
+				console.warn(err);
+			}
+			callback(result);
+		});
+	}
 };
 
 //Finds all members of a group and returns it as an array
-DBGroupMembers.find = function (groupId, callback) {
-	collectionGroupMembers.find({
-		_id: groupId
-	}, {
-		members: true
-	}).toArray(function (err, result) {
-		if (err) {
-			console.warn(err);
-		}
-		callback(result);
-	});
+DBGroupMembers.find = function (req, res, callback) {
+	var groupId = req.params.gid;
+	if (groupId) {
+		collectionGroupMembers.find({
+			_id: groupId
+		}, {
+			members: true
+		}).toArray(function (err, result) {
+			if (err) {
+				console.warn(err);
+			}
+			callback(result);
+		});
+	}
 };
 
 //Removes member from group
-DBGroupMembers.remove = function (groupId, memberId, callback) {
-	collectionGroupMembers.update({
-		_id: groupId
-	}, {
-		$pull: {
-			members: memberId
-		}
-	}, function (err, result) {
-		if (err) {
-			console.warn(err);
-		}
-		callback(result);
-	});
+DBGroupMembers.remove = function (req, res, callback) {
+	var groupId = req.body.gid;
+	var memberId = req.body.uid;
+	if (groupId && memberId) {
+		collectionGroupMembers.update({
+			_id: groupId
+		}, {
+			$pull: {
+				members: memberId
+			}
+		}, function (err, result) {
+			if (err) {
+				console.warn(err);
+			}
+			callback(result);
+		});
+	}
 };
 
 //POSTS
