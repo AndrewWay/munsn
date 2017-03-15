@@ -770,10 +770,10 @@ DBPosts.add = function (req, res, callback) {
 	});
 };
 
-//Remove a post
+//Remove a post by id
 DBPosts.remove = function (req, res, callback) {
 	collectionPosts.remove({
-		_id: objectId
+		_id: req.body.pid
 	}, function (result) {
 		callback(result);
 	});
@@ -782,7 +782,19 @@ DBPosts.remove = function (req, res, callback) {
 //Get posts per user
 DBPosts.findByUserId = function (req, res, callback) {
 	collectionPosts.find({
-		authorid: userId
+		authorid: req.params.uid
+	}).toArray(function (err, results) {
+		if (err) {
+			console.warn(err);
+		}
+		callback(results);
+	});
+};
+
+//Get posts per post id
+DBPosts.findByPostId = function (req, res, callback) {
+	collectionPosts.find({
+		_id: req.params.pid
 	}).toArray(function (err, results) {
 		if (err) {
 			console.warn(err);
@@ -793,8 +805,12 @@ DBPosts.findByUserId = function (req, res, callback) {
 
 //Update post
 DBPosts.update = function (req, res, callback) {
+	var date = new date();
+	var updates = {};
+	if (req.body.data) updates.data = data;
+	updates.modified = date;
 	collectionPosts.update({
-		_id: postId
+		_id: req.body.pid
 	}, {
 		$set: updates
 	}, {
