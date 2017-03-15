@@ -311,6 +311,25 @@ var addGroupUser = "/group/add/user";
  *      - JSON group users object after deletion
  */
 var delGroupUser = "/group/remove/user";
+
+/**
+ * addPost
+ *
+ * URL:
+ * 		- %server%/api/post/add/user
+ * Descript:
+ *      - Add a post
+ * Method:
+ *      - POST
+ * Params:
+ *      - authorid: The authors id
+ * 		- origin: User or Group post
+ * 		- dataType: Text, picture, etc
+ * 		- data: Actual data
+ * Returns:
+ *      - JSON mongo result
+ */
+var addPost = "/post/add/user";
 //==========================================================================================
 
 router.get(findUserById, function (req, res, next) {
@@ -326,7 +345,6 @@ router.get(findUserById, function (req, res, next) {
  * ??
  */
 router.post(updateUser, function (req, res, next) {
-	//DEVIN: What are the body fields for the updates query
 	DB.Users.update(req, res, function (result) {
 		console.log(result);
 	});
@@ -422,6 +440,7 @@ router.post(delFriend, function (req, res, next) {
 		var dbResult = result.result;
 		//Check for database error
 		//DEVIN: This is totally broken now
+		//TODO: Unbreak this (completely nuke it)
 		if (dbResult == null) {
 			console.log("\x1b[31m%s\x1b[0m%s", "[API]", " /post/removeFriend: userId: " + userId + ", friendId: " + friendId + ", dbResult: " + JSON.stringify(dbResult));
 			res.json({
@@ -493,6 +512,13 @@ router.post(delGroupUser, function (req, res, next) {
 //Find members for group
 router.get(findGroupUsers, function (req, res, next) {
 	DB.GroupMembers.find(req, res, function (result) {
+		res.json(result);
+	});
+});
+
+//Add post
+router.post(addPost, function (req, res, next) {
+	DB.Posts.add(req, function (result) {
 		res.json(result);
 	});
 });

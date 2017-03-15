@@ -200,6 +200,11 @@ var DB = mongoClient.connect(dbURL, function (err, DB) {
 					$type: 'string'
 				}
 			}, {
+				//User or group
+				origin: {
+					$type: 'string'
+				}
+			}, {
 				created: {
 					$type: 'date'
 				}
@@ -208,8 +213,7 @@ var DB = mongoClient.connect(dbURL, function (err, DB) {
 					$type: 'date'
 				}
 			}, {
-				//What is this?
-				dType: {
+				dataType: {
 					$type: 'string'
 				}
 			}, {
@@ -221,8 +225,30 @@ var DB = mongoClient.connect(dbURL, function (err, DB) {
 		validationLevel: 'strict',
 		validationAction: 'error'
 	});
-	//DEVIN: COMPLETE THIS
-	//DB.createCollection('comments');
+
+/**
+ * The comments collection is a little special. It contains two fields:
+ *  - (objectId) _id: The same id as its matching post object (post._id = comment._id)
+ * 	- (Array[commentObject]) comments: The array containing the comment objects. Everytime a user comments on a post, we push to this array
+ * The commentObject contains:
+ *  - (string) cid: The comment id
+ *  - (string) author: The user id for the author
+ *  - (Array[dataObjects]) edits: The array containing the data objects. Every time a user edits their comment, we push to this array
+ * The dataObject contains:
+ *  - (string) data: The actual comment data
+ *  - (date) date: The date that the comment was edited
+ */
+	DB.createCollection('comments', {
+		validator: {
+			$and: [{
+				comments: {
+					$type: 'array'
+				}
+			}]
+		},
+		validationLevel: 'strict',
+		validationAction: 'error'
+	});
 
 	//Variables set to mongo collections
 	collectionAuths = DB.collection('auth');
@@ -727,13 +753,15 @@ DBGroupMembers.remove = function (req, res, callback) {
 
 //Add a post
 DBPosts.add = function (post, callback) {
+	console.log(post);
 	var date = new Date();
 	collectionPosts.insert({
-		authorid: post.authorId,
-		created: post.created,
-		modified: post.modified,
-		dType: post.dType,
-		data: post.data
+		authorid: post.body.authorid,
+		origin: post.body.origin,
+		created: date,
+		modified: date,
+		dataType: post.body.dataType,
+		data: post.body.data
 	}, function (err, result) {
 		if (err) {
 			console.warn(err);
@@ -784,15 +812,15 @@ DBPosts.update = function (postId, updates, callback) {
 //======================================================================================================
 
 //Add a comment
+//TODO: Fix parameters to accept req, res
 DBComments.add = function (postId, authorId, data, callback) {
 	var date = new Date();
 	var comment = {
 		commentid: authorId + date.getTime(),
 		authorid: authorId,
-		created: date,
-		modified: date,
-		history: [{
-			data: data
+		data: [{
+			data: data,
+			date: date
 		}]
 	};
 	collectionComments.update({
@@ -823,7 +851,7 @@ DBComments.removeById = function (postId, commentId, callback) {
 	});
 };
 
-//Get comments per postId
+//Get comments per userid
 DBComments.findByPostId = function (userId, callback) {
 	collectionComments.find({
 		authorid: userId
@@ -836,11 +864,15 @@ DBComments.findByPostId = function (userId, callback) {
 };
 
 //Update comment
-DBComments.update = function (postId, updates, callback) {
+DBComments.update = function (req, res, callback) {
+	var updates = {};
+	var date = new Date();
+	if (req.params.data) updates.data = req.params.data;
+	updates.date = date;
 	collectionComments.update({
-		_id: postId
+		_id: req.params.postId, "comments.cid": req.params.cid
 	}, {
-		$set: updates
+		$push: {edits: updates}
 	}, {
 		upsert: true
 	}, function (err, obj) {

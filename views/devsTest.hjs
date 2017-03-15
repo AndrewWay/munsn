@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{{ title }}</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <h1>{{ title }}</h1>
+    <p>Welcome to post creation</p>
+    <form method="post" action="/api/post/add/user">
+        AUTHOR ID: <input type="text" name="authorid"><br>
+        ORIGIN: <input type="text" name="origin"><br>
+        DATA TYPE: <input type="text" name="dataType"><br>
+        DATA: <input type="text" name="data"><br>
+        <input type="submit" name="Register">
+    </form>
+
+  </body>
+</html>

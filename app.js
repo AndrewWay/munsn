@@ -14,7 +14,6 @@ var busboy = require('connect-busboy');
 
 //Routes
 var routerIndex = require('./routes/index');
-var routerUsers = require('./routes/users');
 var routerApi = require('./routes/api');
 var routerAuth = require('./routes/auth');
 var routerTest = require('./routes/test');
@@ -56,8 +55,6 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 //Index Page
 app.use('/', routerIndex);
-// ?
-app.use('/users', routerUsers);
 //API Calls
 app.use('/api', routerApi);
 //Auth Server
