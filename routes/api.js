@@ -204,7 +204,22 @@ var deleteUser = "/user/remove/:uid";
  *      - JSON user object after creation
  */
 var registerUser = "/user/register";
-
+/**
+ * loginUser
+ *
+ * URL:
+ * 		- %server%/api/user/login
+ * Descript:
+ *      - Logs user into the site
+ * Method:
+ *      - POST
+ * Params:
+ *      - uid: User's id
+ *      - pass: User's password
+ * Returns:
+ *      - JSON result
+ */
+var loginUser = "/user/login";
 /**
  * addFriendReq
  *
@@ -397,6 +412,11 @@ router.post(registerUser, function (req, res, next) {
 	DB.Users.add(req.body, function (result) {
 		console.log(result);
 	});
+});
+
+//POST login user
+router.post(loginUser, function (req, res, next) {
+	//DEVIN: Stuff needs to happen right here
 });
 
 //GET list of friends from userId
