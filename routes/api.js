@@ -554,10 +554,14 @@ router.post(addPost, function (req, res, next) {
 });
 
 router.get(findPostByUid, function (req, res, next) {
-
+	DB.Posts.findByUserId(req, res, function (result) {
+		res.json(result);
+	});
 });
 router.get(findPostByPid, function (req, res, next) {
-
+	DB.Posts.findByPostId(req, res, function (result) {
+		res.json(result);
+	});
 });
 
 module.exports = router;
