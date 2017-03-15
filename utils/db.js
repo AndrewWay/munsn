@@ -805,10 +805,12 @@ DBPosts.findByPostId = function (req, res, callback) {
 
 //Update post
 DBPosts.update = function (req, res, callback) {
-	var date = new date();
+	var date = new Date();
 	var updates = {};
-	if (req.body.data) updates.data = data;
-	updates.modified = date;
+	if (req.body.data) {
+		updates.data = req.body.data;
+		updates.modified = date;
+	}
 	collectionPosts.update({
 		_id: req.body.pid
 	}, {
