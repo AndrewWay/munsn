@@ -11,7 +11,7 @@ var utils = require('./utils');
  */
 var validate = function (key, callback) {
 	//Check if auth key exists
-	DB.auth_findAuthKey(key, function (checkResult) {
+	DB.Auth.find(key, function (checkResult) {
 		//console.log(JSON.stringify(checkResult));
 		if (checkResult) {
 			console.log('[ROUTER] /auth: Found authkey for key: ' + checkResult.authkey);
@@ -21,8 +21,8 @@ var validate = function (key, callback) {
 			//If not then auth the user, and delete the key from regauths
 			if (currentDate.getTime() <= checkResult.expiry) {
 				console.log('[ROUTER] /auth: authkey is valid');
-				DB.auth_deleteAuthKey(checkResult.authkey, function (deleteResult) {
-					DB.users_updateUser(id, {
+				DB.Auth.remove(checkResult.authkey, function (deleteResult) {
+					DB.Users.update(id, {
 						auth: true
 					}, function (updateResult) {
 						console.log('ROUTER: /auth: User updated');
@@ -34,13 +34,13 @@ var validate = function (key, callback) {
 				console.log('[ROUTER] /auth: authkey is expired');
 				console.log('[ROUTER] /auth: sending new email to user ' + checkResult.userId);
 				//Get user entry from DB
-				DB.users_findUserById(id, function (userResult) {
+				DB.Users.findById(id, function (userResult) {
 					//Create relevant data
 					var date = new Date();
 					var authkey = id + date.getTime();
 					var mins = 1;
 					//Send the updated data to the database and update it
-					DB.auth_updateAuthKey(userResult, authkey, utils.addMinsToDate(date, mins).getTime(), function (result) {
+					DB.Auth.update(userResult, authkey, utils.addMinsToDate(date, mins).getTime(), function (result) {
 						console.log(result);
 					});
 				});
