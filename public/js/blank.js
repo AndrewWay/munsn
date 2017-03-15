@@ -6,9 +6,15 @@
 
 
     $(window).scroll(function(){
-        $(".sidebars").css({
-            'top': $(this).scrollTop() //Use it later
-        });
+		
+		if(($(".sidebars").offset().top + $(".sidebars").height()) < $(".timeline").height() || $(this).scrollTop() < $(".sidebars").offset().top ){ 
+			$(".sidebars").css({
+			
+				'top': $(this).scrollTop() + 50 //Use it later
+			
+            
+			});
+		}
     });
 
 

@@ -4,6 +4,7 @@
 	<meta charset="UTF-8">
 	<title>{{Title}}</title>
 	<link href="/stylesheets/blank.css" rel="stylesheet"/>
+	<link href="/stylesheets/post.css" rel="stylesheet"/>
 	
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
 	<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
@@ -39,15 +40,115 @@
 
 	<div class="container">
 	<div class="sidebars" id="section-left">
-		<div class="content-1">
+		<div class="userInfo" id="userPic">
+			<a href="{{ USER_LINK }}"><img src="/img/SEAHAWK_SIL.jpg"></a>	
 		</div>
-		<div class="content-2">
+		<div class="userInfo" id="lists">
+			<div class="userLists" id="groupList">
+				<h5> GROUP LIST </h5>
+				<ul id="groupList">
+					<li><a href="#"> TEST1 </a></li>
+					<li><a href="#"> TEST2 </a></li>
+					<li><a href="#"> TEST3 </a></li>
+				</ul>
+			</div>
+		
+			<div class="userLists" id="classList">
+				<h5> CLASS LIST </h5>
+				<ul id="classList">
+					<li><a href="#"> TEST1TEST1 TEST1 TEST1 TEST1  </a></li>
+					<li><a href="#"> TEST2 </a></li>
+					<li><a href="#"> TEST3 </a></li>
+				</ul>
+			</div>
+			
+			<div class="userLists" id="etc">
+				<h5> OTHER LIST </h5>
+				<ul id="otherList">
+					<li><a href="#"> TEST1 </a></li>
+					<li><a href="#"> TEST2 </a></li>
+					<li><a href="#"> TEST3 </a></li>
+				</ul>
+			</div>
+		
 		</div>
 	</div>
 	<div class="timeline">
+		<!-- RANDOM POSTS FOR TESTING -->
+	
+		<div class="postTemp">
+				<div class="postInfo">
+					<div class="postPic">
+						<img src="/img/SEAHAWK_SIL.jpg">
+					</div> 
+					<div class="postName">
+						<a href="{{ POST_LINK }}"> {{ POST_NAME }} </a> <br>
+						<span>{{ POST_TIME }}</span>
+					</div>
+				</div>
+				<div class="postCont">
+					<p> {{ POST_TEXT }}</p><img src="/img/postImg.png">
+				</div>
+				
+				<div class="postComm">
+					<div class="commTemp">
+						<div class="commInfo">
+							<div class="commPic">
+								<img src="/img/SEAHAWK_SIL.jpg">
+							</div>
+							<div class="commName">
+								<a href="{{ COMM_LINK }}"> {{ COMM_NAME }} </a> <br>
+								<span>{{ COMM_TIME }}</span>
+							</div>
+						</div>
+						<div class="commCont">
+							<p> {{ COMM_TEXT }} </p>
+						</div>
+					</div>
+					<div class="commField">
+						<!--Text field for comments to be posted, followed by a submit button -->
+					</div>
+				</div>
+		</div>
+		
+		<div class="postTemp">
+				<div class="postInfo">
+					<div class="postPic">
+						<img src="/img/SEAHAWK_SIL.jpg">
+					</div> 
+					<div class="postName">
+						<a href="{{ POST_LINK }}"> {{ POST_NAME }} </a> <br>
+						<span>{{ POST_TIME }}</span>
+					</div>
+				</div>
+				<div class="postCont">
+					<p> {{ POST_TEXT }}</p><img src="/img/postImg.png">
+				</div>
+				
+				<div class="postComm">
+					<div class="commTemp">
+						<div class="commInfo">
+							<div class="commPic">
+								<img src="/img/SEAHAWK_SIL.jpg">
+							</div>
+							<div class="commName">
+								<a href="{{ COMM_LINK }}"> {{ COMM_NAME }} </a> <br>
+								<span>{{ COMM_TIME }}</span>
+							</div>
+						</div>
+						<div class="commCont">
+							<p> {{ COMM_TEXT }} </p>
+						</div>
+					</div>
+					<div class="commField">
+						<!--Text field for comments to be posted, followed by a submit button -->
+					</div>
+				</div>
+		</div>
 	</div>
 	<div class="sidebars" id="section-right">
 		<div class= "content-1">
+		TEST <br>
 		</div>
 		<div class ="content-2">
 		</div>
