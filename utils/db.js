@@ -832,11 +832,11 @@ DBPosts.update = function (req, res, callback) {
 DBComments.add = function (req, res, callback) {
 	var date = new Date();
 	var comment = {
-		commentid: authorId + date.getTime(),
-		authorid: authorId,
+		commentid: req.body.authorid + date.getTime(),
+		authorid: req.body.authorid,
 		data: [{
-			data: data,
-			date: date
+			data: req.body.data,
+			date: req.body.date
 		}]
 	};
 	collectionComments.update({
