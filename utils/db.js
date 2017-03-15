@@ -226,18 +226,18 @@ var DB = mongoClient.connect(dbURL, function (err, DB) {
 		validationAction: 'error'
 	});
 
-/**
- * The comments collection is a little special. It contains two fields:
- *  - (objectId) _id: The same id as its matching post object (post._id = comment._id)
- * 	- (Array[commentObject]) comments: The array containing the comment objects. Everytime a user comments on a post, we push to this array
- * The commentObject contains:
- *  - (string) cid: The comment id
- *  - (string) author: The user id for the author
- *  - (Array[dataObjects]) edits: The array containing the data objects. Every time a user edits their comment, we push to this array
- * The dataObject contains:
- *  - (string) data: The actual comment data
- *  - (date) date: The date that the comment was edited
- */
+	/**
+	 * The comments collection is a little special. It contains two fields:
+	 *  - (objectId) _id: The same id as its matching post object (post._id = comment._id)
+	 * 	- (Array[commentObject]) comments: The array containing the comment objects. Everytime a user comments on a post, we push to this array
+	 * The commentObject contains:
+	 *  - (string) cid: The comment id
+	 *  - (string) author: The user id for the author
+	 *  - (Array[dataObjects]) edits: The array containing the data objects. Every time a user edits their comment, we push to this array
+	 * The dataObject contains:
+	 *  - (string) data: The actual comment data
+	 *  - (date) date: The date that the comment was edited
+	 */
 	DB.createCollection('comments', {
 		validator: {
 			$and: [{
@@ -536,7 +536,8 @@ DBFriends.addRequest = function (req, res, callback) {
 			});
 	} else {
 		//Else return result json
-		console.log("\x1b[32m%s\x1b[0m%s", "[API]", " /post/sendFriendRequest: userId: " + userId + ", friendId: " + friendId + ", dbResult: " + JSON.stringify(findResult));
+		//DEVIN: This console log function is broken
+		//console.log("\x1b[32m%s\x1b[0m%s", "[API]", " /post/sendFriendRequest: userId: " + userId + ", friendId: " + friendId + ", dbResult: " + JSON.stringify(findResult));
 		res.json({
 			result: "010",
 			operation: "sendFriendRequest",
@@ -752,16 +753,15 @@ DBGroupMembers.remove = function (req, res, callback) {
 //======================================================================================================
 
 //Add a post
-DBPosts.add = function (post, callback) {
-	console.log(post);
+DBPosts.add = function (req, res, callback) {
 	var date = new Date();
 	collectionPosts.insert({
-		authorid: post.body.authorid,
-		origin: post.body.origin,
+		authorid: req.body.authorid,
+		origin: req.body.origin,
 		created: date,
 		modified: date,
-		dataType: post.body.dataType,
-		data: post.body.data
+		dataType: req.body.dataType,
+		data: req.body.data
 	}, function (err, result) {
 		if (err) {
 			console.warn(err);
@@ -867,12 +867,17 @@ DBComments.findByPostId = function (userId, callback) {
 DBComments.update = function (req, res, callback) {
 	var updates = {};
 	var date = new Date();
-	if (req.params.data) updates.data = req.params.data;
+	if (req.params.data) {
+		updates.data = req.params.data;
+	}
 	updates.date = date;
 	collectionComments.update({
-		_id: req.params.postId, "comments.cid": req.params.cid
+		_id: req.params.postId,
+		"comments.cid": req.params.cid
 	}, {
-		$push: {edits: updates}
+		$push: {
+			edits: updates
+		}
 	}, {
 		upsert: true
 	}, function (err, obj) {

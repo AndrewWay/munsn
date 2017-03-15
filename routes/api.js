@@ -518,7 +518,7 @@ router.get(findGroupUsers, function (req, res, next) {
 
 //Add post
 router.post(addPost, function (req, res, next) {
-	DB.Posts.add(req, function (result) {
+	DB.Posts.add(req, res, function (result) {
 		res.json(result);
 	});
 });
