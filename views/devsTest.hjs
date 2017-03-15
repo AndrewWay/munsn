@@ -7,8 +7,9 @@
   <body>
     <h1>{{ title }}</h1>
     <p>Welcome to post update</p>
-    <form method="post" action="/api/post/remove/user">
-        POST ID: <input type="text" name="pid"><br>
+    <form method="post" action="/api/post/add/user">
+        POST ID: <input type="text" name="authorid"><br>
+        VISIBILITY: <input type="text" name="visibility"><br>
         ORIGIN: <input type="text" name="origin"><br>
         DATA TYPE: <input type="text" name="dataType"><br>
         DATA: <input type="text" name="data"><br>

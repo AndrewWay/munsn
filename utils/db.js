@@ -66,6 +66,15 @@ var DB = mongoClient.connect(dbURL, function (err, DB) {
 					$type: 'bool'
 				}
 			}, {
+				/*
+				private: Only the user can view the post
+				public: Everyone can view the post
+				friends: Only friends can view the post
+				*/
+				visibility: {
+					$type: 'string'
+				}
+			}, {
 				_id: {
 					$type: 'string'
 				}
@@ -201,6 +210,18 @@ var DB = mongoClient.connect(dbURL, function (err, DB) {
 					$type: 'string'
 				}
 			}, {
+				/*
+				private: Only the user can view the post
+				public: Everyone can view the post
+				friends: Only friends can view the post
+				list: Only a list of friends can view,
+
+				For list, update to the array list(userId)
+				*/
+				visibility: {
+					$type: 'string'
+				}
+			}, {
 				//User or group
 				origin: {
 					$type: 'string'
@@ -282,6 +303,7 @@ DBUsers.add = function (user, callback) {
 				gender: user.gender,
 				email: user.email,
 				auth: false,
+				visibility: user.visibility,
 				_id: utils.getIdFromEmail(user.email)
 				//_id: req.body.uid
 			};
@@ -336,6 +358,10 @@ DBUsers.update = function (req, res, callback) {
 		});
 	} else {
 		var updates = {};
+		if (req.body.pass) updates.pass = req.body.pass;
+		if (req.body.email) updates.email = req.body.email;
+		if (req.body.visibility) updates.visibility = req.body.visibility;
+		if (req.body.address) updates.address = req.body.address;
 		collectionUsers.update({
 			_id: req.params.uid
 		}, {
@@ -758,6 +784,8 @@ DBPosts.add = function (req, res, callback) {
 	var date = new Date();
 	collectionPosts.insert({
 		authorid: req.body.authorid,
+		visibility: req.body.visibility,
+		list: [],
 		origin: req.body.origin,
 		created: date,
 		modified: date,
@@ -812,6 +840,8 @@ DBPosts.update = function (req, res, callback) {
 		updates.data = req.body.data;
 		updates.modified = date;
 	}
+	if (req.body.visibility) updates.visibility = req.body.visibility;
+
 	collectionPosts.update({
 		_id: ObjectID(req.body.pid)
 	}, {
