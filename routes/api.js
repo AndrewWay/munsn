@@ -330,6 +330,36 @@ var delGroupUser = "/group/remove/user";
  *      - JSON mongo result
  */
 var addPost = "/post/add/user";
+/**
+ * findPostByPid
+ *
+ * URL:
+ * 		- %server%/api/post/:pid
+ * Descript:
+ *      - Get a singular post by PostID
+ * Method:
+ *      - GET
+ * Params:
+ *      - pid: The post id
+ * Returns:
+ *      - JSON mongo result
+ */
+var findPostByPid = "/post/:pid";
+/**
+ * findPostByUid
+ *
+ * URL:
+ * 		- %server%/api/post/user/:pid
+ * Descript:
+ *      - Get ALL posts by UserID
+ * Method:
+ *      - GET
+ * Params:
+ *      - uid: The user id
+ * Returns:
+ *      - JSON mongo result
+ */
+var findPostByUid = "/post/user/:uid";
 //==========================================================================================
 
 router.get(findUserById, function (req, res, next) {
@@ -521,6 +551,13 @@ router.post(addPost, function (req, res, next) {
 	DB.Posts.add(req, res, function (result) {
 		res.json(result);
 	});
+});
+
+router.get(findPostByUid, function (req, res, next) {
+
+});
+router.get(findPostByPid, function (req, res, next) {
+
 });
 
 module.exports = router;
