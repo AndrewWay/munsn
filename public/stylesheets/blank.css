@@ -1,7 +1,7 @@
 body, html {
 	/*Set height through javascript or something getting screen height?*/
 	min-height: 666px;
-	height: 100%;
+	height: 100vh;
 	width: 100%;
 	min-width: 1000px;
 	margin: 0;
@@ -12,7 +12,6 @@ body, html {
 
 .navbar {
 	background-color: #333;
-	overflow: hidden;
 	position: fixed;
 	top:0;
 	width:100%;
@@ -80,7 +79,7 @@ body, html {
 	border-style: none;
 	height:1.75em;
 	position:fixed;
-	top:.79em;
+	top:.95em;
 }
 
 .buttons{
@@ -105,13 +104,13 @@ body, html {
 }
 
 .sidebars{
+	height: calc(100% - 50px);
 	width: 16%;
 	min-width: 160px;
-	min-height: 100%;
 	position: absolute;
-	padding-bottom:100%;
-	background-color: grey;
-	margin-top: 3em;
+	background-color: #aaaaaa;
+	top: 3em;
+	box-sizing: content-box;
 }
 
 #section-left{
@@ -138,8 +137,78 @@ body, html {
 	position: absolute;
 	top: 0;
 	
-	height: 100%;
+	height:100vh;
 	width: 100%;
 	min-width: 1000px;
 }
 
+/*Left sidebar CSS*/ 
+.sidebars div {
+	position: static;
+	display: inline-block;
+	
+	margin-top:10px;
+	width: 100%;
+
+}
+
+.userLists {
+	background-color: #cccccc;
+}
+
+.userLists ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+.userLists h5 {
+	display: block;
+	margin: auto;
+	border-bottom: 1px solid #ffffff;
+}
+
+.userLists a {
+	position: relative;
+	display: block;
+	
+	max-width: 90%;
+	min-width: 90%;
+	margin-left: 10%;
+	
+	font-family: Tahoma;
+	text-decoration: none;
+	font-size: 0.9em;
+	font-weight: bold;
+	color: #000000;
+	
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+}
+
+.userLists li {
+	border-bottom: 1px solid #ffffff;
+}
+
+.userLists li:hover {
+	background-color: #ffffff;
+}
+
+.userLists li:last-of-type {
+	border-bottom: none;
+}
+
+#userPic img{
+	position: relative;
+	
+	display:block;
+	margin: auto;
+	
+	width: 80%;
+	
+	border-style: outset;
+	border-width: 2px;
+	border-color: #aaaaaa #7f1734 #7f1734 #aaaaaa;
+}
+/*End*/
