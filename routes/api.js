@@ -357,31 +357,45 @@ var addGroupUser = "/group/add/user";
 var delGroupUser = "/group/remove/user";
 
 /**
- * addPost
+ * addTimelinePost
  *
  * URL:
- * 		- %server%/api/post/add/user
+ * 		- %server%/api/post/add/timeline
  * Descript:
- *      - Add a post
+ *      - Add a user timeline post
  * Method:
  *      - POST
  * Params:
  *      - authorid: The authors id
- * 		- origin: User or Group post
+ * 		- origin: The userid of the timeline
  * 		- dataType: Text, picture, etc
  * 		- data: Actual data
  * Returns:
  *      - JSON mongo result
  */
-var addPost = "/post/add/user";
-
+var addTimelinePost = "/post/add/timeline";
+/**
+ * addGroupPost
+ *
+ * URL:
+ * 		- %server%/api/post/add/group
+ * Descript:
+ *      - Add a group post
+ * Method:
+ *      - POST
+ * Params:
+ *      - authorid: The authors id
+ * 		- origin: The groupid
+ * 		- dataType: Text, picture, etc
+ * 		- data: Actual data
+ * Returns:
+ *      - JSON mongo result
+ */
+var addGroupPost = "/post/add/group";
 //==========================================================================================
 
 router.get(findUserById, function (req, res, next) {
-	DB.Users.findById({
-		req: req,
-		res: res
-	}, function (user) {
+	DB.Users.findById(req, res, function (user) {
 		res.json(user);
 	});
 });
@@ -566,8 +580,24 @@ router.get(findGroupUsers, function (req, res, next) {
 	});
 });
 
-//Add post
-router.post(addPost, function (req, res, next) {
+//Add timeline post
+router.post(addTimelinePost, function (req, res, next) {
+	//Set type before pass to db
+	req.body.origin = {
+		type: 'timeline',
+		id: req.body.origin
+	};
+	DB.Posts.add(req, res, function (result) {
+		res.json(result);
+	});
+});
+//Add group post
+router.post(addGroupPost, function (req, res, next) {
+	//Set type before pass to db
+	req.body.origin = {
+		type: 'group',
+		id: req.body.origin
+	}
 	DB.Posts.add(req, res, function (result) {
 		res.json(result);
 	});

@@ -266,22 +266,22 @@ var DB = mongoClient.connect(dbURL, function (err, DB) {
 //======================================================================================================
 
 //Insert one user into the user collection
-DBUsers.add = function (user, callback) {
-	if (!Object.keys(user).length) {
+DBUsers.add = function (req, res, callback) {
+	if (!Object.keys(req.body).length) {
 		console.log("[DB] Registration: no data");
 	} else {
 		//Create user
 		try {
 			var row = {
-				fname: user.fname,
-				lname: user.lname,
-				pass: user.pass,
-				dob: user.dob,
-				address: user.address,
-				gender: user.gender,
-				email: user.email,
+				fname: req.body.fname,
+				lname: req.body.lname,
+				pass: req.body.pass,
+				dob: req.body.dob,
+				address: req.body.address,
+				gender: req.body.gender,
+				email: req.body.email,
 				auth: false,
-				_id: utils.getIdFromEmail(user.email)
+				_id: utils.getIdFromEmail(req.body.email)
 				//_id: req.body.uid
 			};
 			//Create auth key and store it in auths
