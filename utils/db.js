@@ -3,6 +3,7 @@ var assert = require('assert');
 var path = require('path');
 var EMS = require('./ems');
 var utils = require('./utils');
+var ObjectID = require('mongodb').ObjectID;
 var DBAuth = {};
 var DBPosts = {};
 var DBGroups = {};
@@ -63,6 +64,15 @@ var DB = mongoClient.connect(dbURL, function (err, DB) {
 			}, {
 				auth: {
 					$type: 'bool'
+				}
+			}, {
+				/*
+				private: Only the user can view the post
+				public: Everyone can view the post
+				friends: Only friends can view the post
+				*/
+				visibility: {
+					$type: 'string'
 				}
 			}, {
 				_id: {
@@ -200,6 +210,18 @@ var DB = mongoClient.connect(dbURL, function (err, DB) {
 					$type: 'string'
 				}
 			}, {
+				/*
+				private: Only the user can view the post
+				public: Everyone can view the post
+				friends: Only friends can view the post
+				list: Only a list of friends can view,
+
+				For list, update to the array list(userId)
+				*/
+				visibility: {
+					$type: 'string'
+				}
+			}, {
 				//User or group
 				origin: {
 					$type: 'string'
@@ -281,6 +303,7 @@ DBUsers.add = function (req, res, callback) {
 				gender: req.body.gender,
 				email: req.body.email,
 				auth: false,
+				visibility: req.body.visibility,
 				_id: utils.getIdFromEmail(req.body.email)
 				//_id: req.body.uid
 			};
@@ -335,6 +358,10 @@ DBUsers.update = function (req, res, callback) {
 		});
 	} else {
 		var updates = {};
+		if (req.body.pass) updates.pass = req.body.pass;
+		if (req.body.email) updates.email = req.body.email;
+		if (req.body.visibility) updates.visibility = req.body.visibility;
+		if (req.body.address) updates.address = req.body.address;
 		collectionUsers.update({
 			_id: req.params.uid
 		}, {
@@ -757,6 +784,8 @@ DBPosts.add = function (req, res, callback) {
 	var date = new Date();
 	collectionPosts.insert({
 		authorid: req.body.authorid,
+		visibility: req.body.visibility,
+		list: [],
 		origin: req.body.origin,
 		created: date,
 		modified: date,
@@ -773,7 +802,7 @@ DBPosts.add = function (req, res, callback) {
 //Remove a post by id
 DBPosts.remove = function (req, res, callback) {
 	collectionPosts.remove({
-		_id: req.body.pid
+		_id: ObjectID(req.body.pid)
 	}, function (result) {
 		callback(result);
 	});
@@ -794,7 +823,7 @@ DBPosts.findByUserId = function (req, res, callback) {
 //Get posts per post id
 DBPosts.findByPostId = function (req, res, callback) {
 	collectionPosts.find({
-		_id: req.params.pid
+		_id: ObjectID(req.params.pid)
 	}).toArray(function (err, results) {
 		if (err) {
 			console.warn(err);
@@ -811,8 +840,10 @@ DBPosts.update = function (req, res, callback) {
 		updates.data = req.body.data;
 		updates.modified = date;
 	}
+	if (req.body.visibility) updates.visibility = req.body.visibility;
+
 	collectionPosts.update({
-		_id: req.body.pid
+		_id: ObjectID(req.body.pid)
 	}, {
 		$set: updates
 	}, {

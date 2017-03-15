@@ -111,7 +111,7 @@ _updateUser_ |
 :---------|
  **URL:**  %server%/api/user/update/:uid|
  **Description:** Updates an user's fields|
- **Params:** <br>- uid: The user id <br>- email: The email address <br>- pass: The password|
+ **Params:** <br>- uid: The user id <br>- email: The email address <br>- pass: The password <br>- address: The address <br>- visibility: The visibility of the user's timeline|
 **Returns:** JSON updated user object|
 
 _deleteUser_ |
@@ -184,12 +184,31 @@ _delGroupUser_ |
  **Params:** <br>- gid: The group id<br>- uid: The user id to be deleted|
 **Returns:** JSON group users object after deletion|
 
+_delPost_ |
+:---------|
+ **URL:**  %server%/api/post/remove/user|
+ **Description:** Delete a post|
+ **Params:** <br>- pid: The post id<br>- uid: The user id to be deleted|
+**Returns:** JSON mongo result|
+
+_updatePost_ |
+:---------|
+ **URL:**  %server%/api/post/update/user|
+ **Description:** Update a post|
+ **Params:** <br>- data: Actual data<br>- uid: The user id to be deleted|
+**Returns:** JSON mongo result|
+
 ## 4. JSON Objects
 
 _User_ |
 :---------|
  **Description:** The user object that every user has|
- **Fields:** <br>- (_string_) _id: The unique id generated from the email<br>- (_bool_) auth: Is the user authenticated yet<br>- (_string_) fName: First name<br>- (_string_) lName: Last name<br>- (_string_) gender: Gender<br>- (_date_) dob: Birthdate<br>- (_string_) email: Email address from @mun.ca<br>- (_string_) pass: Password<br>- (_string_) address: Address|
+ **Fields:** <br>- (_string_) _id: The unique id generated from the email<br>- (_bool_) auth: Is the user authenticated yet<br>- (_string_) fName: First name<br>- (_string_) lName: Last name<br>- (_string_) gender: Gender<br>- (_date_) dob: Birthdate<br>- (_string_) email: Email address from @mun.ca<br>- (_string_) pass: Password<br>- (_string_) address: Address <br>- (_string_) visibility: Visibility of the user's timeline:<br> <ul><li> public: Everyone can post <li> private: Only the user can post <li> friends: Only friends can post|
+
+_Post_ |
+:---------|
+ **Description:** The post object|
+ **Fields:** <br>- (_string_) authorid: The author's id<br>- (_string_) origin: The origin of the post<br> <ul><li> User: <li> Group</ul>- (_date_) created: The creation date of the post<br>- (_date_) modified: The last modified date of the post<br>- (_string_) dataType: <ul><li>text: Plain text<li>image: Image</ul>- (_string_) data: The actual data<br>- (_string_) visibility: Who can view the post: <ul><li> public: Everyone can view the post<li>private: Only the user can view the post<li>friends: Only friends can view the post<li>list: Only a list of friends can view the post</ul>- (_array[string]_) list: The list of friends who can view the post|
 
  _Auth_ |
 :---------|

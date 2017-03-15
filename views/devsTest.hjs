@@ -6,9 +6,10 @@
   </head>
   <body>
     <h1>{{ title }}</h1>
-    <p>Welcome to post creation</p>
-    <form method="post" action="/api/post/add/user">
-        AUTHOR ID: <input type="text" name="authorid"><br>
+    <p>Welcome to post update</p>
+    <form method="post" action="/api/post/add/timeline">
+        POST ID: <input type="text" name="authorid"><br>
+        VISIBILITY: <input type="text" name="visibility"><br>
         ORIGIN: <input type="text" name="origin"><br>
         DATA TYPE: <input type="text" name="dataType"><br>
         DATA: <input type="text" name="data"><br>
