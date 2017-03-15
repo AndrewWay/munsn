@@ -425,8 +425,8 @@ var updatePost = "/post/update/user";
 //==========================================================================================
 
 router.get(findUserById, function (req, res, next) {
-	DB.Users.findById(req, res, function (user) {
-		res.json(user);
+	DB.Users.findById(req, res, function (result) {
+		res.json(result);
 	});
 });
 
@@ -435,7 +435,7 @@ router.get(findUserById, function (req, res, next) {
  */
 router.post(updateUser, function (req, res, next) {
 	DB.Users.update(req, res, function (result) {
-		console.log(result);
+		res.json(result);
 	});
 });
 
@@ -443,7 +443,7 @@ router.post(updateUser, function (req, res, next) {
 
 router.post(deleteUser, function (req, res, next) {
 	DB.Users.remove(req, res, function (result) {
-		console.log(result);
+		res.json(result);
 	});
 });
 
@@ -453,8 +453,8 @@ router.post(deleteUser, function (req, res, next) {
  */
 router.post(registerUser, function (req, res, next) {
 	//Insert user with false auth into colUsers
-	DB.Users.add(req.body, function (result) {
-		console.log(result);
+	DB.Users.add(req, res, function (result) {
+		res.json(result);
 	});
 });
 

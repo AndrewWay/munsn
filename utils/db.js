@@ -27,7 +27,7 @@ var collectionComments; //DEVIN: Completion!!
 //DEVIN: TESTING
 //DEVIN: CALLBACKS
 //Connect to the database
-var DB = mongoClient.connect(dbURL, function (err, DB) {
+mongoClient.connect(dbURL, function (err, DB) {
 	assert.equal(null, err);
 	console.log('Connected to mongo server: ' + dbURL);
 	//Restricts and denies user documents so they have a user, email from mun.ca, and pass
@@ -47,7 +47,7 @@ var DB = mongoClient.connect(dbURL, function (err, DB) {
 				}
 			}, {
 				dob: {
-					$type: 'string'
+					$type: 'date'
 				}
 			}, {
 				address: {
@@ -59,7 +59,7 @@ var DB = mongoClient.connect(dbURL, function (err, DB) {
 				}
 			}, {
 				email: {
-					$type: /@mun\.ca$/
+					$regex: /@mun\.ca$/
 				}
 			}, {
 				auth: {
@@ -85,7 +85,7 @@ var DB = mongoClient.connect(dbURL, function (err, DB) {
 	});
 
 	//Restricts and denies regauth documents so that there is an authkey
-	DB.createCollection('auth', {
+	DB.createCollection('authkeys', {
 		validator: {
 			$and: [{
 				key: {
@@ -273,7 +273,7 @@ var DB = mongoClient.connect(dbURL, function (err, DB) {
 	});
 
 	//Variables set to mongo collections
-	collectionAuths = DB.collection('auth');
+	collectionAuths = DB.collection('authkeys');
 	collectionUsers = DB.collection('users');
 	collectionFriends = DB.collection('friends');
 	collectionFriendRequests = DB.collection('fRequests');
@@ -289,8 +289,12 @@ var DB = mongoClient.connect(dbURL, function (err, DB) {
 
 //Insert one user into the user collection
 DBUsers.add = function (req, res, callback) {
+	var result = {};
 	if (!Object.keys(req.body).length) {
-		console.log("[DB] Registration: no data");
+		console.log("[DB] Registration: Missing Data");
+		callback({
+			status: 'fail'
+		});
 	} else {
 		//Create user
 		try {
@@ -298,54 +302,72 @@ DBUsers.add = function (req, res, callback) {
 				fname: req.body.fname,
 				lname: req.body.lname,
 				pass: req.body.pass,
-				dob: req.body.dob,
+				dob: new Date(req.body.dob),
 				address: req.body.address,
 				gender: req.body.gender,
 				email: req.body.email,
 				auth: false,
-				visibility: req.body.visibility,
+				visibility: req.body.visibility ? req.body.visibility : "default",
 				_id: utils.getIdFromEmail(req.body.email)
 				//_id: req.body.uid
 			};
 			//Create auth key and store it in auths
-			DBAuth.add(row, function (result) {
-				callback("[DB] Registration: Added authkey with result\n" + result);
-			});
-			collectionUsers.insert(row, function (result) {
-				callback(result);
+			collectionUsers.insert(row, function (err, result) {
+				if (err) {
+					console.log("[DBUsers]: " + err.message);
+					callback({
+						status: 'fail'
+					});
+				} else {
+					console.log("[DBUsers] Inserted: " + result.insertedIds[0]);
+					DBAuth.add(row, function (result) {
+						callback(result);
+					});
+				}
 			});
 		} catch (err) {
-			callback("[DB] Registration: Missing fields");
+			console.log("[DBUsers] Registration: Missing fields or other error");
+			callback({
+				status: 'fail'
+			});
 		}
 	}
 };
 
 //Find a user by unique object id
 DBUsers.findById = function (req, res, callback) {
+	console.log("[DBUsers] FindById: " + req.params.uid);
 	if (req.params.uid == undefined) {
-		res.json({
-			error: "undefined"
+		callback({
+			status: 'fail'
 		});
 	} else {
 		collectionUsers.findOne({
 			_id: req.params.uid
 		}, function (err, result) {
 			if (err) {
-				console.warn(err);
+				console.warn("[DBUsers]: " + err.message);
 			}
 			//Returns null if error occured
-			callback(result);
+			callback({
+				status: 'ok',
+				data: result
+			});
 		});
 	}
 };
 
 //Find users matching query
-DBUsers.find = function (query, callback) {
-	collectionUsers.find(query).toArray(function (err, results) {
+DBUsers.find = function (req, res, callback) {
+	console.log("[DBUsers] Find: " + JSON.stringify(req.body));
+	collectionUsers.find(req.body).toArray(function (err, result) {
 		if (err) {
-			console.warn(err);
+			console.warn("[DBUsers]: " + err.message);
 		} else {
-			callback(results);
+			callback({
+				status: 'ok',
+				data: result
+			});
 		}
 	});
 };
@@ -357,11 +379,12 @@ DBUsers.update = function (req, res, callback) {
 			error: "undefined"
 		});
 	} else {
-		var updates = {};
-		if (req.body.pass) updates.pass = req.body.pass;
-		if (req.body.email) updates.email = req.body.email;
-		if (req.body.visibility) updates.visibility = req.body.visibility;
-		if (req.body.address) updates.address = req.body.address;
+		var updates = {
+			pass: req.body.pass,
+			email: req.body.email,
+			visibility: req.body.visibility,
+			address: req.body.address
+		};
 		collectionUsers.update({
 			_id: req.params.uid
 		}, {
@@ -414,13 +437,32 @@ DBAuth.add = function (row, callback) {
 		key: authkey,
 		expiry: expiry
 	};
-	collectionAuths.insert(auth, function (result) {
-		callback(result);
+	collectionAuths.insert(auth, function (err, result) {
+		if (err) {
+			console.log("[DBAuth]: " + err.message);
+			callback({
+				status: 'fail'
+			});
+		} else {
+			var rz = result.ops[0];
+			console.log("[DBAuth] Inserted: { Key: " + rz.key + ", userid: " + rz.userid + " }");
+			//Send auth email to the user with the auth link
+			EMS.sendAuthEmail(row, auth, function (err, message) {
+				if (err) {
+					console.log('[EMS]: ' + err);
+					callback({
+						status: 'fail'
+					});
+				} else {
+					console.log('[EMS] Sent To: ' + message.header.to + '\n[EMS] Subject: ' + message.header.subject);
+					callback({
+						status: 'ok'
+					});
+				}
+			});
+		}
 	});
-	//Send auth email to the user with the auth link
-	EMS.sendAuthEmail(row, auth, function (result) {
-		callback(result);
-	});
+
 };
 DBAuth.update = function (user, authkey, expiry, callback) {
 	var regAuth = {
@@ -543,7 +585,7 @@ DBFriends.addRequest = function (req, res, callback) {
 	//Check if body variables are not null, or undefined
 	if (userId && friendId) {
 		//Check to see if both users exist
-		DB.Users.find({
+		DBUsers.find({
 				_id: {
 					$in: [userId, friendId]
 				}
@@ -575,22 +617,11 @@ DBFriends.addRequest = function (req, res, callback) {
 
 //Find all friend requests from a user
 DBFriends.findRequests = function (req, res, callback) {
-	var userId = req.params.uid;
-	var friendId = req.params.fid;
-	//Declare query variables
-	var query;
-	if (friendId) {
-		query = {
-			friendid: friendId
-		};
-	} else if (userId) {
-		query = {
-			userid: req.params.uid
-		};
-	} else {
-		query = undefined;
-	}
-	if (query) {
+	var query = {
+		friendid: req.params.fid,
+		userid: req.params.uid
+	};
+	if (!Object.keys(query).length) {
 		collectionFriendRequests.find(query).toArray(function (err, result) {
 			if (err) {
 				console.warn(err);

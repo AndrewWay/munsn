@@ -31,7 +31,7 @@ var sendEmail = function (email, callback) {
 			// cc:      "else <else@your-email.com>",
 		},
 		function (err, message) {
-			callback(err ? '[EMS] ' + err : '[EMS] Sent Email To: ' + email.to + '\n[EMS] Subject: ' + email.subject);
+			callback(err, message);
 		}
 	);
 };

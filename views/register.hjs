@@ -8,8 +8,12 @@
     <h1>{{ title }}</h1>
     <p>Welcome to {{ title }}</p>
     <form method="post" action="/api/user/register">
-        USERNAME: <input type="text" name="user"><br>
+        Firstname: <input type="text" name="fname"><br>
+        Lastname: <input type="text" name="lname"><br>
         PASSWORD: <input type="text" name="pass"><br>
+        DOB: <input type="date" name="dob"><br>
+        Address: <input type="text" name="address"><br>
+        Gender: <input type="text" name="gender"><br>
         EMAIL: <input type="text" name="email"><br>
         <input type="submit" name="Register">
     </form>
