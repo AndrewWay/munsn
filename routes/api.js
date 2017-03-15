@@ -349,7 +349,7 @@ var findPostByPid = "/post/:pid";
  * findPostByUid
  *
  * URL:
- * 		- %server%/api/post/user/:pid
+ * 		- %server%/api/post/user/:uid
  * Descript:
  *      - Get ALL posts by UserID
  * Method:
