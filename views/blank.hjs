@@ -3,7 +3,12 @@
 <head lang="en">
 	<meta charset="UTF-8">
 	<title>{{Title}}</title>
-	<link href="/stylesheets/lostfound.css" rel="stylesheet"/>
+	<link href="../css/blank.css" rel="stylesheet"/>
+	
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+	<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+	
+	<script src="../js/blank.js"></script>
 
 </head>
 <body>
@@ -25,23 +30,24 @@
 		</div>
 
 		<div class="buttons">
-			<a href="#"><img id="not" src="/img/notification-red.png"></a>
-			<a href="#"><img id="cog" src="/img/logout.png"></a>
-			<a href="#"><img id="cog" src="/img/settings.png"></a>
+			<a href="#"><img id="not" src="../img/notification-red.png"></a>
+			<a href="#"><img id="cog" src="../img/logout.png"></a>
+			<a href="#"><img id="cog" src="../img/settings.png"></a>
 		</div>
 	</div>
 	</nav>
 
 	<div class="container">
-	<div class="section-left">
+	<div class="sidebars" id="section-left">
 		<div class="content-1">
+		TEST TEST
 		</div>
 		<div class="content-2">
 		</div>
 	</div>
 	<div class="timeline">
 	</div>
-	<div class="section-right">
+	<div class="sidebars" id="section-right">
 		<div class= "content-1">
 		</div>
 		<div class ="content-2">
