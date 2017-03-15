@@ -117,7 +117,36 @@ var findGroupUsers = "/group/users/:gid";
  */
 var findGroupById = "/group/info/:gid";
 
-
+/**
+ * findPostByPid
+ *
+ * URL:
+ * 		- %server%/api/post/:pid
+ * Descript:
+ *      - Get a singular post by PostID
+ * Method:
+ *      - GET
+ * Params:
+ *      - pid: The post id
+ * Returns:
+ *      - JSON mongo result
+ */
+var findPostByPid = "/post/:pid";
+/**
+ * findPostByUid
+ *
+ * URL:
+ * 		- %server%/api/post/user/:uid
+ * Descript:
+ *      - Get ALL posts by UserID
+ * Method:
+ *      - GET
+ * Params:
+ *      - uid: The user id
+ * Returns:
+ *      - JSON mongo result
+ */
+var findPostByUid = "/post/user/:uid";
 //=============================POST VERBS=============================
 
 /**
@@ -330,36 +359,7 @@ var delGroupUser = "/group/remove/user";
  *      - JSON mongo result
  */
 var addPost = "/post/add/user";
-/**
- * findPostByPid
- *
- * URL:
- * 		- %server%/api/post/:pid
- * Descript:
- *      - Get a singular post by PostID
- * Method:
- *      - GET
- * Params:
- *      - pid: The post id
- * Returns:
- *      - JSON mongo result
- */
-var findPostByPid = "/post/:pid";
-/**
- * findPostByUid
- *
- * URL:
- * 		- %server%/api/post/user/:uid
- * Descript:
- *      - Get ALL posts by UserID
- * Method:
- *      - GET
- * Params:
- *      - uid: The user id
- * Returns:
- *      - JSON mongo result
- */
-var findPostByUid = "/post/user/:uid";
+
 //==========================================================================================
 
 router.get(findUserById, function (req, res, next) {
