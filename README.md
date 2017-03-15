@@ -85,9 +85,23 @@ _findGroupsUsers_ |
 _findGroupById_ |
 :---------|
  **URL:**  %server%/api/group/info/:gid|
+ **Description:** Get a singular post by PostID|
+ **Params:** <br>- pid: The post id|
+**Returns:** JSON mongo result|
+
+_findPostByPid_ |
+:---------|
+ **URL:**  %server%/api/post/:pid|
  **Description:** Gets group from a group id|
  **Params:** <br>- gid: The group id|
 **Returns:** JSON group object|
+
+_findPostByUid_ |
+:---------|
+ **URL:**  %server%/api/post/user/:uid|
+ **Description:** Get ALL posts by UserID|
+ **Params:** <br>- uid: The user id|
+**Returns:** JSON mongo result|
 
 ___ 
 
