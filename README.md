@@ -184,6 +184,20 @@ _delGroupUser_ |
  **Params:** <br>- gid: The group id<br>- uid: The user id to be deleted|
 **Returns:** JSON group users object after deletion|
 
+_delPost_ |
+:---------|
+ **URL:**  %server%/api/post/remove/user|
+ **Description:** Delete a post|
+ **Params:** <br>- pid: The post id<br>- uid: The user id to be deleted|
+**Returns:** JSON mongo result|
+
+_updatePost_ |
+:---------|
+ **URL:**  %server%/api/post/update/user|
+ **Description:** Update a post|
+ **Params:** <br>- data: Actual data<br>- uid: The user id to be deleted|
+**Returns:** JSON mongo result|
+
 ## 4. JSON Objects
 
 _User_ |

@@ -360,6 +360,38 @@ var delGroupUser = "/group/remove/user";
  */
 var addPost = "/post/add/user";
 
+/**
+ * delPost
+ *
+ * URL:
+ * 		- %server%/api/post/remove/user
+ * Descript:
+ *      - Delete a post
+ * Method:
+ *      - POST
+ * Params:
+ *      - pid: The post id
+ * Returns:
+ *      - JSON mongo result
+ */
+var delPost = "/post/remove/user";
+
+/**
+ * updatePost
+ *
+ * URL:
+ * 		- %server%/api/post/update/user
+ * Descript:
+ *      - Update a post
+ * Method:
+ *      - POST
+ * Params:
+ * 		- data: Actual data
+ * Returns:
+ *      - JSON mongo result
+ */
+var updatePost = "/post/update/user";
+
 //==========================================================================================
 
 router.get(findUserById, function (req, res, next) {
@@ -549,6 +581,20 @@ router.get(findGroupUsers, function (req, res, next) {
 //Add post
 router.post(addPost, function (req, res, next) {
 	DB.Posts.add(req, res, function (result) {
+		res.json(result);
+	});
+});
+
+//Remove post
+router.post(delPost, function (req, res, next) {
+	DB.Posts.remove(req, res, function (result) {
+		res.json(result);
+	});
+});
+
+//Update post
+router.post(updatePost, function (req, res, next) {
+	DB.Posts.update(req, res, function (result) {
 		res.json(result);
 	});
 });

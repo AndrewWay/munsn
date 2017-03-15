@@ -3,6 +3,7 @@ var assert = require('assert');
 var path = require('path');
 var EMS = require('./ems');
 var utils = require('./utils');
+var ObjectID = require('mongodb').ObjectID;
 var DBAuth = {};
 var DBPosts = {};
 var DBGroups = {};
@@ -773,7 +774,7 @@ DBPosts.add = function (req, res, callback) {
 //Remove a post by id
 DBPosts.remove = function (req, res, callback) {
 	collectionPosts.remove({
-		_id: req.body.pid
+		_id: ObjectID(req.body.pid)
 	}, function (result) {
 		callback(result);
 	});
@@ -794,7 +795,7 @@ DBPosts.findByUserId = function (req, res, callback) {
 //Get posts per post id
 DBPosts.findByPostId = function (req, res, callback) {
 	collectionPosts.find({
-		_id: req.params.pid
+		_id: ObjectID(req.params.pid)
 	}).toArray(function (err, results) {
 		if (err) {
 			console.warn(err);
@@ -812,7 +813,7 @@ DBPosts.update = function (req, res, callback) {
 		updates.modified = date;
 	}
 	collectionPosts.update({
-		_id: req.body.pid
+		_id: ObjectID(req.body.pid)
 	}, {
 		$set: updates
 	}, {
