@@ -771,7 +771,7 @@ DBPosts.add = function (req, res, callback) {
 };
 
 //Remove a post
-DBPosts.remove = function (objectId, callback) {
+DBPosts.remove = function (req, res, callback) {
 	collectionPosts.remove({
 		_id: objectId
 	}, function (result) {
@@ -780,7 +780,7 @@ DBPosts.remove = function (objectId, callback) {
 };
 
 //Get posts per user
-DBPosts.findByUserId = function (userId, callback) {
+DBPosts.findByUserId = function (req, res, callback) {
 	collectionPosts.find({
 		authorid: userId
 	}).toArray(function (err, results) {
@@ -792,7 +792,7 @@ DBPosts.findByUserId = function (userId, callback) {
 };
 
 //Update post
-DBPosts.update = function (postId, updates, callback) {
+DBPosts.update = function (req, res, callback) {
 	collectionPosts.update({
 		_id: postId
 	}, {
@@ -813,7 +813,7 @@ DBPosts.update = function (postId, updates, callback) {
 
 //Add a comment
 //TODO: Fix parameters to accept req, res
-DBComments.add = function (postId, authorId, data, callback) {
+DBComments.add = function (req, res, callback) {
 	var date = new Date();
 	var comment = {
 		commentid: authorId + date.getTime(),
@@ -840,7 +840,7 @@ DBComments.add = function (postId, authorId, data, callback) {
 };
 
 //Remove a comment using commentId
-DBComments.removeById = function (postId, commentId, callback) {
+DBComments.removeById = function (req, res, callback) {
 	collectionComments.remove({
 		_id: postId,
 		comments: {
@@ -852,7 +852,7 @@ DBComments.removeById = function (postId, commentId, callback) {
 };
 
 //Get comments per userid
-DBComments.findByPostId = function (userId, callback) {
+DBComments.findByPostId = function (req, res, callback) {
 	collectionComments.find({
 		authorid: userId
 	}).toArray(function (err, results) {
