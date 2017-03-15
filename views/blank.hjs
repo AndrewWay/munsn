@@ -3,7 +3,7 @@
 <head lang="en">
 	<meta charset="UTF-8">
 	<title>{{Title}}</title>
-	<link href="css/blank.css" rel="stylesheet"/>
+	<link href="/stylesheets/lostfound.css" rel="stylesheet"/>
 
 </head>
 <body>
@@ -25,9 +25,9 @@
 		</div>
 
 		<div class="buttons">
-			<a href="#"><img id="not" src="img/notification-red.png"></a>
-			<a href="#"><img id="cog" src="img/logout.png"></a>
-			<a href="#"><img id="cog" src="img/settings.png"></a>
+			<a href="#"><img id="not" src="/img/notification-red.png"></a>
+			<a href="#"><img id="cog" src="/img/logout.png"></a>
+			<a href="#"><img id="cog" src="/img/settings.png"></a>
 		</div>
 	</div>
 	</nav>

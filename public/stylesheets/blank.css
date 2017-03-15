@@ -126,3 +126,53 @@ body {
 .container{
 }
 
+.lostfound textarea, .lostfound input{
+	resize: none;
+	margin:2%;
+	width:90%;
+	border-radius: 5px;
+	border-style: none;
+	padding: 5px;	
+}
+
+.inputfields{
+	text-align: center;
+}
+
+.lostfound-select{
+	margin-top: 2%;
+	text-align: center;
+}
+
+#lost-button, #found-button{
+	width:70px;
+	height:3em;
+	display: inline-block;
+	border-style: none;
+}
+
+#lost-button{
+	border-top-left-radius:5px;
+	border-bottom-left-radius:5px;	
+}
+
+#found-button{
+	border-top-right-radius:5px;
+	border-bottom-right-radius:5px;
+}
+
+#lost-found-submit, #lost-found-reset{
+	width:42%;
+	display: inline-block;
+}
+
+#previewPhoto{
+	width:auto;
+}
+
+#prevPic{
+	width:100px;
+	display: block;
+	margin-right: auto;
+	margin-left: auto;
+}
