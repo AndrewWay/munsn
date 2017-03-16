@@ -12,5 +12,11 @@
       <input type="file" name="datafile"><br>
       <input type="submit" name="Submit"><br>
     </form>
+    <br>
+    <h1> Resume </h1>
+    <form action="/content/resume/user/jh2587" method="post" enctype="multipart/form-data">
+      <input type="file" name="resume"><br>
+      <input type="submit" name="Submit"><br>
+    </form>
   </body>
 </html>
