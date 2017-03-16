@@ -567,7 +567,9 @@ DBFriends.remove = function (req, res, callback) {
 			callback(result);
 		});
 	} else {
-		res.json({status: 'fail'});
+		res.json({
+			status: 'fail'
+		});
 	}
 };
 
@@ -601,7 +603,9 @@ DBFriends.addRequest = function (req, res, callback) {
 				}
 			});
 	} else {
-		res.json({status: 'fail'});
+		res.json({
+			status: 'fail'
+		});
 	}
 };
 
