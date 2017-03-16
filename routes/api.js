@@ -484,7 +484,7 @@ router.post(loginUser, function (req, res, next) {
 router.get(findFriendsById, function (req, res, next) {
 	DB.Friends.find(req, res, function (result) {
 		//DEVIN: result[0]?
-		res.json(result[0]);
+		res.json(result);
 	});
 
 });
@@ -503,22 +503,8 @@ router.post('/post/addFriend', function(req, res, next) {
 
 
 router.post(addFriendReq, function (req, res, next) {
-	DB.Friends.addRequest(req, res, function (requestResult) {
-		//Operation successfully completed
-		if (requestResult != null) {
-			res.json({
-				result: "000",
-				operation: "sendFriendRequest",
-				text: "Sent friend request"
-			});
-		} else {
-			//Error with collection friendRequest
-			res.json({
-				result: "001",
-				operation: "sendFriendRequest",
-				text: "Error with collection friendRequest"
-			});
-		}
+	DB.Friends.addRequest(req, res, function (result) {
+		res.json(result);
 	});
 });
 
