@@ -285,7 +285,7 @@ mongoClient.connect(dbURL, function (err, DB) {
 DBUsers.add = function (req, res, callback) {
 	var result = {};
 	if (!Object.keys(req.body).length) {
-		console.log("[DB] Registration: Missing Data");
+		console.warn("[DB] Registration: Missing Data");
 		callback({
 			status: 'fail'
 		});
@@ -308,7 +308,7 @@ DBUsers.add = function (req, res, callback) {
 			//Create auth key and store it in auths
 			collectionUsers.insert(row, function (err, result) {
 				if (err) {
-					console.log("[DBUsers]: " + err.message);
+					console.error("[DBUsers]: " + err.message);
 					callback({
 						status: 'fail'
 					});
@@ -320,7 +320,7 @@ DBUsers.add = function (req, res, callback) {
 				}
 			});
 		} catch (err) {
-			console.log("[DBUsers] Registration: Missing fields or other error");
+			console.error("[DBUsers] Registration: Missing fields or other error");
 			callback({
 				status: 'fail'
 			});
@@ -330,8 +330,8 @@ DBUsers.add = function (req, res, callback) {
 
 //Find a user by unique object id
 DBUsers.findById = function (req, res, callback) {
-	console.log("[DBUsers] FindById: " + req.params.uid);
 	if (req.params.uid == undefined) {
+		console.error("[DBUsers] FindById: '" + req.params.uid + "'");
 		callback({
 			status: 'fail'
 		});
@@ -340,24 +340,26 @@ DBUsers.findById = function (req, res, callback) {
 			_id: req.params.uid
 		}, function (err, result) {
 			if (err) {
-				console.warn("[DBUsers]: " + err.message);
+				console.log("[DBUsers]: " + err.message);
+			} else {
+				//Returns null if error occured
+				console.log("[DBUsers] FindById: " + req.params.uid);
+				callback({
+					status: 'ok',
+					data: result
+				});
 			}
-			//Returns null if error occured
-			callback({
-				status: 'ok',
-				data: result
-			});
 		});
 	}
 };
 
 //Find users matching query
 DBUsers.find = function (req, res, callback) {
-	console.log("[DBUsers] Find: " + JSON.stringify(req.body));
 	collectionUsers.find(req.body).toArray(function (err, result) {
 		if (err) {
-			console.warn("[DBUsers]: " + err.message);
+			console.error("[DBUsers]: " + err.message);
 		} else {
+			console.log("[DBUsers] Find: " + JSON.stringify(req.body));
 			callback({
 				status: 'ok',
 				data: result
@@ -369,8 +371,9 @@ DBUsers.find = function (req, res, callback) {
 //Updates the user
 DBUsers.update = function (req, res, callback) {
 	if (req.params.uid == undefined) {
+		console.warn("[DBUsers] Update '" + req.params.uid + "': " + req.body);
 		res.json({
-			error: "undefined"
+			status: "fail"
 		});
 	} else {
 		var updates = {
@@ -385,11 +388,17 @@ DBUsers.update = function (req, res, callback) {
 			$set: updates
 		}, {
 			upsert: true
-		}, function (err, obj) {
+		}, function (err, result) {
 			if (err) {
-				console.warn(err);
+				console.error("[DBUsers] Update: " + err.message);
+				res.json({
+					status: 'fail'
+				});
 			} else {
-				callback(obj.result);
+				console.log("[DBUsers] Update " + req.params.uid + ": " + req.body);
+				callback({
+					status: 'ok'
+				});
 			}
 		});
 	}
@@ -398,19 +407,26 @@ DBUsers.update = function (req, res, callback) {
 //Removes the user
 DBUsers.remove = function (req, res, callback) {
 	if (req.params.uid == undefined) {
+		console.warn("[DBUsers] Remove: '" + req.params.uid + "'");
 		res.json({
-			error: "undefined"
+			status: "fail"
 		});
 	} else {
 		collectionUsers.remove({
 			_id: req.params.id
 		}, {
 			single: true
-		}, function (err, obj) {
+		}, function (err, result) {
 			if (err) {
-				console.warn(err);
+				console.error("[DBUsers] remove: " + err.message);
+				callback({
+					status: 'fail'
+				});
 			} else {
-				callback(obj.result);
+				console.log("[DBUsers] remove: '" + req.params.uid + "'");
+				callback({
+					status: 'ok'
+				});
 			}
 		});
 	}
@@ -433,7 +449,7 @@ DBAuth.add = function (row, callback) {
 	};
 	collectionAuths.insert(auth, function (err, result) {
 		if (err) {
-			console.log("[DBAuth]: " + err.message);
+			console.error("[DBAuth]: " + err.message);
 			callback({
 				status: 'fail'
 			});
@@ -443,7 +459,7 @@ DBAuth.add = function (row, callback) {
 			//Send auth email to the user with the auth link
 			EMS.sendAuthEmail(row, auth, function (err, message) {
 				if (err) {
-					console.log('[EMS]: ' + err);
+					console.error('[EMS]: ' + err);
 					callback({
 						status: 'fail'
 					});
@@ -469,40 +485,68 @@ DBAuth.update = function (user, authkey, expiry, callback) {
 		$set: regAuth
 	}, {
 		upsert: true
-	}, function (err, obj) {
+	}, function (err, result) {
 		if (err) {
-			console.warn(err);
+			console.error("[DBAuth] Update '" + user + "': " + err.message);
+			callback({
+				status: 'fail'
+			});
 		} else {
-			callback(obj.result);
+			console.log("[DBAuth] Update '" + user + "': " + authkey);
+			EMS.resendAuthEmail(user, authkey, function (err, message) {
+				if (err) {
+					console.error("[EMS]: " + err);
+					callback({
+						status: 'fail'
+					});
+				} else {
+					console.log('[EMS] Sent To: ' + message.header.to + '\n[EMS] Subject: ' + message.header.subject);
+					callback({
+						status: 'ok'
+					});
+				}
+			});
 		}
-	});
-	EMS.resendAuthEmail(user, authkey, function (result) {
-		console.log(result);
 	});
 };
 //Check for an existing authkey
 DBAuth.find = function (authkey, callback) {
+	console.error("[DBAuth] Find: '" + authkey + "'");
+
 	collectionAuths.findOne({
 		key: authkey
 	}, function (err, result) {
 		if (err) {
-			console.warn(err);
+			console.error("[DBAuth] Find:: " + err.message);
+			callback({
+				status: 'fail'
+			});
+		} else {
+			callback({
+				status: 'ok',
+				data: result
+			});
 		}
-		callback(result);
 	});
 };
 
 //Delete authkey
 DBAuth.remove = function (authkey, callback) {
+	console.log("[DBAuth] Remove: '" + authkey + "'");
 	collectionAuths.remove({
 		key: authkey
 	}, {
 		single: true
-	}, function (err, obj) {
+	}, function (err, result) {
 		if (err) {
-			console.warn(err);
+			console.error("[DBAuth] Remove: " + err.message);
+			callback({
+				status: 'fail'
+			});
 		} else {
-			callback(obj.result);
+			callback({
+				status: 'ok'
+			});
 		}
 	});
 };
@@ -512,6 +556,7 @@ DBAuth.remove = function (authkey, callback) {
 
 //Adds the friendId to the userId's friend list
 DBFriends.add = function (userId, friendId, callback) {
+	console.log("[DBFriends] Add: '" + userId + "'->'" + friendId + "'");
 	collectionFriends.update({
 		_id: userId
 	}, {
@@ -522,24 +567,43 @@ DBFriends.add = function (userId, friendId, callback) {
 		upsert: true
 	}, function (err, result) {
 		if (err) {
-			console.warn(err);
+			console.error("[DBFriends] Add: " + err.message);
+			callback({
+				status: 'fail'
+			});
+		} else {
+			callback({
+				status: 'ok'
+			});
 		}
-		callback(result);
 	});
 };
 
 //Finds all friends of a userId and returns it as an array
 DBFriends.find = function (req, res, callback) {
 	if (req.params.uid) {
+
 		collectionFriends.find({
 			_id: req.params.uid
 		}, {
 			friends: true
 		}).toArray(function (err, result) {
 			if (err) {
-				console.warn(err);
+				console.error("[DBFriends] Find: " + err.message);
+				callback({
+					status: 'fail'
+				});
+			} else {
+				console.log("[DBFriends] Find: '" + req.params.uid + "'");
+				callback({
+					status: 'ok'
+				});
 			}
-			callback(result);
+		});
+	} else {
+		console.warn("[DBFriends] Find:" + req.params.uid);
+		callback({
+			status: 'fail'
 		});
 	}
 };
@@ -559,11 +623,19 @@ DBFriends.remove = function (req, res, callback) {
 			}
 		}, function (err, result) {
 			if (err) {
-				console.warn(err);
+				console.warn("[DBFriends] Remove: " + err.message);
+				callback({
+					status: 'fail'
+				});
+			} else {
+				console.log("[DBFriends] Remove: '" + userId + "'<->'" + friendId + "'");
+				callback({
+					status: 'ok'
+				});
 			}
-			callback(result);
 		});
 	} else {
+		console.warn("[DBFriends] Remove: '" + userId + "'<->'" + friendId + "'");
 		res.json({
 			status: 'fail'
 		});
@@ -571,23 +643,54 @@ DBFriends.remove = function (req, res, callback) {
 };
 
 //Suggest friends
-DBFriends.suggest = function(req, res, callback) {
+DBFriends.suggest = function (req, res, callback) {
+	console.log("[DBFriends] Suggest: '" + req.params.uid + "'");
 	var users = {};
 	//Find friends of friends
-	collectionFriends.aggregate([{$unwind: "$friends"}, {$lookup: {from: "friends", localField: "friends", foreignField: "_id", as: "fof"}}, {$match: {_id: req.params.uid}}], function(err, fof) {
-		if (fof && fof.length > 0) {
-			//Iterate through aggregation results
-			for (i = 0; i < fof.length; i++) {
-				//Iterate through the friends of friends
-				for (j = 0; j < fof[i].fof[0].friends.length; j++) {
-					//Skip if an index is the user itself, we don't want to add theirselves
-					if (fof[i].fof[0].friends[j] == req.params.uid) continue;
-					users[fof[i].fof[0].friends[j]] = true;
+	collectionFriends.aggregate([{
+		$unwind: "$friends"
+	}, {
+		$lookup: {
+			from: "friends",
+			localField: "friends",
+			foreignField: "_id",
+			as: "fof"
+		}
+	}, {
+		$match: {
+			_id: req.params.uid
+		}
+	}], function (err, fof) {
+		if (err) {
+			console.error("[DBFriends] Suggest: " + err.message);
+			callback({
+				status: 'fail'
+			});
+		} else {
+			if (fof && fof.length > 0) {
+				//Iterate through aggregation results
+				for (var i = 0; i < fof.length; i++) {
+					//Iterate through the friends of friends
+					for (var j = 0; j < fof[i].fof[0].friends.length; j++) {
+						//Skip if an index is the user itself, we don't want to add theirselves
+						if (fof[i].fof[0].friends[j] == req.params.uid) {
+							continue;
+						}
+						users[fof[i].fof[0].friends[j]] = true;
+					}
 				}
+				console.log("[DBFriends] Suggest: '" + req.params.uid + "'");
+				callback({
+					status: 'ok',
+					data: Object.keys(users)
+				});
+			} else {
+				console.warn("[DBFriends] '" + req.params.uid + "': No Data Found");
+				callback({
+					status: 'fail'
+				});
 			}
 		}
-		else {callback({status: 'fail'})};
-		callback(Object.keys(users));
 	});
 };
 
@@ -600,6 +703,7 @@ DBFriends.addRequest = function (req, res, callback) {
 	var userId = req.body.uid;
 	var friendId = req.body.fid;
 	//Check if body variables are not null, or undefined
+	console.log("[DBFriends] AddRequest: '" + userId + "'->'" + friendId + "'");
 	if (userId && friendId) {
 		//Check to see if both users exist
 		collectionUsers.find({
@@ -607,21 +711,42 @@ DBFriends.addRequest = function (req, res, callback) {
 					$in: [userId, friendId]
 				}
 			},
-			function (findResult) {
-				if (findResult.length == 2) {
-					collectionFriendRequests.insert({
-						userid: userId,
-						friendid: friendId
-					}, function (err, result) {
-						if (err) {
-							console.warn(err);
-						}
-						callback(result);
+			function (err, result) {
+				//DEVIN: Will changing this to err,result affect this?
+				if (err) {
+					console.error("[DBFriends] AddRequest: " + err.message);
+					callback({
+						status: 'fail'
 					});
+				} else {
+					if (result.length == 2) {
+						collectionFriendRequests.insert({
+							userid: userId,
+							friendid: friendId
+						}, function (err, result) {
+							if (err) {
+								console.error("[DBFriends] AddRequest: " + err.message);
+								callback({
+									status: 'fail'
+								});
+							} else {
+								callback({
+									status: 'ok',
+									data: result
+								});
+							}
+						});
+					} else {
+						console.warn("[DBFriends] AddRequest: User(s) not found");
+						callback({
+							status: 'fail'
+						});
+					}
 				}
 			});
 	} else {
-		res.json({
+		console.warn("[DBFriends] AddRequest:  Missing Fields");
+		callback({
 			status: 'fail'
 		});
 	}
