@@ -117,9 +117,7 @@ mongoClient.connect(dbURL, function (err, DB) {
 					$type: 'array'
 				}
 			}]
-		},
-		validationLevel: 'strict',
-		validationAction: 'error'
+		}
 	});
 
 	DB.createCollection('fRequests', {
