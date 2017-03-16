@@ -21,11 +21,11 @@ var collectionFriends; //Good
 var collectionFriendRequests; //Good
 var collectionGroups; //Good
 var collectionGroupMembers; //Good
-var collectionGroupAdmins; //JOHN: EVALUATE
-var collectionPosts; //JOHN: EVALUATE
-var collectionComments; //JOHN: EVALUATE
+var collectionGroupAdmins; //TODO: John, EVALUATE
+var collectionPosts; //TODO: John, EVALUATE
+var collectionComments; //TODO: John, EVALUATE
 
-//DEVIN: TESTING
+//TODO: Devin, TESTING
 //Connect to the database
 mongoClient.connect(dbURL, function (err, DB) {
 	assert.equal(null, err);
@@ -330,36 +330,42 @@ DBUsers.add = function (req, res, callback) {
 
 //Find a user by unique object id
 DBUsers.findById = function (req, res, callback) {
-	if (req.params.uid == undefined) {
-		console.error("[DBUsers] FindById: '" + req.params.uid + "'");
-		callback({
-			status: 'fail'
-		});
-	} else {
+	console.log("[DBUsers] FindById: '" + req.params.uid + "'");
+	if (req.params.uid) {
 		collectionUsers.findOne({
 			_id: req.params.uid
 		}, function (err, result) {
 			if (err) {
 				console.log("[DBUsers]: " + err.message);
+				callback({
+					status: 'fail'
+				});
 			} else {
 				//Returns null if error occured
-				console.log("[DBUsers] FindById: " + req.params.uid);
 				callback({
 					status: 'ok',
 					data: result
 				});
 			}
 		});
+	} else {
+		console.error("[DBUsers] FindById: Missing Fields");
+		callback({
+			status: 'fail'
+		});
 	}
 };
 
 //Find users matching query
 DBUsers.find = function (req, res, callback) {
+	console.log("[DBUsers] Find: '" + JSON.stringify(req.body) + "'");
 	collectionUsers.find(req.body).toArray(function (err, result) {
 		if (err) {
 			console.error("[DBUsers]: " + err.message);
+			callback({
+				status: 'fail'
+			});
 		} else {
-			console.log("[DBUsers] Find: " + JSON.stringify(req.body));
 			callback({
 				status: 'ok',
 				data: result
@@ -370,12 +376,8 @@ DBUsers.find = function (req, res, callback) {
 
 //Updates the user
 DBUsers.update = function (req, res, callback) {
-	if (req.params.uid == undefined) {
-		console.warn("[DBUsers] Update '" + req.params.uid + "': " + req.body);
-		res.json({
-			status: "fail"
-		});
-	} else {
+	console.log("[DBUsers] Update: '" + JSON.stringify(req.body) + "'->'" + req.params.uid + "'");
+	if (req.params.uid) {
 		var updates = {
 			pass: req.body.pass,
 			email: req.body.email,
@@ -395,39 +397,44 @@ DBUsers.update = function (req, res, callback) {
 					status: 'fail'
 				});
 			} else {
-				console.log("[DBUsers] Update " + req.params.uid + ": " + req.body);
 				callback({
 					status: 'ok'
 				});
 			}
+		});
+	} else {
+		console.warn("[DBUsers] Update: Missing Fields");
+		res.json({
+			status: "fail"
 		});
 	}
 };
 
 //Removes the user
 DBUsers.remove = function (req, res, callback) {
-	if (req.params.uid == undefined) {
-		console.warn("[DBUsers] Remove: '" + req.params.uid + "'");
-		res.json({
-			status: "fail"
-		});
-	} else {
+	console.log("[DBUsers] Remove: '" + req.params.uid + "'");
+	if (req.params.uid) {
 		collectionUsers.remove({
 			_id: req.params.id
 		}, {
 			single: true
 		}, function (err, result) {
 			if (err) {
-				console.error("[DBUsers] remove: " + err.message);
+				console.error("[DBUsers] Remove: " + err.message);
 				callback({
 					status: 'fail'
 				});
 			} else {
-				console.log("[DBUsers] remove: '" + req.params.uid + "'");
+
 				callback({
 					status: 'ok'
 				});
 			}
+		});
+	} else {
+		console.warn("[DBUsers] Remove: Missing Fields");
+		res.json({
+			status: "fail"
 		});
 	}
 };
@@ -447,6 +454,7 @@ DBAuth.add = function (row, callback) {
 		key: authkey,
 		expiry: expiry
 	};
+	console.log("[DBAuth] Add: '" + JSON.stringify(auth) + "'");
 	collectionAuths.insert(auth, function (err, result) {
 		if (err) {
 			console.error("[DBAuth]: " + err.message);
@@ -454,8 +462,6 @@ DBAuth.add = function (row, callback) {
 				status: 'fail'
 			});
 		} else {
-			var rz = result.ops[0];
-			console.log("[DBAuth] Inserted: { Key: " + rz.key + ", userid: " + rz.userid + " }");
 			//Send auth email to the user with the auth link
 			EMS.sendAuthEmail(row, auth, function (err, message) {
 				if (err) {
@@ -479,6 +485,7 @@ DBAuth.update = function (user, authkey, expiry, callback) {
 		key: authkey,
 		expiry: expiry
 	};
+	console.log("[DBAuth] Update: '" + JSON.stringify(regAuth) + "'->'" + user._id + "'");
 	collectionAuths.update({
 		userid: user._id
 	}, {
@@ -487,12 +494,11 @@ DBAuth.update = function (user, authkey, expiry, callback) {
 		upsert: true
 	}, function (err, result) {
 		if (err) {
-			console.error("[DBAuth] Update '" + user + "': " + err.message);
+			console.error("[DBAuth] Update: " + err.message);
 			callback({
 				status: 'fail'
 			});
 		} else {
-			console.log("[DBAuth] Update '" + user + "': " + authkey);
 			EMS.resendAuthEmail(user, authkey, function (err, message) {
 				if (err) {
 					console.error("[EMS]: " + err);
@@ -500,7 +506,7 @@ DBAuth.update = function (user, authkey, expiry, callback) {
 						status: 'fail'
 					});
 				} else {
-					console.log('[EMS] Sent To: ' + message.header.to + '\n[EMS] Subject: ' + message.header.subject);
+					console.log('[EMS] To: ' + message.header.to + '\n[EMS] Subject: ' + message.header.subject);
 					callback({
 						status: 'ok'
 					});
@@ -512,12 +518,11 @@ DBAuth.update = function (user, authkey, expiry, callback) {
 //Check for an existing authkey
 DBAuth.find = function (authkey, callback) {
 	console.error("[DBAuth] Find: '" + authkey + "'");
-
 	collectionAuths.findOne({
 		key: authkey
 	}, function (err, result) {
 		if (err) {
-			console.error("[DBAuth] Find:: " + err.message);
+			console.error("[DBAuth] Find: " + err.message);
 			callback({
 				status: 'fail'
 			});
@@ -581,8 +586,8 @@ DBFriends.add = function (userId, friendId, callback) {
 
 //Finds all friends of a userId and returns it as an array
 DBFriends.find = function (req, res, callback) {
+	console.log("[DBFriends] Find: '" + req.params.uid + "'");
 	if (req.params.uid) {
-
 		collectionFriends.find({
 			_id: req.params.uid
 		}, {
@@ -594,14 +599,13 @@ DBFriends.find = function (req, res, callback) {
 					status: 'fail'
 				});
 			} else {
-				console.log("[DBFriends] Find: '" + req.params.uid + "'");
 				callback({
 					status: 'ok'
 				});
 			}
 		});
 	} else {
-		console.warn("[DBFriends] Find:" + req.params.uid);
+		console.warn("[DBFriends] Find: " + req.params.uid);
 		callback({
 			status: 'fail'
 		});
@@ -614,6 +618,7 @@ DBFriends.remove = function (req, res, callback) {
 	var userId = req.body.uid;
 	var friendId = req.body.fid;
 	//Check if body variables are not null, or undefined
+	console.log("[DBFriends] Remove: '" + userId + "'<->'" + friendId + "'");
 	if (userId && friendId) {
 		collectionFriends.update({
 			_id: userId
@@ -628,14 +633,13 @@ DBFriends.remove = function (req, res, callback) {
 					status: 'fail'
 				});
 			} else {
-				console.log("[DBFriends] Remove: '" + userId + "'<->'" + friendId + "'");
 				callback({
 					status: 'ok'
 				});
 			}
 		});
 	} else {
-		console.warn("[DBFriends] Remove: '" + userId + "'<->'" + friendId + "'");
+		console.warn("[DBFriends] Remove: Missing Fields");
 		res.json({
 			status: 'fail'
 		});
@@ -711,7 +715,7 @@ DBFriends.addRequest = function (req, res, callback) {
 				}
 			},
 			function (err, result) {
-				//DEVIN: Will changing this to err,result affect this?
+				//TODO: Devin, Will changing this to err,result affect this?
 				if (err) {
 					console.error("[DBFriends] AddRequest: " + err.message);
 					callback({
@@ -761,7 +765,7 @@ DBFriends.findRequests = function (req, res, callback) {
 	if (!Object.keys(query).length) {
 		collectionFriendRequests.find(query).toArray(function (err, result) {
 			if (err) {
-				console.error(err.message);
+				console.error("[DBFriends] FindRequests: " + err.message);
 				callback({
 					status: 'fail'
 				});
@@ -894,6 +898,7 @@ DBGroups.findByUserId = function (req, res, callback) {
 //Find group based on query
 DBGroups.find = function (req, res, callback) {
 	var query = req.body;
+	console.log("[DBGroups] Find: '" + JSON.stringify(query) + "'");
 	if (!Object.keys(query).length) {
 		collectionGroups.find(query, function (err, result) {
 			if (err) {
@@ -921,6 +926,7 @@ DBGroups.find = function (req, res, callback) {
 DBGroups.update = function (req, res, callback) {
 	var groupId = req.body.gid;
 	var updates = req.body.updates;
+	console.log("[DBGroups] Update: '" + JSON.stringify(updates) + "'->'" + groupId + "'");
 	if (groupId && updates) {
 		collectionGroups.update({
 			_id: groupId
@@ -1298,7 +1304,7 @@ DBPosts.update = function (req, res, callback) {
 //Add a comment
 DBComments.add = function (req, res, callback) {
 	var date = new Date();
-	//DEVIN: Look at this make sure it's right.
+	//TODO: Devin, Look at this make sure it's right.
 	var postId = req.body.pid;
 	var comment = {
 		commentid: req.body.authorid + date.getTime(),

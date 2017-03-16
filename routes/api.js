@@ -3,7 +3,6 @@ var router = express.Router();
 var DB = require("../utils/db");
 var EMS = require("../utils/ems");
 var utils = require("../utils/utils");
-//TODO: JOHN AND DEVIN WILL POPULATE THE TOP OF THIS FILE WITH ALL THE IMPLEMENTATION SEMANTICS
 //==============================GET VERBS=============================
 
 /**
