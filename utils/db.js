@@ -679,7 +679,6 @@ DBFriends.suggest = function (req, res, callback) {
 						users[fof[i].fof[0].friends[j]] = true;
 					}
 				}
-				console.log("[DBFriends] Suggest: '" + req.params.uid + "'");
 				callback({
 					status: 'ok',
 					data: Object.keys(users)
@@ -758,12 +757,24 @@ DBFriends.findRequests = function (req, res, callback) {
 		friendid: req.params.fid,
 		userid: req.params.uid
 	};
+	console.log("[DBFriends] FindRequests: '" + query.friendid ? query.friendid : "*" + "'->'" + query.userid ? query.userid : "*" + "'");
 	if (!Object.keys(query).length) {
 		collectionFriendRequests.find(query).toArray(function (err, result) {
 			if (err) {
-				console.warn(err);
+				console.error(err.message);
+				callback({
+					status: 'fail'
+				});
+			} else {
+				callback({
+					status: 'ok'
+				});
 			}
-			callback(result);
+		});
+	} else {
+		console.warn("[DBFriends] FindRequests: Missing Fields");
+		callback({
+			status: 'fail'
 		});
 	}
 };
@@ -771,14 +782,28 @@ DBFriends.findRequests = function (req, res, callback) {
 //Remove friend request
 DBFriends.removeRequest = function (req, res, callback) {
 	//Declare body variables
-	var userId = req.body.uid;
-	var friendId = req.body.fid;
-	if (userId && friendId) {
-		collectionFriendRequests.remove({
-			userid: userId,
-			friendid: friendId
-		}, function (result) {
-			callback(result);
+	var query = {
+		userid: req.body.uid,
+		friendid: req.body.fid
+	};
+	console.log("[DBFriends] RemoveRequest: '" + query.friendid ? query.friendid : "*" + "'->'" + query.userid ? query.userid : "*" + "'");
+	if (Object.keys(query).length === 2) {
+		collectionFriendRequests.remove(query, function (err, result) {
+			if (err) {
+				console.error("[DBFriends] RemoveRequest: " + err.message);
+				callback({
+					status: 'fail'
+				});
+			} else {
+				callback({
+					status: 'ok'
+				});
+			}
+		});
+	} else {
+		console.warn("[DBFriends] RemoveRequest: Missing Fields");
+		callback({
+			status: 'fail'
 		});
 	}
 };
@@ -790,17 +815,22 @@ DBFriends.removeRequest = function (req, res, callback) {
 DBGroups.add = function (req, res, callback) {
 	var creatorId = req.body.gid;
 	var groupName = req.body.name;
-	if (creatorId && groupName) {
+	var row = {
+		name: req.body.name,
+		creatorid: req.body.uid,
+		ownerid: req.body.uid,
+		courses: undefined,
+		created: new Date()
+	};
+	console.log("[DBGroups] Add: '" + row.ownerid + "'->'" + row.name + "'");
+	if (row.name && row.ownerid) {
 		var date = new Date();
-		collectionGroups.insert({
-			name: groupName,
-			creatorid: creatorId,
-			ownerid: creatorId,
-			courses: undefined,
-			created: new Date()
-		}, function (err, result) {
+		collectionGroups.insert(row, function (err, result) {
 			if (err) {
-				console.warn(err);
+				console.error("[DBGroups] Add: " + err.message);
+				callback({
+					status: 'fail'
+				});
 			} else {
 				collectionGroupMembers.update({
 					_id: result.ops[0]._id
@@ -812,11 +842,22 @@ DBGroups.add = function (req, res, callback) {
 					upsert: true
 				}, function (err, result) {
 					if (err) {
-						console.warn(err);
+						console.error("[DBGroups] Add: " + err.message);
+						callback({
+							status: 'fail'
+						});
+					} else {
+						callback({
+							status: 'ok'
+						});
 					}
-					callback(result);
 				});
 			}
+		});
+	} else {
+		console.warn("[DBGroups] Add Group: Missing Fields");
+		callback({
+			status: 'fail'
 		});
 	}
 };
@@ -825,26 +866,54 @@ DBGroups.add = function (req, res, callback) {
 //Find a group by user
 DBGroups.findByUserId = function (req, res, callback) {
 	var userId = req.params.uid;
+	console.log("[DBGroups] FindByUID: '" + req.params.uid + "'");
 	if (userId) {
 		collectionGroups.find({
 			creatorid: userId
 		}).toArray(function (err, result) {
 			if (err) {
-				console.warn(err);
+				console.error("[DBGroups] FindByUID: " + err.message);
+				callback({
+					status: 'fail'
+				});
+			} else {
+				callback({
+					status: 'ok',
+					data: result
+				});
 			}
-			callback(result);
+		});
+	} else {
+		console.warn("[DBGroups] FindByUID: Missing Fields");
+		callback({
+			status: 'fail'
 		});
 	}
 };
 
 //Find group based on query
-DBGroups.find = function (query, callback) {
-	collectionGroups.find(query, function (err, result) {
-		if (err) {
-			console.warn(err);
-		}
-		callback(result);
-	});
+DBGroups.find = function (req, res, callback) {
+	var query = req.body;
+	if (!Object.keys(query).length) {
+		collectionGroups.find(query, function (err, result) {
+			if (err) {
+				console.error("[DBGroups] Find:" + err.message);
+				callback({
+					status: 'fail'
+				});
+			} else {
+				callback({
+					status: 'ok',
+					data: result
+				});
+			}
+		});
+	} else {
+		console.warn("[DBGroups] Find: Missing Fields");
+		callback({
+			status: 'fail'
+		});
+	}
 };
 
 
@@ -859,25 +928,49 @@ DBGroups.update = function (req, res, callback) {
 			$set: updates
 		}, {
 			upsert: true
-		}, function (err, obj) {
+		}, function (err, result) {
 			if (err) {
-				console.warn(err);
+				console.error("[DBGroups] Update: " + err.message);
+				callback({
+					status: 'fail'
+				});
 			} else {
-				callback(obj.result);
+				callback({
+					status: 'ok'
+				});
 			}
 		});
+	} else {
+		console.warn("[DBGroups] Update: Missing Fields");
+		callback({
+			status: 'fail'
+		});
 	}
-
 };
 
 //Remove a group
 DBGroups.remove = function (req, res, callback) {
 	var groupid = req.params.gid;
+	console.log("[DBGroups] Remove: '" + groupid + "'");
 	if (groupid) {
 		collectionGroups.remove({
 			_id: groupid
-		}, function (result) {
-			callback(result);
+		}, function (err, result) {
+			if (err) {
+				console.error("[DBGroups] Remove: " + err.message);
+				callback({
+					status: 'fail'
+				});
+			} else {
+				callback({
+					status: 'ok'
+				});
+			}
+		});
+	} else {
+		console.warn("[DBGroups] Remove: Missing Fields");
+		callback({
+			status: 'fail'
 		});
 	}
 };
@@ -889,6 +982,7 @@ DBGroups.remove = function (req, res, callback) {
 DBGroupAdmins.add = function (req, res, callback) {
 	var groupId = req.body.gid;
 	var adminId = req.body.uid;
+	console.log("[DBGroupAdmins] Add: '" + adminId + "'->'" + groupId + "'");
 	if (groupId && adminId) {
 		collectionGroupAdmins.update({
 			_id: groupId
@@ -900,9 +994,20 @@ DBGroupAdmins.add = function (req, res, callback) {
 			upsert: true
 		}, function (err, result) {
 			if (err) {
-				console.warn(err);
+				console.error("[DBGroupAdmins] Add: " + err.message);
+				callback({
+					status: 'fail'
+				});
+			} else {
+				callback({
+					status: 'ok'
+				});
 			}
-			callback(result);
+		});
+	} else {
+		console.warn("[DBGroupAdmins] Add: Missing Fields");
+		callback({
+			status: 'fail'
 		});
 	}
 };
@@ -910,6 +1015,7 @@ DBGroupAdmins.add = function (req, res, callback) {
 //Finds all admins of a group and returns it as an array
 DBGroupAdmins.find = function (req, res, callback) {
 	var groupId = req.params.gid;
+	console.log("[DBGroupAdmins] Find: '" + groupId + "'");
 	if (groupId) {
 		collectionGroupAdmins.find({
 			_id: groupId
@@ -917,9 +1023,20 @@ DBGroupAdmins.find = function (req, res, callback) {
 			admins: true
 		}).toArray(function (err, result) {
 			if (err) {
-				console.warn(err);
+				console.error("[DBGroupsAdmins] Find: " + err.message);
+				callback({
+					status: 'fail'
+				});
+			} else {
+				callback({
+					status: 'ok'
+				});
 			}
-			callback(result);
+		});
+	} else {
+		console.warn("[DBGroupsAdmins] Find: Missing Fields");
+		callback({
+			status: 'fail'
 		});
 	}
 };
@@ -928,6 +1045,7 @@ DBGroupAdmins.find = function (req, res, callback) {
 DBGroupAdmins.remove = function (req, res, callback) {
 	var groupId = req.body.gid;
 	var adminId = req.body.uid;
+	console.log("[DBGroupAdmins] Remove: '" + adminId + "'->'" + groupId + "'");
 	if (groupId && adminId) {
 		collectionGroupAdmins.update({
 			_id: groupId
@@ -937,9 +1055,20 @@ DBGroupAdmins.remove = function (req, res, callback) {
 			}
 		}, function (err, result) {
 			if (err) {
-				console.warn(err);
+				console.error("[DBGroupAdmins] Remove: " + err.message);
+				callback({
+					status: 'fail'
+				});
+			} else {
+				callback({
+					status: 'ok'
+				});
 			}
-			callback(result);
+		});
+	} else {
+		console.warn("[DBGroupAdmins] Remove: Missing Fields");
+		callback({
+			status: 'fail'
 		});
 	}
 };
