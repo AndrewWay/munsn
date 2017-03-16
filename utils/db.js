@@ -575,22 +575,20 @@ DBFriends.suggest = function(req, res, callback) {
 	var users = {};
 	//Find friends of friends
 	collectionFriends.aggregate([{$unwind: "$friends"}, {$lookup: {from: "friends", localField: "friends", foreignField: "_id", as: "fof"}}, {$match: {_id: req.params.uid}}], function(err, fof) {
-		console.log(err);
-		console.log(fof);
-		console.log(JSON.stringify(fof[0].fof[0]));
-		//Iterate through aggregation results
-		for (i = 0; i < fof.length; i++) {
-			//Iterate through the friends of friends
-			for (j = 0; j < fof[i].fof[0].friends.length; j++) {
-				//Skip if an index is the user itself, we don't want to add theirselves
-				if (fof[i].fof[0].friends[j] == req.params.uid) continue;
-				users[fof[i].fof[0].friends[j]] = true;
+		if (fof && fof.length > 0) {
+			//Iterate through aggregation results
+			for (i = 0; i < fof.length; i++) {
+				//Iterate through the friends of friends
+				for (j = 0; j < fof[i].fof[0].friends.length; j++) {
+					//Skip if an index is the user itself, we don't want to add theirselves
+					if (fof[i].fof[0].friends[j] == req.params.uid) continue;
+					users[fof[i].fof[0].friends[j]] = true;
+				}
 			}
 		}
+		else {callback({status: 'fail'})};
 		callback(Object.keys(users));
 	});
-
-	//Find users in related groups
 };
 
 //FRIEND REQUESTS
