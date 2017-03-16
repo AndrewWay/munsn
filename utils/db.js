@@ -1029,7 +1029,8 @@ DBGroupAdmins.find = function (req, res, callback) {
 				});
 			} else {
 				callback({
-					status: 'ok'
+					status: 'ok',
+					data: result
 				});
 			}
 		});
@@ -1080,6 +1081,7 @@ DBGroupAdmins.remove = function (req, res, callback) {
 DBGroupMembers.add = function (req, res, callback) {
 	var groupId = req.body.gid;
 	var memberId = req.body.uid;
+	console.log("[DBGroupMembers] Add: '" + memberId + "'-> '" + groupId + "'");
 	if (groupId && memberId) {
 		collectionGroupMembers.update({
 			_id: groupId
@@ -1091,9 +1093,20 @@ DBGroupMembers.add = function (req, res, callback) {
 			upsert: true
 		}, function (err, result) {
 			if (err) {
-				console.warn(err);
+				console.error("[DBGroupMembers] Add: " + err.message);
+				callback({
+					status: 'fail'
+				});
+			} else {
+				callback({
+					status: 'ok'
+				});
 			}
-			callback(result);
+		});
+	} else {
+		console.warn("[DBGroupMembers] Add: Missing Fields");
+		callback({
+			status: 'fail'
 		});
 	}
 };
@@ -1101,6 +1114,7 @@ DBGroupMembers.add = function (req, res, callback) {
 //Finds all members of a group and returns it as an array
 DBGroupMembers.find = function (req, res, callback) {
 	var groupId = req.params.gid;
+	console.log("[DBGroupMembers] Find: '" + req.params.gid + "'");
 	if (groupId) {
 		collectionGroupMembers.find({
 			_id: groupId
@@ -1108,9 +1122,21 @@ DBGroupMembers.find = function (req, res, callback) {
 			members: true
 		}).toArray(function (err, result) {
 			if (err) {
-				console.warn(err);
+				console.error("[DBGroupMembers] Find: " + err.message);
+				callback({
+					status: 'fail'
+				});
+			} else {
+				callback({
+					status: 'ok',
+					data: result
+				});
 			}
-			callback(result);
+		});
+	} else {
+		console.warn("[DBGroupMembers] Find: Missing Fields");
+		callback({
+			status: 'fail'
 		});
 	}
 };
@@ -1119,6 +1145,7 @@ DBGroupMembers.find = function (req, res, callback) {
 DBGroupMembers.remove = function (req, res, callback) {
 	var groupId = req.body.gid;
 	var memberId = req.body.uid;
+	console.log("[DBGroupMembers] Remove: '" + memberId + "'->'" + groupId + "'");
 	if (groupId && memberId) {
 		collectionGroupMembers.update({
 			_id: groupId
@@ -1128,9 +1155,20 @@ DBGroupMembers.remove = function (req, res, callback) {
 			}
 		}, function (err, result) {
 			if (err) {
-				console.warn(err);
+				console.error("[DBGroupMembers] Remove: " + err.message);
+				callback({
+					status: 'fail'
+				});
+			} else {
+				callback({
+					status: 'ok'
+				});
 			}
-			callback(result);
+		});
+	} else {
+		console.warn("[DBGroupMembers] Remove: Missing Fields");
+		callback({
+			status: 'fail'
 		});
 	}
 };
@@ -1141,7 +1179,7 @@ DBGroupMembers.remove = function (req, res, callback) {
 //Add a post
 DBPosts.add = function (req, res, callback) {
 	var date = new Date();
-	collectionPosts.insert({
+	var row = {
 		authorid: req.body.authorid,
 		visibility: req.body.visibility,
 		list: [],
@@ -1150,68 +1188,106 @@ DBPosts.add = function (req, res, callback) {
 		modified: date,
 		dataType: req.body.dataType,
 		data: req.body.data
-	}, function (err, result) {
+	};
+	console.log("[DBPosts] Add: '" + row.authorid + "'->'{id:'" + row.origin.id + "',type:'" + row.origin.type + "'}'");
+	collectionPosts.insert(row, function (err, result) {
 		if (err) {
-			console.warn(err);
+			console.error("[DBPosts] Add: " + err.message);
+			callback({
+				status: 'fail'
+			});
+		} else {
+			callback({
+				status: 'ok'
+			});
 		}
-		callback(result);
 	});
 };
 
 //Remove a post by id
 DBPosts.remove = function (req, res, callback) {
+	console.log("[DBPosts] Remove: '" + req.body.pid + "'");
 	collectionPosts.remove({
-		_id: ObjectID(req.body.pid)
-	}, function (result) {
-		callback(result);
+		_id: new ObjectID(req.body.pid)
+	}, function (err, result) {
+		if (err) {
+			console.error("[DBPosts] Remove: " + err.message);
+			callback({
+				status: 'fail'
+			});
+		} else {
+			callback({
+				status: 'ok'
+			});
+		}
 	});
 };
 
 //Get posts per user
 DBPosts.findByUserId = function (req, res, callback) {
+	console.log("[DBPosts] FindByUID: '" + req.params.uid + "'");
 	collectionPosts.find({
 		authorid: req.params.uid
-	}).toArray(function (err, results) {
+	}).toArray(function (err, result) {
 		if (err) {
-			console.warn(err);
+			console.error("[DBPosts] FindByUID: " + err.message);
+			callback({
+				status: 'fail'
+			});
+		} else {
+			callback({
+				status: 'ok',
+				data: result
+			});
 		}
-		callback(results);
 	});
 };
 
 //Get posts per post id
 DBPosts.findByPostId = function (req, res, callback) {
+	console.log("[DBPosts] FindByPID: '" + req.params.pid + "'");
 	collectionPosts.find({
-		_id: ObjectID(req.params.pid)
-	}).toArray(function (err, results) {
+		_id: new ObjectID(req.params.pid)
+	}).toArray(function (err, result) {
 		if (err) {
-			console.warn(err);
+			console.error("[DBPosts] FindByPID: " + err.message);
+			callback({
+				status: 'fail'
+			});
+		} else {
+			callback({
+				status: 'ok',
+				data: result
+			});
 		}
-		callback(results);
 	});
 };
 
 //Update post
 DBPosts.update = function (req, res, callback) {
 	var date = new Date();
-	var updates = {};
-	if (req.body.data) {
-		updates.data = req.body.data;
-		updates.modified = date;
-	}
-	if (req.body.visibility) updates.visibility = req.body.visibility;
-
+	var updates = {
+		data: req.body.data,
+		modified: date,
+		visibility: req.body.visibility
+	};
+	console.log("[DBPosts] Update: '" + req.body.pid + "'->'" + JSON.stringify(updates) + "'");
 	collectionPosts.update({
-		_id: ObjectID(req.body.pid)
+		_id: new ObjectID(req.body.pid)
 	}, {
 		$set: updates
 	}, {
 		upsert: true
-	}, function (err, obj) {
+	}, function (err, result) {
 		if (err) {
-			console.warn(err);
+			console.error("[DBPosts] Update: " + err.message);
+			callback({
+				status: 'fail'
+			});
 		} else {
-			callback(obj.result);
+			callback({
+				status: 'ok'
+			});
 		}
 	});
 };
@@ -1222,6 +1298,8 @@ DBPosts.update = function (req, res, callback) {
 //Add a comment
 DBComments.add = function (req, res, callback) {
 	var date = new Date();
+	//DEVIN: Look at this make sure it's right.
+	var postId = req.body.pid;
 	var comment = {
 		commentid: req.body.authorid + date.getTime(),
 		authorid: req.body.authorid,
@@ -1230,6 +1308,7 @@ DBComments.add = function (req, res, callback) {
 			date: req.body.date
 		}]
 	};
+	console.log("[DBComments] Add: '" + postId + "'->'" + JSON.stringify(comment) + "'");
 	collectionComments.update({
 		_id: postId
 	}, {
@@ -1240,58 +1319,90 @@ DBComments.add = function (req, res, callback) {
 		upsert: true
 	}, function (err, result) {
 		if (err) {
-			console.warn(err);
+			console.error("[DBComments] Add: " + err.message);
+			callback({
+				status: 'fail'
+			});
+		} else {
+			callback({
+				status: 'ok'
+			});
 		}
-		callback(result);
 	});
 };
 
 //Remove a comment using commentId
 DBComments.removeById = function (req, res, callback) {
+	var postId = req.body.pid;
+	var commentId = req.body.cid;
+	console.log("[DBComments] RemoveByID: '" + commentId + "'->'" + postId + "'");
 	collectionComments.remove({
 		_id: postId,
 		comments: {
 			commentId: commentId
 		}
-	}, function (result) {
-		callback(result);
+	}, function (err, result) {
+		if (err) {
+			console.error("[DBComments] RemoveByID:" + err.message);
+			callback({
+				status: 'fail'
+			});
+		} else {
+			callback({
+				status: 'ok'
+			});
+		}
 	});
 };
 
 //Get comments per userid
 DBComments.findByPostId = function (req, res, callback) {
+	var userId = req.body.uid;
+	console.log("[DBComments] FindByPID: '" + userId + "'");
 	collectionComments.find({
 		authorid: userId
-	}).toArray(function (err, results) {
+	}).toArray(function (err, result) {
 		if (err) {
-			console.warn(err);
+			console.error("[DBComments] FindByPID: " + err.message);
+			callback({
+				status: 'fail'
+			});
+		} else {
+			callback({
+				status: 'ok',
+				data: result
+			});
 		}
-		callback(results);
 	});
 };
 
 //Update comment
 DBComments.update = function (req, res, callback) {
-	var updates = {};
-	var date = new Date();
-	if (req.params.data) {
-		updates.data = req.params.data;
-	}
-	updates.date = date;
-	collectionComments.update({
+	var updates = {
+		date: new Date(),
+		data: req.params.data
+	};
+	var query = {
 		_id: req.params.postId,
 		"comments.cid": req.params.cid
-	}, {
+	};
+	console.log("[DBComments] Update: '" + JSON.stringify(updates) + "'->'" + JSON.stringify(query) + "'");
+	collectionComments.update(query, {
 		$push: {
 			edits: updates
 		}
 	}, {
 		upsert: true
-	}, function (err, obj) {
+	}, function (err, result) {
 		if (err) {
-			console.warn(err);
+			console.error("[DBComments] Update: " + err);
+			callback({
+				status: 'fail'
+			});
 		} else {
-			callback(obj.result);
+			callback({
+				status: 'ok'
+			});
 		}
 	});
 };

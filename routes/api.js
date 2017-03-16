@@ -534,33 +534,7 @@ router.post(delFriendReq, function (req, res, next) {
 //Result: xy, where x is 0 for no error, 1 for error, y is 0 for successful deletion, 1 for unsuccessful deletion
 router.post(delFriend, function (req, res, next) {
 	DB.Friends.remove(req, res, function (result) {
-		var dbResult = result.result;
-		//Check for database error
-		//DEVIN: This is totally broken now
-		//TODO: Unbreak this (completely nuke it)
-		if (dbResult == null) {
-			console.log("\x1b[31m%s\x1b[0m%s", "[API]", " /post/removeFriend: userId: " + userId + ", friendId: " + friendId + ", dbResult: " + JSON.stringify(dbResult));
-			res.json({
-				result: "10",
-				operation: "deleteFriend",
-				text: "Database error"
-			});
-		} else {
-			console.log("\x1b[32m%s\x1b[0m%s", "[API]", " /post/removeFriend: userId: " + userId + ", friendId: " + friendId + ", dbResult: " + JSON.stringify(dbResult));
-			if (dbResult.ok == 1 && dbResult.nModified == 1) {
-				res.json({
-					result: "00",
-					operation: "deleteFriend",
-					text: "Removed friend from user"
-				});
-			} else if (dbResult.ok == 1 && dbResult.nModified == 0) {
-				res.json({
-					result: "01",
-					operation: "deleteFriend",
-					text: "Could not remove friend from user"
-				});
-			}
-		}
+		res.json(result);
 	});
 });
 
