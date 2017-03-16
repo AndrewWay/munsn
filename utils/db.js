@@ -20,12 +20,11 @@ var collectionFriends; //Good
 var collectionFriendRequests; //Good
 var collectionGroups; //Good
 var collectionGroupMembers; //Good
-var collectionGroupAdmins; //DEVIN: Missing ALL Methods!!
-var collectionPosts; //DEVIN: Completion!!
-var collectionComments; //DEVIN: Completion!!
+var collectionGroupAdmins; //JOHN: EVALUATE
+var collectionPosts; //JOHN: EVALUATE
+var collectionComments; //JOHN: EVALUATE
 
 //DEVIN: TESTING
-//DEVIN: CALLBACKS
 //Connect to the database
 mongoClient.connect(dbURL, function (err, DB) {
 	assert.equal(null, err);
@@ -318,7 +317,7 @@ DBUsers.add = function (req, res, callback) {
 					});
 				} else {
 					console.log("[DBUsers] Inserted: " + result.insertedIds[0]);
-					DBAuth.add(row, function (result) {
+					collectionAuths.add(row, function (result) {
 						callback(result);
 					});
 				}
@@ -568,7 +567,7 @@ DBFriends.remove = function (req, res, callback) {
 			callback(result);
 		});
 	} else {
-		//DEVIN: Wheres the rest of this logic?
+		res.json({status: 'fail'});
 	}
 };
 
@@ -583,7 +582,7 @@ DBFriends.addRequest = function (req, res, callback) {
 	//Check if body variables are not null, or undefined
 	if (userId && friendId) {
 		//Check to see if both users exist
-		DBUsers.find({
+		collectionUsers.find({
 				_id: {
 					$in: [userId, friendId]
 				}
@@ -602,14 +601,7 @@ DBFriends.addRequest = function (req, res, callback) {
 				}
 			});
 	} else {
-		//Else return result json
-		//DEVIN: This console log function is broken
-		//console.log("\x1b[32m%s\x1b[0m%s", "[API]", " /post/sendFriendRequest: userId: " + userId + ", friendId: " + friendId + ", dbResult: " + JSON.stringify(findResult));
-		res.json({
-			result: "010",
-			operation: "sendFriendRequest",
-			text: "One or more users could not be found"
-		});
+		res.json({status: 'fail'});
 	}
 };
 
@@ -738,6 +730,68 @@ DBGroups.remove = function (req, res, callback) {
 		collectionGroups.remove({
 			_id: groupid
 		}, function (result) {
+			callback(result);
+		});
+	}
+};
+
+//GROUP ADMINS
+//======================================================================================================
+
+//Add admin to group
+DBGroupAdmins.add = function (req, res, callback) {
+	var groupId = req.body.gid;
+	var adminId = req.body.uid;
+	if (groupId && adminId) {
+		collectionGroupAdmins.update({
+			_id: groupId
+		}, {
+			$push: {
+				admins: adminId
+			}
+		}, {
+			upsert: true
+		}, function (err, result) {
+			if (err) {
+				console.warn(err);
+			}
+			callback(result);
+		});
+	}
+};
+
+//Finds all admins of a group and returns it as an array
+DBGroupAdmins.find = function (req, res, callback) {
+	var groupId = req.params.gid;
+	if (groupId) {
+		collectionGroupAdmins.find({
+			_id: groupId
+		}, {
+			admins: true
+		}).toArray(function (err, result) {
+			if (err) {
+				console.warn(err);
+			}
+			callback(result);
+		});
+	}
+};
+
+//Removes admin from group
+DBGroupAdmins.remove = function (req, res, callback) {
+	var groupId = req.body.gid;
+	var adminId = req.body.uid;
+	if (groupId && adminId) {
+		collectionGroupAdmins.update({
+			_id: groupId
+		}, {
+			$pull: {
+				admins: adminId
+			}
+		}, function (err, result) {
+			if (err) {
+				console.warn(err);
+			}
 			callback(result);
 		});
 	}
@@ -890,7 +944,6 @@ DBPosts.update = function (req, res, callback) {
 //======================================================================================================
 
 //Add a comment
-//TODO: Fix parameters to accept req, res
 DBComments.add = function (req, res, callback) {
 	var date = new Date();
 	var comment = {
