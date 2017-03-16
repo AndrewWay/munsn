@@ -320,7 +320,7 @@ DBUsers.add = function (req, res, callback) {
 					});
 				} else {
 					console.log("[DBUsers] Inserted: " + result.insertedIds[0]);
-					DBAuth.add(row, function (result) {
+					collectionAuths.add(row, function (result) {
 						callback(result);
 					});
 				}
@@ -585,7 +585,7 @@ DBFriends.addRequest = function (req, res, callback) {
 	//Check if body variables are not null, or undefined
 	if (userId && friendId) {
 		//Check to see if both users exist
-		DBUsers.find({
+		collectionUsers.find({
 				_id: {
 					$in: [userId, friendId]
 				}
