@@ -13,6 +13,7 @@ var DBGroupMembers = {};
 var DBGroupAdmins = {};
 var DBComments = {};
 var dbURL = 'mongodb://localhost:27017/db';
+var MAX_VALIDATE_MINUTES = 0;
 
 //Collections
 var collectionUsers; //Good
@@ -285,7 +286,7 @@ mongoClient.connect(dbURL, function (err, DB) {
 DBUsers.add = function (req, res, callback) {
 	var result = {};
 	if (!Object.keys(req.body).length) {
-		console.warn("[DB] Registration: Missing Data");
+		console.warn("[DBUsers] Add: Missing Data");
 		callback({
 			status: 'fail'
 		});
@@ -308,13 +309,13 @@ DBUsers.add = function (req, res, callback) {
 			//Create auth key and store it in auths
 			collectionUsers.insert(row, function (err, result) {
 				if (err) {
-					console.error("[DBUsers]: " + err.message);
+					console.error("[DBUsers] Add: " + err.message);
 					callback({
 						status: 'fail'
 					});
 				} else {
-					console.log("[DBUsers] Inserted: " + result.insertedIds[0]);
-					collectionAuths.add(row, function (result) {
+					console.log("[DBUsers] Add: '" + result.insertedIds[0] + "'");
+					DBAuth.add(row, function (result) {
 						callback(result);
 					});
 				}
@@ -446,8 +447,7 @@ DBUsers.remove = function (req, res, callback) {
 DBAuth.add = function (row, callback) {
 	var date = new Date();
 	var authkey = row._id + date.getTime();
-	var mins = 1;
-	var expiry = utils.addMinsToDate(date, mins).getTime();
+	var expiry = utils.addMinsToDate(date, MAX_VALIDATE_MINUTES).getTime();
 	//user, authkey, utils.addMinsToDate(date, mins).getTime()
 	var auth = {
 		userid: row._id,
@@ -463,7 +463,7 @@ DBAuth.add = function (row, callback) {
 			});
 		} else {
 			//Send auth email to the user with the auth link
-			EMS.sendAuthEmail(row, auth, function (err, message) {
+			EMS.sendAuthEmail(auth, function (err, message) {
 				if (err) {
 					console.error('[EMS]: ' + err);
 					callback({
@@ -480,16 +480,12 @@ DBAuth.add = function (row, callback) {
 	});
 
 };
-DBAuth.update = function (user, authkey, expiry, callback) {
-	var regAuth = {
-		key: authkey,
-		expiry: expiry
-	};
-	console.log("[DBAuth] Update: '" + JSON.stringify(regAuth) + "'->'" + user._id + "'");
+DBAuth.update = function (auth, callback) {
+	console.log("[DBAuth] Update: '" + JSON.stringify(auth) + "'->'" + auth.userid + "'");
 	collectionAuths.update({
-		userid: user._id
+		userid: auth.userid
 	}, {
-		$set: regAuth
+		$set: auth
 	}, {
 		upsert: true
 	}, function (err, result) {
@@ -499,7 +495,7 @@ DBAuth.update = function (user, authkey, expiry, callback) {
 				status: 'fail'
 			});
 		} else {
-			EMS.resendAuthEmail(user, authkey, function (err, message) {
+			EMS.resendAuthEmail(auth, function (err, message) {
 				if (err) {
 					console.error("[EMS]: " + err);
 					callback({
@@ -516,15 +512,15 @@ DBAuth.update = function (user, authkey, expiry, callback) {
 	});
 };
 //Check for an existing authkey
-DBAuth.find = function (authkey, callback) {
-	console.error("[DBAuth] Find: '" + authkey + "'");
+DBAuth.find = function (key, callback) {
+	console.error("[DBAuth] Find: '" + key + "'");
 	collectionAuths.findOne({
-		key: authkey
+		key: key
 	}, function (err, result) {
 		if (err) {
 			console.error("[DBAuth] Find: " + err.message);
 			callback({
-				status: 'fail'
+				status: 'fail',
 			});
 		} else {
 			callback({
@@ -536,11 +532,9 @@ DBAuth.find = function (authkey, callback) {
 };
 
 //Delete authkey
-DBAuth.remove = function (authkey, callback) {
-	console.log("[DBAuth] Remove: '" + authkey + "'");
-	collectionAuths.remove({
-		key: authkey
-	}, {
+DBAuth.remove = function (auth, callback) {
+	console.log("[DBAuth] Remove: '" + auth.key + "'->'" + auth.userid + "'");
+	collectionAuths.remove(auth, {
 		single: true
 	}, function (err, result) {
 		if (err) {
@@ -549,8 +543,26 @@ DBAuth.remove = function (authkey, callback) {
 				status: 'fail'
 			});
 		} else {
-			callback({
-				status: 'ok'
+			collectionUsers.update({
+				_id: auth.userid
+			}, {
+				$set: {
+					auth: true
+				}
+			}, {
+				upsert: true
+			}, function (err, result) {
+				if (err) {
+					console.error("[DBUsers] Authorization: " + err.message);
+					callback({
+						status: 'fail'
+					});
+				} else {
+					console.error("[DBUsers] Authorization: '" + auth.userid + "'->'true'");
+					callback({
+						status: 'ok'
+					});
+				}
 			});
 		}
 	});
@@ -677,7 +689,7 @@ DBFriends.suggest = function (req, res, callback) {
 					//Iterate through the friends of friends
 					for (var j = 0; j < fof[i].fof[0].friends.length; j++) {
 						//Skip if an index is the user itself, we don't want to add theirselves
-						if (fof[i].fof[0].friends[j] == req.params.uid) {
+						if (fof[i].fof[0].friends[j] === req.params.uid) {
 							continue;
 						}
 						users[fof[i].fof[0].friends[j]] = true;
@@ -722,7 +734,7 @@ DBFriends.addRequest = function (req, res, callback) {
 						status: 'fail'
 					});
 				} else {
-					if (result.length == 2) {
+					if (result.length === 2) {
 						collectionFriendRequests.insert({
 							userid: userId,
 							friendid: friendId
@@ -1422,5 +1434,6 @@ module.exports = {
 	GroupMembers: DBGroupMembers,
 	GroupAdmins: DBGroupAdmins,
 	Comments: DBComments,
-	DB_URL: dbURL
+	DB_URL: dbURL,
+	MAX_VALIDATE_MINUTES: MAX_VALIDATE_MINUTES
 };

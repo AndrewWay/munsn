@@ -476,13 +476,12 @@ router.post(registerUser, function (req, res, next) {
 
 //POST login user
 router.post(loginUser, function (req, res, next) {
-	//DEVIN: Stuff needs to happen right here
+	//TODO: Devin, Stuff needs to happen right here
 });
 
 //GET list of friends from userId
 router.get(findFriendsById, function (req, res, next) {
 	DB.Friends.find(req, res, function (result) {
-		//DEVIN: result[0]?
 		res.json(result);
 	});
 

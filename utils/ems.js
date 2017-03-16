@@ -42,15 +42,15 @@ var sendEmail = function (email, callback) {
  * @param {string} authkey - The authorization key sent to the user
  * @param {function} callback - A function that currently passes a string to log
  */
-var sendAuthEmail = function (user, authkey, callback) {
+var sendAuthEmail = function (auth, callback) {
 	var email = {
 		subject: 'MUNSON - Confirmation Email',
-		to: user.email,
+		to: auth.userid + '@mun.ca',
 		from: emsSender.name + '<' + emsSender.address + '>',
 		text: 'Welcome to MUNSON! In order to continue using the site as a registered user,' +
 			' please confirm your registration by clicking the link: ' +
 			'http://localhost:3000/auth?key=' +
-			authkey +
+			auth.key +
 			'. We are glad you can join us! Once registered you can fully access the website!'
 	};
 	sendEmail(email, callback);
@@ -62,12 +62,12 @@ var sendAuthEmail = function (user, authkey, callback) {
  * @param {string} authkey - The authorization key sent to the user
  * @param {function} callback - A function that currently passes a string to log
  */
-var resendAuthEmail = function (user, authkey, callback) {
+var resendAuthEmail = function (auth, callback) {
 	var email = {
 		subject: 'MUNSON - Confirmation Email',
-		to: user.email,
+		to: auth.userid + '@mun.ca',
 		from: emsSender.name + '<' + emsSender.address + '>',
-		text: "Looks like your old confirmation email expired. Here's a new one: http://localhost:3000/auth?key=" + authkey
+		text: "Looks like your old confirmation email expired. Here's a new one: http://localhost:3000/auth?key=" + auth.key
 	};
 	sendEmail(email, callback);
 };
