@@ -147,6 +147,23 @@ var findPostByPid = "/post/:pid";
  *      - JSON mongo result
  */
 var findPostByUid = "/post/user/:uid";
+
+/**
+ * suggestFriends
+ *
+ * URL:
+ * 		- %server%/api/user/friends/suggest/:uid
+ * Descript:
+ *      - Get a list of suggested friends
+ * Method:
+ *      - GET
+ * Params:
+ *      - uid: The user id
+ * 		- limit: The amount of suggested friends to return
+ * Returns:
+ *      - JSON user object array
+ */
+var suggestFriends = "/user/friends/suggest/:uid";
 //=============================POST VERBS=============================
 
 /**
@@ -644,4 +661,9 @@ router.get(findPostByPid, function (req, res, next) {
 	});
 });
 
+router.get(suggestFriends, function (req, res, next) {
+	DB.Friends.suggest(req, res, function (result) {
+		res.json(result);
+	});
+});
 module.exports = router;
