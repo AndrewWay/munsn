@@ -13,6 +13,7 @@ var DBGroupMembers = {};
 var DBGroupAdmins = {};
 var DBComments = {};
 var DBCourses = {};
+var DBLost = {};
 var dbURL = 'mongodb://localhost:27017/db';
 var MAX_VALIDATE_MINUTES = 0;
 
@@ -27,6 +28,7 @@ var collectionGroupAdmins; //TODO: John, EVALUATE
 var collectionPosts; //TODO: John, EVALUATE
 var collectionComments; //TODO: John, EVALUATE
 var collectionCourses;
+var collectionLost;
 
 //TODO: Devin, TESTING
 //Connect to the database
@@ -302,6 +304,23 @@ mongoClient.connect(dbURL, function (err, DB) {
 		}
 	});
 
+	DB.createCollection('lost', {
+	validator: {
+		$and: [{
+			imagePath: {$type: 'string'}
+		},
+		{
+			description: {$type: 'string'}
+		},
+		{
+			long: {$type: 'string'}
+		},
+		{
+			lat: {$type: 'string'}
+		}]
+	}
+});
+
 	//Variables set to mongo collections
 	collectionAuths = DB.collection('authkeys');
 	collectionUsers = DB.collection('users');
@@ -313,6 +332,7 @@ mongoClient.connect(dbURL, function (err, DB) {
 	collectionPosts = DB.collection('posts');
 	collectionComments = DB.collection('comments');
 	collectionCourses = DB.collection('courses');
+	collectionLost = DB.collection('lost');
 });
 
 //USERS
@@ -1497,7 +1517,7 @@ DBCourses.add = function (req, res, callback) {
 		cid: req.body.cid,
 		days: req.body.days,	
 		timeStart: req.body.timeStart,
-		timeEnd: req.body.timeEnd,	
+		timeEnd: req.body.timeEnd
 	};
 	console.log("[DBCourses] Add: '" + course.label);
 	collectionCourses.insert(course, function (err, result) {
@@ -1575,7 +1595,7 @@ DBCourses.update = function (req, res, callback) {
 			cid: req.body.cid,
 			days: req.body.days,	
 			timeStart: req.body.timeStart,
-			timeEnd: req.body.timeEnd,	
+			timeEnd: req.body.timeEnd	
 		};
 		collectionCourses.update({
 			_id: req.params.uid
@@ -1632,6 +1652,143 @@ DBCourses.remove = function (req, res, callback) {
 	}
 };
 
+//LOST
+//======================================================================================================
+
+//Add a lost
+DBLost.add = function (req, res, callback) {
+	var lost = {
+		imagePath: req.body.imagePath,
+		description: req.body.description,
+		long: req.body.long,
+		lat: req.body.lat
+	};
+	console.log("[DBLost] Add: '" + course.label);
+	collectionLost.insert(lost, function (err, result) {
+		if (err) {
+			console.error("[DBLost] Add: " + err.message);
+			callback({
+				status: 'fail'
+			});
+		} else {
+			callback({
+				status: 'ok'
+			});
+		}
+	});
+};
+
+//Find a lost by unique lost id
+DBLost.findById = function (req, res, callback) {
+	console.log("[DBLost] FindById: '" + req.params.uid + "'");
+	if (req.params.uid) {
+		collectionLost.findOne({
+			_id: req.params.uid
+		}, function (err, result) {
+			if (err) {
+				console.log("[DBLost]: " + err.message);
+				callback({
+					status: 'fail'
+				});
+			} else {
+				//Returns null if error occured
+				callback({
+					status: 'ok',
+					data: result
+				});
+			}
+		});
+	} else {
+		console.error("[DBLost] FindById: Missing Fields");
+		callback({
+			status: 'fail'
+		});
+	}
+};
+
+//Find lost matching query
+DBLost.find = function (req, res, callback) {
+	console.log("[DBLost] Find: '" + JSON.stringify(req.body) + "'");
+	collectionLost.find(req.body).toArray(function (err, result) {
+		if (err) {
+			console.error("[DBLost]: " + err.message);
+			callback({
+				status: 'fail'
+			});
+		} else {
+			callback({
+				status: 'ok',
+				data: result
+			});
+		}
+	});
+};
+
+//Updates the lost
+DBLost.update = function (req, res, callback) {
+	console.log("[DBLost] Update: '" + JSON.stringify(req.body) + "'->'" + req.params.uid + "'");
+	if (req.params.uid) {
+	var updates = {
+		imagePath: req.body.imagePath,
+		description: req.body.description,
+		long: req.body.long,
+		lat: req.body.lat
+	};
+		collectionLost.update({
+			_id: req.params.uid
+		}, {
+			$set: updates
+		}, {
+			upsert: true
+		}, function (err, result) {
+			if (err) {
+				console.error("[DBLost] Update: " + err.message);
+				res.json({
+					status: 'fail'
+				});
+			} else {
+				callback({
+					status: 'ok'
+				});
+			}
+		});
+	} else {
+		console.warn("[DBLost] Update: Missing Fields");
+		res.json({
+			status: "fail"
+		});
+	}
+};
+
+//Removes the course
+DBLost.remove = function (req, res, callback) {
+	console.log("[DBLost] Remove: '" + req.params.uid + "'");
+	if (req.params.uid) {
+		collectionLost.remove({
+			_id: req.params.id
+		}, {
+			single: true
+		}, function (err, result) {
+			if (err) {
+				console.error("[DBLost] Remove: " + err.message);
+				callback({
+					status: 'fail'
+				});
+			} else {
+
+				callback({
+					status: 'ok'
+				});
+			}
+		});
+	} else {
+		console.warn("[DBLost] Remove: Missing Fields");
+		res.json({
+			status: "fail"
+		});
+	}
+};
+
 module.exports = {
 	Auth: DBAuth,
 	Posts: DBPosts,
@@ -1642,6 +1799,7 @@ module.exports = {
 	GroupAdmins: DBGroupAdmins,
 	Comments: DBComments,
 	Courses: DBCourses,
+	Lost: DBLost,
 	DB_URL: dbURL,
 	MAX_VALIDATE_MINUTES: MAX_VALIDATE_MINUTES
 };
