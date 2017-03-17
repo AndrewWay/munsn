@@ -19,7 +19,8 @@ IO.on('connection', function(socket) {
         }
     });
     socket.on('chat message', function(msg){
-        IO.emit('chat message', msg);
-        console.log('message: ' + msg);
+        var name = users[users.indexOf(socket)].id;
+        IO.emit('chat message', name + ": " + msg);
+        console.log('message: ' + name + ": " + msg);
     });
 });
