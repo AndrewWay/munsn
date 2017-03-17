@@ -206,6 +206,43 @@ var findCourseById = "/course/find/:uid";
  *      - JSON course object array
  */
 var findCourse = "/course/find";
+
+/**
+ * findLostById
+ *
+ * URL:
+ * 		- %server%/api/lost/find/:uid
+ * Descript:
+ *      - Get a course by id
+ * Method:
+ *      - GET
+ * Params:
+ *      - uid: The lost id
+ * Returns:
+ *      - JSON lost object
+ */
+var findLostById = "/lost/find/:uid";
+
+/**
+ * findLost
+ *
+ * URL:
+ * 		- %server%/api/lost/find
+ * Descript:
+ *      - Get a lost based on query
+ * Method:
+ *      - GET
+ * Params:
+ 		_id: The lost unique object id
+		imagePath: The path to an image if supplied
+		description: Description
+		long: Longitude
+		lat: Latitude
+ * Returns:
+ *      - JSON lost object array
+ */
+var findLost = "/lost/find";
+
 //=============================POST VERBS=============================
 
 /**
@@ -550,6 +587,61 @@ var updateCourse = "/course/update";
  *      - JSON mongo result
  */
 var removeCourse = "/course/remove";
+
+/**
+ * addLost
+ *
+ * URL:
+ * 		- %server%/api/lost/add
+ * Descript:
+ *      - Add a Lost
+ * Method:
+ *      - POST
+ * Params:
+		imagePath: The path to an image if supplied
+		description: Description
+		long: Longitude
+		lat: Latitude
+ * Returns:
+ *      - JSON mongo result
+ */
+var addLost = "/lost/add";
+
+/**
+ * updateLost
+ *
+ * URL:
+ * 		- %server%/api/lost/update
+ * Descript:
+ *      - Update a Lost
+ * Method:
+ *      - POST
+ * Params:
+ 		_id: The lost unique object id
+		imagePath: The path to an image if supplied
+		description: Description
+		long: Longitude
+		lat: Latitude
+ * Returns:
+ *      - JSON mongo result
+ */
+var updateLost = "/lost/update";
+
+/**
+ * removeLost
+ *
+ * URL:
+ * 		- %server%/api/lost/remove
+ * Descript:
+ *      - Remove a Lost
+ * Method:
+ *      - POST
+ * Params:
+ 		_id: The Lost unique object id
+ * Returns:
+ *      - JSON mongo result
+ */
+var removeLost = "/lost/remove";
 //==========================================================================================
 
 router.get(findUserById, function (req, res, next) {
@@ -788,6 +880,36 @@ router.post(removeCourse, function (req, res, next) {
 
 router.post(updateCourse, function (req, res, next) {
 	DB.Courses.update(req, res, function (result) {
+		res.json(result);
+	});
+});
+
+router.get(findLostById, function (req, res, next) {
+	DB.Lost.findById(req, res, function (result) {
+		res.json(result);
+	});
+});
+
+router.get(findLost, function (req, res, next) {
+	DB.Lost.find(req, res, function (result) {
+		res.json(result);
+	});
+});
+
+router.post(addLost, function (req, res, next) {
+	DB.Lost.add(req, res, function (result) {
+		res.json(result);
+	});
+});
+
+router.post(removeLost, function (req, res, next) {
+	DB.Lost.remove(req, res, function (result) {
+		res.json(result);
+	});
+});
+
+router.post(updateLost, function (req, res, next) {
+	DB.Lost.update(req, res, function (result) {
 		res.json(result);
 	});
 });
