@@ -103,6 +103,20 @@ _findPostByUid_ |
  **Params:** <br>- uid: The user id|
 **Returns:** JSON mongo result|
 
+findCourseById |
+:---------|
+ **URL:**  %server%/api/course/find/:uid|
+ **Description:** Get a course by id|
+ **Params:** <br>- uid: The course id|
+**Returns:** JSON course object|
+
+_findCourse_ |
+:---------|
+ **URL:**  %server%/api/course/find|
+ **Description:** Get a course based on query|
+ **Params:** <br>- (_string_) _id: The course unique object id <br>- (_string_) label: Shorthand name, ex. "COMP 4770" <br>- (_string_) name: Full name, ex. "Team Project"<br>- (_string_) description: Description <br>- (_string_) semester: Semester, ex. "winter" <br>- (_string_) department: Department that the course belongs to, ex. "cs" <br>- (_string_) location: Room number, ex. "EN 1051" <br>- (_string_) year: Current year the course is offered <br>- (_array[string]_) days: Array of strings of days the course is every week, ex. days["monday", "wednesday", "friday"]<br>- (_string_) cid: Creator id<br>- (_date_) timeStart: The course start date, ex. "Jan. 1" <br>- (_date_) The course end date, ex. "Apr. 12"|
+**Returns:** JSON course object array|
+
 ___ 
 
 ### 3.2 POST
@@ -127,6 +141,13 @@ _registerUser_ |
  **Description:** Registers a user|
  **Params:** <br>- fName: First name <br>- lName: Last name<br>- gender: gender<br>- dob: Birthdate<br>- email: Email address from @mun.ca<br>- pass: Password<br>- address: Address|
 **Returns:** JSON user object after creation|
+
+_loginUser_ |
+:---------|
+ **URL:**  %server%/api/user/login|
+ **Description:** Logs into the site|
+ **Params:** <br>- uid: User's id <br>- pass: User's password|
+**Returns:** JSON user|
 
 _addFriendReq_ |
 :---------|
@@ -198,6 +219,27 @@ _updatePost_ |
  **Params:** <br>- data: Actual data<br>- uid: The user id to be deleted|
 **Returns:** JSON mongo result|
 
+_addCourse_ |
+:---------|
+ **URL:**  %server%/api/course/add|
+ **Description:** Add a course|
+ **Params:** <br>- (_string_) label: Shorthand name, ex. "COMP 4770" <br>- (_string_) name: Full name, ex. "Team Project"<br>- (_string_) description: Description <br>- (_string_) semester: Semester, ex. "winter" <br>- (_string_) department: Department that the course belongs to, ex. "cs" <br>- (_string_) location: Room number, ex. "EN 1051" <br>- (_string_) year: Current year the course is offered <br>- (_array[string]_) days: Array of strings of days the course is every week, ex. days["monday", "wednesday", "friday"]<br>- (_string_) cid: Creator id<br>- (_date_) timeStart: The course start date, ex. "Jan. 1" <br>- (_date_) The course end date, ex. "Apr. 12"|
+**Returns:** JSON mongo result|
+
+_updateCourse_ |
+:---------|
+ **URL:**  %server%/api/course/update|
+ **Description:** Update a course|
+ **Params:** <br>- (_string_) _id: The course unique object id<br>- (_string_) label: Shorthand name, ex. "COMP 4770" <br>- (_string_) name: Full name, ex. "Team Project"<br>- (_string_) description: Description <br>- (_string_) semester: Semester, ex. "winter" <br>- (_string_) department: Department that the course belongs to, ex. "cs" <br>- (_string_) location: Room number, ex. "EN 1051" <br>- (_string_) year: Current year the course is offered <br>- (_array[string]_) days: Array of strings of days the course is every week, ex. days["monday", "wednesday", "friday"]<br>- (_string_) cid: Creator id<br>- (_date_) timeStart: The course start date, ex. "Jan. 1" <br>- (_date_) The course end date, ex. "Apr. 12"|
+**Returns:** JSON mongo result|
+
+_removeCourse_ |
+:---------|
+ **URL:**  %server%/api/course/remove|
+ **Description:** remove a course|
+ **Params:** <br>- (_string_) _id: The course unique object id|
+**Returns:** JSON mongo result|
+
 ## 4. JSON Objects
 
 _User_ |
@@ -234,3 +276,8 @@ _Post_ |
 :---------|
  **Description:** The admin list for a group|
  **Fields:** <br>- (_string_) _id: The group id<br>- (_array[string]_) admins: The array that contains the admin's ids<br|
+
+ _Course_ |
+:---------|
+ **Description:** The course object|
+ **Params:** <br>- (_string_) _id: The course unique object id<br>- (_string_) label: Shorthand name, ex. "COMP 4770" <br>- (_string_) name: Full name, ex. "Team Project"<br>- (_string_) description: Description <br>- (_string_) semester: Semester, ex. "winter" <br>- (_string_) department: Department that the course belongs to, ex. "cs" <br>- (_string_) location: Room number, ex. "EN 1051" <br>- (_string_) year: Current year the course is offered <br>- (_array[string]_) days: Array of strings of days the course is every week, ex. days["monday", "wednesday", "friday"]<br>- (_string_) cid: Creator id<br>- (_date_) timeStart: The course start date, ex. "Jan. 1" <br>- (_date_) The course end date, ex. "Apr. 12"|

@@ -163,6 +163,49 @@ var findPostByUid = "/post/user/:uid";
  *      - JSON user object array
  */
 var suggestFriends = "/user/friends/suggest/:uid";
+
+/**
+ * findCourseById
+ *
+ * URL:
+ * 		- %server%/api/course/find/:uid
+ * Descript:
+ *      - Get a course by id
+ * Method:
+ *      - GET
+ * Params:
+ *      - uid: The course id
+ * Returns:
+ *      - JSON course object
+ */
+var findCourseById = "/course/find/:uid";
+
+/**
+ * findCourse
+ *
+ * URL:
+ * 		- %server%/api/course/find
+ * Descript:
+ *      - Get a course based on query
+ * Method:
+ *      - GET
+ * Params:
+ 		_id: The course unique object id
+		label: Shorthand name, ex. "COMP 4770"
+		name: Full name, ex. "Team Project"
+		description: Description
+		semester: Semester, ex. "winter"
+		department: Department that the course belongs to, ex. "cs"
+		location: Room number, ex. "EN 1051"
+		year: Current year the course is offered
+		cid: Creator id
+		days: Array of strings of days the course is every week, ex. days["monday", "wednesday", "friday"]
+		timeStart: (date)The course start date, ex. "Jan. 1"
+		timeEnd: (date) The course end date, ex. "Apr. 12"
+ * Returns:
+ *      - JSON course object array
+ */
+var findCourse = "/course/find";
 //=============================POST VERBS=============================
 
 /**
@@ -233,7 +276,7 @@ var registerUser = "/user/register";
  *      - uid: User's id
  *      - pass: User's password
  * Returns:
- *      - JSON result
+ *      - JSON user
  */
 var loginUser = "/user/login";
 /**
@@ -438,6 +481,75 @@ var delPost = "/post/remove";
  *      - JSON mongo result
  */
 var updatePost = "/post/update";
+
+/**
+ * addCourse
+ *
+ * URL:
+ * 		- %server%/api/course/add
+ * Descript:
+ *      - Add a course
+ * Method:
+ *      - POST
+ * Params:
+		label: Shorthand name, ex. "COMP 4770"
+		name: Full name, ex. "Team Project"
+		description: Description
+		semester: Semester, ex. "winter"
+		department: Department that the course belongs to, ex. "cs"
+		location: Room number, ex. "EN 1051"
+		year: Current year the course is offered
+		cid: Creator id
+		days: Array of strings of days the course is every week, ex. days["monday", "wednesday", "friday"]
+		timeStart: (date)The course start date, ex. "Jan. 1"
+		timeEnd: (date) The course end date, ex. "Apr. 12"
+ * Returns:
+ *      - JSON mongo result
+ */
+var addCourse = "/course/add";
+
+/**
+ * updateCourse
+ *
+ * URL:
+ * 		- %server%/api/course/update
+ * Descript:
+ *      - Update a course
+ * Method:
+ *      - POST
+ * Params:
+ 		_id: The course unique object id
+		label: Shorthand name, ex. "COMP 4770"
+		name: Full name, ex. "Team Project"
+		description: Description
+		semester: Semester, ex. "winter"
+		department: Department that the course belongs to, ex. "cs"
+		location: Room number, ex. "EN 1051"
+		year: Current year the course is offered
+		cid: Creator id
+		days: Array of strings of days the course is every week, ex. days["monday", "wednesday", "friday"]
+		timeStart: (date)The course start date, ex. "Jan. 1"
+		timeEnd: (date) The course end date, ex. "Apr. 12"
+ * Returns:
+ *      - JSON mongo result
+ */
+var updateCourse = "/course/update";
+
+/**
+ * removeCourse
+ *
+ * URL:
+ * 		- %server%/api/course/remove
+ * Descript:
+ *      - Remove a course
+ * Method:
+ *      - POST
+ * Params:
+ 		_id: The course unique object id
+ * Returns:
+ *      - JSON mongo result
+ */
+var removeCourse = "/course/remove";
 //==========================================================================================
 
 router.get(findUserById, function (req, res, next) {
@@ -649,4 +761,35 @@ router.get(suggestFriends, function (req, res, next) {
 		res.json(result);
 	});
 });
+
+router.get(findCourseById, function (req, res, next) {
+	DB.Courses.findById(req, res, function (result) {
+		res.json(result);
+	});
+});
+
+router.get(findCourse, function (req, res, next) {
+	DB.Courses.find(req, res, function (result) {
+		res.json(result);
+	});
+});
+
+router.post(addCourse, function (req, res, next) {
+	DB.Courses.add(req, res, function (result) {
+		res.json(result);
+	});
+});
+
+router.post(removeCourse, function (req, res, next) {
+	DB.Courses.remove(req, res, function (result) {
+		res.json(result);
+	});
+});
+
+router.post(updateCourse, function (req, res, next) {
+	DB.Courses.update(req, res, function (result) {
+		res.json(result);
+	});
+});
+
 module.exports = router;
