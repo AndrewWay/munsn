@@ -6,7 +6,7 @@ var DB = require('../utils/db');
  *  GET home page.
  */
 router.get('/', function (req, res, next) {
-	res.render('chat', {
+	res.render('login', {
 		title: 'Login'
 	});
 });
@@ -31,6 +31,11 @@ router.post('/login', function (req, res, next) {
 			title: userRes.user
 		});
 	});
+});
+
+//Just testing shit
+router.get('/test', function (req, res, next) {
+    res.render('blank', {});
 });
 
 module.exports = router;

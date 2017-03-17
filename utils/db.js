@@ -440,6 +440,26 @@ DBUsers.remove = function (req, res, callback) {
 	}
 };
 
+DBUsers.login = function (req, res, callback) {
+   	console.log("[DBUsers] Login: '" + req.body.uid + "'"); 
+    if (req.body.uid && req.body.pass) {
+        collectionUsers.find({_id: req.body.uid, pass: req.body.pass}).toArray(function(err, results) {
+            console.log("results: " + JSON.stringify(results));
+            if (results) {
+                callback(results[0]);
+            }
+            else {
+                console.warn("[DBUsers] Login: User find error");
+                res.json({status: "fail"});
+            }
+        });
+    }
+    else {
+        console.warn("[DBUsers] Login: Missing fields");
+        res.json({status: "fail"});       
+    }
+};
+
 //AUTH
 //======================================================================================================
 
