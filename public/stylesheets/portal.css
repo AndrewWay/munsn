@@ -1,0 +1,63 @@
+#postBox {
+	width: 96%;
+	
+	display: inline-block;
+	
+	height:30px;
+	margin-top: 1px;
+	margin-right: 3px;
+	margin-left: 3px;
+	
+	background-color: #eeeeee;
+	padding: 2%;
+	
+	border: 2px solid #cccccc;
+	
+}
+
+#postBox #text {
+	width: 85%;
+	height: 30px;
+	
+	   
+	resize: none;
+    outline: none;
+	
+	
+
+}
+
+#postBox #button {
+	position: relative;
+	top: -15px;
+	width: 10%;
+	height: 30px;
+	padding:0;
+}
+
+#suggFriend {
+		position: relative;
+		background: #cccccc;
+	
+		display: inline-block;
+		
+		height: 200px;
+		width: 100%;
+		
+		margin: 0;
+		
+		overflow: hidden;
+}
+
+#suggList {
+	margin: 0;
+}
+
+#suggList img {
+	width: 100px;
+	margin: 10px;
+	
+	border: 2px outset;
+	
+	border-color: #aaaaaa #7f1734 #7f1734 #aaaaaa;
+}
