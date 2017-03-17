@@ -12,6 +12,7 @@ var DBFriends = {};
 var DBGroupMembers = {};
 var DBGroupAdmins = {};
 var DBComments = {};
+var DBCourses = {};
 var dbURL = 'mongodb://localhost:27017/db';
 var MAX_VALIDATE_MINUTES = 0;
 
@@ -25,6 +26,7 @@ var collectionGroupMembers; //Good
 var collectionGroupAdmins; //TODO: John, EVALUATE
 var collectionPosts; //TODO: John, EVALUATE
 var collectionComments; //TODO: John, EVALUATE
+var collectionCourses;
 
 //TODO: Devin, TESTING
 //Connect to the database
@@ -133,7 +135,7 @@ mongoClient.connect(dbURL, function (err, DB) {
 		validationAction: 'error'
 	});
 
-	DB.createCollection('group', {
+	DB.createCollection('groups', {
 		validator: {
 			$and: [{
 				//GroupName
@@ -267,6 +269,39 @@ mongoClient.connect(dbURL, function (err, DB) {
 		validationAction: 'error'
 	});
 
+	DB.createCollection('courses', {
+		validator: {
+			$and: [{
+				label: {$type: 'string'}
+			},
+			{
+				timeStart: {$type: 'date'}
+			},
+			{
+				timeEnd: {$type: 'date'}
+			},
+			{
+				description: {$type: 'string'}
+			},
+			{
+				name: {$type: 'string'}
+			},
+			{
+				semester: {$type: 'string'}
+			},
+			{
+				location: {$type: 'string'}
+			},
+			{
+				year: {$type: 'string'}
+			},
+			{
+				//Creatorid
+				cid: {$type: 'string'}
+			}]
+		}
+	});
+
 	//Variables set to mongo collections
 	collectionAuths = DB.collection('authkeys');
 	collectionUsers = DB.collection('users');
@@ -277,6 +312,7 @@ mongoClient.connect(dbURL, function (err, DB) {
 	collectionGroupAdmins = DB.collection('gAdmins');
 	collectionPosts = DB.collection('posts');
 	collectionComments = DB.collection('comments');
+	collectionCourses = DB.collection('courses');
 });
 
 //USERS
@@ -1445,6 +1481,157 @@ DBComments.update = function (req, res, callback) {
 	});
 };
 
+//COURSES
+//======================================================================================================
+
+//Add a course
+DBCourses.add = function (req, res, callback) {
+	var course = {
+		label: req.body.label,
+		name: req.body.name,
+		description: req.body.description,
+		semester: req.body.semester,
+		department: req.body.department,
+		location: req.body.location,
+		year: req.body.year,
+		cid: req.body.cid,
+		days: req.body.days,	
+		timeStart: req.body.timeStart,
+		timeEnd: req.body.timeEnd,	
+	};
+	console.log("[DBCourses] Add: '" + course.label);
+	collectionCourses.insert(course, function (err, result) {
+		if (err) {
+			console.error("[DBCourses] Add: " + err.message);
+			callback({
+				status: 'fail'
+			});
+		} else {
+			callback({
+				status: 'ok'
+			});
+		}
+	});
+};
+
+//Find a course by unique course id
+DBCourses.findById = function (req, res, callback) {
+	console.log("[DBCourses] FindById: '" + req.params.uid + "'");
+	if (req.params.uid) {
+		collectionCourses.findOne({
+			_id: req.params.uid
+		}, function (err, result) {
+			if (err) {
+				console.log("[DBCourses]: " + err.message);
+				callback({
+					status: 'fail'
+				});
+			} else {
+				//Returns null if error occured
+				callback({
+					status: 'ok',
+					data: result
+				});
+			}
+		});
+	} else {
+		console.error("[DBCourses] FindById: Missing Fields");
+		callback({
+			status: 'fail'
+		});
+	}
+};
+
+//Find courses matching query
+DBCourses.find = function (req, res, callback) {
+	console.log("[DBCourses] Find: '" + JSON.stringify(req.body) + "'");
+	collectionCourses.find(req.body).toArray(function (err, result) {
+		if (err) {
+			console.error("[DBCourses]: " + err.message);
+			callback({
+				status: 'fail'
+			});
+		} else {
+			callback({
+				status: 'ok',
+				data: result
+			});
+		}
+	});
+};
+
+//Updates the course
+DBCourses.update = function (req, res, callback) {
+	console.log("[DBCourses] Update: '" + JSON.stringify(req.body) + "'->'" + req.params.uid + "'");
+	if (req.params.uid) {
+		var updates = {
+			label: req.body.label,
+			name: req.body.name,
+			description: req.body.description,
+			semester: req.body.semester,
+			department: req.body.department,
+			location: req.body.location,
+			year: req.body.year,
+			cid: req.body.cid,
+			days: req.body.days,	
+			timeStart: req.body.timeStart,
+			timeEnd: req.body.timeEnd,	
+		};
+		collectionCourses.update({
+			_id: req.params.uid
+		}, {
+			$set: updates
+		}, {
+			upsert: true
+		}, function (err, result) {
+			if (err) {
+				console.error("[DBCourses] Update: " + err.message);
+				res.json({
+					status: 'fail'
+				});
+			} else {
+				callback({
+					status: 'ok'
+				});
+			}
+		});
+	} else {
+		console.warn("[DBCourses] Update: Missing Fields");
+		res.json({
+			status: "fail"
+		});
+	}
+};
+
+//Removes the course
+DBCourses.remove = function (req, res, callback) {
+	console.log("[DBCourses] Remove: '" + req.params.uid + "'");
+	if (req.params.uid) {
+		collectionCourses.remove({
+			_id: req.params.id
+		}, {
+			single: true
+		}, function (err, result) {
+			if (err) {
+				console.error("[DBCourses] Remove: " + err.message);
+				callback({
+					status: 'fail'
+				});
+			} else {
+
+				callback({
+					status: 'ok'
+				});
+			}
+		});
+	} else {
+		console.warn("[DBCourses] Remove: Missing Fields");
+		res.json({
+			status: "fail"
+		});
+	}
+};
+
 module.exports = {
 	Auth: DBAuth,
 	Posts: DBPosts,
@@ -1454,6 +1641,7 @@ module.exports = {
 	GroupMembers: DBGroupMembers,
 	GroupAdmins: DBGroupAdmins,
 	Comments: DBComments,
+	Courses: DBCourses,
 	DB_URL: dbURL,
 	MAX_VALIDATE_MINUTES: MAX_VALIDATE_MINUTES
 };
