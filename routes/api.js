@@ -477,9 +477,9 @@ router.post(registerUser, function (req, res, next) {
 //POST login user
 router.post(loginUser, function (req, res, next) {
 	//TODO: Devin, Stuff needs to happen right here
-    DB.Users.login(req, res, function(result) {
-        res.json(result);
-    });
+	DB.Users.login(req, res, function (result) {
+		res.json(result);
+	});
 });
 
 //GET list of friends from userId
