@@ -475,11 +475,19 @@ router.post(registerUser, function (req, res, next) {
 });
 
 //POST login user
+//TODO: dev: clean this up
+//sessions: just a tag to find session example, dont worry about this line
 router.post(loginUser, function (req, res, next) {
-	//TODO: Devin, Stuff needs to happen right here
-	DB.Users.login(req, res, function (result) {
-		res.json(result);
-	});
+	if (req.session.user) {
+		console.log("SESSION: Existed" + JSON.stringify(req.session.user));
+	}
+	else {
+		DB.Users.login(req, res, function (result) {
+			req.session.user = result;
+			console.log("SESSION: Created" + JSON.stringify(req.session.user));
+			res.json(result);
+		});
+	}
 });
 
 //GET list of friends from userId
