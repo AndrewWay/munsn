@@ -19,9 +19,20 @@ router.get('/image/group/:gid', function (req, res, next) {
 	var file = utils.findFiles('group', path.join(__dirname, '../content/images/group/' + req.params.gid)).next().value;
 	utils.download(req, res, file);
 });
-
+/**
+ * Return User resume named 'resume.pdf'
+ * Resume Example: src='/content/resume/user/user123'
+ */
 router.get('/resume/user/:uid', function (req, res, next) {
 	var file = utils.findFiles('resume', path.join(__dirname, '../content/resumes/user/' + req.params.uid)).next().value;
+	utils.download(req, res, file);
+});
+/**
+ * Return a Post Image or other file based on the postid, saves the file as the id for the name
+ * Example: src='/content/posts/post123/any123'
+ */
+router.get('/posts/:pid/:id', function (req, res, next) {
+	var file = utils.findFiles(req.params.id, path.join(__dirname, '../content/posts/' + req.params.pid)).next().value;
 	utils.download(req, res, file);
 });
 /**
@@ -41,10 +52,18 @@ router.post('/image/group/:gid', function (req, res, next) {
 });
 /**
  * Upload a User Resume based on the userid
- * HTMLForm Example: action='/content/resume/user/user123'
+ * Resume Example: src='/content/resume/user/user123'
  */
 router.post('/resume/user/:uid', function (req, res, next) {
 	utils.upload(req, 'resumes/user/' + req.params.uid, 'resume');
+});
+/**
+ * Upload a Post Image or other file based on the postid, saves the file as the id for the name
+ * NOTE: ONLY SUPPORTS ONE FILE PER POST RIGHT NOW
+ * Example: action='/content/posts/post123/any123'
+ */
+router.post('/posts/:pid/:id', function (req, res, next) {
+	utils.upload(req, 'posts/' + req.params.pid + '/', req.params.id);
 });
 /* Unused
 router.post('/image/post/:pid', function(req, res, next) {

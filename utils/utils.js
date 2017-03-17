@@ -39,7 +39,6 @@ function* findFiles(filter, directory) {
 		var filename = path.join(directory, files[i]);
 		var stat = fs.lstatSync(filename);
 		if (!stat.isDirectory() && filename.indexOf(filter) >= 0) {
-			console.log(filename);
 			yield filename;
 		}
 	}
@@ -74,15 +73,22 @@ function download(req, res, file) {
  * @returns {void}
  */
 function upload(req, dest, name) {
-	var fstream;
 	req.pipe(req.busboy);
 	req.busboy.on("file", function (fieldname, file, filename) {
+		var fstream;
 		var dir = path.join(__dirname, "../content/" + dest);
 		//File extension
 		var fext = path.extname(filename);
 		console.log("Uploading: " + filename);
 		//Path where file will be uploaded
 		fs.exists(dir, function (exist) {
+			var name;
+			//If upload(req,dest) then change set name to filename
+			if (!name) {
+				name = filename;
+			} else {
+				name = name + fext;
+			}
 			//Create the directory if it doesn't exist
 			if (!exist) {
 				fs.mkdirSync(dir);
@@ -94,15 +100,9 @@ function upload(req, dest, name) {
 					}
 				}
 			}
-			//If upload(req,dest) then change set name to filename
-			if (!name) {
-				name = filename;
-			} else {
-				name = name + fext;
-			}
 			fstream = fs.createWriteStream(path.join(dir, name));
 			fstream.on("close", function () {
-				console.log("Uploaded: " + filename);
+				console.log("Uploaded: " + name);
 			});
 			switch (fext.toLowerCase()) {
 				case ".jpg":
