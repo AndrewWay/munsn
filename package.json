@@ -23,6 +23,7 @@
 		"connect-busboy": "0.0.2",
 		"fs-extra": "2.0.0",
 		"mime": "1.3.4",
-		"emailjs": "1.0.8"
+		"emailjs": "1.0.8",
+		"socket.io": "^1.7.3"
 	}
 }
