@@ -34,9 +34,7 @@ body, html {
 	left: 0;
 	background: #eeeeee;
 	
-	-webkit-box-shadow: inset -5px -1px 1px #bbbbbb;
-    -moz-box-shadow: inset -5px -1px 1px #bbbbbb;
-	box-shadow: inset -5px -1px 1px #bbbbbb;
+	border: 2px solid #cccccc;
 }
 
 #leftPanel {
@@ -79,9 +77,7 @@ body, html {
 	height: 400px;
 	/*background: #7f1734; /*claret */
 	background: #eeeeee;
-	-webkit-box-shadow: inset 0 0 2px 2px #bbbbbb;
-    -moz-box-shadow: inset 0 0 2px 2px #bbbbbb;
-	box-shadow: inset 0 0 2px 2px #bbbbbb;
+	border: 2px solid #cccccc;
 	/*box-shadow: inset 0 0 2px 2px #400c1a; /*dark claret */
 	/*box-shadow: inset 0 0 2px 2px #7f1734; /*claret */
 	border-radius: 50% / 5%;
