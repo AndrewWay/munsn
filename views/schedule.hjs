@@ -84,6 +84,12 @@
 
 	<div id="calendar"></div>
 		
+	<div class="sidebars" id="section-right">
+		<div id= "content-1">
+		</div>
+		<div id ="content-2">
+		</div>
+	</div>
 		
 
 	
