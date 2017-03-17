@@ -712,7 +712,6 @@ DBFriends.addRequest = function (req, res, callback) {
 				}
 			},
 			function (err, result) {
-				//DEVIN: Will changing this to err,result affect this?
 				if (err) {
 					console.error("[DBFriends] AddRequest: " + err.message);
 					callback({
@@ -1010,8 +1009,20 @@ DBGroupMembers.remove = function (req, res, callback) {
 //======================================================================================================
 
 //Add a post
+//Choice = [string]
 DBPosts.add = function (req, res, callback) {
 	var date = new Date();
+    var data = {
+        text: req.body.text,
+        imagePath: req.body.imagePath,
+        poll: {
+            total: 0,
+            choices: []
+        }
+    };
+    for (var i = 0; i < req.body.choices.length; i++) {
+        data.poll.choices[i] = {text: req.body.choices[i], count: 0};
+    }
 	collectionPosts.insert({
 		authorid: req.body.authorid,
 		visibility: req.body.visibility,
@@ -1020,7 +1031,7 @@ DBPosts.add = function (req, res, callback) {
 		created: date,
 		modified: date,
 		dataType: req.body.dataType,
-		data: req.body.data
+		data: data
 	}, function (err, result) {
 		if (err) {
 			console.warn(err);
@@ -1065,13 +1076,14 @@ DBPosts.findByPostId = function (req, res, callback) {
 //Update post
 DBPosts.update = function (req, res, callback) {
 	var date = new Date();
-	var updates = {};
-	if (req.body.data) {
-		updates.data = req.body.data;
-		updates.modified = date;
-	}
-	if (req.body.visibility) updates.visibility = req.body.visibility;
-
+	var updates = {
+        visibility: req.body.visibility,
+        modified: date,
+        data: {
+            text: req.body.text,
+            imagePath: req.body.imagePath,
+        }
+    };
 	collectionPosts.update({
 		_id: ObjectID(req.body.pid)
 	}, {
@@ -1085,6 +1097,17 @@ DBPosts.update = function (req, res, callback) {
 			callback(obj.result);
 		}
 	});
+};
+
+//TODO
+DBPosts.updatePoll = function (req, res, callback) {
+    var updates = {
+        poll: {
+            choices: req.body.choices,
+            total: req.body.choices.length
+        }
+    };
+    collectionPosts.update({_id: ObjectID(req.body.pid), data.poll.}, {});
 };
 
 //POST COMMENTS
