@@ -173,9 +173,9 @@
 			<h5> Suggested Friends </h5>
 			<div id="suggFriend">
 				<div id="suggList">
-					<a href="#"><img src="/img/SEAHAWK_SIL.jpg">
-					<div id="suggName"> </div> </a>
-					<div id="nextButt"> NEXT</div>
+					<a id="suggLink" href="#"><img src="/img/SEAHAWK_SIL.jpg">
+					<div id="suggName"> {{SUGG_NAME}} </div> </a>
+					<div id="suggButt"><button id="suggPrev" value="PREV"><span> PREV </span></button><button id="suggNext" value="NEXT"><span> NEXT </span></button></div>
 				
 				</div>
 			</div>
