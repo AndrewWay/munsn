@@ -411,7 +411,7 @@ var addGroupPost = "/post/add/group";
  * delPost
  *
  * URL:
- * 		- %server%/api/post/remove/user
+ * 		- %server%/api/post/remove/
  * Descript:
  *      - Delete a post
  * Method:
@@ -421,13 +421,13 @@ var addGroupPost = "/post/add/group";
  * Returns:
  *      - JSON mongo result
  */
-var delPost = "/post/remove/user";
+var delPost = "/post/remove";
 
 /**
  * updatePost
  *
  * URL:
- * 		- %server%/api/post/update/user
+ * 		- %server%/api/post/update
  * Descript:
  *      - Update a post
  * Method:
@@ -437,7 +437,7 @@ var delPost = "/post/remove/user";
  * Returns:
  *      - JSON mongo result
  */
-var updatePost = "/post/update/user";
+var updatePost = "/post/update";
 //==========================================================================================
 
 router.get(findUserById, function (req, res, next) {
