@@ -7,6 +7,7 @@ IO.on('connection', function(socket) {
     users.push(socket);
     console.log("SOCKET.IO: User with id " + socket.id + " connected");
     console.log("SOCKET.IO: " + users.length);
+    IO.emit('chat message', "User: " + socket.id + " has joined!");
 
     //User disconnects
     socket.on('disconnect', function() {
@@ -14,6 +15,7 @@ IO.on('connection', function(socket) {
         if (index != -1) {
             users.splice(index, 1);
             console.log("SOCKET.IO: User with id " + socket.id + " disconnected");
+            IO.emit('chat message', "User: " + socket.id + " has left!");
         }
     });
     socket.on('chat message', function(msg){
