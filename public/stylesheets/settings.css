@@ -1,0 +1,67 @@
+.settings {
+	height: 50px;
+	width: 90%;
+	
+	position: static;
+	margin: 10px;
+	background: #eeeeee;
+	
+	border: 1px solid #bbbbbb;
+	
+	overflow: hidden;
+	
+}
+
+.lists {
+	position: relative;
+	top: 10px;
+	
+	height:200px;
+	padding-left: 10px;
+}
+
+.setTitle {
+	background-color: #dddddd;
+	height: 50px;
+	width: 100%;
+	
+	padding-top: 10px;
+	padding-left: 15px;
+	
+	font-family: Arial Black;
+	color: #000000;
+}
+
+.setTitle:hover {
+	background-color: #bbbbbb;
+	cursor: pointer;
+}
+
+#confirmChange{
+	height: 50px;
+	width: 90%;
+	
+	position: static;
+	margin: 10px;
+	background: #eeeeee;
+	
+	padding: 10px;
+	
+	border: 1px solid #bbbbbb;
+	
+	font-family: Arial Black;
+	color: #000000;
+	
+	overflow: hidden;
+	
+}
+
+#confirmChange input[type="button"] {
+	padding:0;
+}
+
+ 
+ #newPass input{
+	 position: absolute;
+	 left: 120px;
+ }
