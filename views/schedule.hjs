@@ -4,16 +4,10 @@
 	<meta charset="UTF-8">
 	<title>{{Title}}</title>
 	<link href="/stylesheets/blank.css" rel="stylesheet"/>
-	<link href="/stylesheets/post.css" rel="stylesheet"/>
 	<link href="/stylesheets/schedule.css" rel="stylesheet"/>
 	
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
 	<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
-	
-	<script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.js"></script>
-	<script src="http://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.2.0/fullcalendar.min.js"></script>
-	<link href="http://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.2.0/fullcalendar.min.css" rel="stylesheet"/>
-	<link href="http://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.2.0/fullcalendar.print.css" media="print" rel="stylesheet"/>
 	
 	<script src="/js/blank.js"></script>
 	<script src="/js/schedule.js"></script>
@@ -39,11 +33,26 @@
 
 		<div class="buttons">
 			<a href="#"><img id="not" src="/img/notification-red.png"></a>
-			<a href="#"><img id="cog" src="/img/logout.png"></a>
+			<a href="#"><img id="log" src="/img/logout.png"></a>
 			<a href="#"><img id="cog" src="/img/settings.png"></a>
 		</div>
 	</div>
 	</nav>
+	
+	<div id="not-center">
+		<a href="#"><div id="note">
+			{{NOT_INFO}}
+		</div></a>
+		<a href="#"><div id="note">
+			{{NOT_INFO}}
+		</div></a>
+		<a href="#"><div id="note">
+			{{NOT_INFO}}
+		</div></a>
+		<a href="#"><div id="note">
+			{{NOT_INFO}}
+		</div></a>
+	</div>
 
 	<div class="container">
 	<div class="sidebars" id="section-left">
@@ -82,7 +91,7 @@
 	</div>
 
 
-	<div id="calendar"></div>
+	<div id="calendar"><iframe src="https://calendar.google.com/calendar/embed" style="border: 0" frameborder="0" scrolling="no"></iframe></div>
 		
 	<div class="sidebars" id="section-right">
 		<div id= "content-1">

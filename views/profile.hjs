@@ -34,12 +34,27 @@
 
 		<div class="buttons">
 			<a href="#"><img id="not" src="/img/notification-red.png"></a>
-			<a href="#"><img id="cog" src="/img/logout.png"></a>
+			<a href="#"><img id="log" src="/img/logout.png"></a>
 			<a href="#"><img id="cog" src="/img/settings.png"></a>
 		</div>
 	</div>
 	</nav>
 
+	<div id="not-center">
+		<a href="#"><div id="note">
+			{{NOT_INFO}}
+		</div></a>
+		<a href="#"><div id="note">
+			{{NOT_INFO}}
+		</div></a>
+		<a href="#"><div id="note">
+			{{NOT_INFO}}
+		</div></a>
+		<a href="#"><div id="note">
+			{{NOT_INFO}}
+		</div></a>
+	</div>
+	
 	<div class="container">
 	<div class="sidebars" id="section-left">
 		<div class="userInfo" id="userPic">

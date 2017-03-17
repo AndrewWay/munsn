@@ -93,7 +93,7 @@ body, html {
 	margin-right: 10px;
 }
 
-#cog{
+#cog, #log{
 	vertical-align: middle;
 	padding-bottom: 3px;
 }
