@@ -41,7 +41,7 @@
 	
 		display: inline-block;
 		
-		height: 200px;
+		height: 180px;
 		width: 100%;
 		
 		margin: 0;
@@ -51,13 +51,57 @@
 
 #suggList {
 	margin: 0;
+	display: block;
 }
 
 #suggList img {
 	width: 100px;
-	margin: 10px;
+	display: block;
+	margin: auto;
 	
 	border: 2px outset;
 	
 	border-color: #aaaaaa #7f1734 #7f1734 #aaaaaa;
+}
+
+#suggName {
+	height:30px;
+	text-align: center;
+	vertical-align: middle;
+	line-height: 30px;
+	text-decoration: none;
+	margin-top: 0;
+	margin-bottom: 10px;
+	font-family: Tahoma;
+	color: #000000;
+}
+
+#suggButt {
+	height: 30px;
+	margin: 0;
+	width:100%;
+	bottom: 0;
+}
+
+#suggButt button {
+	height: 100%;
+	width: 49%;
+	
+	border: none;
+	background-color: #eeeeee;
+	
+	border-right: 1px solid #000000;
+	
+	
+	
+}
+
+#suggButt button:last-of-type {
+	border-right: none;
+	
+}
+
+#suggButt button:hover {
+	cursor: pointer;
+	background-color: #dddddd;
 }
