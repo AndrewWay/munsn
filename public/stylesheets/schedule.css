@@ -1,0 +1,9 @@
+	#calendar {
+		position: absolute;
+		margin-left: 16%; 
+		width: 84%;
+		min-width: 840px;
+		display: inline-block;
+		top:3.1em;
+	}
+	
