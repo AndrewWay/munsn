@@ -116,12 +116,14 @@ body, html {
 #section-left{
 	left:0;
 	display: inline-block;
+	border-right: 2px solid #cccccc;
 	
 }
 
 #section-right{
 	right:0;
 	display: inline-block;
+	border-left: 2px solid #cccccc;
 }
 
 .timeline{
