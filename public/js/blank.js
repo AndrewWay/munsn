@@ -3,6 +3,29 @@
 *
 */
 
+$(document).ready(function(){
+	
+	$("#not").click(function(){
+		if($("#not-center:visible").length == 0) {
+			$("#not-center").fadeIn(200);	
+		}
+		else {
+			$("#not-center").fadeOut(200);
+		}
+		
+		
+	});
+	
+	$("#log").click(function(){
+		//CALL LOGOUT from api. Not yet implemented.
+	});
+	
+	$("#cog").click(function(){
+		//GOTO: Settings
+	});
+	
+});
+
 
 
     $(window).scroll(function(){

@@ -37,6 +37,21 @@
 		</div>
 	</div>
 	</nav>
+	
+	<div id="not-center">
+		<a href="#"><div id="note">
+			{{NOT_INFO}}
+		</div></a>
+		<a href="#"><div id="note">
+			{{NOT_INFO}}
+		</div></a>
+		<a href="#"><div id="note">
+			{{NOT_INFO}}
+		</div></a>
+		<a href="#"><div id="note">
+			{{NOT_INFO}}
+		</div></a>
+	</div>
 
 	<div class="container">
 	<div class="sidebars" id="section-left">
@@ -76,81 +91,13 @@
 	<div class="timeline">
 		<!-- RANDOM POSTS FOR TESTING -->
 	
-		<div class="postTemp">
-				<div class="postInfo">
-					<div class="postPic">
-						<img src="/img/SEAHAWK_SIL.jpg">
-					</div> 
-					<div class="postName">
-						<a href="{{ POST_LINK }}"> {{ POST_NAME }} </a> <br>
-						<span>{{ POST_TIME }}</span>
-					</div>
-				</div>
-				<div class="postCont">
-					<p> {{ POST_TEXT }}</p><img src="/img/postImg.png">
-				</div>
-				
-				<div class="postComm">
-					<div class="commTemp">
-						<div class="commInfo">
-							<div class="commPic">
-								<img src="/img/SEAHAWK_SIL.jpg">
-							</div>
-							<div class="commName">
-								<a href="{{ COMM_LINK }}"> {{ COMM_NAME }} </a> <br>
-								<span>{{ COMM_TIME }}</span>
-							</div>
-						</div>
-						<div class="commCont">
-							<p> {{ COMM_TEXT }} </p>
-						</div>
-					</div>
-					<div class="commField">
-						<!--Text field for comments to be posted, followed by a submit button -->
-					</div>
-				</div>
-		</div>
 		
-		<div class="postTemp">
-				<div class="postInfo">
-					<div class="postPic">
-						<img src="/img/SEAHAWK_SIL.jpg">
-					</div> 
-					<div class="postName">
-						<a href="{{ POST_LINK }}"> {{ POST_NAME }} </a> <br>
-						<span>{{ POST_TIME }}</span>
-					</div>
-				</div>
-				<div class="postCont">
-					<p> {{ POST_TEXT }}</p><img src="/img/postImg.png">
-				</div>
-				
-				<div class="postComm">
-					<div class="commTemp">
-						<div class="commInfo">
-							<div class="commPic">
-								<img src="/img/SEAHAWK_SIL.jpg">
-							</div>
-							<div class="commName">
-								<a href="{{ COMM_LINK }}"> {{ COMM_NAME }} </a> <br>
-								<span>{{ COMM_TIME }}</span>
-							</div>
-						</div>
-						<div class="commCont">
-							<p> {{ COMM_TEXT }} </p>
-						</div>
-					</div>
-					<div class="commField">
-						<!--Text field for comments to be posted, followed by a submit button -->
-					</div>
-				</div>
-		</div>
 	</div>
 	<div class="sidebars" id="section-right">
-		<div class= "content-1">
+		<div id= "content-1">
 		TEST <br>
 		</div>
-		<div class ="content-2">
+		<div id ="content-2">
 		</div>
 	</div>
 	</div>

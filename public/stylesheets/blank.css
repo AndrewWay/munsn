@@ -103,6 +103,42 @@ body, html {
 	padding-bottom: 2px;
 }
 
+#not-center{
+	position: absolute;
+	height: 300px;
+	width: 300px;
+	
+	top:3em;
+	right: 0;
+	
+	display: none;
+	
+	z-index: 100;
+	
+	background: #ffffff;
+	border: 2px solid #dddddd;
+}
+
+#not-center #note {
+	display: block;
+	
+	height: 50px;
+	
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	border-bottom: 1px solid #777777;
+	
+	font-family: Tahoma;
+	text-decoration: none;
+	font-size: 0.9em;
+	color: #000000;
+}
+
+#not-center #note:hover {
+	background-color: #dddddd;
+}
+
 .sidebars{
 	height: calc(100% - 50px);
 	width: 16%;
