@@ -23,7 +23,6 @@ module.exports = function (DBUsers, DBAuth, collectionUsers) {
 					auth: false,
 					visibility: req.body.visibility ? req.body.visibility : "default",
 					_id: utils.getIdFromEmail(req.body.email)
-					//_id: req.body.uid
 				};
 
 				//Create auth key and store it in auths
