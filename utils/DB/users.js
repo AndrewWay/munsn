@@ -2,6 +2,7 @@ var utils = require('../utils');
 
 module.exports = function (DBUsers, DBAuth, collectionUsers) {
 	DBUsers.add = function (req, res, callback) {
+		console.log("[DBUsers] Add: '" + JSON.stringify(req.body) + "'");
 		var result = {};
 		if (!Object.keys(req.body).length) {
 			console.warn("[DBUsers] Add: Missing Data");
