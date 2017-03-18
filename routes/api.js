@@ -190,18 +190,18 @@ var findCourseById = "/course/find/:uid";
  * Method:
  *      - GET
  * Params:
- 		_id: The course unique object id
-		label: Shorthand name, ex. "COMP 4770"
-		name: Full name, ex. "Team Project"
-		description: Description
-		semester: Semester, ex. "winter"
-		department: Department that the course belongs to, ex. "cs"
-		location: Room number, ex. "EN 1051"
-		year: Current year the course is offered
-		cid: Creator id
-		days: Array of strings of days the course is every week, ex. days["monday", "wednesday", "friday"]
-		timeStart: (date)The course start date, ex. "Jan. 1"
-		timeEnd: (date) The course end date, ex. "Apr. 12"
+ *		_id: The course unique object id
+ *		label: Shorthand name, ex. "COMP 4770"
+ *		name: Full name, ex. "Team Project"
+ *		description: Description
+ *		semester: Semester, ex. "winter"
+ *		department: Department that the course belongs to, ex. "cs"
+ *		location: Room number, ex. "EN 1051"
+ *		year: Current year the course is offered
+ *		cid: Creator id
+ *		days: Array of strings of days the course is every week, ex. days["monday", "wednesday", "friday"]
+ *		timeStart: (date)The course start date, ex. "Jan. 1"
+ *		timeEnd: (date) The course end date, ex. "Apr. 12"
  * Returns:
  *      - JSON course object array
  */
@@ -233,11 +233,11 @@ var findLostById = "/lost/find/:uid";
  * Method:
  *      - GET
  * Params:
- 		_id: The lost unique object id
-		imagePath: The path to an image if supplied
-		description: Description
-		long: Longitude
-		lat: Latitude
+ *		_id: The lost unique object id
+ *		imagePath: The path to an image if supplied
+ *		description: Description
+ *		long: Longitude
+ *		lat: Latitude
  * Returns:
  *      - JSON lost object array
  */
@@ -529,17 +529,17 @@ var updatePost = "/post/update";
  * Method:
  *      - POST
  * Params:
-		label: Shorthand name, ex. "COMP 4770"
-		name: Full name, ex. "Team Project"
-		description: Description
-		semester: Semester, ex. "winter"
-		department: Department that the course belongs to, ex. "cs"
-		location: Room number, ex. "EN 1051"
-		year: Current year the course is offered
-		cid: Creator id
-		days: Array of strings of days the course is every week, ex. days["monday", "wednesday", "friday"]
-		timeStart: (date)The course start date, ex. "Jan. 1"
-		timeEnd: (date) The course end date, ex. "Apr. 12"
+ *		label: Shorthand name, ex. "COMP 4770"
+ *		name: Full name, ex. "Team Project"
+ *		description: Description
+ *		semester: Semester, ex. "winter"
+ *		department: Department that the course belongs to, ex. "cs"
+ *		location: Room number, ex. "EN 1051"
+ *		year: Current year the course is offered
+ *		cid: Creator id
+ *		days: Array of strings of days the course is every week, ex. days["monday", "wednesday", "friday"]
+ *		timeStart: (date)The course start date, ex. "Jan. 1"
+ *		timeEnd: (date) The course end date, ex. "Apr. 12"
  * Returns:
  *      - JSON mongo result
  */
@@ -555,18 +555,18 @@ var addCourse = "/course/add";
  * Method:
  *      - POST
  * Params:
- 		_id: The course unique object id
-		label: Shorthand name, ex. "COMP 4770"
-		name: Full name, ex. "Team Project"
-		description: Description
-		semester: Semester, ex. "winter"
-		department: Department that the course belongs to, ex. "cs"
-		location: Room number, ex. "EN 1051"
-		year: Current year the course is offered
-		cid: Creator id
-		days: Array of strings of days the course is every week, ex. days["monday", "wednesday", "friday"]
-		timeStart: (date)The course start date, ex. "Jan. 1"
-		timeEnd: (date) The course end date, ex. "Apr. 12"
+ *		_id: The course unique object id
+ *		label: Shorthand name, ex. "COMP 4770"
+ *		name: Full name, ex. "Team Project"
+ *		description: Description
+ *		semester: Semester, ex. "winter"
+ *		department: Department that the course belongs to, ex. "cs"
+ *		location: Room number, ex. "EN 1051"
+ *		year: Current year the course is offered
+ *		cid: Creator id
+ *		days: Array of strings of days the course is every week, ex. days["monday", "wednesday", "friday"]
+ *		timeStart: (date)The course start date, ex. "Jan. 1"
+ *		timeEnd: (date) The course end date, ex. "Apr. 12"
  * Returns:
  *      - JSON mongo result
  */
@@ -582,7 +582,7 @@ var updateCourse = "/course/update";
  * Method:
  *      - POST
  * Params:
- 		_id: The course unique object id
+ *		_id: The course unique object id
  * Returns:
  *      - JSON mongo result
  */
@@ -598,10 +598,10 @@ var removeCourse = "/course/remove";
  * Method:
  *      - POST
  * Params:
-		imagePath: The path to an image if supplied
-		description: Description
-		long: Longitude
-		lat: Latitude
+ *		imagePath: The path to an image if supplied
+ *		description: Description
+ *		long: Longitude
+ *		lat: Latitude
  * Returns:
  *      - JSON mongo result
  */
@@ -617,11 +617,11 @@ var addLost = "/lost/add";
  * Method:
  *      - POST
  * Params:
- 		_id: The lost unique object id
-		imagePath: The path to an image if supplied
-		description: Description
-		long: Longitude
-		lat: Latitude
+ *		_id: The lost unique object id
+ *		imagePath: The path to an image if supplied
+ *		description: Description
+ *		long: Longitude
+ *		lat: Latitude
  * Returns:
  *      - JSON mongo result
  */
@@ -637,7 +637,7 @@ var updateLost = "/lost/update";
  * Method:
  *      - POST
  * Params:
- 		_id: The Lost unique object id
+ *		_id: The Lost unique object id
  * Returns:
  *      - JSON mongo result
  */
