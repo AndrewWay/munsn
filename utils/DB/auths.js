@@ -1,0 +1,144 @@
+var EMS = require('../ems');
+var utils = require('../utils');
+/**
+ * @param {object} DBAuth
+ * @param {object} collectionAuths
+ * @param {object} collectionUsers
+ * @param {number} MAX_VALIDATE_MINUTES
+ */
+module.exports = function (DBAuth, collectionAuths, collectionUsers, MAX_VALIDATE_MINUTES) {
+	DBAuth.add = function (req, res, row, callback) {
+		var date = new Date();
+		var authkey = row._id + date.getTime();
+		var expiry = utils.addMinsToDate(date, MAX_VALIDATE_MINUTES).getTime();
+		//user, authkey, utils.addMinsToDate(date, mins).getTime()
+		var auth = {
+			userid: row._id,
+			key: authkey,
+			expiry: expiry
+		};
+		console.log("[DBAuth] Add: '" + JSON.stringify(auth) + "'");
+		collectionAuths.insert(auth, function (err, result) {
+			if (err) {
+				console.error("[DBAuth]: " + err.message);
+				callback({
+					session: req.session,
+					status: 'fail'
+				});
+			} else {
+				//Send auth email to the user with the auth link
+				EMS.sendAuthEmail(auth, function (err, message) {
+					if (err) {
+						console.error('[EMS]: ' + err);
+						callback({
+							session: req.session,
+							status: 'fail'
+						});
+					} else {
+						console.log('[EMS] Sent To: ' + message.header.to + '\n[EMS] Subject: ' + message.header.subject);
+						callback({
+							session: req.session,
+							status: 'ok'
+						});
+					}
+				});
+			}
+		});
+
+	};
+	DBAuth.update = function (req, res, auth, callback) {
+		console.log("[DBAuth] Update: '" + JSON.stringify(auth) + "'->'" + auth.userid + "'");
+		collectionAuths.update({
+			userid: auth.userid
+		}, {
+			$set: auth
+		}, {
+			upsert: true
+		}, function (err, result) {
+			if (err) {
+				console.error("[DBAuth] Update: " + err.message);
+				callback({
+					session: req.session,
+					status: 'fail'
+				});
+			} else {
+				EMS.resendAuthEmail(auth, function (err, message) {
+					if (err) {
+						console.error("[EMS]: " + err);
+						callback({
+							session: req.session,
+							status: 'fail'
+						});
+					} else {
+						console.log('[EMS] To: ' + message.header.to + '\n[EMS] Subject: ' + message.header.subject);
+						callback({
+							session: req.session,
+							status: 'ok'
+						});
+					}
+				});
+			}
+		});
+	};
+	//Check for an existing authkey
+	DBAuth.find = function (req, res, key, callback) {
+		console.error("[DBAuth] Find: '" + req.query.key + "'");
+		collectionAuths.findOne({
+			key: key
+		}, function (err, result) {
+			if (err) {
+				console.error("[DBAuth] Find: " + err.message);
+				callback({
+					session: req.session,
+					status: 'fail',
+				});
+			} else {
+				callback({
+					session: req.session,
+					status: 'ok',
+					data: result
+				});
+			}
+		});
+	};
+
+	//Delete authkey
+	DBAuth.remove = function (req, res, auth, callback) {
+		console.log("[DBAuth] Remove: '" + auth.key + "'->'" + auth.userid + "'");
+		collectionAuths.remove(auth, {
+			single: true
+		}, function (err, result) {
+			if (err) {
+				console.error("[DBAuth] Remove: " + err.message);
+				callback({
+					session: req.session,
+					status: 'fail'
+				});
+			} else {
+				collectionUsers.update({
+					_id: auth.userid
+				}, {
+					$set: {
+						auth: true
+					}
+				}, {
+					upsert: true
+				}, function (err, result) {
+					if (err) {
+						console.error("[DBUsers] Authorization: " + err.message);
+						callback({
+							session: req.session,
+							status: 'fail'
+						});
+					} else {
+						console.error("[DBUsers] Authorization: '" + auth.userid + "'->'true'");
+						callback({
+							session: req.session,
+							status: 'ok'
+						});
+					}
+				});
+			}
+		});
+	};
+};
