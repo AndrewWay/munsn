@@ -479,18 +479,21 @@ DBUsers.update = function (req, res, callback) {
 		}, function (err, result) {
 			if (err) {
 				console.error("[DBUsers] Update: " + err.message);
-				res.json({
+				callback({
+					session: req.session,
 					status: 'fail'
 				});
 			} else {
 				callback({
+					session: req.session,
 					status: 'ok'
 				});
 			}
 		});
 	} else {
 		console.warn("[DBUsers] Update: Missing Fields");
-		res.json({
+		callback({
+			session: req.session,
 			status: "fail"
 		});
 	}
@@ -531,7 +534,7 @@ DBUsers.login = function (req, res, callback) {
 		console.log("[SESSION]: 'Exists'->'" + JSON.stringify(req.session.user) + "'");
 		callback({
 			status: 'ok',
-			session: req.session.user
+			session: req.session
 		});
 	} else {
 		if (req.body.uid && req.body.pass) {
