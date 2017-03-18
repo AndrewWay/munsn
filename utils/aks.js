@@ -8,9 +8,9 @@ var utils = require('./utils');
  * @param {string} key
  * @param {function} callback
  */
-var validate = function (key, callback) {
+var validate = function (req, res, callback) {
 	//Check if auth key exists
-	DB.Auth.find(key, function (result) {
+	DB.Auth.find(req, res, function (result) {
 		//console.log(JSON.stringify(checkResult));
 		if (result.data) {
 			var auth = result.data;
@@ -21,7 +21,7 @@ var validate = function (key, callback) {
 			//If not then auth the user, and delete the key from regauths
 			if (date.getTime() <= auth.expiry) {
 				console.log("[AKS]: 'Valid'->'" + auth.userid + "'");
-				DB.Auth.remove(auth, function (result) {
+				DB.Auth.remove(req, res, auth, function (result) {
 					if (result.status === 'ok') {
 						callback(true, result);
 					} else {
@@ -40,7 +40,7 @@ var validate = function (key, callback) {
 					expiry: utils.addMinsToDate(date, DB.MAX_VALIDATE_MINUTES).getTime()
 				};
 				//Send the updated data to the database and update it
-				DB.Auth.update(auth, function (result) {
+				DB.Auth.update(req, res, auth, function (result) {
 					if (result.status === 'ok') {
 						callback(true, result);
 					} else {

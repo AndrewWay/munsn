@@ -372,6 +372,7 @@ DBUsers.add = function (req, res, callback) {
 	if (!Object.keys(req.body).length) {
 		console.warn("[DBUsers] Add: Missing Data");
 		callback({
+			session: req.session,
 			status: 'fail'
 		});
 	} else {
@@ -396,11 +397,12 @@ DBUsers.add = function (req, res, callback) {
 				if (err) {
 					console.error("[DBUsers] Add: " + err.message);
 					callback({
+						session: req.session,
 						status: 'fail'
 					});
 				} else {
 					console.log("[DBUsers] Add: '" + result.insertedIds[0] + "'");
-					DBAuth.add(row, function (result) {
+					DBAuth.add(req, res, row, function (result) {
 						callback(result);
 					});
 				}
@@ -408,6 +410,7 @@ DBUsers.add = function (req, res, callback) {
 		} catch (err) {
 			console.error("[DBUsers] Registration: Missing fields or other error");
 			callback({
+				session: req.session,
 				status: 'fail'
 			});
 		}
@@ -424,11 +427,13 @@ DBUsers.findById = function (req, res, callback) {
 			if (err) {
 				console.log("[DBUsers]: " + err.message);
 				callback({
+					session: req.session,
 					status: 'fail'
 				});
 			} else {
 				//Returns null if error occured
 				callback({
+					session: req.session,
 					status: 'ok',
 					data: result
 				});
@@ -437,6 +442,7 @@ DBUsers.findById = function (req, res, callback) {
 	} else {
 		console.error("[DBUsers] FindById: Missing Fields");
 		callback({
+			session: req.session,
 			status: 'fail'
 		});
 	}
@@ -449,10 +455,12 @@ DBUsers.find = function (req, res, callback) {
 		if (err) {
 			console.error("[DBUsers]: " + err.message);
 			callback({
+				session: req.session,
 				status: 'fail'
 			});
 		} else {
 			callback({
+				session: req.session,
 				status: 'ok',
 				data: result
 			});
@@ -511,18 +519,20 @@ DBUsers.remove = function (req, res, callback) {
 			if (err) {
 				console.error("[DBUsers] Remove: " + err.message);
 				callback({
+					session: req.session,
 					status: 'fail'
 				});
 			} else {
-
 				callback({
+					session: req.session,
 					status: 'ok'
 				});
 			}
 		});
 	} else {
 		console.warn("[DBUsers] Remove: Missing Fields");
-		res.json({
+		callback({
+			session: req.session,
 			status: "fail"
 		});
 	}
@@ -533,8 +543,8 @@ DBUsers.login = function (req, res, callback) {
 	if (req.session.user) {
 		console.log("[SESSION]: 'Exists'->'" + JSON.stringify(req.session.user) + "'");
 		callback({
-			status: 'ok',
-			session: req.session
+			session: req.session,
+			status: 'ok'
 		});
 	} else {
 		if (req.body.uid && req.body.pass) {
@@ -545,16 +555,16 @@ DBUsers.login = function (req, res, callback) {
 				console.log("results: " + JSON.stringify(results));
 				if (err && results.length) {
 					callback({
-						status: "fail",
-						session: req.session
+						session: req.session,
+						status: 'fail'
 					});
 					console.error("[DBUsers] Login: 'NotFound'->'" + req.body.uid + "'");
 
 				} else {
 					req.session.user = results[0];
 					callback({
-						status: "ok",
-						session: req.session
+						session: req.session,
+						status: 'ok'
 					});
 					console.log("[SESSION]: 'Created'->'" + JSON.stringify(req.session) + "'");
 				}
@@ -562,8 +572,8 @@ DBUsers.login = function (req, res, callback) {
 		} else {
 			console.warn("[DBUsers] Login: Missing fields");
 			callback({
-				status: "fail",
-				session: req.session
+				session: req.session,
+				status: 'fail'
 			});
 		}
 	}
@@ -573,7 +583,7 @@ DBUsers.login = function (req, res, callback) {
 //======================================================================================================
 
 //Add an authkey to regauths
-DBAuth.add = function (row, callback) {
+DBAuth.add = function (req, res, row, callback) {
 	var date = new Date();
 	var authkey = row._id + date.getTime();
 	var expiry = utils.addMinsToDate(date, MAX_VALIDATE_MINUTES).getTime();
@@ -588,6 +598,7 @@ DBAuth.add = function (row, callback) {
 		if (err) {
 			console.error("[DBAuth]: " + err.message);
 			callback({
+				session: req.session,
 				status: 'fail'
 			});
 		} else {
@@ -596,11 +607,13 @@ DBAuth.add = function (row, callback) {
 				if (err) {
 					console.error('[EMS]: ' + err);
 					callback({
+						session: req.session,
 						status: 'fail'
 					});
 				} else {
 					console.log('[EMS] Sent To: ' + message.header.to + '\n[EMS] Subject: ' + message.header.subject);
 					callback({
+						session: req.session,
 						status: 'ok'
 					});
 				}
@@ -609,7 +622,7 @@ DBAuth.add = function (row, callback) {
 	});
 
 };
-DBAuth.update = function (auth, callback) {
+DBAuth.update = function (req, res, auth, callback) {
 	console.log("[DBAuth] Update: '" + JSON.stringify(auth) + "'->'" + auth.userid + "'");
 	collectionAuths.update({
 		userid: auth.userid
@@ -621,6 +634,7 @@ DBAuth.update = function (auth, callback) {
 		if (err) {
 			console.error("[DBAuth] Update: " + err.message);
 			callback({
+				session: req.session,
 				status: 'fail'
 			});
 		} else {
@@ -628,11 +642,13 @@ DBAuth.update = function (auth, callback) {
 				if (err) {
 					console.error("[EMS]: " + err);
 					callback({
+						session: req.session,
 						status: 'fail'
 					});
 				} else {
 					console.log('[EMS] To: ' + message.header.to + '\n[EMS] Subject: ' + message.header.subject);
 					callback({
+						session: req.session,
 						status: 'ok'
 					});
 				}
@@ -641,18 +657,20 @@ DBAuth.update = function (auth, callback) {
 	});
 };
 //Check for an existing authkey
-DBAuth.find = function (key, callback) {
-	console.error("[DBAuth] Find: '" + key + "'");
+DBAuth.find = function (req, res, key, callback) {
+	console.error("[DBAuth] Find: '" + req.query.key + "'");
 	collectionAuths.findOne({
 		key: key
 	}, function (err, result) {
 		if (err) {
 			console.error("[DBAuth] Find: " + err.message);
 			callback({
+				session: req.session,
 				status: 'fail',
 			});
 		} else {
 			callback({
+				session: req.session,
 				status: 'ok',
 				data: result
 			});
@@ -661,7 +679,7 @@ DBAuth.find = function (key, callback) {
 };
 
 //Delete authkey
-DBAuth.remove = function (auth, callback) {
+DBAuth.remove = function (req, res, auth, callback) {
 	console.log("[DBAuth] Remove: '" + auth.key + "'->'" + auth.userid + "'");
 	collectionAuths.remove(auth, {
 		single: true
@@ -669,6 +687,7 @@ DBAuth.remove = function (auth, callback) {
 		if (err) {
 			console.error("[DBAuth] Remove: " + err.message);
 			callback({
+				session: req.session,
 				status: 'fail'
 			});
 		} else {
@@ -684,11 +703,13 @@ DBAuth.remove = function (auth, callback) {
 				if (err) {
 					console.error("[DBUsers] Authorization: " + err.message);
 					callback({
+						session: req.session,
 						status: 'fail'
 					});
 				} else {
 					console.error("[DBUsers] Authorization: '" + auth.userid + "'->'true'");
 					callback({
+						session: req.session,
 						status: 'ok'
 					});
 				}
@@ -737,10 +758,12 @@ DBFriends.find = function (req, res, callback) {
 			if (err) {
 				console.error("[DBFriends] Find: " + err.message);
 				callback({
+					session: req.session,
 					status: 'fail'
 				});
 			} else {
 				callback({
+					session: req.session,
 					status: 'ok'
 				});
 			}
@@ -748,6 +771,7 @@ DBFriends.find = function (req, res, callback) {
 	} else {
 		console.warn("[DBFriends] Find: " + req.params.uid);
 		callback({
+			session: req.session,
 			status: 'fail'
 		});
 	}
@@ -771,17 +795,20 @@ DBFriends.remove = function (req, res, callback) {
 			if (err) {
 				console.warn("[DBFriends] Remove: " + err.message);
 				callback({
+					session: req.session,
 					status: 'fail'
 				});
 			} else {
 				callback({
+					session: req.session,
 					status: 'ok'
 				});
 			}
 		});
 	} else {
 		console.warn("[DBFriends] Remove: Missing Fields");
-		res.json({
+		callback({
+			session: req.session,
 			status: 'fail'
 		});
 	}
@@ -809,6 +836,7 @@ DBFriends.suggest = function (req, res, callback) {
 		if (err) {
 			console.error("[DBFriends] Suggest: " + err.message);
 			callback({
+				session: req.session,
 				status: 'fail'
 			});
 		} else {
@@ -825,12 +853,14 @@ DBFriends.suggest = function (req, res, callback) {
 					}
 				}
 				callback({
+					session: req.session,
 					status: 'ok',
 					data: Object.keys(users)
 				});
 			} else {
 				console.warn("[DBFriends] '" + req.params.uid + "': No Data Found");
 				callback({
+					session: req.session,
 					status: 'fail'
 				});
 			}
@@ -860,6 +890,7 @@ DBFriends.addRequest = function (req, res, callback) {
 				if (err) {
 					console.error("[DBFriends] AddRequest: " + err.message);
 					callback({
+						session: req.session,
 						status: 'fail'
 					});
 				} else {
@@ -871,10 +902,12 @@ DBFriends.addRequest = function (req, res, callback) {
 							if (err) {
 								console.error("[DBFriends] AddRequest: " + err.message);
 								callback({
+									session: req.session,
 									status: 'fail'
 								});
 							} else {
 								callback({
+									session: req.session,
 									status: 'ok',
 									data: result
 								});
@@ -883,6 +916,7 @@ DBFriends.addRequest = function (req, res, callback) {
 					} else {
 						console.warn("[DBFriends] AddRequest: User(s) not found");
 						callback({
+							session: req.session,
 							status: 'fail'
 						});
 					}
@@ -891,6 +925,7 @@ DBFriends.addRequest = function (req, res, callback) {
 	} else {
 		console.warn("[DBFriends] AddRequest:  Missing Fields");
 		callback({
+			session: req.session,
 			status: 'fail'
 		});
 	}
@@ -908,10 +943,12 @@ DBFriends.findRequests = function (req, res, callback) {
 			if (err) {
 				console.error("[DBFriends] FindRequests: " + err.message);
 				callback({
+					session: req.session,
 					status: 'fail'
 				});
 			} else {
 				callback({
+					session: req.session,
 					status: 'ok'
 				});
 			}
@@ -919,6 +956,7 @@ DBFriends.findRequests = function (req, res, callback) {
 	} else {
 		console.warn("[DBFriends] FindRequests: Missing Fields");
 		callback({
+			session: req.session,
 			status: 'fail'
 		});
 	}
@@ -937,10 +975,12 @@ DBFriends.removeRequest = function (req, res, callback) {
 			if (err) {
 				console.error("[DBFriends] RemoveRequest: " + err.message);
 				callback({
+					session: req.session,
 					status: 'fail'
 				});
 			} else {
 				callback({
+					session: req.session,
 					status: 'ok'
 				});
 			}
@@ -948,6 +988,7 @@ DBFriends.removeRequest = function (req, res, callback) {
 	} else {
 		console.warn("[DBFriends] RemoveRequest: Missing Fields");
 		callback({
+			session: req.session,
 			status: 'fail'
 		});
 	}
@@ -974,6 +1015,7 @@ DBGroups.add = function (req, res, callback) {
 			if (err) {
 				console.error("[DBGroups] Add: " + err.message);
 				callback({
+					session: req.session,
 					status: 'fail'
 				});
 			} else {
@@ -989,10 +1031,12 @@ DBGroups.add = function (req, res, callback) {
 					if (err) {
 						console.error("[DBGroups] Add: " + err.message);
 						callback({
+							session: req.session,
 							status: 'fail'
 						});
 					} else {
 						callback({
+							session: req.session,
 							status: 'ok'
 						});
 					}
@@ -1002,6 +1046,7 @@ DBGroups.add = function (req, res, callback) {
 	} else {
 		console.warn("[DBGroups] Add Group: Missing Fields");
 		callback({
+			session: req.session,
 			status: 'fail'
 		});
 	}
@@ -1019,10 +1064,12 @@ DBGroups.findByUserId = function (req, res, callback) {
 			if (err) {
 				console.error("[DBGroups] FindByUID: " + err.message);
 				callback({
+					session: req.session,
 					status: 'fail'
 				});
 			} else {
 				callback({
+					session: req.session,
 					status: 'ok',
 					data: result
 				});
@@ -1031,6 +1078,7 @@ DBGroups.findByUserId = function (req, res, callback) {
 	} else {
 		console.warn("[DBGroups] FindByUID: Missing Fields");
 		callback({
+			session: req.session,
 			status: 'fail'
 		});
 	}
@@ -1045,10 +1093,12 @@ DBGroups.find = function (req, res, callback) {
 			if (err) {
 				console.error("[DBGroups] Find:" + err.message);
 				callback({
+					session: req.session,
 					status: 'fail'
 				});
 			} else {
 				callback({
+					session: req.session,
 					status: 'ok',
 					data: result
 				});
@@ -1057,6 +1107,7 @@ DBGroups.find = function (req, res, callback) {
 	} else {
 		console.warn("[DBGroups] Find: Missing Fields");
 		callback({
+			session: req.session,
 			status: 'fail'
 		});
 	}
@@ -1079,10 +1130,12 @@ DBGroups.update = function (req, res, callback) {
 			if (err) {
 				console.error("[DBGroups] Update: " + err.message);
 				callback({
+					session: req.session,
 					status: 'fail'
 				});
 			} else {
 				callback({
+					session: req.session,
 					status: 'ok'
 				});
 			}
@@ -1090,6 +1143,7 @@ DBGroups.update = function (req, res, callback) {
 	} else {
 		console.warn("[DBGroups] Update: Missing Fields");
 		callback({
+			session: req.session,
 			status: 'fail'
 		});
 	}
@@ -1106,10 +1160,12 @@ DBGroups.remove = function (req, res, callback) {
 			if (err) {
 				console.error("[DBGroups] Remove: " + err.message);
 				callback({
+					session: req.session,
 					status: 'fail'
 				});
 			} else {
 				callback({
+					session: req.session,
 					status: 'ok'
 				});
 			}
@@ -1117,6 +1173,7 @@ DBGroups.remove = function (req, res, callback) {
 	} else {
 		console.warn("[DBGroups] Remove: Missing Fields");
 		callback({
+			session: req.session,
 			status: 'fail'
 		});
 	}
@@ -1143,10 +1200,12 @@ DBGroupAdmins.add = function (req, res, callback) {
 			if (err) {
 				console.error("[DBGroupAdmins] Add: " + err.message);
 				callback({
+					session: req.session,
 					status: 'fail'
 				});
 			} else {
 				callback({
+					session: req.session,
 					status: 'ok'
 				});
 			}
@@ -1154,6 +1213,7 @@ DBGroupAdmins.add = function (req, res, callback) {
 	} else {
 		console.warn("[DBGroupAdmins] Add: Missing Fields");
 		callback({
+			session: req.session,
 			status: 'fail'
 		});
 	}
@@ -1172,10 +1232,12 @@ DBGroupAdmins.find = function (req, res, callback) {
 			if (err) {
 				console.error("[DBGroupsAdmins] Find: " + err.message);
 				callback({
+					session: req.session,
 					status: 'fail'
 				});
 			} else {
 				callback({
+					session: req.session,
 					status: 'ok',
 					data: result
 				});
@@ -1184,6 +1246,7 @@ DBGroupAdmins.find = function (req, res, callback) {
 	} else {
 		console.warn("[DBGroupsAdmins] Find: Missing Fields");
 		callback({
+			session: req.session,
 			status: 'fail'
 		});
 	}
@@ -1205,10 +1268,12 @@ DBGroupAdmins.remove = function (req, res, callback) {
 			if (err) {
 				console.error("[DBGroupAdmins] Remove: " + err.message);
 				callback({
+					session: req.session,
 					status: 'fail'
 				});
 			} else {
 				callback({
+					session: req.session,
 					status: 'ok'
 				});
 			}
@@ -1216,6 +1281,7 @@ DBGroupAdmins.remove = function (req, res, callback) {
 	} else {
 		console.warn("[DBGroupAdmins] Remove: Missing Fields");
 		callback({
+			session: req.session,
 			status: 'fail'
 		});
 	}
@@ -1242,10 +1308,12 @@ DBGroupMembers.add = function (req, res, callback) {
 			if (err) {
 				console.error("[DBGroupMembers] Add: " + err.message);
 				callback({
+					session: req.session,
 					status: 'fail'
 				});
 			} else {
 				callback({
+					session: req.session,
 					status: 'ok'
 				});
 			}
@@ -1253,6 +1321,7 @@ DBGroupMembers.add = function (req, res, callback) {
 	} else {
 		console.warn("[DBGroupMembers] Add: Missing Fields");
 		callback({
+			session: req.session,
 			status: 'fail'
 		});
 	}
@@ -1271,10 +1340,12 @@ DBGroupMembers.find = function (req, res, callback) {
 			if (err) {
 				console.error("[DBGroupMembers] Find: " + err.message);
 				callback({
+					session: req.session,
 					status: 'fail'
 				});
 			} else {
 				callback({
+					session: req.session,
 					status: 'ok',
 					data: result
 				});
@@ -1283,6 +1354,7 @@ DBGroupMembers.find = function (req, res, callback) {
 	} else {
 		console.warn("[DBGroupMembers] Find: Missing Fields");
 		callback({
+			session: req.session,
 			status: 'fail'
 		});
 	}
@@ -1304,10 +1376,12 @@ DBGroupMembers.remove = function (req, res, callback) {
 			if (err) {
 				console.error("[DBGroupMembers] Remove: " + err.message);
 				callback({
+					session: req.session,
 					status: 'fail'
 				});
 			} else {
 				callback({
+					session: req.session,
 					status: 'ok'
 				});
 			}
@@ -1315,6 +1389,7 @@ DBGroupMembers.remove = function (req, res, callback) {
 	} else {
 		console.warn("[DBGroupMembers] Remove: Missing Fields");
 		callback({
+			session: req.session,
 			status: 'fail'
 		});
 	}
@@ -1341,10 +1416,12 @@ DBPosts.add = function (req, res, callback) {
 		if (err) {
 			console.error("[DBPosts] Add: " + err.message);
 			callback({
+				session: req.session,
 				status: 'fail'
 			});
 		} else {
 			callback({
+				session: req.session,
 				status: 'ok'
 			});
 		}
@@ -1360,10 +1437,12 @@ DBPosts.remove = function (req, res, callback) {
 		if (err) {
 			console.error("[DBPosts] Remove: " + err.message);
 			callback({
+				session: req.session,
 				status: 'fail'
 			});
 		} else {
 			callback({
+				session: req.session,
 				status: 'ok'
 			});
 		}
@@ -1379,10 +1458,12 @@ DBPosts.findByUserId = function (req, res, callback) {
 		if (err) {
 			console.error("[DBPosts] FindByUID: " + err.message);
 			callback({
+				session: req.session,
 				status: 'fail'
 			});
 		} else {
 			callback({
+				session: req.session,
 				status: 'ok',
 				data: result
 			});
@@ -1399,10 +1480,12 @@ DBPosts.findByPostId = function (req, res, callback) {
 		if (err) {
 			console.error("[DBPosts] FindByPID: " + err.message);
 			callback({
+				session: req.session,
 				status: 'fail'
 			});
 		} else {
 			callback({
+				session: req.session,
 				status: 'ok',
 				data: result
 			});
@@ -1429,10 +1512,12 @@ DBPosts.update = function (req, res, callback) {
 		if (err) {
 			console.error("[DBPosts] Update: " + err.message);
 			callback({
+				session: req.session,
 				status: 'fail'
 			});
 		} else {
 			callback({
+				session: req.session,
 				status: 'ok'
 			});
 		}
@@ -1468,10 +1553,12 @@ DBComments.add = function (req, res, callback) {
 		if (err) {
 			console.error("[DBComments] Add: " + err.message);
 			callback({
+				session: req.session,
 				status: 'fail'
 			});
 		} else {
 			callback({
+				session: req.session,
 				status: 'ok'
 			});
 		}
@@ -1492,10 +1579,12 @@ DBComments.removeById = function (req, res, callback) {
 		if (err) {
 			console.error("[DBComments] RemoveByID:" + err.message);
 			callback({
+				session: req.session,
 				status: 'fail'
 			});
 		} else {
 			callback({
+				session: req.session,
 				status: 'ok'
 			});
 		}
@@ -1512,10 +1601,12 @@ DBComments.findByPostId = function (req, res, callback) {
 		if (err) {
 			console.error("[DBComments] FindByPID: " + err.message);
 			callback({
+				session: req.session,
 				status: 'fail'
 			});
 		} else {
 			callback({
+				session: req.session,
 				status: 'ok',
 				data: result
 			});
@@ -1544,10 +1635,12 @@ DBComments.update = function (req, res, callback) {
 		if (err) {
 			console.error("[DBComments] Update: " + err);
 			callback({
+				session: req.session,
 				status: 'fail'
 			});
 		} else {
 			callback({
+				session: req.session,
 				status: 'ok'
 			});
 		}
@@ -1577,10 +1670,12 @@ DBCourses.add = function (req, res, callback) {
 		if (err) {
 			console.error("[DBCourses] Add: " + err.message);
 			callback({
+				session: req.session,
 				status: 'fail'
 			});
 		} else {
 			callback({
+				session: req.session,
 				status: 'ok'
 			});
 		}
@@ -1597,11 +1692,13 @@ DBCourses.findById = function (req, res, callback) {
 			if (err) {
 				console.log("[DBCourses]: " + err.message);
 				callback({
+					session: req.session,
 					status: 'fail'
 				});
 			} else {
 				//Returns null if error occured
 				callback({
+					session: req.session,
 					status: 'ok',
 					data: result
 				});
@@ -1610,6 +1707,7 @@ DBCourses.findById = function (req, res, callback) {
 	} else {
 		console.error("[DBCourses] FindById: Missing Fields");
 		callback({
+			session: req.session,
 			status: 'fail'
 		});
 	}
@@ -1622,10 +1720,12 @@ DBCourses.find = function (req, res, callback) {
 		if (err) {
 			console.error("[DBCourses]: " + err.message);
 			callback({
+				session: req.session,
 				status: 'fail'
 			});
 		} else {
 			callback({
+				session: req.session,
 				status: 'ok',
 				data: result
 			});
@@ -1659,18 +1759,21 @@ DBCourses.update = function (req, res, callback) {
 		}, function (err, result) {
 			if (err) {
 				console.error("[DBCourses] Update: " + err.message);
-				res.json({
+				callback({
+					session: req.session,
 					status: 'fail'
 				});
 			} else {
 				callback({
+					session: req.session,
 					status: 'ok'
 				});
 			}
 		});
 	} else {
 		console.warn("[DBCourses] Update: Missing Fields");
-		res.json({
+		callback({
+			session: req.session,
 			status: "fail"
 		});
 	}
@@ -1688,18 +1791,21 @@ DBCourses.remove = function (req, res, callback) {
 			if (err) {
 				console.error("[DBCourses] Remove: " + err.message);
 				callback({
+					session: req.session,
 					status: 'fail'
 				});
 			} else {
 
 				callback({
+					session: req.session,
 					status: 'ok'
 				});
 			}
 		});
 	} else {
 		console.warn("[DBCourses] Remove: Missing Fields");
-		res.json({
+		callback({
+			session: req.session,
 			status: "fail"
 		});
 	}
@@ -1722,10 +1828,12 @@ DBLost.add = function (req, res, callback) {
 		if (err) {
 			console.error("[DBLost] Add: " + err.message);
 			callback({
+				session: req.session,
 				status: 'fail'
 			});
 		} else {
 			callback({
+				session: req.session,
 				status: 'ok'
 			});
 		}
@@ -1742,11 +1850,13 @@ DBLost.findById = function (req, res, callback) {
 			if (err) {
 				console.log("[DBLost]: " + err.message);
 				callback({
+					session: req.session,
 					status: 'fail'
 				});
 			} else {
 				//Returns null if error occured
 				callback({
+					session: req.session,
 					status: 'ok',
 					data: result
 				});
@@ -1755,6 +1865,7 @@ DBLost.findById = function (req, res, callback) {
 	} else {
 		console.error("[DBLost] FindById: Missing Fields");
 		callback({
+			session: req.session,
 			status: 'fail'
 		});
 	}
@@ -1767,10 +1878,12 @@ DBLost.find = function (req, res, callback) {
 		if (err) {
 			console.error("[DBLost]: " + err.message);
 			callback({
+				session: req.session,
 				status: 'fail'
 			});
 		} else {
 			callback({
+				session: req.session,
 				status: 'ok',
 				data: result
 			});
@@ -1797,18 +1910,21 @@ DBLost.update = function (req, res, callback) {
 		}, function (err, result) {
 			if (err) {
 				console.error("[DBLost] Update: " + err.message);
-				res.json({
+				callback({
+					session: req.session,
 					status: 'fail'
 				});
 			} else {
 				callback({
+					session: req.session,
 					status: 'ok'
 				});
 			}
 		});
 	} else {
 		console.warn("[DBLost] Update: Missing Fields");
-		res.json({
+		callback({
+			session: req.session,
 			status: "fail"
 		});
 	}
@@ -1826,18 +1942,21 @@ DBLost.remove = function (req, res, callback) {
 			if (err) {
 				console.error("[DBLost] Remove: " + err.message);
 				callback({
+					session: req.session,
 					status: 'fail'
 				});
 			} else {
 
 				callback({
+					session: req.session,
 					status: 'ok'
 				});
 			}
 		});
 	} else {
 		console.warn("[DBLost] Remove: Missing Fields");
-		res.json({
+		callback({
+			session: req.session,
 			status: "fail"
 		});
 	}

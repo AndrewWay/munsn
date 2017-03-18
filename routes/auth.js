@@ -5,7 +5,7 @@ var aks = require("../utils/aks");
 router.get("/", function (req, res, next) {
 	console.log("[ROUTER] Auth: 'Validate'->'" + req.query.key + "'");
 	if (req.query.key) {
-		aks.validate(req.query.key, function (success, result) {
+		aks.validate(req, res, function (success, result) {
 			if (success) {
 				res.json(result);
 			} else {
