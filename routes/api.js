@@ -879,31 +879,31 @@ router.post(updateCourse, function (req, res, next) {
 });
 
 router.get(findLostById, function (req, res, next) {
-	DB.Lost.findById(req, res, function (result) {
+	DB.LostFound.findById(req, res, function (result) {
 		res.json(result);
 	});
 });
 
 router.get(findLost, function (req, res, next) {
-	DB.Lost.find(req, res, function (result) {
+	DB.LostFound.find(req, res, function (result) {
 		res.json(result);
 	});
 });
 
 router.post(addLost, function (req, res, next) {
-	DB.Lost.add(req, res, function (result) {
+	DB.LostFound.add(req, res, function (result) {
 		res.json(result);
 	});
 });
 
 router.post(removeLost, function (req, res, next) {
-	DB.Lost.remove(req, res, function (result) {
+	DB.LostFound.remove(req, res, function (result) {
 		res.json(result);
 	});
 });
 
 router.post(updateLost, function (req, res, next) {
-	DB.Lost.update(req, res, function (result) {
+	DB.LostFound.update(req, res, function (result) {
 		res.json(result);
 	});
 });

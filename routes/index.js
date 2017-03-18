@@ -38,4 +38,10 @@ router.post('/login', function (req, res, next) {
 	});
 });
 
+router.get('/chat', function (req, res, next) {
+	res.render('chat', {
+		title: 'Register'
+	});
+});
+
 module.exports = router;
