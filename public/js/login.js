@@ -101,7 +101,6 @@ $("#logSubmit").click( function() {
 			.done( function() {
 				console.log("success");
                 console.log(JSON.stringify(jqxhr.responseJSON));
-                $.get("/test");
 				//$("#regFields")[0].reset();
 				//$("#someDiv").val("Check yo email");
 			})

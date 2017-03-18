@@ -184,6 +184,21 @@ function upload(req, dest, name, callback) {
 function uploadImage(req, dest, name, callback) {
 	upload(req, "images/" + dest, name, callback);
 }
+
+/**
+ * 
+ * Helper function that debugs an object's properties and values
+ * @param {any} obj - The object to debug
+ * @param {any} name - (optional) The name of the object to pass. Just makes the console look better
+ */
+function debugObject(obj, name) {
+	Object.keys(obj).forEach(function(key,index) {
+		// key: the name of the object key
+		// index: the ordinal position of the key within the object 
+		console.log("[DEBUG OBJECT] " + name + ": " + key + " = " + obj[key]);
+	});
+}
+
 // Exports
 exports.getIdFromEmail = getIdFromEmail;
 exports.addMinsToDate = addMinsToDate;
@@ -191,3 +206,4 @@ exports.findFiles = findFiles;
 exports.download = download;
 exports.uploadImage = uploadImage;
 exports.upload = upload;
+exports.debugObject = debugObject;

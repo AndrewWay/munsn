@@ -390,6 +390,7 @@ DBUsers.add = function (req, res, callback) {
 				_id: utils.getIdFromEmail(req.body.email)
 				//_id: req.body.uid
 			};
+
 			//Create auth key and store it in auths
 			collectionUsers.insert(row, function (err, result) {
 				if (err) {

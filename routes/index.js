@@ -6,7 +6,7 @@ var DB = require('../utils/db');
  *  GET home page.
  */
 router.get('/', function (req, res, next) {
-	res.render('devsTest', {
+	res.render('login', {
 		title: 'Login'
 	});
 });
