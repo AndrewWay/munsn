@@ -3,23 +3,19 @@ var router = express.Router();
 var utils = require("../utils/utils");
 var aks = require("../utils/aks");
 router.get("/", function (req, res, next) {
-	if (req.query.key == undefined) {
-		res.json({
-			error: "null or undefined"
-		});
-	} else {
-		console.log(req.query.key);
-		aks.validate(req.query.key, function (success, authResult) {
+	console.log("[ROUTER] Auth: 'Validate'->'" + req.query.key + "'");
+	if (req.query.key) {
+		aks.validate(req, res, function (success, result) {
 			if (success) {
-				res.redirect("/");
+				res.json(result);
 			} else {
 				// TODO: FILL THESE WITH THE APPROPRIATE FRONTEND DATA
-				if (authResult) {
-					//email was resent
-				} else {
-					//This key doesn't exist
-				}
+				res.json(result);
 			}
+		});
+	} else {
+		res.json({
+			status: 'fail'
 		});
 	}
 });

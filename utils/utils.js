@@ -39,9 +39,28 @@ function* findFiles(filter, directory) {
 		var filename = path.join(directory, files[i]);
 		var stat = fs.lstatSync(filename);
 		if (!stat.isDirectory() && filename.indexOf(filter) >= 0) {
-			console.log(filename);
 			yield filename;
 		}
+	}
+}
+
+/**
+ *
+ * @param {HTTPRequest} req
+ * @param {HTTPResponse} res
+ * @param {string} file
+ */
+function remove(filter, directory, callback) {
+	var file = findFiles(filter, directory).next().value;
+	if (file) {
+		fs.unlinkSync(file);
+		callback({
+			status: 'ok'
+		});
+	} else {
+		callback({
+			status: 'fail'
+		});
 	}
 }
 /**
@@ -51,7 +70,8 @@ function* findFiles(filter, directory) {
  * @param {string} file - the full path of the file.
  * @returns {void}
  */
-function download(req, res, file) {
+function download(req, res, file, callback) {
+	//TODO: John, Test this
 	fs.exists(file, function (exist) {
 		if (exist) {
 			var filename = path.basename(file);
@@ -60,8 +80,15 @@ function download(req, res, file) {
 			res.setHeader("Content-type", mimetype);
 			var fstream = fs.createReadStream(file);
 			fstream.pipe(res);
+			fstream.on('finish', function () {
+				callback({
+					status: 'ok'
+				});
+			});
 		} else {
-			res.status(404).send("Content not found");
+			callback({
+				status: 'fail'
+			});
 		}
 	});
 }
@@ -73,49 +100,79 @@ function download(req, res, file) {
  * @param {String} name - The name to give this file when saving it (optional)
  * @returns {void}
  */
-function upload(req, dest, name) {
-	var fstream;
-	req.pipe(req.busboy);
-	req.busboy.on("file", function (fieldname, file, filename) {
-		var dir = path.join(__dirname, "../content/" + dest);
-		//File extension
-		var fext = path.extname(filename);
-		console.log("Uploading: " + filename);
-		//Path where file will be uploaded
-		fs.exists(dir, function (exist) {
-			//Create the directory if it doesn't exist
-			if (!exist) {
-				fs.mkdirSync(dir);
-			} else {
-				//If it does exist, find files by the name given and delete them
-				for (var f of findFiles(name ? name : filename, dir)) {
-					if (f !== undefined) {
-						fs.unlinkSync(f);
+function upload(req, dest, name, callback) {
+	//TODO: John, Test this to break it
+	try {
+		var error = false;
+
+		req.pipe(req.busboy);
+		req.busboy.on("file", function (fieldname, file, filename) {
+			var fstream;
+			var dir = path.join(__dirname, "../content/" + dest);
+			//File extension
+			var fext = path.extname(filename);
+			//Path where file will be uploaded
+			fs.exists(dir, function (exist) {
+				var name;
+				//If upload(req,dest) then change set name to filename
+				if (!name) {
+					name = filename;
+				} else {
+					name = name + fext;
+				}
+				//Create the directory if it doesn't exist
+				if (!exist) {
+					fs.mkdirSync(dir);
+				} else {
+					//If it does exist, find files by the name given and delete them
+					for (var f of findFiles(name ? name : filename, dir)) {
+						if (f !== undefined) {
+							fs.unlinkSync(f);
+						}
 					}
 				}
-			}
-			//If upload(req,dest) then change set name to filename
-			if (!name) {
-				name = filename;
-			} else {
-				name = name + fext;
-			}
-			fstream = fs.createWriteStream(path.join(dir, name));
-			fstream.on("close", function () {
-				console.log("Uploaded: " + filename);
+				fstream = fs.createWriteStream(path.join(dir, name));
+				fstream.on("close", function () {
+					console.log("Uploaded: " + name);
+				});
+				fstream.on('error', function (err) {
+					error = true;
+					req.unpipe(req.busboy);
+				});
+				switch (fext.toLowerCase()) {
+					case ".jpg":
+					case ".png":
+						//I have no idea how to make these images work with imagemin.
+						//There's literally no usage guide that makes sense to me
+						//The API for all this stuff is teeeeerrrrible
+					default:
+						console.log("Uploading: " + filename);
+						file.pipe(fstream);
+						break;
+				}
 			});
-			switch (fext.toLowerCase()) {
-				case ".jpg":
-				case ".png":
-					//I have no idea how to make these images work with imagemin.
-					//There's literally no usage guide that makes sense to me
-					//The API for all this stuff is teeeeerrrrible
-				default:
-					file.pipe(fstream);
-					break;
+		});
+		req.busboy.on('error', function () {
+			error = true;
+			req.unpipe(req.busboy);
+		});
+		req.busboy.on('finish', function () {
+			if (!error) {
+				callback({
+					status: 'ok'
+				});
+			} else {
+				callback({
+					status: 'fail'
+				});
 			}
 		});
-	});
+	} catch (err) {
+		callback({
+			status: 'fail'
+		});
+	}
+
 }
 
 /**
@@ -124,9 +181,24 @@ function upload(req, dest, name) {
  * @param {string} dest - The relative path to 'content/%dest%'
  * @param {string} name - The name to rename this file to; can be optionally left undefined
  */
-function uploadImage(req, dest, name) {
-	upload(req, "images/" + dest, name);
+function uploadImage(req, dest, name, callback) {
+	upload(req, "images/" + dest, name, callback);
 }
+
+/**
+ * 
+ * Helper function that debugs an object's properties and values
+ * @param {any} obj - The object to debug
+ * @param {any} name - (optional) The name of the object to pass. Just makes the console look better
+ */
+function debugObject(obj, name) {
+	Object.keys(obj).forEach(function(key,index) {
+		// key: the name of the object key
+		// index: the ordinal position of the key within the object 
+		console.log("[DEBUG OBJECT] " + name + ": " + key + " = " + obj[key]);
+	});
+}
+
 // Exports
 exports.getIdFromEmail = getIdFromEmail;
 exports.addMinsToDate = addMinsToDate;
@@ -134,3 +206,4 @@ exports.findFiles = findFiles;
 exports.download = download;
 exports.uploadImage = uploadImage;
 exports.upload = upload;
+exports.debugObject = debugObject;

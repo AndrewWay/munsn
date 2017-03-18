@@ -14,10 +14,13 @@ var busboy = require('connect-busboy');
 
 //Routes
 var routerIndex = require('./routes/index');
-var routerUsers = require('./routes/users');
 var routerApi = require('./routes/api');
 var routerAuth = require('./routes/auth');
 var routerTest = require('./routes/test');
+var routerProfile = require('./routes/profile');
+var routerGroup = require('./routes/group');
+var routerSchedule = require('./routes/schedule');
+var routerSettings = require('./routes/settings');
 var routerContent = require('./routes/content');
 
 //Beyond this point is all the code needed to start the server.
@@ -56,17 +59,22 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 //Index Page
 app.use('/', routerIndex);
-// ?
-app.use('/users', routerUsers);
 //API Calls
 app.use('/api', routerApi);
 //Auth Server
 app.use('/auth', routerAuth);
-//Upload Example
-app.use('/test', routerTest);
-//Content Server
+//Content server
 app.use('/content', routerContent);
-
+//Profile pages
+app.use('/profile', routerProfile);
+//Profile pages
+app.use('/group', routerGroup);
+//Profile pages
+app.use('/schedule', routerSchedule);
+//Profile pages
+app.use('/settings', routerSettings);
+//Test
+app.use('/test', routerTest);
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
 	var err = new Error('Not Found');

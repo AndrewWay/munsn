@@ -3,7 +3,6 @@ var router = express.Router();
 var DB = require("../utils/db");
 var EMS = require("../utils/ems");
 var utils = require("../utils/utils");
-//TODO: JOHN AND DEVIN WILL POPULATE THE TOP OF THIS FILE WITH ALL THE IMPLEMENTATION SEMANTICS
 //==============================GET VERBS=============================
 
 /**
@@ -117,6 +116,132 @@ var findGroupUsers = "/group/users/:gid";
  */
 var findGroupById = "/group/info/:gid";
 
+/**
+ * findPostByPid
+ *
+ * URL:
+ * 		- %server%/api/post/:pid
+ * Descript:
+ *      - Get a singular post by PostID
+ * Method:
+ *      - GET
+ * Params:
+ *      - pid: The post id
+ * Returns:
+ *      - JSON mongo result
+ */
+var findPostByPid = "/post/:pid";
+/**
+ * findPostByUid
+ *
+ * URL:
+ * 		- %server%/api/post/user/:uid
+ * Descript:
+ *      - Get ALL posts by UserID
+ * Method:
+ *      - GET
+ * Params:
+ *      - uid: The user id
+ * Returns:
+ *      - JSON mongo result
+ */
+var findPostByUid = "/post/user/:uid";
+
+/**
+ * suggestFriends
+ *
+ * URL:
+ * 		- %server%/api/user/friends/suggest/:uid
+ * Descript:
+ *      - Get a list of suggested friends
+ * Method:
+ *      - GET
+ * Params:
+ *      - uid: The user id
+ * 		- limit: The amount of suggested friends to return
+ * Returns:
+ *      - JSON user object array
+ */
+var suggestFriends = "/user/friends/suggest/:uid";
+
+/**
+ * findCourseById
+ *
+ * URL:
+ * 		- %server%/api/course/find/:uid
+ * Descript:
+ *      - Get a course by id
+ * Method:
+ *      - GET
+ * Params:
+ *      - uid: The course id
+ * Returns:
+ *      - JSON course object
+ */
+var findCourseById = "/course/find/:uid";
+
+/**
+ * findCourse
+ *
+ * URL:
+ * 		- %server%/api/course/find
+ * Descript:
+ *      - Get a course based on query
+ * Method:
+ *      - GET
+ * Params:
+ *		_id: The course unique object id
+ *		label: Shorthand name, ex. "COMP 4770"
+ *		name: Full name, ex. "Team Project"
+ *		description: Description
+ *		semester: Semester, ex. "winter"
+ *		department: Department that the course belongs to, ex. "cs"
+ *		location: Room number, ex. "EN 1051"
+ *		year: Current year the course is offered
+ *		cid: Creator id
+ *		days: Array of strings of days the course is every week, ex. days["monday", "wednesday", "friday"]
+ *		timeStart: (date)The course start date, ex. "Jan. 1"
+ *		timeEnd: (date) The course end date, ex. "Apr. 12"
+ * Returns:
+ *      - JSON course object array
+ */
+var findCourse = "/course/find";
+
+/**
+ * findLostById
+ *
+ * URL:
+ * 		- %server%/api/lost/find/:uid
+ * Descript:
+ *      - Get a course by id
+ * Method:
+ *      - GET
+ * Params:
+ *      - uid: The lost id
+ * Returns:
+ *      - JSON lost object
+ */
+var findLostById = "/lost/find/:uid";
+
+/**
+ * findLost
+ *
+ * URL:
+ * 		- %server%/api/lost/find
+ * Descript:
+ *      - Get a lost based on query
+ * Method:
+ *      - GET
+ * Params:
+ *		_id: The lost unique object id
+ *		imagePath: The path to an image if supplied
+ *		description: Description
+ *		long: Longitude
+ *		lat: Latitude
+ * Returns:
+ *      - JSON lost object array
+ */
+var findLost = "/lost/find";
 
 //=============================POST VERBS=============================
 
@@ -175,7 +300,22 @@ var deleteUser = "/user/remove/:uid";
  *      - JSON user object after creation
  */
 var registerUser = "/user/register";
-
+/**
+ * loginUser
+ *
+ * URL:
+ * 		- %server%/api/user/login
+ * Descript:
+ *      - Logs user into the site
+ * Method:
+ *      - POST
+ * Params:
+ *      - uid: User's id
+ *      - pass: User's password
+ * Returns:
+ *      - JSON user
+ */
+var loginUser = "/user/login";
 /**
  * addFriendReq
  *
@@ -311,14 +451,202 @@ var addGroupUser = "/group/add/user";
  *      - JSON group users object after deletion
  */
 var delGroupUser = "/group/remove/user";
+
+/**
+ * addTimelinePost
+ *
+ * URL:
+ * 		- %server%/api/post/add/timeline
+ * Descript:
+ *      - Add a user timeline post
+ * Method:
+ *      - POST
+ * Params:
+ *      - authorid: The authors id
+ * 		- origin: The userid of the timeline
+ * 		- dataType: Text, picture, etc
+ * 		- data: Actual data
+ * Returns:
+ *      - JSON mongo result
+ */
+var addTimelinePost = "/post/add/timeline";
+/**
+ * addGroupPost
+ *
+ * URL:
+ * 		- %server%/api/post/add/group
+ * Descript:
+ *      - Add a group post
+ * Method:
+ *      - POST
+ * Params:
+ *      - authorid: The authors id
+ * 		- origin: The groupid
+ * 		- dataType: Text, picture, etc
+ * 		- data: Actual data
+ */
+var addGroupPost = "/post/add/group";
+
+/**
+ * delPost
+ *
+ * URL:
+ * 		- %server%/api/post/remove/
+ * Descript:
+ *      - Delete a post
+ * Method:
+ *      - POST
+ * Params:
+ *      - pid: The post id
+ * Returns:
+ *      - JSON mongo result
+ */
+var delPost = "/post/remove";
+
+/**
+ * updatePost
+ *
+ * URL:
+ * 		- %server%/api/post/update
+ * Descript:
+ *      - Update a post
+ * Method:
+ *      - POST
+ * Params:
+ * 		- data: Actual data
+ * Returns:
+ *      - JSON mongo result
+ */
+var updatePost = "/post/update";
+
+/**
+ * addCourse
+ *
+ * URL:
+ * 		- %server%/api/course/add
+ * Descript:
+ *      - Add a course
+ * Method:
+ *      - POST
+ * Params:
+ *		label: Shorthand name, ex. "COMP 4770"
+ *		name: Full name, ex. "Team Project"
+ *		description: Description
+ *		semester: Semester, ex. "winter"
+ *		department: Department that the course belongs to, ex. "cs"
+ *		location: Room number, ex. "EN 1051"
+ *		year: Current year the course is offered
+ *		cid: Creator id
+ *		days: Array of strings of days the course is every week, ex. days["monday", "wednesday", "friday"]
+ *		timeStart: (date)The course start date, ex. "Jan. 1"
+ *		timeEnd: (date) The course end date, ex. "Apr. 12"
+ * Returns:
+ *      - JSON mongo result
+ */
+var addCourse = "/course/add";
+
+/**
+ * updateCourse
+ *
+ * URL:
+ * 		- %server%/api/course/update
+ * Descript:
+ *      - Update a course
+ * Method:
+ *      - POST
+ * Params:
+ *		_id: The course unique object id
+ *		label: Shorthand name, ex. "COMP 4770"
+ *		name: Full name, ex. "Team Project"
+ *		description: Description
+ *		semester: Semester, ex. "winter"
+ *		department: Department that the course belongs to, ex. "cs"
+ *		location: Room number, ex. "EN 1051"
+ *		year: Current year the course is offered
+ *		cid: Creator id
+ *		days: Array of strings of days the course is every week, ex. days["monday", "wednesday", "friday"]
+ *		timeStart: (date)The course start date, ex. "Jan. 1"
+ *		timeEnd: (date) The course end date, ex. "Apr. 12"
+ * Returns:
+ *      - JSON mongo result
+ */
+var updateCourse = "/course/update";
+
+/**
+ * removeCourse
+ *
+ * URL:
+ * 		- %server%/api/course/remove
+ * Descript:
+ *      - Remove a course
+ * Method:
+ *      - POST
+ * Params:
+ *		_id: The course unique object id
+ * Returns:
+ *      - JSON mongo result
+ */
+var removeCourse = "/course/remove";
+
+/**
+ * addLost
+ *
+ * URL:
+ * 		- %server%/api/lost/add
+ * Descript:
+ *      - Add a Lost
+ * Method:
+ *      - POST
+ * Params:
+ *		imagePath: The path to an image if supplied
+ *		description: Description
+ *		long: Longitude
+ *		lat: Latitude
+ * Returns:
+ *      - JSON mongo result
+ */
+var addLost = "/lost/add";
+
+/**
+ * updateLost
+ *
+ * URL:
+ * 		- %server%/api/lost/update
+ * Descript:
+ *      - Update a Lost
+ * Method:
+ *      - POST
+ * Params:
+ *		_id: The lost unique object id
+ *		imagePath: The path to an image if supplied
+ *		description: Description
+ *		long: Longitude
+ *		lat: Latitude
+ * Returns:
+ *      - JSON mongo result
+ */
+var updateLost = "/lost/update";
+
+/**
+ * removeLost
+ *
+ * URL:
+ * 		- %server%/api/lost/remove
+ * Descript:
+ *      - Remove a Lost
+ * Method:
+ *      - POST
+ * Params:
+ *		_id: The Lost unique object id
+ * Returns:
+ *      - JSON mongo result
+ */
+var removeLost = "/lost/remove";
 //==========================================================================================
 
 router.get(findUserById, function (req, res, next) {
-	DB.Users.findById({
-		req: req,
-		res: res
-	}, function (user) {
-		res.json(user);
+	DB.Users.findById(req, res, function (result) {
+		res.json(result);
 	});
 });
 
@@ -326,9 +654,8 @@ router.get(findUserById, function (req, res, next) {
  * ??
  */
 router.post(updateUser, function (req, res, next) {
-	//DEVIN: What are the body fields for the updates query
 	DB.Users.update(req, res, function (result) {
-		console.log(result);
+		res.json(result);
 	});
 });
 
@@ -336,7 +663,7 @@ router.post(updateUser, function (req, res, next) {
 
 router.post(deleteUser, function (req, res, next) {
 	DB.Users.remove(req, res, function (result) {
-		console.log(result);
+		res.json(result);
 	});
 });
 
@@ -346,16 +673,25 @@ router.post(deleteUser, function (req, res, next) {
  */
 router.post(registerUser, function (req, res, next) {
 	//Insert user with false auth into colUsers
-	DB.Users.add(req.body, function (result) {
-		console.log(result);
+	DB.Users.add(req, res, function (result) {
+		res.json(result);
+	});
+});
+
+//POST login user
+//sessions: just a tag to find session example, dont worry about this line
+router.post(loginUser, function (req, res, next) {
+	//TODO: DEVIN, THIS NEEDS TO BE CHECKED AGAIN
+	//TODO: ADD A LOGOUT
+	DB.Users.login(req, res, function (result) {
+		res.json(result);
 	});
 });
 
 //GET list of friends from userId
 router.get(findFriendsById, function (req, res, next) {
 	DB.Friends.find(req, res, function (result) {
-		//DEVIN: result[0]?
-		res.json(result[0]);
+		res.json(result);
 	});
 
 });
@@ -374,22 +710,8 @@ router.post('/post/addFriend', function(req, res, next) {
 
 
 router.post(addFriendReq, function (req, res, next) {
-	DB.Friends.addRequest(req, res, function (requestResult) {
-		//Operation successfully completed
-		if (requestResult != null) {
-			res.json({
-				result: "000",
-				operation: "sendFriendRequest",
-				text: "Sent friend request"
-			});
-		} else {
-			//Error with collection friendRequest
-			res.json({
-				result: "001",
-				operation: "sendFriendRequest",
-				text: "Error with collection friendRequest"
-			});
-		}
+	DB.Friends.addRequest(req, res, function (result) {
+		res.json(result);
 	});
 });
 
@@ -419,32 +741,7 @@ router.post(delFriendReq, function (req, res, next) {
 //Result: xy, where x is 0 for no error, 1 for error, y is 0 for successful deletion, 1 for unsuccessful deletion
 router.post(delFriend, function (req, res, next) {
 	DB.Friends.remove(req, res, function (result) {
-		var dbResult = result.result;
-		//Check for database error
-		//DEVIN: This is totally broken now
-		if (dbResult == null) {
-			console.log("\x1b[31m%s\x1b[0m%s", "[API]", " /post/removeFriend: userId: " + userId + ", friendId: " + friendId + ", dbResult: " + JSON.stringify(dbResult));
-			res.json({
-				result: "10",
-				operation: "deleteFriend",
-				text: "Database error"
-			});
-		} else {
-			console.log("\x1b[32m%s\x1b[0m%s", "[API]", " /post/removeFriend: userId: " + userId + ", friendId: " + friendId + ", dbResult: " + JSON.stringify(dbResult));
-			if (dbResult.ok == 1 && dbResult.nModified == 1) {
-				res.json({
-					result: "00",
-					operation: "deleteFriend",
-					text: "Removed friend from user"
-				});
-			} else if (dbResult.ok == 1 && dbResult.nModified == 0) {
-				res.json({
-					result: "01",
-					operation: "deleteFriend",
-					text: "Could not remove friend from user"
-				});
-			}
-		}
+		res.json(result);
 	});
 });
 
@@ -493,6 +790,120 @@ router.post(delGroupUser, function (req, res, next) {
 //Find members for group
 router.get(findGroupUsers, function (req, res, next) {
 	DB.GroupMembers.find(req, res, function (result) {
+		res.json(result);
+	});
+});
+
+//Add timeline post
+router.post(addTimelinePost, function (req, res, next) {
+	//Set type before pass to db
+	req.body.origin = {
+		type: 'timeline',
+		id: req.body.origin
+	};
+	DB.Posts.add(req, res, function (result) {
+		res.json(result);
+	});
+});
+//Add group post
+router.post(addGroupPost, function (req, res, next) {
+	//Set type before pass to db
+	req.body.origin = {
+		type: 'group',
+		id: req.body.origin
+	};
+	DB.Posts.add(req, res, function (result) {
+		res.json(result);
+	});
+});
+
+//Remove post
+router.post(delPost, function (req, res, next) {
+	DB.Posts.remove(req, res, function (result) {
+		res.json(result);
+	});
+});
+
+//Update post
+router.post(updatePost, function (req, res, next) {
+	DB.Posts.update(req, res, function (result) {
+		res.json(result);
+	});
+});
+
+router.get(findPostByUid, function (req, res, next) {
+	DB.Posts.findByUserId(req, res, function (result) {
+		res.json(result);
+	});
+});
+router.get(findPostByPid, function (req, res, next) {
+	DB.Posts.findByPostId(req, res, function (result) {
+		res.json(result);
+	});
+});
+
+router.get(suggestFriends, function (req, res, next) {
+	DB.Friends.suggest(req, res, function (result) {
+		res.json(result);
+	});
+});
+
+router.get(findCourseById, function (req, res, next) {
+	DB.Courses.findById(req, res, function (result) {
+		res.json(result);
+	});
+});
+
+router.get(findCourse, function (req, res, next) {
+	DB.Courses.find(req, res, function (result) {
+		res.json(result);
+	});
+});
+
+router.post(addCourse, function (req, res, next) {
+	DB.Courses.add(req, res, function (result) {
+		res.json(result);
+	});
+});
+
+router.post(removeCourse, function (req, res, next) {
+	DB.Courses.remove(req, res, function (result) {
+		res.json(result);
+	});
+});
+
+router.post(updateCourse, function (req, res, next) {
+	DB.Courses.update(req, res, function (result) {
+		res.json(result);
+	});
+});
+
+router.get(findLostById, function (req, res, next) {
+	DB.Lost.findById(req, res, function (result) {
+		res.json(result);
+	});
+});
+
+router.get(findLost, function (req, res, next) {
+	DB.Lost.find(req, res, function (result) {
+		res.json(result);
+	});
+});
+
+router.post(addLost, function (req, res, next) {
+	DB.Lost.add(req, res, function (result) {
+		res.json(result);
+	});
+});
+
+router.post(removeLost, function (req, res, next) {
+	DB.Lost.remove(req, res, function (result) {
+		res.json(result);
+	});
+});
+
+router.post(updateLost, function (req, res, next) {
+	DB.Lost.update(req, res, function (result) {
 		res.json(result);
 	});
 });

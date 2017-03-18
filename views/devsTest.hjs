@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{{ title }}</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <h1>{{ title }}</h1>
+    <p>Welcome to post update</p>
+    <iframe src="https://calendar.google.com/calendar/embed?src=mun.ca_m4eaae94kh4j7nlihkr5ecridk%40group.calendar.google.com&ctz=America/St_Johns" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>
+    <form method="post" action="/api/post/add/timeline">
+        POST ID: <input type="text" name="authorid"><br>
+        VISIBILITY: <input type="text" name="visibility"><br>
+        ORIGIN: <input type="text" name="origin"><br>
+        DATA TYPE: <input type="text" name="dataType"><br>
+        DATA: <input type="text" name="data"><br>
+        <input type="submit" name="Register">
+    </form>
+
+  </body>
+</html>
+

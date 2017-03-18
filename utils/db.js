@@ -3,14 +3,19 @@ var assert = require('assert');
 var path = require('path');
 var EMS = require('./ems');
 var utils = require('./utils');
+var ObjectID = require('mongodb').ObjectID;
 var DBAuth = {};
 var DBPosts = {};
 var DBGroups = {};
 var DBUsers = {};
 var DBFriends = {};
 var DBGroupMembers = {};
+var DBGroupAdmins = {};
 var DBComments = {};
+var DBCourses = {};
+var DBLost = {};
 var dbURL = 'mongodb://localhost:27017/db';
+var MAX_VALIDATE_MINUTES = 0;
 
 //Collections
 var collectionUsers; //Good
@@ -19,14 +24,15 @@ var collectionFriends; //Good
 var collectionFriendRequests; //Good
 var collectionGroups; //Good
 var collectionGroupMembers; //Good
-var collectionGroupAdmins; //DEVIN: Missing ALL Methods!!
-var collectionPosts; //DEVIN: Completion!!
-var collectionComments; //DEVIN: Completion!!
+var collectionGroupAdmins; //TODO: John, EVALUATE
+var collectionPosts; //TODO: John, EVALUATE
+var collectionComments; //TODO: John, EVALUATE
+var collectionCourses;
+var collectionLost;
 
-//DEVIN: TESTING
-//DEVIN: CALLBACKS
+//TODO: Devin, TESTING
 //Connect to the database
-var DB = mongoClient.connect(dbURL, function (err, DB) {
+mongoClient.connect(dbURL, function (err, DB) {
 	assert.equal(null, err);
 	console.log('Connected to mongo server: ' + dbURL);
 	//Restricts and denies user documents so they have a user, email from mun.ca, and pass
@@ -46,7 +52,7 @@ var DB = mongoClient.connect(dbURL, function (err, DB) {
 				}
 			}, {
 				dob: {
-					$type: 'string'
+					$type: 'date'
 				}
 			}, {
 				address: {
@@ -58,11 +64,20 @@ var DB = mongoClient.connect(dbURL, function (err, DB) {
 				}
 			}, {
 				email: {
-					$type: /@mun\.ca$/
+					$regex: /@mun\.ca$/
 				}
 			}, {
 				auth: {
 					$type: 'bool'
+				}
+			}, {
+				/*
+				private: Only the user can view the post
+				public: Everyone can view the post
+				friends: Only friends can view the post
+				*/
+				visibility: {
+					$type: 'string'
 				}
 			}, {
 				_id: {
@@ -75,7 +90,7 @@ var DB = mongoClient.connect(dbURL, function (err, DB) {
 	});
 
 	//Restricts and denies regauth documents so that there is an authkey
-	DB.createCollection('auth', {
+	DB.createCollection('authkeys', {
 		validator: {
 			$and: [{
 				key: {
@@ -102,14 +117,8 @@ var DB = mongoClient.connect(dbURL, function (err, DB) {
 				_id: {
 					$type: 'string'
 				}
-			}, {
-				friends: {
-					$type: 'array'
-				}
 			}]
-		},
-		validationLevel: 'strict',
-		validationAction: 'error'
+		}
 	});
 
 	DB.createCollection('fRequests', {
@@ -128,7 +137,7 @@ var DB = mongoClient.connect(dbURL, function (err, DB) {
 		validationAction: 'error'
 	});
 
-	DB.createCollection('group', {
+	DB.createCollection('groups', {
 		validator: {
 			$and: [{
 				//GroupName
@@ -200,6 +209,23 @@ var DB = mongoClient.connect(dbURL, function (err, DB) {
 					$type: 'string'
 				}
 			}, {
+				/*
+				private: Only the user can view the post
+				public: Everyone can view the post
+				friends: Only friends can view the post
+				list: Only a list of friends can view,
+
+				For list, update to the array list(userId)
+				*/
+				visibility: {
+					$type: 'string'
+				}
+			}, {
+				//User or group
+				origin: {
+					$type: 'string'
+				}
+			}, {
 				created: {
 					$type: 'date'
 				}
@@ -208,8 +234,7 @@ var DB = mongoClient.connect(dbURL, function (err, DB) {
 					$type: 'date'
 				}
 			}, {
-				//What is this?
-				dType: {
+				dataType: {
 					$type: 'string'
 				}
 			}, {
@@ -221,11 +246,111 @@ var DB = mongoClient.connect(dbURL, function (err, DB) {
 		validationLevel: 'strict',
 		validationAction: 'error'
 	});
-	//DEVIN: COMPLETE THIS
-	//DB.createCollection('comments');
+
+	/**
+	 * The comments collection is a little special. It contains two fields:
+	 *  - (objectId) _id: The same id as its matching post object (post._id = comment._id)
+	 * 	- (Array[commentObject]) comments: The array containing the comment objects. Everytime a user comments on a post, we push to this array
+	 * The commentObject contains:
+	 *  - (string) cid: The comment id
+	 *  - (string) author: The user id for the author
+	 *  - (Array[dataObjects]) edits: The array containing the data objects. Every time a user edits their comment, we push to this array
+	 * The dataObject contains:
+	 *  - (string) data: The actual comment data
+	 *  - (date) date: The date that the comment was edited
+	 */
+	DB.createCollection('comments', {
+		validator: {
+			$and: [{
+				comments: {
+					$type: 'array'
+				}
+			}]
+		},
+		validationLevel: 'strict',
+		validationAction: 'error'
+	});
+
+	DB.createCollection('courses', {
+		validator: {
+			$and: [{
+					label: {
+						$type: 'string'
+					}
+				},
+				{
+					timeStart: {
+						$type: 'date'
+					}
+				},
+				{
+					timeEnd: {
+						$type: 'date'
+					}
+				},
+				{
+					description: {
+						$type: 'string'
+					}
+				},
+				{
+					name: {
+						$type: 'string'
+					}
+				},
+				{
+					semester: {
+						$type: 'string'
+					}
+				},
+				{
+					location: {
+						$type: 'string'
+					}
+				},
+				{
+					year: {
+						$type: 'string'
+					}
+				},
+				{
+					//Creatorid
+					cid: {
+						$type: 'string'
+					}
+				}
+			]
+		}
+	});
+
+	DB.createCollection('lost', {
+		validator: {
+			$and: [{
+					imagePath: {
+						$type: 'string'
+					}
+				},
+				{
+					description: {
+						$type: 'string'
+					}
+				},
+				{
+					long: {
+						$type: 'string'
+					}
+				},
+				{
+					lat: {
+						$type: 'string'
+					}
+				}
+			]
+		}
+	});
 
 	//Variables set to mongo collections
-	collectionAuths = DB.collection('auth');
+	collectionAuths = DB.collection('authkeys');
 	collectionUsers = DB.collection('users');
 	collectionFriends = DB.collection('friends');
 	collectionFriendRequests = DB.collection('fRequests');
@@ -234,115 +359,223 @@ var DB = mongoClient.connect(dbURL, function (err, DB) {
 	collectionGroupAdmins = DB.collection('gAdmins');
 	collectionPosts = DB.collection('posts');
 	collectionComments = DB.collection('comments');
+	collectionCourses = DB.collection('courses');
+	collectionLost = DB.collection('lost');
 });
 
 //USERS
 //======================================================================================================
 
 //Insert one user into the user collection
-DBUsers.add = function (user, callback) {
-	if (!Object.keys(user).length) {
-		console.log("[DB] Registration: no data");
+DBUsers.add = function (req, res, callback) {
+	var result = {};
+	if (!Object.keys(req.body).length) {
+		console.warn("[DBUsers] Add: Missing Data");
+		callback({
+			session: req.session,
+			status: 'fail'
+		});
 	} else {
 		//Create user
 		try {
 			var row = {
-				fname: user.fname,
-				lname: user.lname,
-				pass: user.pass,
-				dob: user.dob,
-				address: user.address,
-				gender: user.gender,
-				email: user.email,
+				fname: req.body.fname,
+				lname: req.body.lname,
+				pass: req.body.pass,
+				dob: new Date(req.body.dob),
+				address: req.body.address,
+				gender: req.body.gender,
+				email: req.body.email,
 				auth: false,
-				_id: utils.getIdFromEmail(user.email)
+				visibility: req.body.visibility ? req.body.visibility : "default",
+				_id: utils.getIdFromEmail(req.body.email)
 				//_id: req.body.uid
 			};
+
 			//Create auth key and store it in auths
-			DBAuth.add(row, function (result) {
-				callback("[DB] Registration: Added authkey with result\n" + result);
-			});
-			collectionUsers.insert(row, function (result) {
-				callback(result);
+			collectionUsers.insert(row, function (err, result) {
+				if (err) {
+					console.error("[DBUsers] Add: " + err.message);
+					callback({
+						session: req.session,
+						status: 'fail'
+					});
+				} else {
+					console.log("[DBUsers] Add: '" + result.insertedIds[0] + "'");
+					DBAuth.add(req, res, row, function (result) {
+						callback(result);
+					});
+				}
 			});
 		} catch (err) {
-			callback("[DB] Registration: Missing fields");
+			console.error("[DBUsers] Registration: Missing fields or other error");
+			callback({
+				session: req.session,
+				status: 'fail'
+			});
 		}
 	}
 };
 
 //Find a user by unique object id
 DBUsers.findById = function (req, res, callback) {
-	if (req.params.uid == undefined) {
-		res.json({
-			error: "undefined"
-		});
-	} else {
+	console.log("[DBUsers] FindById: '" + req.params.uid + "'");
+	if (req.params.uid) {
 		collectionUsers.findOne({
 			_id: req.params.uid
 		}, function (err, result) {
 			if (err) {
-				console.warn(err);
+				console.log("[DBUsers]: " + err.message);
+				callback({
+					session: req.session,
+					status: 'fail'
+				});
+			} else {
+				//Returns null if error occured
+				callback({
+					session: req.session,
+					status: 'ok',
+					data: result
+				});
 			}
-			//Returns null if error occured
-			callback(result);
+		});
+	} else {
+		console.error("[DBUsers] FindById: Missing Fields");
+		callback({
+			session: req.session,
+			status: 'fail'
 		});
 	}
 };
 
 //Find users matching query
-DBUsers.find = function (query, callback) {
-	collectionUsers.find(query).toArray(function (err, results) {
+DBUsers.find = function (req, res, callback) {
+	console.log("[DBUsers] Find: '" + JSON.stringify(req.body) + "'");
+	collectionUsers.find(req.body).toArray(function (err, result) {
 		if (err) {
-			console.warn(err);
+			console.error("[DBUsers]: " + err.message);
+			callback({
+				session: req.session,
+				status: 'fail'
+			});
 		} else {
-			callback(results);
+			callback({
+				session: req.session,
+				status: 'ok',
+				data: result
+			});
 		}
 	});
 };
 
 //Updates the user
 DBUsers.update = function (req, res, callback) {
-	if (req.params.uid == undefined) {
-		res.json({
-			error: "undefined"
-		});
-	} else {
-		var updates = {};
+	console.log("[DBUsers] Update: '" + JSON.stringify(req.body) + "'->'" + req.params.uid + "'");
+	if (req.params.uid) {
+		var updates = {
+			pass: req.body.pass,
+			email: req.body.email,
+			visibility: req.body.visibility,
+			address: req.body.address
+		};
 		collectionUsers.update({
 			_id: req.params.uid
 		}, {
 			$set: updates
 		}, {
 			upsert: true
-		}, function (err, obj) {
+		}, function (err, result) {
 			if (err) {
-				console.warn(err);
+				console.error("[DBUsers] Update: " + err.message);
+				callback({
+					session: req.session,
+					status: 'fail'
+				});
 			} else {
-				callback(obj.result);
+				callback({
+					session: req.session,
+					status: 'ok'
+				});
 			}
+		});
+	} else {
+		console.warn("[DBUsers] Update: Missing Fields");
+		callback({
+			session: req.session,
+			status: "fail"
 		});
 	}
 };
 
 //Removes the user
 DBUsers.remove = function (req, res, callback) {
-	if (req.params.uid == undefined) {
-		res.json({
-			error: "undefined"
-		});
-	} else {
+	console.log("[DBUsers] Remove: '" + req.params.uid + "'");
+	if (req.params.uid) {
 		collectionUsers.remove({
 			_id: req.params.id
 		}, {
 			single: true
-		}, function (err, obj) {
+		}, function (err, result) {
 			if (err) {
-				console.warn(err);
+				console.error("[DBUsers] Remove: " + err.message);
+				callback({
+					session: req.session,
+					status: 'fail'
+				});
 			} else {
-				callback(obj.result);
+				callback({
+					session: req.session,
+					status: 'ok'
+				});
 			}
 		});
+	} else {
+		console.warn("[DBUsers] Remove: Missing Fields");
+		callback({
+			session: req.session,
+			status: "fail"
+		});
+	}
+};
+
+DBUsers.login = function (req, res, callback) {
+	console.log("[DBUsers] Login: '" + req.body.uid + "'");
+	if (req.session.user) {
+		console.log("[SESSION]: 'Exists'->'" + JSON.stringify(req.session.user) + "'");
+		callback({
+			session: req.session,
+			status: 'ok'
+		});
+	} else {
+		if (req.body.uid && req.body.pass) {
+			collectionUsers.find({
+				_id: req.body.uid,
+				pass: req.body.pass
+			}).toArray(function (err, results) {
+				console.log("results: " + JSON.stringify(results));
+				if (err && results.length) {
+					callback({
+						session: req.session,
+						status: 'fail'
+					});
+					console.error("[DBUsers] Login: 'NotFound'->'" + req.body.uid + "'");
+
+				} else {
+					req.session.user = results[0];
+					callback({
+						session: req.session,
+						status: 'ok'
+					});
+					console.log("[SESSION]: 'Created'->'" + JSON.stringify(req.session) + "'");
+				}
+			});
+		} else {
+			console.warn("[DBUsers] Login: Missing fields");
+			callback({
+				session: req.session,
+				status: 'fail'
+			});
+		}
 	}
 };
 
@@ -350,70 +583,137 @@ DBUsers.remove = function (req, res, callback) {
 //======================================================================================================
 
 //Add an authkey to regauths
-DBAuth.add = function (row, callback) {
+DBAuth.add = function (req, res, row, callback) {
 	var date = new Date();
 	var authkey = row._id + date.getTime();
-	var mins = 1;
-	var expiry = utils.addMinsToDate(date, mins).getTime();
+	var expiry = utils.addMinsToDate(date, MAX_VALIDATE_MINUTES).getTime();
 	//user, authkey, utils.addMinsToDate(date, mins).getTime()
 	var auth = {
 		userid: row._id,
 		key: authkey,
 		expiry: expiry
 	};
-	collectionAuths.insert(auth, function (result) {
-		callback(result);
-	});
-	//Send auth email to the user with the auth link
-	EMS.sendAuthEmail(row, auth, function (result) {
-		callback(result);
-	});
-};
-DBAuth.update = function (user, authkey, expiry, callback) {
-	var regAuth = {
-		key: authkey,
-		expiry: expiry
-	};
-	collectionAuths.update({
-		userid: user._id
-	}, {
-		$set: regAuth
-	}, {
-		upsert: true
-	}, function (err, obj) {
+	console.log("[DBAuth] Add: '" + JSON.stringify(auth) + "'");
+	collectionAuths.insert(auth, function (err, result) {
 		if (err) {
-			console.warn(err);
+			console.error("[DBAuth]: " + err.message);
+			callback({
+				session: req.session,
+				status: 'fail'
+			});
 		} else {
-			callback(obj.result);
+			//Send auth email to the user with the auth link
+			EMS.sendAuthEmail(auth, function (err, message) {
+				if (err) {
+					console.error('[EMS]: ' + err);
+					callback({
+						session: req.session,
+						status: 'fail'
+					});
+				} else {
+					console.log('[EMS] Sent To: ' + message.header.to + '\n[EMS] Subject: ' + message.header.subject);
+					callback({
+						session: req.session,
+						status: 'ok'
+					});
+				}
+			});
 		}
 	});
-	EMS.resendAuthEmail(user, authkey, function (result) {
-		console.log(result);
+
+};
+DBAuth.update = function (req, res, auth, callback) {
+	console.log("[DBAuth] Update: '" + JSON.stringify(auth) + "'->'" + auth.userid + "'");
+	collectionAuths.update({
+		userid: auth.userid
+	}, {
+		$set: auth
+	}, {
+		upsert: true
+	}, function (err, result) {
+		if (err) {
+			console.error("[DBAuth] Update: " + err.message);
+			callback({
+				session: req.session,
+				status: 'fail'
+			});
+		} else {
+			EMS.resendAuthEmail(auth, function (err, message) {
+				if (err) {
+					console.error("[EMS]: " + err);
+					callback({
+						session: req.session,
+						status: 'fail'
+					});
+				} else {
+					console.log('[EMS] To: ' + message.header.to + '\n[EMS] Subject: ' + message.header.subject);
+					callback({
+						session: req.session,
+						status: 'ok'
+					});
+				}
+			});
+		}
 	});
 };
 //Check for an existing authkey
-DBAuth.find = function (authkey, callback) {
+DBAuth.find = function (req, res, key, callback) {
+	console.error("[DBAuth] Find: '" + req.query.key + "'");
 	collectionAuths.findOne({
-		key: authkey
+		key: key
 	}, function (err, result) {
 		if (err) {
-			console.warn(err);
+			console.error("[DBAuth] Find: " + err.message);
+			callback({
+				session: req.session,
+				status: 'fail',
+			});
+		} else {
+			callback({
+				session: req.session,
+				status: 'ok',
+				data: result
+			});
 		}
-		callback(result);
 	});
 };
 
 //Delete authkey
-DBAuth.remove = function (authkey, callback) {
-	collectionAuths.remove({
-		key: authkey
-	}, {
+DBAuth.remove = function (req, res, auth, callback) {
+	console.log("[DBAuth] Remove: '" + auth.key + "'->'" + auth.userid + "'");
+	collectionAuths.remove(auth, {
 		single: true
-	}, function (err, obj) {
+	}, function (err, result) {
 		if (err) {
-			console.warn(err);
+			console.error("[DBAuth] Remove: " + err.message);
+			callback({
+				session: req.session,
+				status: 'fail'
+			});
 		} else {
-			callback(obj.result);
+			collectionUsers.update({
+				_id: auth.userid
+			}, {
+				$set: {
+					auth: true
+				}
+			}, {
+				upsert: true
+			}, function (err, result) {
+				if (err) {
+					console.error("[DBUsers] Authorization: " + err.message);
+					callback({
+						session: req.session,
+						status: 'fail'
+					});
+				} else {
+					console.error("[DBUsers] Authorization: '" + auth.userid + "'->'true'");
+					callback({
+						session: req.session,
+						status: 'ok'
+					});
+				}
+			});
 		}
 	});
 };
@@ -423,6 +723,7 @@ DBAuth.remove = function (authkey, callback) {
 
 //Adds the friendId to the userId's friend list
 DBFriends.add = function (userId, friendId, callback) {
+	console.log("[DBFriends] Add: '" + userId + "'->'" + friendId + "'");
 	collectionFriends.update({
 		_id: userId
 	}, {
@@ -433,14 +734,21 @@ DBFriends.add = function (userId, friendId, callback) {
 		upsert: true
 	}, function (err, result) {
 		if (err) {
-			console.warn(err);
+			console.error("[DBFriends] Add: " + err.message);
+			callback({
+				status: 'fail'
+			});
+		} else {
+			callback({
+				status: 'ok'
+			});
 		}
-		callback(result);
 	});
 };
 
 //Finds all friends of a userId and returns it as an array
 DBFriends.find = function (req, res, callback) {
+	console.log("[DBFriends] Find: '" + req.params.uid + "'");
 	if (req.params.uid) {
 		collectionFriends.find({
 			_id: req.params.uid
@@ -448,9 +756,23 @@ DBFriends.find = function (req, res, callback) {
 			friends: true
 		}).toArray(function (err, result) {
 			if (err) {
-				console.warn(err);
+				console.error("[DBFriends] Find: " + err.message);
+				callback({
+					session: req.session,
+					status: 'fail'
+				});
+			} else {
+				callback({
+					session: req.session,
+					status: 'ok'
+				});
 			}
-			callback(result);
+		});
+	} else {
+		console.warn("[DBFriends] Find: " + req.params.uid);
+		callback({
+			session: req.session,
+			status: 'fail'
 		});
 	}
 };
@@ -461,6 +783,7 @@ DBFriends.remove = function (req, res, callback) {
 	var userId = req.body.uid;
 	var friendId = req.body.fid;
 	//Check if body variables are not null, or undefined
+	console.log("[DBFriends] Remove: '" + userId + "'<->'" + friendId + "'");
 	if (userId && friendId) {
 		collectionFriends.update({
 			_id: userId
@@ -470,13 +793,79 @@ DBFriends.remove = function (req, res, callback) {
 			}
 		}, function (err, result) {
 			if (err) {
-				console.warn(err);
+				console.warn("[DBFriends] Remove: " + err.message);
+				callback({
+					session: req.session,
+					status: 'fail'
+				});
+			} else {
+				callback({
+					session: req.session,
+					status: 'ok'
+				});
 			}
-			callback(result);
 		});
 	} else {
-		//DEVIN: Wheres the rest of this logic?
+		console.warn("[DBFriends] Remove: Missing Fields");
+		callback({
+			session: req.session,
+			status: 'fail'
+		});
 	}
+};
+
+//Suggest friends
+DBFriends.suggest = function (req, res, callback) {
+	console.log("[DBFriends] Suggest: '" + req.params.uid + "'");
+	var users = {};
+	//Find friends of friends
+	collectionFriends.aggregate([{
+		$unwind: "$friends"
+	}, {
+		$lookup: {
+			from: "friends",
+			localField: "friends",
+			foreignField: "_id",
+			as: "fof"
+		}
+	}, {
+		$match: {
+			_id: req.params.uid
+		}
+	}], function (err, fof) {
+		if (err) {
+			console.error("[DBFriends] Suggest: " + err.message);
+			callback({
+				session: req.session,
+				status: 'fail'
+			});
+		} else {
+			if (fof && fof.length > 0) {
+				//Iterate through aggregation results
+				for (var i = 0; i < fof.length; i++) {
+					//Iterate through the friends of friends
+					for (var j = 0; j < fof[i].fof[0].friends.length; j++) {
+						//Skip if an index is the user itself, we don't want to add theirselves
+						if (fof[i].fof[0].friends[j] === req.params.uid) {
+							continue;
+						}
+						users[fof[i].fof[0].friends[j]] = true;
+					}
+				}
+				callback({
+					session: req.session,
+					status: 'ok',
+					data: Object.keys(users)
+				});
+			} else {
+				console.warn("[DBFriends] '" + req.params.uid + "': No Data Found");
+				callback({
+					session: req.session,
+					status: 'fail'
+				});
+			}
+		}
+	});
 };
 
 //FRIEND REQUESTS
@@ -488,60 +877,87 @@ DBFriends.addRequest = function (req, res, callback) {
 	var userId = req.body.uid;
 	var friendId = req.body.fid;
 	//Check if body variables are not null, or undefined
+	console.log("[DBFriends] AddRequest: '" + userId + "'->'" + friendId + "'");
 	if (userId && friendId) {
 		//Check to see if both users exist
-		DB.Users.find({
+		collectionUsers.find({
 				_id: {
 					$in: [userId, friendId]
 				}
 			},
-			function (findResult) {
-				if (findResult.length == 2) {
-					collectionFriendRequests.insert({
-						userid: userId,
-						friendid: friendId
-					}, function (err, result) {
-						if (err) {
-							console.warn(err);
-						}
-						callback(result);
+			function (err, result) {
+				//TODO: Devin, Will changing this to err,result affect this?
+				if (err) {
+					console.error("[DBFriends] AddRequest: " + err.message);
+					callback({
+						session: req.session,
+						status: 'fail'
 					});
+				} else {
+					if (result.length === 2) {
+						collectionFriendRequests.insert({
+							userid: userId,
+							friendid: friendId
+						}, function (err, result) {
+							if (err) {
+								console.error("[DBFriends] AddRequest: " + err.message);
+								callback({
+									session: req.session,
+									status: 'fail'
+								});
+							} else {
+								callback({
+									session: req.session,
+									status: 'ok',
+									data: result
+								});
+							}
+						});
+					} else {
+						console.warn("[DBFriends] AddRequest: User(s) not found");
+						callback({
+							session: req.session,
+							status: 'fail'
+						});
+					}
 				}
 			});
 	} else {
-		//Else return result json
-		console.log("\x1b[32m%s\x1b[0m%s", "[API]", " /post/sendFriendRequest: userId: " + userId + ", friendId: " + friendId + ", dbResult: " + JSON.stringify(findResult));
-		res.json({
-			result: "010",
-			operation: "sendFriendRequest",
-			text: "One or more users could not be found"
+		console.warn("[DBFriends] AddRequest:  Missing Fields");
+		callback({
+			session: req.session,
+			status: 'fail'
 		});
 	}
 };
 
 //Find all friend requests from a user
 DBFriends.findRequests = function (req, res, callback) {
-	var userId = req.params.uid;
-	var friendId = req.params.fid;
-	//Declare query variables
-	var query;
-	if (friendId) {
-		query = {
-			friendid: friendId
-		};
-	} else if (userId) {
-		query = {
-			userid: req.params.uid
-		};
-	} else {
-		query = undefined;
-	}
-	if (query) {
+	var query = {
+		friendid: req.params.fid,
+		userid: req.params.uid
+	};
+	console.log("[DBFriends] FindRequests: '" + query.friendid ? query.friendid : "*" + "'->'" + query.userid ? query.userid : "*" + "'");
+	if (!Object.keys(query).length) {
 		collectionFriendRequests.find(query).toArray(function (err, result) {
 			if (err) {
-				console.warn(err);
+				console.error("[DBFriends] FindRequests: " + err.message);
+				callback({
+					session: req.session,
+					status: 'fail'
+				});
+			} else {
+				callback({
+					session: req.session,
+					status: 'ok'
+				});
 			}
-			callback(result);
+		});
+	} else {
+		console.warn("[DBFriends] FindRequests: Missing Fields");
+		callback({
+			session: req.session,
+			status: 'fail'
 		});
 	}
 };
@@ -549,14 +965,31 @@ DBFriends.findRequests = function (req, res, callback) {
 //Remove friend request
 DBFriends.removeRequest = function (req, res, callback) {
 	//Declare body variables
-	var userId = req.body.uid;
-	var friendId = req.body.fid;
-	if (userId && friendId) {
-		collectionFriendRequests.remove({
-			userid: userId,
-			friendid: friendId
-		}, function (result) {
-			callback(result);
+	var query = {
+		userid: req.body.uid,
+		friendid: req.body.fid
+	};
+	console.log("[DBFriends] RemoveRequest: '" + query.friendid ? query.friendid : "*" + "'->'" + query.userid ? query.userid : "*" + "'");
+	if (Object.keys(query).length === 2) {
+		collectionFriendRequests.remove(query, function (err, result) {
+			if (err) {
+				console.error("[DBFriends] RemoveRequest: " + err.message);
+				callback({
+					session: req.session,
+					status: 'fail'
+				});
+			} else {
+				callback({
+					session: req.session,
+					status: 'ok'
+				});
+			}
+		});
+	} else {
+		console.warn("[DBFriends] RemoveRequest: Missing Fields");
+		callback({
+			session: req.session,
+			status: 'fail'
 		});
 	}
 };
@@ -568,17 +1001,23 @@ DBFriends.removeRequest = function (req, res, callback) {
 DBGroups.add = function (req, res, callback) {
 	var creatorId = req.body.gid;
 	var groupName = req.body.name;
-	if (creatorId && groupName) {
+	var row = {
+		name: req.body.name,
+		creatorid: req.body.uid,
+		ownerid: req.body.uid,
+		courses: undefined,
+		created: new Date()
+	};
+	console.log("[DBGroups] Add: '" + row.ownerid + "'->'" + row.name + "'");
+	if (row.name && row.ownerid) {
 		var date = new Date();
-		collectionGroups.insert({
-			name: groupName,
-			creatorid: creatorId,
-			ownerid: creatorId,
-			courses: undefined,
-			created: new Date()
-		}, function (err, result) {
+		collectionGroups.insert(row, function (err, result) {
 			if (err) {
-				console.warn(err);
+				console.error("[DBGroups] Add: " + err.message);
+				callback({
+					session: req.session,
+					status: 'fail'
+				});
 			} else {
 				collectionGroupMembers.update({
 					_id: result.ops[0]._id
@@ -590,11 +1029,25 @@ DBGroups.add = function (req, res, callback) {
 					upsert: true
 				}, function (err, result) {
 					if (err) {
-						console.warn(err);
+						console.error("[DBGroups] Add: " + err.message);
+						callback({
+							session: req.session,
+							status: 'fail'
+						});
+					} else {
+						callback({
+							session: req.session,
+							status: 'ok'
+						});
 					}
-					callback(result);
 				});
 			}
+		});
+	} else {
+		console.warn("[DBGroups] Add Group: Missing Fields");
+		callback({
+			session: req.session,
+			status: 'fail'
 		});
 	}
 };
@@ -603,26 +1056,61 @@ DBGroups.add = function (req, res, callback) {
 //Find a group by user
 DBGroups.findByUserId = function (req, res, callback) {
 	var userId = req.params.uid;
+	console.log("[DBGroups] FindByUID: '" + req.params.uid + "'");
 	if (userId) {
 		collectionGroups.find({
 			creatorid: userId
 		}).toArray(function (err, result) {
 			if (err) {
-				console.warn(err);
+				console.error("[DBGroups] FindByUID: " + err.message);
+				callback({
+					session: req.session,
+					status: 'fail'
+				});
+			} else {
+				callback({
+					session: req.session,
+					status: 'ok',
+					data: result
+				});
 			}
-			callback(result);
+		});
+	} else {
+		console.warn("[DBGroups] FindByUID: Missing Fields");
+		callback({
+			session: req.session,
+			status: 'fail'
 		});
 	}
 };
 
 //Find group based on query
-DBGroups.find = function (query, callback) {
-	collectionGroups.find(query, function (err, result) {
-		if (err) {
-			console.warn(err);
-		}
-		callback(result);
-	});
+DBGroups.find = function (req, res, callback) {
+	var query = req.body;
+	console.log("[DBGroups] Find: '" + JSON.stringify(query) + "'");
+	if (!Object.keys(query).length) {
+		collectionGroups.find(query, function (err, result) {
+			if (err) {
+				console.error("[DBGroups] Find:" + err.message);
+				callback({
+					session: req.session,
+					status: 'fail'
+				});
+			} else {
+				callback({
+					session: req.session,
+					status: 'ok',
+					data: result
+				});
+			}
+		});
+	} else {
+		console.warn("[DBGroups] Find: Missing Fields");
+		callback({
+			session: req.session,
+			status: 'fail'
+		});
+	}
 };
 
 
@@ -630,6 +1118,7 @@ DBGroups.find = function (query, callback) {
 DBGroups.update = function (req, res, callback) {
 	var groupId = req.body.gid;
 	var updates = req.body.updates;
+	console.log("[DBGroups] Update: '" + JSON.stringify(updates) + "'->'" + groupId + "'");
 	if (groupId && updates) {
 		collectionGroups.update({
 			_id: groupId
@@ -637,25 +1126,163 @@ DBGroups.update = function (req, res, callback) {
 			$set: updates
 		}, {
 			upsert: true
-		}, function (err, obj) {
+		}, function (err, result) {
 			if (err) {
-				console.warn(err);
+				console.error("[DBGroups] Update: " + err.message);
+				callback({
+					session: req.session,
+					status: 'fail'
+				});
 			} else {
-				callback(obj.result);
+				callback({
+					session: req.session,
+					status: 'ok'
+				});
 			}
 		});
+	} else {
+		console.warn("[DBGroups] Update: Missing Fields");
+		callback({
+			session: req.session,
+			status: 'fail'
+		});
 	}
-
 };
 
 //Remove a group
 DBGroups.remove = function (req, res, callback) {
 	var groupid = req.params.gid;
+	console.log("[DBGroups] Remove: '" + groupid + "'");
 	if (groupid) {
 		collectionGroups.remove({
 			_id: groupid
-		}, function (result) {
-			callback(result);
+		}, function (err, result) {
+			if (err) {
+				console.error("[DBGroups] Remove: " + err.message);
+				callback({
+					session: req.session,
+					status: 'fail'
+				});
+			} else {
+				callback({
+					session: req.session,
+					status: 'ok'
+				});
+			}
+		});
+	} else {
+		console.warn("[DBGroups] Remove: Missing Fields");
+		callback({
+			session: req.session,
+			status: 'fail'
+		});
+	}
+};
+
+//GROUP ADMINS
+//======================================================================================================
+
+//Add admin to group
+DBGroupAdmins.add = function (req, res, callback) {
+	var groupId = req.body.gid;
+	var adminId = req.body.uid;
+	console.log("[DBGroupAdmins] Add: '" + adminId + "'->'" + groupId + "'");
+	if (groupId && adminId) {
+		collectionGroupAdmins.update({
+			_id: groupId
+		}, {
+			$push: {
+				admins: adminId
+			}
+		}, {
+			upsert: true
+		}, function (err, result) {
+			if (err) {
+				console.error("[DBGroupAdmins] Add: " + err.message);
+				callback({
+					session: req.session,
+					status: 'fail'
+				});
+			} else {
+				callback({
+					session: req.session,
+					status: 'ok'
+				});
+			}
+		});
+	} else {
+		console.warn("[DBGroupAdmins] Add: Missing Fields");
+		callback({
+			session: req.session,
+			status: 'fail'
+		});
+	}
+};
+
+//Finds all admins of a group and returns it as an array
+DBGroupAdmins.find = function (req, res, callback) {
+	var groupId = req.params.gid;
+	console.log("[DBGroupAdmins] Find: '" + groupId + "'");
+	if (groupId) {
+		collectionGroupAdmins.find({
+			_id: groupId
+		}, {
+			admins: true
+		}).toArray(function (err, result) {
+			if (err) {
+				console.error("[DBGroupsAdmins] Find: " + err.message);
+				callback({
+					session: req.session,
+					status: 'fail'
+				});
+			} else {
+				callback({
+					session: req.session,
+					status: 'ok',
+					data: result
+				});
+			}
+		});
+	} else {
+		console.warn("[DBGroupsAdmins] Find: Missing Fields");
+		callback({
+			session: req.session,
+			status: 'fail'
+		});
+	}
+};
+
+//Removes admin from group
+DBGroupAdmins.remove = function (req, res, callback) {
+	var groupId = req.body.gid;
+	var adminId = req.body.uid;
+	console.log("[DBGroupAdmins] Remove: '" + adminId + "'->'" + groupId + "'");
+	if (groupId && adminId) {
+		collectionGroupAdmins.update({
+			_id: groupId
+		}, {
+			$pull: {
+				admins: adminId
+			}
+		}, function (err, result) {
+			if (err) {
+				console.error("[DBGroupAdmins] Remove: " + err.message);
+				callback({
+					session: req.session,
+					status: 'fail'
+				});
+			} else {
+				callback({
+					session: req.session,
+					status: 'ok'
+				});
+			}
+		});
+	} else {
+		console.warn("[DBGroupAdmins] Remove: Missing Fields");
+		callback({
+			session: req.session,
+			status: 'fail'
 		});
 	}
 };
@@ -667,6 +1294,7 @@ DBGroups.remove = function (req, res, callback) {
 DBGroupMembers.add = function (req, res, callback) {
 	var groupId = req.body.gid;
 	var memberId = req.body.uid;
+	console.log("[DBGroupMembers] Add: '" + memberId + "'-> '" + groupId + "'");
 	if (groupId && memberId) {
 		collectionGroupMembers.update({
 			_id: groupId
@@ -678,9 +1306,23 @@ DBGroupMembers.add = function (req, res, callback) {
 			upsert: true
 		}, function (err, result) {
 			if (err) {
-				console.warn(err);
+				console.error("[DBGroupMembers] Add: " + err.message);
+				callback({
+					session: req.session,
+					status: 'fail'
+				});
+			} else {
+				callback({
+					session: req.session,
+					status: 'ok'
+				});
 			}
-			callback(result);
+		});
+	} else {
+		console.warn("[DBGroupMembers] Add: Missing Fields");
+		callback({
+			session: req.session,
+			status: 'fail'
 		});
 	}
 };
@@ -688,6 +1330,7 @@ DBGroupMembers.add = function (req, res, callback) {
 //Finds all members of a group and returns it as an array
 DBGroupMembers.find = function (req, res, callback) {
 	var groupId = req.params.gid;
+	console.log("[DBGroupMembers] Find: '" + req.params.gid + "'");
 	if (groupId) {
 		collectionGroupMembers.find({
 			_id: groupId
@@ -695,9 +1338,24 @@ DBGroupMembers.find = function (req, res, callback) {
 			members: true
 		}).toArray(function (err, result) {
 			if (err) {
-				console.warn(err);
+				console.error("[DBGroupMembers] Find: " + err.message);
+				callback({
+					session: req.session,
+					status: 'fail'
+				});
+			} else {
+				callback({
+					session: req.session,
+					status: 'ok',
+					data: result
+				});
 			}
-			callback(result);
+		});
+	} else {
+		console.warn("[DBGroupMembers] Find: Missing Fields");
+		callback({
+			session: req.session,
+			status: 'fail'
 		});
 	}
 };
@@ -706,6 +1364,7 @@ DBGroupMembers.find = function (req, res, callback) {
 DBGroupMembers.remove = function (req, res, callback) {
 	var groupId = req.body.gid;
 	var memberId = req.body.uid;
+	console.log("[DBGroupMembers] Remove: '" + memberId + "'->'" + groupId + "'");
 	if (groupId && memberId) {
 		collectionGroupMembers.update({
 			_id: groupId
@@ -715,9 +1374,23 @@ DBGroupMembers.remove = function (req, res, callback) {
 			}
 		}, function (err, result) {
 			if (err) {
-				console.warn(err);
+				console.error("[DBGroupMembers] Remove: " + err.message);
+				callback({
+					session: req.session,
+					status: 'fail'
+				});
+			} else {
+				callback({
+					session: req.session,
+					status: 'ok'
+				});
 			}
-			callback(result);
+		});
+	} else {
+		console.warn("[DBGroupMembers] Remove: Missing Fields");
+		callback({
+			session: req.session,
+			status: 'fail'
 		});
 	}
 };
@@ -726,56 +1399,127 @@ DBGroupMembers.remove = function (req, res, callback) {
 //======================================================================================================
 
 //Add a post
-DBPosts.add = function (post, callback) {
+DBPosts.add = function (req, res, callback) {
 	var date = new Date();
-	collectionPosts.insert({
-		authorid: post.authorId,
-		created: post.created,
-		modified: post.modified,
-		dType: post.dType,
-		data: post.data
-	}, function (err, result) {
+	var row = {
+		authorid: req.body.authorid,
+		visibility: req.body.visibility,
+		list: [],
+		origin: req.body.origin,
+		created: date,
+		modified: date,
+		dataType: req.body.dataType,
+		data: req.body.data
+	};
+	console.log("[DBPosts] Add: '" + row.authorid + "'->'{id:'" + row.origin.id + "',type:'" + row.origin.type + "'}'");
+	collectionPosts.insert(row, function (err, result) {
 		if (err) {
-			console.warn(err);
+			console.error("[DBPosts] Add: " + err.message);
+			callback({
+				session: req.session,
+				status: 'fail'
+			});
+		} else {
+			callback({
+				session: req.session,
+				status: 'ok'
+			});
 		}
-		callback(result);
 	});
 };
 
-//Remove a post
-DBPosts.remove = function (objectId, callback) {
+//Remove a post by id
+DBPosts.remove = function (req, res, callback) {
+	console.log("[DBPosts] Remove: '" + req.body.pid + "'");
 	collectionPosts.remove({
-		_id: objectId
-	}, function (result) {
-		callback(result);
+		_id: new ObjectID(req.body.pid)
+	}, function (err, result) {
+		if (err) {
+			console.error("[DBPosts] Remove: " + err.message);
+			callback({
+				session: req.session,
+				status: 'fail'
+			});
+		} else {
+			callback({
+				session: req.session,
+				status: 'ok'
+			});
+		}
 	});
 };
 
 //Get posts per user
-DBPosts.findByUserId = function (userId, callback) {
+DBPosts.findByUserId = function (req, res, callback) {
+	console.log("[DBPosts] FindByUID: '" + req.params.uid + "'");
 	collectionPosts.find({
-		authorid: userId
-	}).toArray(function (err, results) {
+		authorid: req.params.uid
+	}).toArray(function (err, result) {
 		if (err) {
-			console.warn(err);
+			console.error("[DBPosts] FindByUID: " + err.message);
+			callback({
+				session: req.session,
+				status: 'fail'
+			});
+		} else {
+			callback({
+				session: req.session,
+				status: 'ok',
+				data: result
+			});
 		}
-		callback(results);
+	});
+};
+
+//Get posts per post id
+DBPosts.findByPostId = function (req, res, callback) {
+	console.log("[DBPosts] FindByPID: '" + req.params.pid + "'");
+	collectionPosts.find({
+		_id: new ObjectID(req.params.pid)
+	}).toArray(function (err, result) {
+		if (err) {
+			console.error("[DBPosts] FindByPID: " + err.message);
+			callback({
+				session: req.session,
+				status: 'fail'
+			});
+		} else {
+			callback({
+				session: req.session,
+				status: 'ok',
+				data: result
+			});
+		}
 	});
 };
 
 //Update post
-DBPosts.update = function (postId, updates, callback) {
+DBPosts.update = function (req, res, callback) {
+	var date = new Date();
+	var updates = {
+		data: req.body.data,
+		modified: date,
+		visibility: req.body.visibility
+	};
+	console.log("[DBPosts] Update: '" + req.body.pid + "'->'" + JSON.stringify(updates) + "'");
 	collectionPosts.update({
-		_id: postId
+		_id: new ObjectID(req.body.pid)
 	}, {
 		$set: updates
 	}, {
 		upsert: true
-	}, function (err, obj) {
+	}, function (err, result) {
 		if (err) {
-			console.warn(err);
+			console.error("[DBPosts] Update: " + err.message);
+			callback({
+				session: req.session,
+				status: 'fail'
+			});
 		} else {
-			callback(obj.result);
+			callback({
+				session: req.session,
+				status: 'ok'
+			});
 		}
 	});
 };
@@ -784,17 +1528,19 @@ DBPosts.update = function (postId, updates, callback) {
 //======================================================================================================
 
 //Add a comment
-DBComments.add = function (postId, authorId, data, callback) {
+DBComments.add = function (req, res, callback) {
 	var date = new Date();
+	//TODO: Devin, Look at this make sure it's right.
+	var postId = req.body.pid;
 	var comment = {
-		commentid: authorId + date.getTime(),
-		authorid: authorId,
-		created: date,
-		modified: date,
-		history: [{
-			data: data
+		commentid: req.body.authorid + date.getTime(),
+		authorid: req.body.authorid,
+		data: [{
+			data: req.body.data,
+			date: req.body.date
 		}]
 	};
+	console.log("[DBComments] Add: '" + postId + "'->'" + JSON.stringify(comment) + "'");
 	collectionComments.update({
 		_id: postId
 	}, {
@@ -805,51 +1551,415 @@ DBComments.add = function (postId, authorId, data, callback) {
 		upsert: true
 	}, function (err, result) {
 		if (err) {
-			console.warn(err);
+			console.error("[DBComments] Add: " + err.message);
+			callback({
+				session: req.session,
+				status: 'fail'
+			});
+		} else {
+			callback({
+				session: req.session,
+				status: 'ok'
+			});
 		}
-		callback(result);
 	});
 };
 
 //Remove a comment using commentId
-DBComments.removeById = function (postId, commentId, callback) {
+DBComments.removeById = function (req, res, callback) {
+	var postId = req.body.pid;
+	var commentId = req.body.cid;
+	console.log("[DBComments] RemoveByID: '" + commentId + "'->'" + postId + "'");
 	collectionComments.remove({
 		_id: postId,
 		comments: {
 			commentId: commentId
 		}
-	}, function (result) {
-		callback(result);
+	}, function (err, result) {
+		if (err) {
+			console.error("[DBComments] RemoveByID:" + err.message);
+			callback({
+				session: req.session,
+				status: 'fail'
+			});
+		} else {
+			callback({
+				session: req.session,
+				status: 'ok'
+			});
+		}
 	});
 };
 
-//Get comments per postId
-DBComments.findByPostId = function (userId, callback) {
+//Get comments per userid
+DBComments.findByPostId = function (req, res, callback) {
+	var userId = req.body.uid;
+	console.log("[DBComments] FindByPID: '" + userId + "'");
 	collectionComments.find({
 		authorid: userId
-	}).toArray(function (err, results) {
+	}).toArray(function (err, result) {
 		if (err) {
-			console.warn(err);
+			console.error("[DBComments] FindByPID: " + err.message);
+			callback({
+				session: req.session,
+				status: 'fail'
+			});
+		} else {
+			callback({
+				session: req.session,
+				status: 'ok',
+				data: result
+			});
 		}
-		callback(results);
 	});
 };
 
 //Update comment
-DBComments.update = function (postId, updates, callback) {
-	collectionComments.update({
-		_id: postId
-	}, {
-		$set: updates
+DBComments.update = function (req, res, callback) {
+	var updates = {
+		date: new Date(),
+		data: req.params.data
+	};
+	var query = {
+		_id: req.params.postId,
+		"comments.cid": req.params.cid
+	};
+	console.log("[DBComments] Update: '" + JSON.stringify(updates) + "'->'" + JSON.stringify(query) + "'");
+	collectionComments.update(query, {
+		$push: {
+			edits: updates
+		}
 	}, {
 		upsert: true
-	}, function (err, obj) {
+	}, function (err, result) {
 		if (err) {
-			console.warn(err);
+			console.error("[DBComments] Update: " + err);
+			callback({
+				session: req.session,
+				status: 'fail'
+			});
 		} else {
-			callback(obj.result);
+			callback({
+				session: req.session,
+				status: 'ok'
+			});
 		}
 	});
+};
+
+//COURSES
+//======================================================================================================
+
+//Add a course
+DBCourses.add = function (req, res, callback) {
+	var course = {
+		label: req.body.label,
+		name: req.body.name,
+		description: req.body.description,
+		semester: req.body.semester,
+		department: req.body.department,
+		location: req.body.location,
+		year: req.body.year,
+		cid: req.body.cid,
+		days: req.body.days,
+		timeStart: req.body.timeStart,
+		timeEnd: req.body.timeEnd
+	};
+	console.log("[DBCourses] Add: '" + course.label);
+	collectionCourses.insert(course, function (err, result) {
+		if (err) {
+			console.error("[DBCourses] Add: " + err.message);
+			callback({
+				session: req.session,
+				status: 'fail'
+			});
+		} else {
+			callback({
+				session: req.session,
+				status: 'ok'
+			});
+		}
+	});
+};
+
+//Find a course by unique course id
+DBCourses.findById = function (req, res, callback) {
+	console.log("[DBCourses] FindById: '" + req.params.uid + "'");
+	if (req.params.uid) {
+		collectionCourses.findOne({
+			_id: req.params.uid
+		}, function (err, result) {
+			if (err) {
+				console.log("[DBCourses]: " + err.message);
+				callback({
+					session: req.session,
+					status: 'fail'
+				});
+			} else {
+				//Returns null if error occured
+				callback({
+					session: req.session,
+					status: 'ok',
+					data: result
+				});
+			}
+		});
+	} else {
+		console.error("[DBCourses] FindById: Missing Fields");
+		callback({
+			session: req.session,
+			status: 'fail'
+		});
+	}
+};
+
+//Find courses matching query
+DBCourses.find = function (req, res, callback) {
+	console.log("[DBCourses] Find: '" + JSON.stringify(req.body) + "'");
+	collectionCourses.find(req.body).toArray(function (err, result) {
+		if (err) {
+			console.error("[DBCourses]: " + err.message);
+			callback({
+				session: req.session,
+				status: 'fail'
+			});
+		} else {
+			callback({
+				session: req.session,
+				status: 'ok',
+				data: result
+			});
+		}
+	});
+};
+
+//Updates the course
+DBCourses.update = function (req, res, callback) {
+	console.log("[DBCourses] Update: '" + JSON.stringify(req.body) + "'->'" + req.params.uid + "'");
+	if (req.params.uid) {
+		var updates = {
+			label: req.body.label,
+			name: req.body.name,
+			description: req.body.description,
+			semester: req.body.semester,
+			department: req.body.department,
+			location: req.body.location,
+			year: req.body.year,
+			cid: req.body.cid,
+			days: req.body.days,
+			timeStart: req.body.timeStart,
+			timeEnd: req.body.timeEnd
+		};
+		collectionCourses.update({
+			_id: req.params.uid
+		}, {
+			$set: updates
+		}, {
+			upsert: true
+		}, function (err, result) {
+			if (err) {
+				console.error("[DBCourses] Update: " + err.message);
+				callback({
+					session: req.session,
+					status: 'fail'
+				});
+			} else {
+				callback({
+					session: req.session,
+					status: 'ok'
+				});
+			}
+		});
+	} else {
+		console.warn("[DBCourses] Update: Missing Fields");
+		callback({
+			session: req.session,
+			status: "fail"
+		});
+	}
+};
+
+//Removes the course
+DBCourses.remove = function (req, res, callback) {
+	console.log("[DBCourses] Remove: '" + req.params.uid + "'");
+	if (req.params.uid) {
+		collectionCourses.remove({
+			_id: req.params.id
+		}, {
+			single: true
+		}, function (err, result) {
+			if (err) {
+				console.error("[DBCourses] Remove: " + err.message);
+				callback({
+					session: req.session,
+					status: 'fail'
+				});
+			} else {
+
+				callback({
+					session: req.session,
+					status: 'ok'
+				});
+			}
+		});
+	} else {
+		console.warn("[DBCourses] Remove: Missing Fields");
+		callback({
+			session: req.session,
+			status: "fail"
+		});
+	}
+};
+
+//LOST
+//======================================================================================================
+
+//Add a lost
+DBLost.add = function (req, res, callback) {
+	var lost = {
+		imagePath: req.body.imagePath,
+		description: req.body.description,
+		long: req.body.long,
+		lat: req.body.lat
+	};
+	//TODO: DEVIN, THIS COURSE VARIABLE IS NOT DEFINED.
+	console.log("[DBLost] Add: '" + course.label);
+	collectionLost.insert(lost, function (err, result) {
+		if (err) {
+			console.error("[DBLost] Add: " + err.message);
+			callback({
+				session: req.session,
+				status: 'fail'
+			});
+		} else {
+			callback({
+				session: req.session,
+				status: 'ok'
+			});
+		}
+	});
+};
+
+//Find a lost by unique lost id
+DBLost.findById = function (req, res, callback) {
+	console.log("[DBLost] FindById: '" + req.params.uid + "'");
+	if (req.params.uid) {
+		collectionLost.findOne({
+			_id: req.params.uid
+		}, function (err, result) {
+			if (err) {
+				console.log("[DBLost]: " + err.message);
+				callback({
+					session: req.session,
+					status: 'fail'
+				});
+			} else {
+				//Returns null if error occured
+				callback({
+					session: req.session,
+					status: 'ok',
+					data: result
+				});
+			}
+		});
+	} else {
+		console.error("[DBLost] FindById: Missing Fields");
+		callback({
+			session: req.session,
+			status: 'fail'
+		});
+	}
+};
+
+//Find lost matching query
+DBLost.find = function (req, res, callback) {
+	console.log("[DBLost] Find: '" + JSON.stringify(req.body) + "'");
+	collectionLost.find(req.body).toArray(function (err, result) {
+		if (err) {
+			console.error("[DBLost]: " + err.message);
+			callback({
+				session: req.session,
+				status: 'fail'
+			});
+		} else {
+			callback({
+				session: req.session,
+				status: 'ok',
+				data: result
+			});
+		}
+	});
+};
+
+//Updates the lost
+DBLost.update = function (req, res, callback) {
+	console.log("[DBLost] Update: '" + JSON.stringify(req.body) + "'->'" + req.params.uid + "'");
+	if (req.params.uid) {
+		var updates = {
+			imagePath: req.body.imagePath,
+			description: req.body.description,
+			long: req.body.long,
+			lat: req.body.lat
+		};
+		collectionLost.update({
+			_id: req.params.uid
+		}, {
+			$set: updates
+		}, {
+			upsert: true
+		}, function (err, result) {
+			if (err) {
+				console.error("[DBLost] Update: " + err.message);
+				callback({
+					session: req.session,
+					status: 'fail'
+				});
+			} else {
+				callback({
+					session: req.session,
+					status: 'ok'
+				});
+			}
+		});
+	} else {
+		console.warn("[DBLost] Update: Missing Fields");
+		callback({
+			session: req.session,
+			status: "fail"
+		});
+	}
+};
+
+//Removes the course
+DBLost.remove = function (req, res, callback) {
+	console.log("[DBLost] Remove: '" + req.params.uid + "'");
+	if (req.params.uid) {
+		collectionLost.remove({
+			_id: req.params.id
+		}, {
+			single: true
+		}, function (err, result) {
+			if (err) {
+				console.error("[DBLost] Remove: " + err.message);
+				callback({
+					session: req.session,
+					status: 'fail'
+				});
+			} else {
+
+				callback({
+					session: req.session,
+					status: 'ok'
+				});
+			}
+		});
+	} else {
+		console.warn("[DBLost] Remove: Missing Fields");
+		callback({
+			session: req.session,
+			status: "fail"
+		});
+	}
 };
 
 module.exports = {
@@ -859,6 +1969,10 @@ module.exports = {
 	Users: DBUsers,
 	Friends: DBFriends,
 	GroupMembers: DBGroupMembers,
+	GroupAdmins: DBGroupAdmins,
 	Comments: DBComments,
-	DB_URL: dbURL
+	Courses: DBCourses,
+	Lost: DBLost,
+	DB_URL: dbURL,
+	MAX_VALIDATE_MINUTES: MAX_VALIDATE_MINUTES
 };

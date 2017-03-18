@@ -91,16 +91,17 @@ $("#logSubmit").click( function() {
 		}).effect( "highlight", {color: "#ffb6c1"}, 500);
 		
 	} else {
-		var jqxhr = $.post("/login", 
+		var jqxhr = $.post("/api/user/login", 
 			{
-				user: $('#loginFields input[name="user"]').val(),
+				uid: $('#loginFields input[name="user"]').val(),
 				pass: $('#loginFields input[name="pass"]').val(),
 			},
 			function() {console.log("post");}
 				)
 			.done( function() {
 				console.log("success");
-				$("#regFields")[0].reset();
+                console.log(JSON.stringify(jqxhr.responseJSON));
+				//$("#regFields")[0].reset();
 				//$("#someDiv").val("Check yo email");
 			})
 			.fail( function () {

@@ -6,9 +6,14 @@ var DB = require('../utils/db');
  *  GET home page.
  */
 router.get('/', function (req, res, next) {
-	res.render('login', {
-		title: 'Login'
-	});
+	if (req.session.user) {
+		res.render('portal', {});
+	}
+	else {
+		res.render('login', {
+			title: 'Login'
+		});
+	}
 });
 /**
  * GET registration page.

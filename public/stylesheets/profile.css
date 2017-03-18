@@ -1,0 +1,97 @@
+#infoContainer{
+	background-color: #cccccc;
+	
+	position: static;
+	width: 98%;
+	height: 220px;
+	
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	
+	border: 2px outset #fafafa;
+	
+}
+
+#infoContainer div {
+	display: inline-block;
+}
+
+#infoPic {
+	width: 100px;
+	height: 100px;
+	
+	margin:0;
+	padding:0;
+	
+	margin-left: 10px;
+	margin-top: 10px;
+	
+	border: 2px outset;
+	border-color:  #aaaaaa #7f1734 #7f1734 #aaaaaa;
+}
+
+#infoPic img {
+	width: 100px;
+
+}
+
+/*Maybe put these all into one div with the pictures and move everything inside that? Just in the container div?*/
+
+#infoText {
+	
+	position: relative;
+	margin: 0;
+	top: -5px;
+	width: calc(100% - 120px);
+	height: 100px;
+	
+}
+
+#infoText div {
+	position: static;
+	display: block;
+	left: 0px;
+}
+
+#infoText #edit {
+	margin-top: 10px;
+	
+	bottom: 0;
+}
+
+#infoButton {
+	margin-top: 10px;
+	margin-left: 10px;
+	width: 100%;
+}
+
+#postBox {
+	width: 96%;
+	
+	display: inline-block;
+	
+	margin-left: 3.5%;
+	margin-top: 20px;
+	
+}
+
+#postBox #text {
+	width: 85%;
+	height: 30px;
+	
+	   
+	resize: none;
+    outline: none;
+	
+	
+
+}
+
+#postBox #button {
+	position: relative;
+	top: -15px;
+	width: 10%;
+	height: 30px;
+	padding:0;
+}
