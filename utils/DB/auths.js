@@ -81,10 +81,10 @@ module.exports = function (DBAuth, collectionAuths, collectionUsers, MAX_VALIDAT
 		});
 	};
 	//Check for an existing authkey
-	DBAuth.find = function (req, res, key, callback) {
+	DBAuth.find = function (req, res, callback) {
 		console.error("[DBAuth] Find: '" + req.query.key + "'");
 		collectionAuths.findOne({
-			key: key
+			key: req.query.key
 		}, function (err, result) {
 			if (err) {
 				console.error("[DBAuth] Find: " + err.message);

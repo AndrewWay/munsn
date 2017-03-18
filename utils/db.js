@@ -5,7 +5,7 @@ var EMS = require('./ems');
 var utils = require('./utils');
 
 var dbURL = 'mongodb://localhost:27017/db';
-var MAX_VALIDATE_MINUTES = 0;
+var MAX_VALIDATE_MINUTES = 5;
 
 //Collections
 var collectionUsers; //Good
