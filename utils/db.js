@@ -274,52 +274,80 @@ mongoClient.connect(dbURL, function (err, DB) {
 	DB.createCollection('courses', {
 		validator: {
 			$and: [{
-				label: {$type: 'string'}
-			},
-			{
-				timeStart: {$type: 'date'}
-			},
-			{
-				timeEnd: {$type: 'date'}
-			},
-			{
-				description: {$type: 'string'}
-			},
-			{
-				name: {$type: 'string'}
-			},
-			{
-				semester: {$type: 'string'}
-			},
-			{
-				location: {$type: 'string'}
-			},
-			{
-				year: {$type: 'string'}
-			},
-			{
-				//Creatorid
-				cid: {$type: 'string'}
-			}]
+					label: {
+						$type: 'string'
+					}
+				},
+				{
+					timeStart: {
+						$type: 'date'
+					}
+				},
+				{
+					timeEnd: {
+						$type: 'date'
+					}
+				},
+				{
+					description: {
+						$type: 'string'
+					}
+				},
+				{
+					name: {
+						$type: 'string'
+					}
+				},
+				{
+					semester: {
+						$type: 'string'
+					}
+				},
+				{
+					location: {
+						$type: 'string'
+					}
+				},
+				{
+					year: {
+						$type: 'string'
+					}
+				},
+				{
+					//Creatorid
+					cid: {
+						$type: 'string'
+					}
+				}
+			]
 		}
 	});
 
 	DB.createCollection('lost', {
-	validator: {
-		$and: [{
-			imagePath: {$type: 'string'}
-		},
-		{
-			description: {$type: 'string'}
-		},
-		{
-			long: {$type: 'string'}
-		},
-		{
-			lat: {$type: 'string'}
-		}]
-	}
-});
+		validator: {
+			$and: [{
+					imagePath: {
+						$type: 'string'
+					}
+				},
+				{
+					description: {
+						$type: 'string'
+					}
+				},
+				{
+					long: {
+						$type: 'string'
+					}
+				},
+				{
+					lat: {
+						$type: 'string'
+					}
+				}
+			]
+		}
+	});
 
 	//Variables set to mongo collections
 	collectionAuths = DB.collection('authkeys');
@@ -497,23 +525,44 @@ DBUsers.remove = function (req, res, callback) {
 };
 
 DBUsers.login = function (req, res, callback) {
-   	console.log("[DBUsers] Login: '" + req.body.uid + "'"); 
-    if (req.body.uid && req.body.pass) {
-        collectionUsers.find({_id: req.body.uid, pass: req.body.pass}).toArray(function(err, results) {
-            console.log("results: " + JSON.stringify(results));
-            if (results) {
-                callback(results[0]);
-            }
-            else {
-                console.warn("[DBUsers] Login: User find error");
-                res.json({status: "fail"});
-            }
-        });
-    }
-    else {
-        console.warn("[DBUsers] Login: Missing fields");
-        res.json({status: "fail"});       
-    }
+	console.log("[DBUsers] Login: '" + req.body.uid + "'");
+	if (req.session.user) {
+		console.log("[SESSION]: 'Exists'->'" + JSON.stringify(req.session.user) + "'");
+		callback({
+			status: 'ok',
+			session: req.session.user
+		});
+	} else {
+		if (req.body.uid && req.body.pass) {
+			collectionUsers.find({
+				_id: req.body.uid,
+				pass: req.body.pass
+			}).toArray(function (err, results) {
+				console.log("results: " + JSON.stringify(results));
+				if (err && results.length) {
+					callback({
+						status: "fail",
+						session: req.session
+					});
+					console.error("[DBUsers] Login: 'NotFound'->'" + req.body.uid + "'");
+
+				} else {
+					req.session.user = results[0];
+					callback({
+						status: "ok",
+						session: req.session
+					});
+					console.log("[SESSION]: 'Created'->'" + JSON.stringify(req.session) + "'");
+				}
+			});
+		} else {
+			console.warn("[DBUsers] Login: Missing fields");
+			callback({
+				status: "fail",
+				session: req.session
+			});
+		}
+	}
 };
 
 //AUTH
@@ -1515,7 +1564,7 @@ DBCourses.add = function (req, res, callback) {
 		location: req.body.location,
 		year: req.body.year,
 		cid: req.body.cid,
-		days: req.body.days,	
+		days: req.body.days,
 		timeStart: req.body.timeStart,
 		timeEnd: req.body.timeEnd
 	};
@@ -1593,9 +1642,9 @@ DBCourses.update = function (req, res, callback) {
 			location: req.body.location,
 			year: req.body.year,
 			cid: req.body.cid,
-			days: req.body.days,	
+			days: req.body.days,
 			timeStart: req.body.timeStart,
-			timeEnd: req.body.timeEnd	
+			timeEnd: req.body.timeEnd
 		};
 		collectionCourses.update({
 			_id: req.params.uid
@@ -1663,6 +1712,7 @@ DBLost.add = function (req, res, callback) {
 		long: req.body.long,
 		lat: req.body.lat
 	};
+	//TODO: DEVIN, THIS COURSE VARIABLE IS NOT DEFINED.
 	console.log("[DBLost] Add: '" + course.label);
 	collectionLost.insert(lost, function (err, result) {
 		if (err) {
@@ -1728,12 +1778,12 @@ DBLost.find = function (req, res, callback) {
 DBLost.update = function (req, res, callback) {
 	console.log("[DBLost] Update: '" + JSON.stringify(req.body) + "'->'" + req.params.uid + "'");
 	if (req.params.uid) {
-	var updates = {
-		imagePath: req.body.imagePath,
-		description: req.body.description,
-		long: req.body.long,
-		lat: req.body.lat
-	};
+		var updates = {
+			imagePath: req.body.imagePath,
+			description: req.body.description,
+			long: req.body.long,
+			lat: req.body.lat
+		};
 		collectionLost.update({
 			_id: req.params.uid
 		}, {
