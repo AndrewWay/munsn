@@ -45,8 +45,8 @@
 					<input class="regName" type="text" name="fname" placeholder="Given name">
 					<input class="regName" type="text" name="lname" placeholder="Surname"><br>
 					<input class="regField" type="text" name="addr" placeholder="Address"><br>
-					<input class="regField" type="password" name="regPass" placeholder="Password"><br>
-					<input class="regField" type="password" name="regPassConf" placeholder="Confirm Password"><br>
+					<input class="regField" type="password" name="pass" placeholder="Password"><br>
+					<input class="regField" type="password" name="passConf" placeholder="Confirm Password"><br>
 					<input type="text" class="regField" id="datePick" placeholder="Date of Birth"><br>
 					<div class="regText">GENDER:</div> 
 					<input type="radio" name="gender" value="male" checked> Male
