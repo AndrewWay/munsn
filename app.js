@@ -5,7 +5,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
-var mongoStore = require('connect-mongo')(session);
+var MongoStore = require('connect-mongo')(session);
 var mongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
 var db = require('./utils/db');
@@ -35,7 +35,7 @@ app.use(
 		proxy: true,
 		resave: true,
 		saveUninitialized: true,
-		store: new mongoStore({
+		store: new MongoStore({
 			url: db.DB_URL
 		})
 	})
