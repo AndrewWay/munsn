@@ -125,13 +125,13 @@ module.exports = function (DBAuth, collectionAuths, collectionUsers, MAX_VALIDAT
 					upsert: true
 				}, function (err, result) {
 					if (err) {
-						console.error("[DBUsers] Authorization: " + err.message);
+						console.error("[DBUsers] Update: " + err.message);
 						callback({
 							session: req.session,
 							status: 'fail'
 						});
 					} else {
-						console.error("[DBUsers] Authorization: '" + auth.userid + "'->'true'");
+						console.error("[DBUsers] Update: '" + auth.userid + "'->'{auth:'true'}");
 						callback({
 							session: req.session,
 							status: 'ok'
