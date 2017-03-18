@@ -51,12 +51,17 @@ $("#regSubmit").click( function() {
 		}).effect( "highlight", {color: "#ffb6c1"}, 500);
 		
 	} else {		
+		var dob = $('#regFields #datePick').val().split('/');
 		var jqxhr = $.post("/api/user/register", 
 			{
-				user: $('#regFields input[name="user"]').val(),
+				fname: $('#regFields input[name="fname"]').val(),
+				lname: $('#regFields input[name="lname"]').val(),
+				email: $('#regFields input[name="email"]').val(),
 				pass: $('#regFields input[name="pass"]').val(),
-				email: $('#regFields input[name="email"]').val()
-			}, //Should really include the other fields
+				dob: new Date(dob[2], dob[0]-1, dob[1]),
+				gender: $('#regFields input[name="gender"]').val(),
+				address: $('#regFields input[name="addr"]').val()
+			},
 			function() {console.log("post");}
 				)
 			.done( function() {
@@ -91,6 +96,7 @@ $("#logSubmit").click( function() {
 		}).effect( "highlight", {color: "#ffb6c1"}, 500);
 		
 	} else {
+		alert("Not yet implemented. Integration milestone.");
 		var jqxhr = $.post("/api/user/login", 
 			{
 				uid: $('#loginFields input[name="user"]').val(),
@@ -101,16 +107,27 @@ $("#logSubmit").click( function() {
 			.done( function() {
 				console.log("success");
                 console.log(JSON.stringify(jqxhr.responseJSON));
-				//$("#regFields")[0].reset();
-				//$("#someDiv").val("Check yo email");
+				//TODO: Integration -- Go to portal with session token.
 			})
 			.fail( function () {
 				console.log("failure");
-				//$("#someDiv").val("Is no good");
-				//Maybe change some colours depending on failure?
+				
+				//TODO: Integration -- Error from server.
 			})		
 	}
 
+});
+
+/*****************************************************
+*Handler for guest sign-in.
+*
+*@params: null
+*
+*Sign in using guest credentials?
+*****************************************************/
+
+$('#guestIn').click(function() {
+	$(location).attr('href','/');
 });
 
 });

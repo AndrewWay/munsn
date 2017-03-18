@@ -126,6 +126,20 @@ body, html {
 	background-color: #f1f1f1;
 }
 
+#guestIn {
+	display: block;
+	width: 100%;
+	text-align: center;
+	margin-top: 25px;
+	
+	text-decoration: none;
+	color: #7f1734;
+}
+
+#guestIn:hover {
+	text-decoration: underline;
+}
+
 #forPass {
 	width: 150px;
 }

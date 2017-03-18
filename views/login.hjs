@@ -36,12 +36,15 @@
 					<input class="logButton" id="forPass" type="button" value="Forgot Password"><br>
 					
 					<img src="/img/MUNLOGO.gif" alt="Provehito in Altum" title="Provehito in Altum">
+					
+					<a href="/login" id="guestIn"> Sign in as Guest </a>
 				</form>
 				<form id="regFields" name="regForm" method="post" action="/api/user/register">
 					<input type="hidden" name="user">
 					<input class="regField" type="text" name="email" placeholder="MUN E-mail"><br>
-					<input class="regName" type="text" name="gname" placeholder="Given name">
-					<input class="regName" type="text" name="sname" placeholder="Surname"><br>
+					<input class="regName" type="text" name="fname" placeholder="Given name">
+					<input class="regName" type="text" name="lname" placeholder="Surname"><br>
+					<input class="regField" type="text" name="addr" placeholder="Address"><br>
 					<input class="regField" type="password" name="regPass" placeholder="Password"><br>
 					<input class="regField" type="password" name="regPassConf" placeholder="Confirm Password"><br>
 					<input type="text" class="regField" id="datePick" placeholder="Date of Birth"><br>
