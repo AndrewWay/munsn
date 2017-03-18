@@ -92,36 +92,18 @@ router.post('/image/post/:pid', function(req, res, next) {
  *
  */
 router.delete('/resume/user/:uid', function (req, res, next) {
-	if (utils.remove('resume', path.join(__dirname, '../content/resumes/user/' + req.params.uid))) {
-		res.json({
-			status: 'ok'
-		});
-	} else {
-		res.json({
-			status: 'fail'
-		});
-	}
+	utils.remove('resume', path.join(__dirname, '../content/resumes/user/' + req.params.uid), function (result) {
+		res.json(result);
+	});
 });
 router.delete('/image/profile/:uid', function (req, res, next) {
-	if (utils.remove('profile', path.join(__dirname, '../content/images/user/' + req.params.uid))) {
-		res.json({
-			status: 'ok'
-		});
-	} else {
-		res.json({
-			status: 'fail'
-		});
-	}
+	utils.remove('profile', path.join(__dirname, '../content/images/user/' + req.params.uid), function (result) {
+		res.json(result);
+	});
 });
 router.delete('/image/group/:gid', function (req, res, next) {
-	if (utils.remove('group', path.join(__dirname, '../content/images/user/' + req.params.gid))) {
-		res.json({
-			status: 'ok'
-		});
-	} else {
-		res.json({
-			status: 'fail'
-		});
-	}
+	utils.remove('group', path.join(__dirname, '../content/images/user/' + req.params.gid), function (result) {
+		res.json(result);
+	});
 });
 module.exports = router;

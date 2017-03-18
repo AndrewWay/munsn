@@ -50,13 +50,17 @@ function* findFiles(filter, directory) {
  * @param {HTTPResponse} res
  * @param {string} file
  */
-function remove(filter, directory) {
+function remove(filter, directory, callback) {
 	var file = findFiles(filter, directory).next().value;
 	if (file) {
 		fs.unlinkSync(file);
-		return true;
+		callback({
+			status: 'ok'
+		});
 	} else {
-		return false;
+		callback({
+			status: 'fail'
+		});
 	}
 }
 /**
@@ -67,6 +71,7 @@ function remove(filter, directory) {
  * @returns {void}
  */
 function download(req, res, file, callback) {
+	//TODO: John, Test this
 	fs.exists(file, function (exist) {
 		if (exist) {
 			var filename = path.basename(file);
@@ -96,6 +101,7 @@ function download(req, res, file, callback) {
  * @returns {void}
  */
 function upload(req, dest, name, callback) {
+	//TODO: John, Test this to break it
 	try {
 		var error = false;
 

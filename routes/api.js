@@ -684,8 +684,7 @@ router.post(registerUser, function (req, res, next) {
 router.post(loginUser, function (req, res, next) {
 	if (req.session.user) {
 		console.log("SESSION: Existed" + JSON.stringify(req.session.user));
-	}
-	else {
+	} else {
 		DB.Users.login(req, res, function (result) {
 			req.session.user = result;
 			console.log("SESSION: Created" + JSON.stringify(req.session.user));
