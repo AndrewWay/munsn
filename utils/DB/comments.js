@@ -8,7 +8,7 @@ module.exports = function (DBComments, collectionComments) {
 			authorid: req.body.authorid,
 			data: [{
 				data: req.body.data,
-				date: req.body.date
+				date: date.getTime()
 			}]
 		};
 		console.log("[DBComments] Add: '" + postId + "'->'" + JSON.stringify(comment) + "'");
@@ -92,13 +92,13 @@ module.exports = function (DBComments, collectionComments) {
 			data: req.params.data
 		};
 		var query = {
-			_id: req.params.postId,
-			"comments.cid": req.params.cid
+			_id: req.params.pid,
+			"comments.commentid": req.params.commentid
 		};
 		console.log("[DBComments] Update: '" + JSON.stringify(updates) + "'->'" + JSON.stringify(query) + "'");
 		collectionComments.update(query, {
 			$push: {
-				edits: updates
+				"comments.data": updates
 			}
 		}, {
 			upsert: true

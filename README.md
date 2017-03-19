@@ -138,6 +138,12 @@ _findGroupAdmins_ |
  **Params:** <br>- gid: The group id to get admins from|
 **Returns:** JSON array containing user objects|
 
+_findCommentsById_ |
+:---------|
+ **URL:**  %server%/api/comment/find/:uid|
+ **Description:** Gets comments by user id|
+ **Params:** <br>- uid: the user id|
+**Returns:** JSON array containing comment objects|
 ___ 
 
 ### 3.2 POST
@@ -296,6 +302,27 @@ _delGroupAdmin_ |
  **Params:** <br>- gid: The group id<br>- uid: The user id to be deleted|
 **Returns:** JSON group users object after deletion|
 
+_addComment_ |
+:---------|
+ **URL:**  %server%/api/comment/add|
+ **Description:** Add a comment|
+ **Params:** <br>- (_string_) pid: The post id to which the comment belongs to<br>- (_string_) authorid: The author's id<br>- (_string_) data: The comment data|
+**Returns:** JSON mongo result|
+
+_updateComment_ |
+:---------|
+ **URL:**  %server%/api/comment/update|
+ **Description:** Update a comment|
+ **Params:** <br>- (_string_) data: The comment data/text<br>- (_string_) commentid: The comment id|
+**Returns:** JSON mongo result|
+
+_removeComment_ |
+:---------|
+ **URL:**  %server%/api/comment/remove|
+ **Description:** Remove a comment|
+ **Params:** <br>- (_string_) pid: The post id to which the comment belongs to<br>- (_string_) commentid: The comment id|
+**Returns:** JSON mongo result|
+
 ## 4. JSON Objects
 
 _User_ |
@@ -342,3 +369,8 @@ _Post_ |
 :---------|
  **Description:** The lost and found object|
  **Params:** <br>- (_string_) _id: The lost unique object id <br>- (_string_) imagePath: The path to an image if supplied <br>- (_string_) description: Description <br>- (_string_) long: Longitude <br>- (_string_) lat: Latitude|
+
+  _Comment_ |
+:---------|
+ **Description:** The comment object|
+ **Params:** <br>- (_string_) pid: The post id the comment belongs to <br>- (_array[objects]_) comments: An array of objects with the following fields<ul><li>data: The data/text of the comment<li>date: The date object created when the data is written|
