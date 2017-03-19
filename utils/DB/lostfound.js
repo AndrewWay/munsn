@@ -3,13 +3,13 @@ module.exports = function (DBLostFound, collectionLost) {
 	//Add a lost
 	DBLostFound.add = function (req, res, callback) {
 		var lost = {
+            name: req.body.name,
 			imagePath: req.body.imagePath,
 			description: req.body.description,
 			long: req.body.long,
 			lat: req.body.lat
 		};
-		//TODO: DEVIN, THIS COURSE VARIABLE IS NOT DEFINED.
-		console.log("[DBLost] Add: '" + course.label);
+		console.log("[DBLost] Add: '" + lost.name);
 		collectionLost.insert(lost, function (err, result) {
 			if (err) {
 				console.error("[DBLost] Add: " + err.message);
@@ -82,6 +82,7 @@ module.exports = function (DBLostFound, collectionLost) {
 		console.log("[DBLost] Update: '" + JSON.stringify(req.body) + "'->'" + req.params.uid + "'");
 		if (req.params.uid) {
 			var updates = {
+                name: req.body.name,
 				imagePath: req.body.imagePath,
 				description: req.body.description,
 				long: req.body.long,

@@ -4,6 +4,7 @@ var fs = require('fs-extra');
 var path = require('path');
 var mp = require('multiparty');
 var utils = require('../utils/utils');
+var DB = require("../utils/db");
 
 /* GET Test upload page. */
 router.get('/upload', function (req, res, next) {
@@ -26,6 +27,11 @@ router.post('/', function (req, res, next) {
 		} else {
 			res.json(fields);
 		}
+	});
+});
+router.post('/calendar', function (req, res, next) {
+	DB.Calendar.add(req, res, function (result) {
+		res.json(result);
 	});
 });
 module.exports = router;

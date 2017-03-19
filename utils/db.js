@@ -330,6 +330,11 @@ mongoClient.connect(dbURL, function (err, DB) {
 	DB.createCollection('lostfound', {
 		validator: {
 			$and: [{
+                    name: {
+                        $type: 'string'
+                    }
+                },
+                {
 					imagePath: {
 						$type: 'string'
 					}
@@ -353,13 +358,13 @@ mongoClient.connect(dbURL, function (err, DB) {
 		}
 	});
 
-	DB.createCollection('users', {
+	DB.createCollection('calendars', {
 		validator: {
 			$and: [{
 				_id: {
 					$type: 'string'
 				},
-				calendarId: {
+				calendarid: {
 					$type: 'string'
 				}
 			}]
@@ -369,6 +374,7 @@ mongoClient.connect(dbURL, function (err, DB) {
 	});
 	//Variables set to mongo collections
 	collectionAuths = DB.collection('authkeys');
+	collectionCalendar = DB.collection('calendars');
 	collectionUsers = DB.collection('users');
 	collectionFriends = DB.collection('friends');
 	collectionFriendRequests = DB.collection('fRequests');
@@ -395,6 +401,7 @@ mongoClient.connect(dbURL, function (err, DB) {
 
 module.exports = {
 	Auth: DBAuth,
+	Calendar: DBCalendar,
 	Posts: DBPosts,
 	Groups: DBGroups,
 	Users: DBUsers,
