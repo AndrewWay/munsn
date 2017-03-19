@@ -2,7 +2,6 @@ module.exports = function (DBComments, collectionComments) {
 	//Add a comment
 	DBComments.add = function (req, res, callback) {
 		var date = new Date();
-		//TODO: Devin, Look at this make sure it's right.
 		var postId = req.body.pid;
 		var comment = {
 			commentid: req.body.authorid + date.getTime(),
