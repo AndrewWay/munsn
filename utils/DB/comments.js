@@ -64,10 +64,10 @@ module.exports = function (DBComments, collectionComments) {
 
 	//Get comments per userid
 	DBComments.findByPostId = function (req, res, callback) {
-		var userId = req.body.uid;
+		var pid = req.body.pid;
 		console.log("[DBComments] FindByPID: '" + userId + "'");
 		collectionComments.find({
-			authorid: userId
+			_id: pid
 		}).toArray(function (err, result) {
 			if (err) {
 				console.error("[DBComments] FindByPID: " + err.message);
