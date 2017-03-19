@@ -131,6 +131,13 @@ _findLost_ |
  **Params:** <br>- (_string_) _id: The lost unique object id <br>- (_string_) imagePath: The path to an image if supplied <br>- (_string_) description: Description <br>- (_string_) long: Longitude <br>- (_string_) lat: Latitude|
 **Returns:** JSON lost object array|
 
+_findGroupAdmins_ |
+:---------|
+ **URL:**  %server%/api/group/admins/:gid|
+ **Description:** Gets all admins in a group|
+ **Params:** <br>- gid: The group id to get admins from|
+**Returns:** JSON array containing user objects|
+
 ___ 
 
 ### 3.2 POST
@@ -274,6 +281,20 @@ _removeLost_ |
  **Description:** Remove a lost|
  **Params:** <br>- (_string_) _id: The lost unique object id|
 **Returns:** JSON mongo result|
+
+_addGroupAdmin_ |
+:---------|
+ **URL:**  %server%/api/group/add/admin|
+ **Description:** Add an admin to a group|
+ **Params:** <br>- gid: The group id<br>- uid: The admin id to be added|
+**Returns:** JSON group users object after creation|
+
+_delGroupAdmin_ |
+:---------|
+ **URL:**  %server%/api/group/remove/admin|
+ **Description:** Delete anadmin from a group|
+ **Params:** <br>- gid: The group id<br>- uid: The user id to be deleted|
+**Returns:** JSON group users object after deletion|
 
 ## 4. JSON Objects
 
