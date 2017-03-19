@@ -5,13 +5,15 @@
 	<title>{{Title}}</title>
 	<link href="/stylesheets/blank.css" rel="stylesheet"/>
 	<link href="/stylesheets/post.css" rel="stylesheet"/>
-	<link href="/stylesheets/profile.css" rel="stylesheet"/>
+	<link href="/stylesheets/lostfound.css" rel="stylesheet"/>
 	
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
 	<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+	<script type="text/javascript" src='http://maps.google.com/maps/api/js?libraries=places&key=AIzaSyAOvv4l4DtmVnBj7_5R7P_lccMyffm03to'></script>
+    <script src="https://cdn.rawgit.com/Logicify/jquery-locationpicker-plugin/master/dist/locationpicker.jquery.js"></script>
 	
 	<script src="/js/blank.js"></script>
-	<script src="/js/profile.js"></script>
+	<script src="/js/lostfound.js"></script>
 
 </head>
 <body>
@@ -92,6 +94,8 @@
 	</div>
 	<div class="timeline">
 		
+		<div id="mapHolder"><div id="map"> </div></div>
+		
 		<!-- RANDOM POSTS FOR TESTING -->
 		<div class="postTemp">
 				<div class="postInfo">
@@ -170,11 +174,53 @@
 				<button id="foundChoice"> FOUND</button>
 			</div>
 		</div>
-		<div class ="content-2" id="lostContent">
-			<
+		<div class="content-2" id="lostContent">
+			<div class="lostClass" id="lostImage">
+				<img id="lostImgDisp" src="/img/SEAHAWK_SIL.jpg">
+				<input type="file" id="lostImg" style="display: none;" accept="image/*" />
+			</div>
+			<div class="lostClass" id="textDesc">
+				<textarea id="text" placeholder="Description..."></textarea>
+			</div>
+			<div class="lostClass" id="lostLocation">
+				<button class="mapToggle"> Map </button> <br>
+				<input type="hidden" name="lat" id="lat"/>
+
+				<input type="hidden" name="long" id="long"/>
+				
+				<label for="long">Location</label> 
+				<input type="text" name="locate" class="locate"/>
+				
+				<label for="name">Contact Info</label> 
+				<input class="contact" type="text" name="name" id="name" placeholder="Name"/>
+				<input class="contact" type="text" name="phone" id="phone" placeholder="Phone #"/>
+				<input class="contact" type="text" name="email" id="email" placeholder="E-Mail"/>
+				
+				<button class="submitLF" id="submitLost"> Submit Lost Item </button>
+			</div>
 		</div>
-		<div class ="content-2" id="foundContent">
-			
+		
+		<div class="content-2" id="foundContent">
+			<div class="foundClass" id="lostImage">
+				<img id="lostImgDisp" src="/img/SEAHAWK_SIL.jpg">
+				<input type="file" id="lostImg" style="display: none;" accept="image/*" />
+			</div>
+			<div class="foundClass" id="textDesc">
+				<textarea id="text" placeholder="Description..."></textarea>
+			</div>
+			<div class="foundClass" id="lostLocation">
+				<button class="mapToggle"> Map </button> <br>
+				
+				<label for="long">Location</label> 
+				<input type="text" class="locate" name="locate"/>
+				
+				<label for="name">Contact Info</label> 
+				<input class="contact" type="text" name="name" id="name" placeholder="Name"/>
+				<input class="contact" type="text" name="phone" id="phone" placeholder="Phone #"/>
+				<input class="contact" type="text" name="email" id="email" placeholder="E-Mail"/>
+				
+				<button class="submitLF" id="submitFound"> Submit Found Item </button>
+			</div>
 		</div>
 	</div>
 	</div>

@@ -23,6 +23,7 @@ var routerSchedule = require('./routes/schedule');
 var routerSettings = require('./routes/settings');
 var routerContent = require('./routes/content');
 var routerResume = require('./routes/resume');
+var routerLostFound = require('./routes/lostfound');
 
 //Beyond this point is all the code needed to start the server.
 var app = express();
@@ -82,6 +83,8 @@ app.use('/schedule', routerSchedule);
 app.use('/settings', routerSettings);
 //Resume pages
 app.use('/resume', routerResume);
+//Lost&Found pages
+app.use('/lostfound', routerLostFound)
 //Test
 app.use('/test', routerTest);
 // catch 404 and forward to error handler
