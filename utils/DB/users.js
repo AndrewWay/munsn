@@ -2,6 +2,7 @@ var utils = require('../utils');
 
 module.exports = function (DBUsers, DBAuth, collectionUsers) {
 	DBUsers.add = function (req, res, callback) {
+		console.log("[DBUsers] Add: '" + JSON.stringify(req.body) + "'");
 		var result = {};
 		if (!Object.keys(req.body).length) {
 			console.warn("[DBUsers] Add: Missing Data");
@@ -23,7 +24,6 @@ module.exports = function (DBUsers, DBAuth, collectionUsers) {
 					auth: false,
 					visibility: req.body.visibility ? req.body.visibility : "default",
 					_id: utils.getIdFromEmail(req.body.email)
-					//_id: req.body.uid
 				};
 
 				//Create auth key and store it in auths
@@ -35,7 +35,7 @@ module.exports = function (DBUsers, DBAuth, collectionUsers) {
 							status: 'fail'
 						});
 					} else {
-						console.log("[DBUsers] Add: '" + result.insertedIds[0] + "'");
+						console.log("[DBUsers] Inserted: '" + result.insertedIds[0] + "'");
 						DBAuth.add(req, res, row, function (result) {
 							callback(result);
 						});
@@ -193,7 +193,6 @@ module.exports = function (DBUsers, DBAuth, collectionUsers) {
 							status: 'fail'
 						});
 						console.error("[DBUsers] Login: 'NotFound'->'" + req.body.uid + "'");
-
 					} else {
 						req.session.user = results[0];
 						callback({
@@ -212,5 +211,4 @@ module.exports = function (DBUsers, DBAuth, collectionUsers) {
 			}
 		}
 	};
-	return DBUsers;
 };
