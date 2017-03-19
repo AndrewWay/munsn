@@ -16,6 +16,7 @@ var collectionGroups; //Good
 var collectionGroupMembers; //Good
 var collectionGroupAdmins; //TODO: John, EVALUATE
 var collectionPosts; //TODO: John, EVALUATE
+var collectionCalendar;
 var collectionComments; //TODO: John, EVALUATE
 var collectionCourses;
 var collectionLostFound;
@@ -29,6 +30,7 @@ var DBGroupAdmins = {};
 var DBComments = {};
 var DBCourses = {};
 var DBLostFound = {};
+var DBCalendar = {};
 //TODO: Devin, TESTING
 //Connect to the database
 mongoClient.connect(dbURL, function (err, DB) {
@@ -259,20 +261,20 @@ mongoClient.connect(dbURL, function (err, DB) {
 	 *  - (date) date: The date that the comment was edited
 	 */
 
-    //The comments collection will most likely fail when using an array validator, commenting it out for now
-/*
-	DB.createCollection('comments', {
-		validator: {
-			$and: [{
-				comments: {
-					$type: 'array'
-				}
-			}]
-		},
-		validationLevel: 'strict',
-		validationAction: 'error'
-	});
-*/
+	//The comments collection will most likely fail when using an array validator, commenting it out for now
+	/*
+		DB.createCollection('comments', {
+			validator: {
+				$and: [{
+					comments: {
+						$type: 'array'
+					}
+				}]
+			},
+			validationLevel: 'strict',
+			validationAction: 'error'
+		});
+	*/
 	DB.createCollection('courses', {
 		validator: {
 			$and: [{
@@ -351,6 +353,20 @@ mongoClient.connect(dbURL, function (err, DB) {
 		}
 	});
 
+	DB.createCollection('users', {
+		validator: {
+			$and: [{
+				_id: {
+					$type: 'string'
+				},
+				calendarId: {
+					$type: 'string'
+				}
+			}]
+		},
+		validationLevel: 'strict',
+		validationAction: 'error'
+	});
 	//Variables set to mongo collections
 	collectionAuths = DB.collection('authkeys');
 	collectionUsers = DB.collection('users');
@@ -373,6 +389,7 @@ mongoClient.connect(dbURL, function (err, DB) {
 	require('./DB/comments')(DBComments, collectionComments);
 	require('./DB/courses')(DBCourses, collectionCourses);
 	require('./DB/lostfound')(DBLostFound, collectionLostFound);
+	require('./DB/calendar')(DBCalendar, collectionCalendar);
 });
 
 
