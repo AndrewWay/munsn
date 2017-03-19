@@ -22,7 +22,7 @@
 
 		<div class="menu">
 		<ul>
-            <li><a href="#">Home</a></li>
+            <li><a href="/">Home</a></li>
             <li><a href="#">Groups</a></li>
             <li><a href="#">Friends</a></li>
         </ul>
@@ -36,12 +36,12 @@
 
 		<div class="buttons">
 			<a href="#"><img id="not" src="/img/notification-red.png"></a>
-			<a href="#"><img id="log" src="/img/logout.png"></a>
-			<a href="#"><img id="cog" src="/img/settings.png"></a>
+			<a href="/logout"><img id="log" src="/img/logout.png"></a>
+			<a href="/settings"><img id="cog" src="/img/settings.png"></a>
 		</div>
 	</div>
 	</nav>
-
+	
 	<div id="not-center">
 		<a href="#"><div id="note">
 			{{NOT_INFO}}
@@ -56,17 +56,17 @@
 			{{NOT_INFO}}
 		</div></a>
 	</div>
-	
+
 	<div class="container">
 	<div class="sidebars" id="section-left">
 		<div class="userInfo" id="userPic">
-			<a href="{{ USER_LINK }}"><img src="/img/SEAHAWK_SIL.jpg"></a>	
+			<a href="/profile"><img src="/img/SEAHAWK_SIL.jpg"></a>	
 		</div>
 		<div class="userInfo" id="lists">
 			<div class="userLists" id="groupList">
 				<h5> GROUP LIST </h5>
 				<ul id="groupList">
-					<li><a href="#"> TEST1 </a></li>
+					<li><a href="/group"> GOTO Group </a></li>
 					<li><a href="#"> TEST2 </a></li>
 					<li><a href="#"> TEST3 </a></li>
 				</ul>
@@ -75,7 +75,7 @@
 			<div class="userLists" id="classList">
 				<h5> CLASS LIST </h5>
 				<ul id="classList">
-					<li><a href="#"> TEST1TEST1 TEST1 TEST1 TEST1  </a></li>
+					<li><a href="/group"> Classes are special groups </a></li>
 					<li><a href="#"> TEST2 </a></li>
 					<li><a href="#"> TEST3 </a></li>
 				</ul>
@@ -84,7 +84,7 @@
 			<div class="userLists" id="etc">
 				<h5> OTHER LIST </h5>
 				<ul id="otherList">
-					<li><a href="#"> TEST1 </a></li>
+					<li><a href="/lostfound"> Lost & Found </a></li>
 					<li><a href="#"> TEST2 </a></li>
 					<li><a href="#"> TEST3 </a></li>
 				</ul>
@@ -174,6 +174,9 @@
 				<button id="foundChoice"> FOUND</button>
 			</div>
 		</div>
+		
+		<!-- TODO: Make consistent. Should these divs be classes or ids. Class seems superfluous, but seperate ids allow for specialization-->
+		
 		<div class="content-2" id="lostContent">
 			<div class="lostClass" id="lostImage">
 				<img id="lostImgDisp" src="/img/SEAHAWK_SIL.jpg">

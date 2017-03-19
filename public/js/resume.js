@@ -1,4 +1,15 @@
+//TODO -- This javascript may need to be in page to allow for the changing of url.
+
 $(document).ready(function (){
+
+/*************************
+* Functions for PDF viewer
+*
+*@params: null
+*
+* List of functions for downloading and displaying PDFs in any browser.
+**************************/
+
 	
 	// If absolute URL from the remote server is provided, configure the CORS
 // header on that server.
@@ -14,6 +25,7 @@ var pdfDoc = null,
     scale = 0.8,
     canvas = document.getElementById('canvas'),
     ctx = canvas.getContext('2d');
+	ctx.imageSmoothingEnabled = false;
 
 /**
  * Get page info from document, resize canvas accordingly, and render page.
