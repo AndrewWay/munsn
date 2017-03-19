@@ -64,7 +64,7 @@
 					
 					<div id="tosText"><input type="checkbox" name="checkTOS">I HAVE READ AND AGREE TO THE TERMS OF SERVICE</div><br>
 					
-					<input class="regButton" type="button" value="Terms of Service"><br>
+					<input class="regButton" id="tosButton" type="button" value="Terms of Service"><br>
 					<input class="regButton" id="regSubmit" type="button" value="Register"><br>
 					<input class="regButton" id="closeReg" type="button" value="Back">
 				</form>
