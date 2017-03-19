@@ -19,7 +19,7 @@
 					$.post("/api/user/register",
 						{
 							user: "Test",
-								pass: "Test",
+							pass: "Test",
 							email: "jh2587@mun.ca"
 						},
 						function(data){
@@ -29,7 +29,18 @@
 					);
 				}
 			);
-			$("#template").click(Test);
+			$("#template").click(
+				function(){
+					$.post("/test/calendar",
+						{
+							uid: "jh2587"
+						},
+						function(data){
+							alert(JSON.stringify(data));
+						}
+					);
+				}
+			);
 		}
 	);
 </script>

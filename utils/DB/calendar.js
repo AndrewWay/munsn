@@ -4,6 +4,36 @@ var googleFuncs = require('../googleFuncs');
 var googleapi = require('googleapis');
 
 module.exports = function (DBCalendar, collectionCalendar) {
+	DBCalendar.add = function (req, res, callback) {
+		googleFuncs.getKey(function (key) {
+			googleapi.calendar('v3').calendars.insert({
+				auth: key,
+				resource: {
+					summary: req.body.uid
+				}
+			}, function (err, result) {
+				if (err) {
+					callback({
+						status: 'fail'
+					});
+				} else {
+					collectionCalendar.insert({
+						_id: req.body.uid,
+						calendarid: result.id
+					}, function (err, result) {
+						if (err) {
+
+						} else {
+							callback({
+								data: result,
+								status: 'ok'
+							});
+						}
+					});
+				}
+			});
+		});
+	};
 	DBCalendar.find = function (req, res, callback) {
 		collectionCalendar.findOne({
 			_id: req.params.uid
