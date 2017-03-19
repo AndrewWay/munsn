@@ -5,7 +5,7 @@ var googleapi = require('googleapis');
 var calendar = {};
 
 
-calendar.list = function (req, res, callback) {
+calendar.find = function (req, res, callback) {
 	googleFuncs.getKey(function (key) {
 		googleapi.calendar('v3').calendarList.list({
 			auth: key
@@ -17,6 +17,21 @@ calendar.list = function (req, res, callback) {
 			}
 		});
 	});
+};
+calendar.insert = function (req, res, callback) {
+	googleFuncs.getKey(
+		function (key) {
+			googleapi.calendar('v3').events.insert({
+				auth: key,
+				calendarId: "6rqlb7jaeqrgrd0ov5j73tijkg@group.calendar.google.com",
+				event: {}
+			},
+				function (err, event) {
+
+				}
+			);
+		}
+	);
 };
 /* Test Code
 var calendar = require('./utils/calendar');
