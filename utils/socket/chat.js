@@ -5,6 +5,7 @@ var nsChat = IO.of("/chat");
 
 //User connects to server
 nsChat.on('connection', function(socket) {
+    /*
     var room = Math.floor((Math.random() * 10) + 1);
     clients.push({
         socket: socket,
@@ -16,6 +17,24 @@ nsChat.on('connection', function(socket) {
     socket.join(room);
     //IO.emit('chat message', "User: " + socket.id + " has joined!");
     nsChat.in(room).emit('chat message', "Connected to room: " + room)
+    */
+    //Init chat event
+    socket.on('initChat', function(data, callback) {
+        console.log("DATA " + JSON.stringify(data));
+        var room = Math.floor((Math.random() * 10) + 1);
+        var name = socket.id;
+        if (data.name) name = data._id;
+        var client = {
+            socket: socket,
+            name: name,
+            room: room            
+        };
+        clients.push(client);
+        console.log("[CHAT][ROOM " + client.room + "]["  + client.name + "] Connected!");
+        socket.join(client.room);
+        //IO.emit('chat message', "User: " + socket.id + " has joined!");
+        nsChat.in(room).emit('chat message', "[ROOM " + client.room + "][" + client.name + "] Connected!");
+    });
 
     //Name
     socket.on('name', function(data, callback) {
