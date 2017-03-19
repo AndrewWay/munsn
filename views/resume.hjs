@@ -4,7 +4,7 @@
 	<meta charset="UTF-8">
 	<title>{{Title}}</title>
 	<link href="/stylesheets/blank.css" rel="stylesheet"/>
-	<!--<link href="/stylesheets/resume.css" rel="stylesheet"/>-->
+	<link href="/stylesheets/resume.css" rel="stylesheet"/>
 	
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
 	<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
@@ -93,20 +93,34 @@
 
 
 	<div class="timeline">
-		<div>
-			<button id="pdfPrev">Previous</button>
-			&nbsp; &nbsp;
-			<span>Page: <span id="page_num"></span> / <span id="page_count"></span></span>
-			&nbsp; &nbsp;
-			<button id="pdfNext">Next</button>
+		
+		<div id="canvasContainer">
+			<div>
+				<button class="pdfButton" id="pdfPrev">Previous</button>
+			
+				<span>Page: <span id="page_num"></span> / <span id="page_count"></span></span>
+			
+				<button class="pdfButton" id="pdfNext">Next</button>
+			</div>
+			<canvas id="canvas" width="680px"></canvas>
 		</div>
-		<canvas id="canvas"></canvas>
 	</div>
 		
 	<div class="sidebars" id="section-right">
-		<div id= "content-1">
+		<div class= "content-1">
+			<div id="uploadResume">
+				<button id="uploadButton"> UPLOAD RESUME </button>
+			</div>
 		</div>
-		<div id ="content-2">
+		<div class="content-2">
+			<div class="userLists" id="resumeHistory">
+				<ul id="resumeList">
+					<!-- TODO: Link to old uploads on server side if possible-->
+					<li><a href="/resume"> Links back here </a></li>
+					<li><a href="#"> TEST2 </a></li>
+					<li><a href="#"> TEST3 </a></li>
+				</ul>
+			</div>
 		</div>
 	</div>
 		

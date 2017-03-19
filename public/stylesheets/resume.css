@@ -1,0 +1,37 @@
+#canvas {
+	position: relative;
+	width: 95%;
+	top: 0;
+	display: block;
+	margin: auto;
+}
+
+#canvasContainer {
+	width: 95%;
+	display: black;
+	margin: auto;
+	background-color: #111111;
+	border: 2px solid #555555;
+	color: #ffffff;
+}
+
+#canvasContainer div {
+	margin: auto;
+	display: table;
+}
+
+#canvasContainer div .pdfButton {
+	height: 20px;
+	margin-left: 10px;
+	margin-right: 10px;
+	border-radius: 5px;
+}
+
+#uploadButton {
+	display: block;
+	margin: auto;
+	
+	border-radius: 20px;
+	margin-bottom: 20px;
+}
+
