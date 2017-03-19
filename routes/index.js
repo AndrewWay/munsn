@@ -23,19 +23,17 @@ router.get('/register', function (req, res, next) {
 		title: 'Register'
 	});
 });
+
 /**
- * Post to login form.
+ * logout
  */
-router.post('/login', function (req, res, next) {
-	var userReq = {
-		user: req.body.user,
-		pass: req.body.pass
-	};
-	DB.findUserById(userReq.user, function (userRes) {
-		res.render('index', {
-			title: userRes.user
-		});
-	});
+router.get('/logout', function (req, res, next) {
+    if (req.session.user) {
+        req.session.destroy();
+        res.render('login', {
+            title: 'login'
+        });
+    }
 });
 
 router.get('/chat', function (req, res, next) {
