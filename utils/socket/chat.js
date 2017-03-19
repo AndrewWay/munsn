@@ -31,6 +31,22 @@ nsChat.on('connection', function(socket) {
         }
     });
 
+    //Name
+    socket.on('room', function(data, callback) {
+        console.log("ROOM:" + data);
+        var index = clientsIndexOf(socket);
+        console.log("INDEX: " + index);
+        if (index != -1) {
+            socket.leave(clients[index].room);
+            socket.join(data);
+            clients[index].room = data;
+            callback({status: "ok"});
+        }
+        else {
+            callback({status: "fail"});
+        }
+    });
+
     //User disconnects
     socket.on('disconnect', function() {
         var index = clientsIndexOf(socket);
