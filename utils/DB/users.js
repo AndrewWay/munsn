@@ -35,7 +35,7 @@ module.exports = function (DBUsers, DBAuth, collectionUsers) {
 							status: 'fail'
 						});
 					} else {
-						console.log("[DBUsers] Add: '" + result.insertedIds[0] + "'");
+						console.log("[DBUsers] Inserted: '" + result.insertedIds[0] + "'");
 						DBAuth.add(req, res, row, function (result) {
 							callback(result);
 						});
@@ -193,7 +193,6 @@ module.exports = function (DBUsers, DBAuth, collectionUsers) {
 							status: 'fail'
 						});
 						console.error("[DBUsers] Login: 'NotFound'->'" + req.body.uid + "'");
-
 					} else {
 						req.session.user = results[0];
 						callback({
@@ -212,5 +211,4 @@ module.exports = function (DBUsers, DBAuth, collectionUsers) {
 			}
 		}
 	};
-	return DBUsers;
 };

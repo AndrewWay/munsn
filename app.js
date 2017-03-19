@@ -28,13 +28,19 @@ var app = express();
 
 //Busboy used for file uploading to the server
 app.use(busboy());
-
 app.use(
 	session({
 		secret: 'faeb4453e5d14fe6f6d04637f78077c76c73d1b4',
 		proxy: true,
 		resave: true,
-		saveUninitialized: true,
+		saveUninitialized: false,
+		cookie: {
+			path: '/',
+			httpOnly: true,
+			maxAge: 60000
+		},
+		unset: 'destroy',
+		rolling: true,
 		store: new MongoStore({
 			url: db.DB_URL
 		})

@@ -17,8 +17,9 @@ router.get('/jqueryTest', function (req, res, next) {
 });
 router.post('/', function (req, res, next) {
 	var form = new mp.Form();
-	utils.upload(req, "upload/", 'name');
+	//utils.upload(req, "upload/", 'name');
 	form.parse(req, function (err, fields, files) {
+		console.log(JSON.stringify(files));
 		console.log(fields);
 		if (err) {
 			console.error('MegaDeath');
