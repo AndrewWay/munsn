@@ -330,11 +330,11 @@ mongoClient.connect(dbURL, function (err, DB) {
 	DB.createCollection('lostfound', {
 		validator: {
 			$and: [{
-                    name: {
-                        $type: 'string'
-                    }
-                },
-                {
+					name: {
+						$type: 'string'
+					}
+				},
+				{
 					imagePath: {
 						$type: 'string'
 					}

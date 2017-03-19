@@ -4,7 +4,7 @@ function initChat(initData) {
     var socket = io("/chat");
 
     socket.emit('initChat', user);
-    
+
     $('form').submit(function () {
         var cmdName = "/name";
         var cmdRoom = "/room";
@@ -17,20 +17,18 @@ function initChat(initData) {
             });
             $('#m').val('');
             console.log("ROOM: " + room);
-        }
-        else if (str.indexOf(cmdName) != -1) {
+        } else if (str.indexOf(cmdName) != -1) {
             var name = str.substring(cmdName.length).trim();
             socket.emit('name', name, function (result) {
                 console.log(JSON.stringify(result));
             });
             $('#m').val('');
             console.log("NAME: " + name);
-        }
-        else {
+        } else {
             socket.emit('chat message', str);
             $('#m').val('');
             console.log("MESSAGE: ");
-        } 
+        }
         return false;
     });
 

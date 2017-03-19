@@ -29,14 +29,18 @@
 					);
 				}
 			);
-			$("#template").click(
+			$("#calendarPost").click(
 				function(){
-					$.post("/test/calendar",
-						{
-							uid: "jh2587"
-						},
-						function(data){
+					$.post("/test/calendar/jh2587",function(result){
 							alert(JSON.stringify(data));
+						}
+					);
+				}
+			);
+			$("#calendarGet").click(
+				function() {
+					$.get("/test/calendar/jh2587", function(result){
+							$("#cal").html('<iframe src="https://calendar.google.com/calendar/embed?src='+result.data.calendarid+'&ctz=America/St_Johns" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>');
 						}
 					);
 				}
@@ -50,12 +54,13 @@
 
 <button id="get">GET STUFF</button>
 <button id="post">POST STUFF</button>
-<button id="template">TEMPLATES</button>
+<button id="calendarPost">Post Calendar</button>
+<button id="calendarGet">Get Calendar</button>
 
 <br>
 <br><div id="div1"><h2>GET DATA WILL APPEAR HERE</h2></div>
 <br><div id="div2"><h2>POST DATA HERE</h2></div>
 <div id="data">Test</div>
-<iframe src="https://calendar.google.com/calendar/embed?src=6rqlb7jaeqrgrd0ov5j73tijkg@group.calendar.google.com&ctz=America/St_Johns" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>
+<div id="cal"></div>
 </body>
 </html>
