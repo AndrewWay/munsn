@@ -91,4 +91,5 @@ function onListening() {
 }
 
 module.exports = io;
-var socket = require('../utils/socket');
+var nsChat = require('../utils/socket/chat');
+var nsNotif = require('../utils/socket/notif');
