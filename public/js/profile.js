@@ -22,4 +22,8 @@ $(document).ready(function () {
 
 
 	});
+	
+	$('#infoButton #resume').click(function() {
+		window.location.href="/resume";
+	});
 });

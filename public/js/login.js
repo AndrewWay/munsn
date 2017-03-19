@@ -124,7 +124,7 @@ $(document).ready(function () {
 			}, 500);
 
 		} else {
-			alert("Not yet implemented. Integration milestone.");
+			alert("NOTE: Data will not be filled. Integration milestone.");
 			var jqxhr = $.post("/api/user/login", {
 						uid: $('#loginFields input[name="user"]').val(),
 						pass: $('#loginFields input[name="pass"]').val(),
@@ -137,6 +137,7 @@ $(document).ready(function () {
 					console.log("success");
 					console.log(JSON.stringify(jqxhr.responseJSON));
 					initChat(jqxhr.responseJSON);
+					window.location.reload("true");	//Reload page after successful login post.
 					//window.location.href = "/chat";
 					//TODO: Integration -- Go to portal with session token.
 				})

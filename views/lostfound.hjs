@@ -5,13 +5,13 @@
 	<title>{{Title}}</title>
 	<link href="/stylesheets/blank.css" rel="stylesheet"/>
 	<link href="/stylesheets/post.css" rel="stylesheet"/>
-	<link href="/stylesheets/settings.css" rel="stylesheet"/>
+	<link href="/stylesheets/profile.css" rel="stylesheet"/>
 	
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
 	<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 	
 	<script src="/js/blank.js"></script>
-	<script src="/js/settings.js"></script>
+	<script src="/js/profile.js"></script>
 
 </head>
 <body>
@@ -20,7 +20,7 @@
 
 		<div class="menu">
 		<ul>
-            <li><a href="/">Home</a></li>
+            <li><a href="#">Home</a></li>
             <li><a href="#">Groups</a></li>
             <li><a href="#">Friends</a></li>
         </ul>
@@ -39,7 +39,7 @@
 		</div>
 	</div>
 	</nav>
-	
+
 	<div id="not-center">
 		<a href="#"><div id="note">
 			{{NOT_INFO}}
@@ -54,7 +54,7 @@
 			{{NOT_INFO}}
 		</div></a>
 	</div>
-
+	
 	<div class="container">
 	<div class="sidebars" id="section-left">
 		<div class="userInfo" id="userPic">
@@ -90,28 +90,91 @@
 		
 		</div>
 	</div>
-	<div class="timeline">	
+	<div class="timeline">
+		
 		<!-- RANDOM POSTS FOR TESTING -->
-		<div class="settings" id="account"><div class="setTitle">Account Settings</div><div class="lists">Gender:   <input type="radio" name="gender" value="male" checked> Male
-  <input type="radio" name="gender" value="female"> Female
-  <input type="radio" name="gender" value="other"> Other <br>
-  <div id="newPass">
-		New password: <input type="password" name="confPass" placeholder="New Password"><br>
-					<input type="password" name="confPass" placeholder="Confirm New Password">
-	</div>
-  </div></div>
-		<div class="settings" id="privacy"><div class="setTitle">Privacy Settings</div><div class="lists"></div></div>
-		<div class="settings" id="other"><div class="setTitle">Other Settings</div><div class="lists"></div></div>
+		<div class="postTemp">
+				<div class="postInfo">
+					<div class="postPic">
+						<img src="/img/SEAHAWK_SIL.jpg">
+					</div> 
+					<div class="postName">
+						<a href="{{ POST_LINK }}"> {{ POST_NAME }} </a> <br>
+						<span>{{ POST_TIME }}</span>
+					</div>
+				</div>
+				<div class="postCont">
+					<p> {{ POST_TEXT }}</p><img src="/img/postImg.png">
+				</div>
+				
+				<div class="postComm">
+					<div class="commTemp">
+						<div class="commInfo">
+							<div class="commPic">
+								<img src="/img/SEAHAWK_SIL.jpg">
+							</div>
+							<div class="commName">
+								<a href="{{ COMM_LINK }}"> {{ COMM_NAME }} </a> <br>
+								<span>{{ COMM_TIME }}</span>
+							</div>
+						</div>
+						<div class="commCont">
+							<p> {{ COMM_TEXT }} </p>
+						</div>
+					</div>
+					<div class="commField">
+						<!--Text field for comments to be posted, followed by a submit button -->
+					</div>
+				</div>
+		</div>
 		
-		<div id="confirmChange"> Confirm changes: <input type="password" name="confPass" placeholder="Current Password"> 
-		<input type="button" value="Confirm"></div>
-		
-		
+		<div class="postTemp">
+				<div class="postInfo">
+					<div class="postPic">
+						<img src="/img/SEAHAWK_SIL.jpg">
+					</div> 
+					<div class="postName">
+						<a href="{{ POST_LINK }}"> {{ POST_NAME }} </a> <br>
+						<span>{{ POST_TIME }}</span>
+					</div>
+				</div>
+				<div class="postCont">
+					<p> {{ POST_TEXT }}</p><img src="/img/postImg.png">
+				</div>
+				
+				<div class="postComm">
+					<div class="commTemp">
+						<div class="commInfo">
+							<div class="commPic">
+								<img src="/img/SEAHAWK_SIL.jpg">
+							</div>
+							<div class="commName">
+								<a href="{{ COMM_LINK }}"> {{ COMM_NAME }} </a> <br>
+								<span>{{ COMM_TIME }}</span>
+							</div>
+						</div>
+						<div class="commCont">
+							<p> {{ COMM_TEXT }} </p>
+						</div>
+					</div>
+					<div class="commField">
+						<!--Text field for comments to be posted, followed by a submit button -->
+					</div>
+				</div>
+		</div>
 	</div>
 	<div class="sidebars" id="section-right">
-		<div id= "content-1">
+		<div class= "content-1">
+			<div id="choiceButtons"> 
+				<button id="lostChoice"> LOST </button>
+				<button id="foundChoice"> FOUND</button>
+			</div>
 		</div>
-		<div id ="content-2">
+		<div class ="content-2" id="lostContent">
+			<
+		</div>
+		<div class ="content-2" id="foundContent">
+			
 		</div>
 	</div>
 	</div>

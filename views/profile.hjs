@@ -20,7 +20,7 @@
 
 		<div class="menu">
 		<ul>
-            <li><a href="#">Home</a></li>
+            <li><a href="/">Home</a></li>
             <li><a href="#">Groups</a></li>
             <li><a href="#">Friends</a></li>
         </ul>
@@ -35,7 +35,7 @@
 		<div class="buttons">
 			<a href="#"><img id="not" src="/img/notification-red.png"></a>
 			<a href="#"><img id="log" src="/img/logout.png"></a>
-			<a href="#"><img id="cog" src="/img/settings.png"></a>
+			<a href="/settings"><img id="cog" src="/img/settings.png"></a>
 		</div>
 	</div>
 	</nav>
@@ -64,7 +64,7 @@
 			<div class="userLists" id="groupList">
 				<h5> GROUP LIST </h5>
 				<ul id="groupList">
-					<li><a href="#"> TEST1 </a></li>
+					<li><a href="/group"> TEST1 </a></li>
 					<li><a href="#"> TEST2 </a></li>
 					<li><a href="#"> TEST3 </a></li>
 				</ul>
@@ -99,15 +99,15 @@
 				<div class="info" id="dob"> {{INFO_DOB}} </div>
 				<div class="info" id="gender"> {{INFO_GENDER}} </div>
 				<div class="info" id="major"> {{INFO_MAJOR}} </div>
-				<div class="info" id="edit"> <input type="button" value="Edit Profile"> </div>
+				<div class="info" id="edit"> <button>Edit Profile</button> </div>
 			</div>
 			<div class="info" id="infoButton">
-				<input type="button" value="Add Friend">
-				<input type="button" value="Send Message">
-				<input type="button" value="Friends">
-				<input type="button" value="Groups">
-				<input type="button" value="Classes">
-				<input type="button" value="Resume">
+				<button>Add Friend</button>
+				<button>Send Message</button>
+				<button>Friends</button>
+				<button>Groups</button>
+				<button>Classes</button>
+				<button id="resume">Resume</button>
 			</div>
 			<div class="info" id="postBox">
 				<textarea id="text" placeholder="Make a post!"></textarea><input type="button" id="button" value="Submit">
