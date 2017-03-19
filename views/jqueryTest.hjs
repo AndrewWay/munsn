@@ -45,5 +45,6 @@
 <br><div id="div1"><h2>GET DATA WILL APPEAR HERE</h2></div>
 <br><div id="div2"><h2>POST DATA HERE</h2></div>
 <div id="data">Test</div>
+<iframe src="https://calendar.google.com/calendar/embed?src=6rqlb7jaeqrgrd0ov5j73tijkg@group.calendar.google.com&ctz=America/St_Johns" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>
 </body>
 </html>
