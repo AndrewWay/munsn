@@ -179,8 +179,8 @@
 				<img id="lostImgDisp" src="/img/SEAHAWK_SIL.jpg">
 				<input type="file" id="lostImg" style="display: none;" accept="image/*" />
 			</div>
-			<div class="lostClass" id="textDesc">
-				<textarea id="text" placeholder="Description..."></textarea>
+			<div class="textDesc">
+				<textarea class="text" placeholder="Description..."></textarea>
 			</div>
 			<div class="lostClass" id="lostLocation">
 				<button class="mapToggle"> Map </button> <br>
@@ -205,8 +205,8 @@
 				<img id="lostImgDisp" src="/img/SEAHAWK_SIL.jpg">
 				<input type="file" id="lostImg" style="display: none;" accept="image/*" />
 			</div>
-			<div class="foundClass" id="textDesc">
-				<textarea id="text" placeholder="Description..."></textarea>
+			<div class="textDesc">
+				<textarea class="text" placeholder="Description..."></textarea>
 			</div>
 			<div class="foundClass" id="lostLocation">
 				<button class="mapToggle"> Map </button> <br>

@@ -94,13 +94,13 @@ $(document).ready(function() {
 	****************/
 	
 	//Expand box when focused.
-	$("#textDesc #text").focus(function () {
+	$(".textDesc .text").focus(function () {
 
 
-		$("#textDesc").animate({
+		$(".textDesc").animate({
 			height: "100px"
 		}, 200);
-		$("#textDesc #text").animate({
+		$(".textDesc .text").animate({
 			height: "100px"
 		}, 200);
 
@@ -108,12 +108,12 @@ $(document).ready(function() {
 	});
 
 	//Shrink box when unfocused.
-	$("#textDesc #text").focusout(function () {
+	$(".textDesc .text").focusout(function () {
 
-		$("#textDesc").animate({
+		$(".textDesc").animate({
 			height: "30px"
 		}, 200);
-		$("#textDesc #text").animate({
+		$(".textDesc .text").animate({
 			height: "30px"
 		}, 200);
 
