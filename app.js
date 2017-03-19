@@ -22,6 +22,7 @@ var routerGroup = require('./routes/group');
 var routerSchedule = require('./routes/schedule');
 var routerSettings = require('./routes/settings');
 var routerContent = require('./routes/content');
+var routerResume = require('./routes/resume');
 
 //Beyond this point is all the code needed to start the server.
 var app = express();
@@ -79,6 +80,8 @@ app.use('/group', routerGroup);
 app.use('/schedule', routerSchedule);
 //Profile pages
 app.use('/settings', routerSettings);
+//Resume pages
+app.use('/resume', routerResume);
 //Test
 app.use('/test', routerTest);
 // catch 404 and forward to error handler

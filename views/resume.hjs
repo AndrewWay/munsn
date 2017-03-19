@@ -4,18 +4,14 @@
 	<meta charset="UTF-8">
 	<title>{{Title}}</title>
 	<link href="/stylesheets/blank.css" rel="stylesheet"/>
-	<link href="/stylesheets/schedule.css" rel="stylesheet"/>
+	<!--<link href="/stylesheets/resume.css" rel="stylesheet"/>-->
 	
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
 	<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
-	
-	<script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.js"></script>
-	<script src="http://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.2.0/fullcalendar.min.js"></script>
-	<link href="http://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.2.0/fullcalendar.min.css" rel="stylesheet"/>
-	<link href="http://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.2.0/fullcalendar.print.css" media="print" rel="stylesheet"/>
+	<script src="//mozilla.github.io/pdf.js/build/pdf.js"></script>
 	
 	<script src="/js/blank.js"></script>
-	<script src="/js/schedule.js"></script>
+	<script src="/js/resume.js"></script>
 
 </head>
 <body>
@@ -96,7 +92,16 @@
 	</div>
 
 
-	<div class="timeline"><div id="calendar"></div></div>
+	<div class="timeline">
+		<div>
+			<button id="pdfPrev">Previous</button>
+			&nbsp; &nbsp;
+			<span>Page: <span id="page_num"></span> / <span id="page_count"></span></span>
+			&nbsp; &nbsp;
+			<button id="pdfNext">Next</button>
+		</div>
+		<canvas id="canvas"></canvas>
+	</div>
 		
 	<div class="sidebars" id="section-right">
 		<div id= "content-1">
