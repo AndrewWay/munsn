@@ -258,6 +258,9 @@ mongoClient.connect(dbURL, function (err, DB) {
 	 *  - (string) data: The actual comment data
 	 *  - (date) date: The date that the comment was edited
 	 */
+
+    //The comments collection will most likely fail when using an array validator, commenting it out for now
+/*
 	DB.createCollection('comments', {
 		validator: {
 			$and: [{
@@ -269,7 +272,7 @@ mongoClient.connect(dbURL, function (err, DB) {
 		validationLevel: 'strict',
 		validationAction: 'error'
 	});
-
+*/
 	DB.createCollection('courses', {
 		validator: {
 			$and: [{

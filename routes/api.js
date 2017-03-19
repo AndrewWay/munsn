@@ -259,6 +259,22 @@ var findLost = "/lost/find";
  */
 var findGroupAdmins = "/group/admins/:gid";
 
+/**
+ * findCommentById
+ *
+ * URL:
+ * 		- %server%/api/comment/find/:uid
+ * Descript:
+ *      - Get comments by user id
+ * Method:
+ *      - GET
+ * Params:
+ *      - uid: The user id
+ * Returns:
+ *      - JSON array containing comment objects
+ */
+var findCommentById = "/comment/find/:uid";
+
 //=============================POST VERBS=============================
 
 /**
@@ -693,6 +709,58 @@ var addGroupAdmin = "/group/add/admin";
  *      - JSON mongo result
  */
 var removeGroupAdmin = "/group/remove/admin";
+
+/**
+ * addComment
+ *
+ * URL:
+ * 		- %server%/api/comment/add
+ * Descript:
+ *      - Add a comment
+ * Method:
+ *      - POST
+ * Params:
+ *      pid: The post id to which the comment belongs to
+ *      authorid: The author's id
+ *      data: The comment data
+ * Returns:
+ *      - JSON mongo result
+ */
+var addComment = "/comment/add";
+
+/**
+ * updateComment
+ *
+ * URL:
+ * 		- %server%/api/comment/update
+ * Descript:
+ *      - Update a comment
+ * Method:
+ *      - POST
+ * Params:
+ *      data: The comment data/text
+ *      commentid: The comment id
+ * Returns:
+ *      - JSON mongo result
+ */
+var updateComment = "/comment/update";
+
+/**
+ * removeComment
+ *
+ * URL:
+ * 		- %server%/api/comment/remove
+ * Descript:
+ *      - Remove a comment
+ * Method:
+ *      - POST
+ * Params:
+ *      pid: The post id to which the comment belongs to
+ *      commentid: The comment id
+ * Returns:
+ *      - JSON mongo result
+ */
+var removeComment = "/comment/remove";
 //==========================================================================================
 
 router.get(findUserById, function (req, res, next) {
@@ -973,6 +1041,30 @@ router.post(addGroupAdmin, function (req, res, next) {
 
 router.post(removeGroupAdmin, function (req, res, next) {
 	DB.GroupAdmins.remove(req, res, function (result) {
+		res.json(result);
+	});
+});
+
+router.get(findCommentById, function (req, res, next) {
+	DB.Comments.findByPostId(req, res, function (result) {
+		res.json(result);
+	});
+});
+
+router.post(addComment, function (req, res, next) {
+	DB.Comments.add(req, res, function (result) {
+		res.json(result);
+	});
+});
+
+router.post(removeComment, function (req, res, next) {
+	DB.Comments.removeById(req, res, function (result) {
+		res.json(result);
+	});
+});
+
+router.post(updateComment, function (req, res, next) {
+	DB.Comments.update(req, res, function (result) {
 		res.json(result);
 	});
 });
