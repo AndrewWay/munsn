@@ -1,3 +1,5 @@
+
+//Initialized datepicker for registration form.
 $(function () {
 	$("#datePick").datepicker({
 		changeMonth: true,
@@ -63,6 +65,9 @@ $(document).ready(function () {
 	 *Checks that form is complete, then submits it.
 	 *****************************************************/
 
+	 //TODO -- check that password and confirm password are the same.
+	 //TODO -- Make sure TOS checkbox is clicked.
+	 //TODO -- Maybe remove requirement on profile picture field?
 	$("#regSubmit").click(function () {
 		$('#regFields input[name="user"]').val($('input[name="email"]').val().split('@')[0]); //This is only need because user isn't parsed on server
 		if (!($("#regFields input").filter(function () { //If field is empty highlight it.
@@ -124,7 +129,6 @@ $(document).ready(function () {
 			}, 500);
 
 		} else {
-			alert("NOTE: Data will not be filled. Integration milestone.");
 			var jqxhr = $.post("/api/user/login", {
 						uid: $('#loginFields input[name="user"]').val(),
 						pass: $('#loginFields input[name="pass"]').val(),
@@ -151,7 +155,7 @@ $(document).ready(function () {
 	});
 
 	/*****************************************************
-	 *Handler for guest sign-in.
+	 *Handler for guest sign-in?
 	 *
 	 *@params: null
 	 *
@@ -159,7 +163,26 @@ $(document).ready(function () {
 	 *****************************************************/
 
 	$('#guestIn').click(function () {
+		//TODO -- Implementation when integrated. Can't currently sign in this way.
 		$(location).attr('href', '/');
 	});
+	
+	/***********************
+	* Other button functions
+	*
+	*@params: null
+	*
+	* Functions and behaviour for various buttons.
+	************************/
 
+	//Display terms of service when button is clicked.
+	$('#tosButton').click(function () {
+		//TODO -- Implement
+	});
+	
+	//Display prompt for password recovery. 
+	$('#forPass').click(function () {
+		//TODO -- Implement. Needs to integrate with serverside.
+	});
+	
 });
