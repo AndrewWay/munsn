@@ -3,17 +3,19 @@ var IO = require('../../bin/www');
 var clients = [];
 var nsChat = IO.of("/chat");
 
-//TODO: Document all this, add error handling
-
 //User connects to server
 nsChat.on('connection', function(socket) {
+    var room = Math.floor((Math.random() * 10) + 1);
     clients.push({
         socket: socket,
-        name: socket.id
+        name: socket.id,
+        room: room
     });
-    console.log("[CHAT]: User with id " + socket.id + " connected");
+    console.log("[CHAT]: User with id " + socket.id + " connected to room " + room);
     console.log("[CHAT]: There are currently " + clients.length + " users");
-    nsChat.emit('chat message', "User: " + socket.id + " has joined!");
+    socket.join(room);
+    //IO.emit('chat message', "User: " + socket.id + " has joined!");
+    nsChat.in(room).emit('chat message', "Connected to room: " + room)
 
     //Name
     socket.on('name', function(data, callback) {
@@ -44,18 +46,20 @@ nsChat.on('connection', function(socket) {
         var name;
         var index = clientsIndexOf(socket);
         if (index != -1) {
-            nsChat.emit('chat message', clients[index].name + ": " + msg);
+            nsChat.in(clients[index].room).emit('chat message', clients[index].name + ": " + msg);
+            //IO.emit('chat message', users[index].name + ": " + msg);
             console.log('[CHAT] ' + clients[index].name + ": " + msg);
         }
         else {
-            nsChat.emit('chat message', socket.id + ": " + msg);
+            nsChat.in(clients[index].room).emit('chat message', clients[index].name + ": " + msg);
+            //IO.emit('chat message', socket.id + ": " + msg);
             console.log('[CHAT] ' + socket.id + ": " + msg);           
         }
     });
 });
 
 /**
- * Gets the index of clients with a matching socket
+ * Gets the index of users with a matching socket
  * 
  * @param {any} search - The search term
  * @returns - Index
