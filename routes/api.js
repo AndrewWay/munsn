@@ -243,6 +243,22 @@ var findLostById = "/lost/find/:uid";
  */
 var findLost = "/lost/find";
 
+/**
+ * findGroupsAdmins
+ *
+ * URL:
+ * 		- %server%/api/group/admins/:gid
+ * Descript:
+ *      - Gets all admins in a group
+ * Method:
+ *      - GET
+ * Params:
+ *      - gid: The group id to get admins from
+ * Returns:
+ *      - JSON array containing user objects
+ */
+var findGroupAdmins = "/group/admins/:gid";
+
 //=============================POST VERBS=============================
 
 /**
@@ -642,6 +658,41 @@ var updateLost = "/lost/update";
  *      - JSON mongo result
  */
 var removeLost = "/lost/remove";
+
+/**
+ * addGroupAdmin
+ *
+ * URL:
+ * 		- %server%/api/group/add/admin
+ * Descript:
+ *      - Add an admin
+ * Method:
+ *      - POST
+ * Params:
+ *		imagePath: The path to an image if supplied
+ *		description: Description
+ *		long: Longitude
+ *		lat: Latitude
+ * Returns:
+ *      - JSON mongo result
+ */
+var addGroupAdmin = "/group/add/admin";
+
+/**
+ * removeGroupAdmin
+ *
+ * URL:
+ * 		- %server%/api/group/remove/admin
+ * Descript:
+ *      - Remove an admin
+ * Method:
+ *      - POST
+ * Params:
+ *		_id: The admin unique object id
+ * Returns:
+ *      - JSON mongo result
+ */
+var removeGroupAdmin = "/group/remove/admin";
 //==========================================================================================
 
 router.get(findUserById, function (req, res, next) {
@@ -904,6 +955,24 @@ router.post(removeLost, function (req, res, next) {
 
 router.post(updateLost, function (req, res, next) {
 	DB.LostFound.update(req, res, function (result) {
+		res.json(result);
+	});
+});
+
+router.get(findGroupAdmins, function (req, res, next) {
+	DB.GroupAdmins.find(req, res, function (result) {
+		res.json(result);
+	});
+});
+
+router.post(addGroupAdmin, function (req, res, next) {
+	DB.GroupAdmins.add(req, res, function (result) {
+		res.json(result);
+	});
+});
+
+router.post(removeGroupAdmin, function (req, res, next) {
+	DB.GroupAdmins.remove(req, res, function (result) {
 		res.json(result);
 	});
 });

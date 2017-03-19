@@ -1,5 +1,10 @@
-$(function () {
+function initChat(initData) {
+    console.log("INIT CHAT: DATA " + initData);
+    var user = initData.session.user;
     var socket = io("/chat");
+
+    socket.emit('initChat', user);
+    
     $('form').submit(function () {
         var cmdName = "/name";
         var cmdRoom = "/room";
@@ -32,4 +37,4 @@ $(function () {
     socket.on('chat message', function (msg) {
         $('#messages').append($('<li>').text(msg));
     });
-});
+};
