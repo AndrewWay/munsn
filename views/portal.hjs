@@ -20,7 +20,7 @@
 
 		<div class="menu">
 		<ul>
-            <li><a href="#">Home</a></li>
+            <li><a href="/">Home</a></li>
             <li><a href="#">Groups</a></li>
             <li><a href="#">Friends</a></li>
         </ul>
@@ -35,7 +35,7 @@
 		<div class="buttons">
 			<a href="#"><img id="not" src="/img/notification-red.png"></a>
 			<a href="#"><img id="log" src="/img/logout.png"></a>
-			<a href="#"><img id="cog" src="/img/settings.png"></a>
+			<a href="/settings"><img id="cog" src="/img/settings.png"></a>
 		</div>
 	</div>
 	</nav>
@@ -58,15 +58,15 @@
 	<div class="container">
 	<div class="sidebars" id="section-left">
 		<div class="userInfo" id="userPic">
-			<a href="{{ USER_LINK }}"><img src="/img/SEAHAWK_SIL.jpg"></a>	
+			<a href="profile/"><img src="/img/SEAHAWK_SIL.jpg"></a>	
 		</div>
 		<div class="userInfo" id="lists">
 			<div class="userLists" id="groupList">
 				<h5> GROUP LIST </h5>
 				<ul id="groupList">
-					<li><a href="#"> TEST1 </a></li>
+					<li><a href="group/"> CLICK THIS ONE </a></li>
 					<li><a href="#"> TEST2 </a></li>
-					<li><a href="#"> TEST3 </a></li>
+					<li><a href="#"> ALSO THE PICTURE </a></li>
 				</ul>
 			</div>
 		

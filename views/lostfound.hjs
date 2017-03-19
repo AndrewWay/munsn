@@ -5,13 +5,15 @@
 	<title>{{Title}}</title>
 	<link href="/stylesheets/blank.css" rel="stylesheet"/>
 	<link href="/stylesheets/post.css" rel="stylesheet"/>
-	<link href="/stylesheets/profile.css" rel="stylesheet"/>
+	<link href="/stylesheets/lostfound.css" rel="stylesheet"/>
 	
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
 	<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+	<script type="text/javascript" src='http://maps.google.com/maps/api/js?libraries=places&key=AIzaSyAOvv4l4DtmVnBj7_5R7P_lccMyffm03to'></script>
+    <script src="https://cdn.rawgit.com/Logicify/jquery-locationpicker-plugin/master/dist/locationpicker.jquery.js"></script>
 	
 	<script src="/js/blank.js"></script>
-	<script src="/js/profile.js"></script>
+	<script src="/js/lostfound.js"></script>
 
 </head>
 <body>
@@ -20,7 +22,7 @@
 
 		<div class="menu">
 		<ul>
-            <li><a href="/">Home</a></li>
+            <li><a href="#">Home</a></li>
             <li><a href="#">Groups</a></li>
             <li><a href="#">Friends</a></li>
         </ul>
@@ -35,7 +37,7 @@
 		<div class="buttons">
 			<a href="#"><img id="not" src="/img/notification-red.png"></a>
 			<a href="#"><img id="log" src="/img/logout.png"></a>
-			<a href="/settings"><img id="cog" src="/img/settings.png"></a>
+			<a href="#"><img id="cog" src="/img/settings.png"></a>
 		</div>
 	</div>
 	</nav>
@@ -64,7 +66,7 @@
 			<div class="userLists" id="groupList">
 				<h5> GROUP LIST </h5>
 				<ul id="groupList">
-					<li><a href="/group"> TEST1 </a></li>
+					<li><a href="#"> TEST1 </a></li>
 					<li><a href="#"> TEST2 </a></li>
 					<li><a href="#"> TEST3 </a></li>
 				</ul>
@@ -92,28 +94,7 @@
 	</div>
 	<div class="timeline">
 		
-		<div id="infoContainer">
-			<div class="info" id="infoPic"><img src="/img/SEAHAWK_SIL.jpg"></div>
-			<div class="info" id="infoText">
-				<div class="info" id="name"> {{INFO_NAME}} </div>
-				<div class="info" id="dob"> {{INFO_DOB}} </div>
-				<div class="info" id="gender"> {{INFO_GENDER}} </div>
-				<div class="info" id="major"> {{INFO_MAJOR}} </div>
-				<div class="info" id="edit"> <button>Edit Profile</button> </div>
-			</div>
-			<div class="info" id="infoButton">
-				<button>Add Friend</button>
-				<button>Send Message</button>
-				<button>Friends</button>
-				<button>Groups</button>
-				<button>Classes</button>
-				<button id="resume">Resume</button>
-			</div>
-			<div class="info" id="postBox">
-				<textarea id="text" placeholder="Make a post!"></textarea><input type="button" id="button" value="Submit">
-			
-			</div>		
-		</div>
+		<div id="mapHolder"><div id="map"> </div></div>
 		
 		<!-- RANDOM POSTS FOR TESTING -->
 		<div class="postTemp">
@@ -188,9 +169,58 @@
 	</div>
 	<div class="sidebars" id="section-right">
 		<div class= "content-1">
-		TEST <br>
+			<div id="choiceButtons"> 
+				<button id="lostChoice"> LOST </button>
+				<button id="foundChoice"> FOUND</button>
+			</div>
 		</div>
-		<div class ="content-2">
+		<div class="content-2" id="lostContent">
+			<div class="lostClass" id="lostImage">
+				<img id="lostImgDisp" src="/img/SEAHAWK_SIL.jpg">
+				<input type="file" id="lostImg" style="display: none;" accept="image/*" />
+			</div>
+			<div class="textDesc">
+				<textarea class="text" placeholder="Description..."></textarea>
+			</div>
+			<div class="lostClass" id="lostLocation">
+				<button class="mapToggle"> Map </button> <br>
+				<input type="hidden" name="lat" id="lat"/>
+
+				<input type="hidden" name="long" id="long"/>
+				
+				<label for="long">Location</label> 
+				<input type="text" name="locate" class="locate"/>
+				
+				<label for="name">Contact Info</label> 
+				<input class="contact" type="text" name="name" id="name" placeholder="Name"/>
+				<input class="contact" type="text" name="phone" id="phone" placeholder="Phone #"/>
+				<input class="contact" type="text" name="email" id="email" placeholder="E-Mail"/>
+				
+				<button class="submitLF" id="submitLost"> Submit Lost Item </button>
+			</div>
+		</div>
+		
+		<div class="content-2" id="foundContent">
+			<div class="foundClass" id="lostImage">
+				<img id="lostImgDisp" src="/img/SEAHAWK_SIL.jpg">
+				<input type="file" id="lostImg" style="display: none;" accept="image/*" />
+			</div>
+			<div class="textDesc">
+				<textarea class="text" placeholder="Description..."></textarea>
+			</div>
+			<div class="foundClass" id="lostLocation">
+				<button class="mapToggle"> Map </button> <br>
+				
+				<label for="long">Location</label> 
+				<input type="text" class="locate" name="locate"/>
+				
+				<label for="name">Contact Info</label> 
+				<input class="contact" type="text" name="name" id="name" placeholder="Name"/>
+				<input class="contact" type="text" name="phone" id="phone" placeholder="Phone #"/>
+				<input class="contact" type="text" name="email" id="email" placeholder="E-Mail"/>
+				
+				<button class="submitLF" id="submitFound"> Submit Found Item </button>
+			</div>
 		</div>
 	</div>
 	</div>

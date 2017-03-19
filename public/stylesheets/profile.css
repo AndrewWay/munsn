@@ -61,12 +61,16 @@
 }
 
 #infoButton {
+	position: relative;
 	margin-top: 10px;
 	margin-left: 10px;
 	width: 100%;
+	top: -55px;
 }
 
 #postBox {
+	position: relative;
+	top: -55px;
 	width: 96%;
 	
 	display: inline-block;

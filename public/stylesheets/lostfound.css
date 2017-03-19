@@ -1,0 +1,103 @@
+#choiceButtons {
+	width: 80%;
+	display: block;
+	margin: auto;
+}
+
+#choiceButtons button {
+	display: inline-block;
+	width: 48%;
+	margin: 0;
+	padding: 0;
+}
+
+#choiceButtons #lostChoice {
+	border-top-left-radius: 10px;
+	border-bottom-left-radius: 10px;
+	box-shadow: 1px 1px 5px #555 inset;
+}
+
+#choiceButtons #foundChoice {
+	border-top-right-radius: 10px;
+	border-bottom-right-radius: 10px;
+	box-shadow: none;
+}
+
+#lostImage {
+	width: 100%;
+}
+
+#lostImgDisp {
+	width: 150px;
+	display: block;
+	margin: auto;
+	cursor: pointer;
+	border-radius: 10px;
+}
+
+.content-2 input {
+	width: 95%;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.content-2 textarea {
+	width: 95%;
+	height: 30px;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.textDesc {
+	height: 30px;
+}
+
+#lostContent {
+	
+}
+
+#foundContent {
+	display: none;
+}
+
+.mapToggle {
+	display: block;
+	margin: auto;
+	width: 95%;
+}
+
+#mapHolder {
+	background-color: #aaaaaa;
+	position: absolute;
+	height: 550px;
+	width: 0px;
+	overflow: hidden;
+	right: 0;
+	
+	border: 1px solid #dddddd;
+	border-right: none;
+	border-top: none;
+	
+	z-index: 2;
+}
+
+#map {
+	height:500px;
+	width: 500px;
+	margin: auto;
+	margin-top: 25px;
+
+}
+
+.contact {
+	margin-top: 5px;
+}
+
+.submitLF {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 10px;
+}
