@@ -45,6 +45,7 @@
 					);
 				}
 			);
+			alert(new Date(Date.now()).toISOString());
 		}
 	);
 </script>

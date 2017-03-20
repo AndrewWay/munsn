@@ -44,7 +44,8 @@ app.use(
 		unset: 'destroy',
 		rolling: true,
 		store: new MongoStore({
-			url: db.DB_URL
+			url: db.DB_URL,
+			stringify: false
 		})
 	})
 );
