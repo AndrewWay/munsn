@@ -9,7 +9,9 @@
 	
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
 	<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
-	
+    <script src="jquery-3.1.1.min.js"></script>
+	<script src="/socket.io/socket.io.js"></script>	
+ 	<script src="/js/chat.js"></script> 
 	<script src="/js/blank.js"></script>
 	<script src="/js/portal.js"></script>
 
@@ -83,7 +85,7 @@
 				<h5> OTHER LIST </h5>
 				<ul id="otherList">
 					<li><a href="/lostfound"> Lost & Found </a></li>
-					<li><a href="#"> TEST2 </a></li>
+					<li><a href="#"> </a></li>
 					<li><a href="#"> TEST3 </a></li>
 				</ul>
 			</div>
@@ -168,6 +170,7 @@
 				</div>
 		</div>
 	</div>
+	
 	<div class="sidebars" id="section-right">
 		<div class= "content-1">
 			<h5> Suggested Friends </h5>
@@ -183,6 +186,9 @@
 		<div class="content-2">
 		</div>
 	</div>
+	
+	<div id="chat"> <div id="chatTop"> CHAT </div><iframe src="/chat" id="chatBox" name="chat"></iframe> </div>
+	<button id="chatButton"> CHAT </button>
 	</div>
 </body>
 </html>

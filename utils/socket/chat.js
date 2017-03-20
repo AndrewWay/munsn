@@ -1,24 +1,34 @@
 var IO = require('../../bin/www');
+var app = require('../../app');
 
 var clients = [];
-var nsChat = IO.of("/chat");
+var nsChat = IO.of("/chat").use(IO.sharedsession(app.session, {
+    autoSave: true
+}));
+
+//SESSIONS:
+//socket.handshake.session
 
 //User connects to server
 nsChat.on('connection', function(socket) {
 
     //Init chat event
     socket.on('initChat', function(data, callback) {
-        console.log("DATA " + JSON.stringify(data));
+        console.log("session user " + JSON.stringify(socket.handshake.session.user));
+        var user = socket.handshake.session.user;
+        console.log("USER " + JSON.stringify(user));
         var room = Math.floor((Math.random() * 10) + 1);
         var name = socket.id;
-        if (data._id) name = data._id;
+        if (user._id) name = user._id;
         var client = {
             socket: socket,
             name: name,
             room: room            
         };
+        socket.handshake.session.room = room;
+        console.log("USER " + JSON.stringify(socket.handshake.session));       
         clients.push(client);
-        console.log("[CHAT][ROOM " + client.room + "]["  + client.name + "] Connected!");
+        console.log("[CHAT][ROOM " + client.room + "]["  + client.name + "][ID " + client.socket.id + "] Connected!");
         socket.join(client.room);
         nsChat.in(room).emit('chat message', "[ROOM " + client.room + "] " + client.name + " Connected!");
     });
