@@ -29,8 +29,13 @@ router.post('/', function (req, res, next) {
 		}
 	});
 });
-router.post('/calendar', function (req, res, next) {
+router.post('/calendar/:uid', function (req, res, next) {
 	DB.Calendar.add(req, res, function (result) {
+		res.json(result);
+	});
+});
+router.get('/calendar/:uid', function (req, res, next) {
+	DB.Calendar.find(req, res, function (result) {
 		res.json(result);
 	});
 });

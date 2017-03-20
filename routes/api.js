@@ -799,8 +799,6 @@ router.post(registerUser, function (req, res, next) {
 
 //POST login user
 router.post(loginUser, function (req, res, next) {
-	//TODO: DEVIN, THIS NEEDS TO BE CHECKED AGAIN
-	//TODO: ADD A LOGOUT
 	DB.Users.login(req, res, function (result) {
 		res.json(result);
 	});

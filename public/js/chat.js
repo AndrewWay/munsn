@@ -4,11 +4,12 @@ $(function () {
     var init = false;
     $('form').submit(function () {
         if (!init) {
-            socket.emit('initChat', {_id: $('#m').val()});
+            socket.emit('initChat', {
+                _id: $('#m').val()
+            });
             $('#m').val('');
             init = true;
-        }
-        else {
+        } else {
             var cmdName = "/name";
             var cmdRoom = "/room";
             var str = $('#m').val();
@@ -19,20 +20,18 @@ $(function () {
                 });
                 $('#m').val('');
                 console.log("ROOM: " + room);
-            }
-            else if (str.indexOf(cmdName) != -1) {
+            } else if (str.indexOf(cmdName) != -1) {
                 var name = str.substring(cmdName.length).trim();
                 socket.emit('name', name, function (result) {
                     console.log(JSON.stringify(result));
                 });
                 $('#m').val('');
                 console.log("NAME: " + name);
-            }
-            else {
+            } else {
                 socket.emit('chat message', str);
                 $('#m').val('');
                 console.log("MESSAGE: ");
-            } 
+            }
         }
         return false;
     });
@@ -41,7 +40,7 @@ $(function () {
         $('#messages').append($('<li>').text(msg));
     });
 
-    $('#m').focus(function() {
+    $('#m').focus(function () {
         $('#m').val('');
     });
 });

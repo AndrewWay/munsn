@@ -39,7 +39,7 @@ app.use(
 		cookie: {
 			path: '/',
 			httpOnly: true,
-			maxAge: 60000
+			maxAge: 600000
 		},
 		unset: 'destroy',
 		rolling: true,
