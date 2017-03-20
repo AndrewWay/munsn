@@ -30,8 +30,8 @@ var app = express();
 
 //Busboy used for file uploading to the server
 app.use(busboy());
-app.use(
-	session({
+
+var sess = 	session({
 		secret: 'faeb4453e5d14fe6f6d04637f78077c76c73d1b4',
 		proxy: true,
 		resave: true,
@@ -46,7 +46,8 @@ app.use(
 		store: new MongoStore({
 			url: db.DB_URL
 		})
-	})
+	});
+app.use(sess
 );
 
 // view engine setup
@@ -105,4 +106,5 @@ app.use(function (err, req, res, next) {
 	res.render('error');
 });
 
+app.session = sess;
 module.exports = app;
