@@ -16,6 +16,8 @@ nsChat.on('connection', function(socket) {
     socket.on('initChat', function(data, callback) {
         console.log("session user " + JSON.stringify(socket.handshake.session.user));
         var user = socket.handshake.session.user;
+        socket.handshake.session.socketid = socket.id;
+        var index = clientsIndexOf(socket);
         console.log("USER " + JSON.stringify(user));
         var room = Math.floor((Math.random() * 10) + 1);
         var name = socket.id;
