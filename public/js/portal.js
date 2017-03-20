@@ -57,4 +57,22 @@ $(document).ready(function () {
 		
 	
 	});
+	
+	/*************************
+	* Chat popout
+	*
+	*@params: null
+	*
+	* Opens a chat box
+	*************************/
+	
+	$('#chatButton').click(function() {
+		$('#chatButton').hide();
+		$('#chat').animate({height: "300px"},200);
+	});
+	
+	$('#chatTop').click(function(){
+		$('#chatButton').show();
+		$('#chat').animate({height: "0px"},200);
+	});
 });

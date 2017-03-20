@@ -83,7 +83,7 @@
 				<h5> OTHER LIST </h5>
 				<ul id="otherList">
 					<li><a href="/lostfound"> Lost & Found </a></li>
-					<li><a href="#"> TEST2 </a></li>
+					<li><a href="#"> </a></li>
 					<li><a href="#"> TEST3 </a></li>
 				</ul>
 			</div>
@@ -168,6 +168,7 @@
 				</div>
 		</div>
 	</div>
+	
 	<div class="sidebars" id="section-right">
 		<div class= "content-1">
 			<h5> Suggested Friends </h5>
@@ -183,6 +184,9 @@
 		<div class="content-2">
 		</div>
 	</div>
+	
+	<div id="chat"> <div id="chatTop"> CHAT </div><iframe src="/chat" id="chatBox" name="chat"></iframe> </div>
+	<button id="chatButton"> CHAT </button>
 	</div>
 </body>
 </html>
