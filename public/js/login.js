@@ -139,7 +139,6 @@ $(document).ready(function () {
 				.done(function () {
 					console.log("success");
 					console.log(JSON.stringify(jqxhr.responseJSON));
-					initChat(jqxhr.responseJSON);
 					window.location.reload("true"); //Reload page after successful login post.
 					//window.location.href = "/chat";
 					//TODO: Integration -- Go to portal with session token.
