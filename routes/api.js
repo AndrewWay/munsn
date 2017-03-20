@@ -395,7 +395,7 @@ var delFriendReq = "/user/remove/request";
  *      - uid: The user id to delete the friend from
  * 		- fid: The friend id to delete the friendship from
  * Returns:
- *      - devin?
+ *      - Mongo result
  */
 var delFriend = "/user/remove/friend";
 
@@ -798,7 +798,6 @@ router.post(registerUser, function (req, res, next) {
 });
 
 //POST login user
-//sessions: just a tag to find session example, dont worry about this line
 router.post(loginUser, function (req, res, next) {
 	//TODO: DEVIN, THIS NEEDS TO BE CHECKED AGAIN
 	//TODO: ADD A LOGOUT
@@ -814,19 +813,6 @@ router.get(findFriendsById, function (req, res, next) {
 	});
 
 });
-
-/*
-//POST add friendId to userId
-router.post('/post/addFriend', function(req, res, next) {
-		if (req.body.userId && req.body.friendId) {
-				DB.friends_addFriendToUser(req.body.userId, req.body.friendId, function(result) {
-						console.log(result);
-						res.json(JSON.stringify(result));
-				});
-		}
-});
-*/
-
 
 router.post(addFriendReq, function (req, res, next) {
 	DB.Friends.addRequest(req, res, function (result) {
@@ -855,9 +841,6 @@ router.post(delFriendReq, function (req, res, next) {
 	});
 });
 
-//POST remove friendId from userId
-//Return json response
-//Result: xy, where x is 0 for no error, 1 for error, y is 0 for successful deletion, 1 for unsuccessful deletion
 router.post(delFriend, function (req, res, next) {
 	DB.Friends.remove(req, res, function (result) {
 		res.json(result);
