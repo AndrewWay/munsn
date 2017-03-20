@@ -12,7 +12,7 @@
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
 	<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 	<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />  
-    <script src="jquery-3.1.1.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.0.min.js"></script>
 	<script src="/js/login.js"></script>
 </head>
 
