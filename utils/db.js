@@ -240,7 +240,7 @@ mongoClient.connect(dbURL, function (err, DB) {
 				}
 			}, {
 				data: {
-					$type: 'string'
+					$type: 'object'
 				}
 			}]
 		},
