@@ -5,25 +5,13 @@ var nsChat = IO.of("/chat");
 
 //User connects to server
 nsChat.on('connection', function(socket) {
-    /*
-    var room = Math.floor((Math.random() * 10) + 1);
-    clients.push({
-        socket: socket,
-        name: socket.id,
-        room: room
-    });
-    console.log("[CHAT]: User with id " + socket.id + " connected to room " + room);
-    console.log("[CHAT]: There are currently " + clients.length + " users");
-    socket.join(room);
-    //IO.emit('chat message', "User: " + socket.id + " has joined!");
-    nsChat.in(room).emit('chat message', "Connected to room: " + room)
-    */
+
     //Init chat event
     socket.on('initChat', function(data, callback) {
         console.log("DATA " + JSON.stringify(data));
         var room = Math.floor((Math.random() * 10) + 1);
         var name = socket.id;
-        if (data.name) name = data._id;
+        if (data._id) name = data._id;
         var client = {
             socket: socket,
             name: name,
@@ -32,8 +20,7 @@ nsChat.on('connection', function(socket) {
         clients.push(client);
         console.log("[CHAT][ROOM " + client.room + "]["  + client.name + "] Connected!");
         socket.join(client.room);
-        //IO.emit('chat message', "User: " + socket.id + " has joined!");
-        nsChat.in(room).emit('chat message', "[ROOM " + client.room + "][" + client.name + "] Connected!");
+        nsChat.in(room).emit('chat message', "[ROOM " + client.room + "] " + client.name + " Connected!");
     });
 
     //Name
@@ -50,7 +37,7 @@ nsChat.on('connection', function(socket) {
         }
     });
 
-    //Name
+    //Room
     socket.on('room', function(data, callback) {
         console.log("ROOM:" + data);
         var index = clientsIndexOf(socket);
@@ -77,19 +64,19 @@ nsChat.on('connection', function(socket) {
     });
 
     //Chat message
+    //TODO: cleanup
     socket.on('chat message', function(msg){
         var name;
         var index = clientsIndexOf(socket);
         if (index != -1) {
-            nsChat.in(clients[index].room).emit('chat message', clients[index].name + ": " + msg);
+            nsChat.in(clients[index].room).emit('chat message', "[ROOM " + clients[index].room + "] " + clients[index].name + ": " + msg);
             //IO.emit('chat message', users[index].name + ": " + msg);
-            console.log('[CHAT] ' + clients[index].name + ": " + msg);
+            console.log("[CHAT][ROOM " + clients[index].room + "] " + clients[index].name + ": " + msg);
         }
         else {
-            nsChat.in(clients[index].room).emit('chat message', clients[index].name + ": " + msg);
+            nsChat.in(clients[index].room).emit('chat message', "[ROOM " + clients[index].room + "] " + clients[index].name + ": " + msg);
             //IO.emit('chat message', socket.id + ": " + msg);
-            console.log('[CHAT] ' + socket.id + ": " + msg);           
-        }
+            console.log("[CHAT][ROOM " + clients[index].room + "] " + clients[index].name + ": " + msg);        }
     });
 });
 

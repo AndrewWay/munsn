@@ -111,7 +111,7 @@ $(document).ready(function () {
 	 *
 	 *Checks that form is complete, then submits it.
 	 *****************************************************/
-
+    
 	$("#logSubmit").click(function () {
 		if (!($("#loginFields input").filter(function () { //If field is empty highlight it.
 				return $.trim($(this).val()).length === 0
@@ -136,9 +136,7 @@ $(document).ready(function () {
 				.done(function () {
 					console.log("success");
 					console.log(JSON.stringify(jqxhr.responseJSON));
-					initChat(jqxhr.responseJSON);
 					window.location.reload("true");	//Reload page after successful login post.
-					//window.location.href = "/chat";
 					//TODO: Integration -- Go to portal with session token.
 				})
 				.fail(function () {
