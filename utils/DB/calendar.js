@@ -2,7 +2,86 @@ var fs = require('fs');
 var path = require('path');
 var googleFuncs = require('../googleFuncs');
 var googleapi = require('googleapis');
+var calendar = googleapi.calendar('v3');
+var MUNSNCal = {};
+MUNSNCal.add = function (data, callback) {
+	googleFuncs.getKey(function (key) {
+		calendar.calendars.insert({
+			auth: key,
+			resource: {
+				summary: data.uid
+			}
+		}, function (err, result) {
+			var acl = {
+				calendarId: result.id,
+				role: 'writer',
+				type: 'user',
+				value: data.uid + '@mun.ca'
+			};
+			MUNSNCal.addACL({
+				calendarId: acl.calendarId
+			});
+			MUNSNCal.addACL(acl);
+			callback(err, result);
+		});
+	});
+};
+MUNSNCal.addACL = function (data, callback) {
+	googleFuncs.getKey(function (key) {
+		calendar.acl.insert({
+			auth: key,
+			calendarId: data.calendarId,
+			resource: {
+				role: data.role || 'reader',
+				scope: {
+					type: data.type || 'default',
+					value: data.value || undefined
+				}
+			}
+		}, callback);
+	});
+};
+MUNSNCal.removeACL = function (data, callback) {
+	googleFuncs.getKey(function (key) {
+		calendar.acl.delete({
+			auth: key,
+			calendarId: data.calendarid,
+			resource: {
+				ruleId: 'user:' + data.uid + '@mun.ca'
+			}
+		}, callback);
+	});
+};
+MUNSNCal.addEvent = function (data, callback) {
+	googleFuncs.getKey(function (key) {
+		calendar.events.insert({
+			auth: key,
+			calendarId: data.calendarid,
+			resource: {
 
+			}
+		}, callback);
+	});
+};
+MUNSNCal.removeEvent = function (data, callback) {
+	googleFuncs.getKey(function (key) {
+		calendar.events.remove({
+			auth: key,
+			calendarId: data.calendarid,
+			resource: {
+
+			}
+		}, callback);
+	});
+};
+MUNSNCal.remove = function (data, callback) {
+	googleFuncs.getKey(function (key) {
+		calendar.calendars.delete({
+			auth: key,
+			calendarId: data.calendarid
+		}, callback);
+	});
+};
 module.exports = function (DBCalendar, collectionCalendar) {
 	DBCalendar.add = function (req, res, callback) {
 		console.log("[DBCalendar] Add: '" + req.params.uid + "'");
@@ -17,11 +96,8 @@ module.exports = function (DBCalendar, collectionCalendar) {
 					});
 				} else {
 					if (!result) {
-						googleapi.calendar('v3').calendars.insert({
-							auth: key,
-							resource: {
-								summary: req.params.uid
-							}
+						MUNSNCal.add({
+							uid: req.params.uid
 						}, function (err, result) {
 							if (err) {
 								console.log("[DBCalendar] Add: '" + err.message + "'");
@@ -76,10 +152,48 @@ module.exports = function (DBCalendar, collectionCalendar) {
 			}
 		});
 	};
+	DBCalendar.remove = function (req, res, callback) {
+		console.log("[DBCalendar] Remove: '" + req.params.uid + "'");
+		collectionCalendar.findOne({
+			_id: req.params.uid
+		}, function (err, result) {
+			if (err) {
+				console.log("[DBCalendar] Remove: " + err.message);
+				callback({
+					status: 'fail'
+				});
+			} else {
+				var row = result;
+				collectionCalendar.remove({
+					_id: req.params.uid
+				}, function (err, result) {
+					if (err) {
+						console.log("[DBCalendar] Remove: " + err.message);
+						callback({
+							status: 'fail'
+						});
+					} else {
+						MUNSNCal.remove(row, function (err, result) {
+							if (err) {
+								console.log("[MUNSNCal] Remove: '" + err + "'");
+								callback({
+									status: 'fail'
+								});
+							} else {
+								callback({
+									status: 'ok'
+								});
+							}
+						});
+					}
+				});
+			}
+		});
+	};
 	DBCalendar.insertEvent = function (req, res, callback) {
 		googleFuncs.getKey(
 			function (key) {
-				googleapi.calendar('v3').events.insert({
+				calendar.events.insert({
 						auth: key,
 						calendarId: "6rqlb7jaeqrgrd0ov5j73tijkg@group.calendar.google.com",
 						resource: {
@@ -96,7 +210,7 @@ module.exports = function (DBCalendar, collectionCalendar) {
 	DBCalendar.addACL = function (req, res, callback) {
 		googleFuncs.getKey(
 			function (key) {
-				googleapi.calendar('v3').acl.insert({
+				calendar.acl.insert({
 						auth: key,
 						calendarId: "6rqlb7jaeqrgrd0ov5j73tijkg@group.calendar.google.com"
 					},

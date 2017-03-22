@@ -39,4 +39,9 @@ router.get('/calendar/:uid', function (req, res, next) {
 		res.json(result);
 	});
 });
+router.delete('/calendar/:uid', function (req, res, next) {
+	DB.Calendar.remove(req, res, function (result) {
+		res.json(result);
+	});
+});
 module.exports = router;

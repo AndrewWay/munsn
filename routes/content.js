@@ -5,7 +5,7 @@ var utils = require('../utils/utils');
 
 /**
  * Return User profile picture named 'profile'
- * HTMLImage Example: src='/content/image/user/user123'
+ * GET -> '/content/image/profile/:uid'
  */
 router.get('/image/profile/:uid', function (req, res, next) {
 	var file = utils.findFiles('profile', path.join(__dirname, '../content/images/user/' + req.params.uid)).next().value;
@@ -15,7 +15,7 @@ router.get('/image/profile/:uid', function (req, res, next) {
 });
 /**
  * Return Group profile picture named 'group'
- * HTMLImage Example: src='/content/image/group/group123'
+ * GET -> '/content/image/group/:gid'
  */
 router.get('/image/group/:gid', function (req, res, next) {
 	var file = utils.findFiles('group', path.join(__dirname, '../content/images/group/' + req.params.gid)).next().value;
@@ -25,7 +25,7 @@ router.get('/image/group/:gid', function (req, res, next) {
 });
 /**
  * Return User resume named 'resume.pdf'
- * Resume Example: src='/content/resume/user/user123'
+ * GET -> src='/content/resume/user/:uid'
  */
 router.get('/resume/user/:uid', function (req, res, next) {
 	var file = utils.findFiles('resume', path.join(__dirname, '../content/resumes/user/' + req.params.uid)).next().value;
@@ -35,7 +35,7 @@ router.get('/resume/user/:uid', function (req, res, next) {
 });
 /**
  * Return a Post Image or other file based on the postid, saves the file as the id for the name
- * Example: src='/content/posts/post123/any123'
+ * GET -> '/content/posts/:pid/:id'
  */
 router.get('/posts/:pid/:id', function (req, res, next) {
 	var file = utils.findFiles(req.params.id, path.join(__dirname, '../content/posts/' + req.params.pid)).next().value;
@@ -46,7 +46,7 @@ router.get('/posts/:pid/:id', function (req, res, next) {
 
 /**
  * Upload a User profile image based on the userid
- * HTMLForm Example: action='/content/image/user/user123'
+ * POST -> '/content/image/profile/:uid'
  */
 router.post('/image/profile/:uid', function (req, res, next) {
 	utils.uploadImage(req, 'user/' + req.params.uid, 'profile', function (result) {
@@ -56,7 +56,7 @@ router.post('/image/profile/:uid', function (req, res, next) {
 
 /**
  * Upload a Group profile image based on the groupid
- * HTMLForm Example: action='/content/image/group/test123'
+ * POST -> '/content/image/group/:gid'
  */
 router.post('/image/group/:gid', function (req, res, next) {
 	utils.uploadImage(req, 'group/' + req.params.gid, 'group', function (result) {
@@ -65,7 +65,7 @@ router.post('/image/group/:gid', function (req, res, next) {
 });
 /**
  * Upload a User Resume based on the userid
- * Resume Example: src='/content/resume/user/user123'
+ * POST -> '/content/resume/user/:uid'
  */
 router.post('/resume/user/:uid', function (req, res, next) {
 	utils.upload(req, 'resumes/user/' + req.params.uid, 'resume', function (result) {
@@ -75,7 +75,7 @@ router.post('/resume/user/:uid', function (req, res, next) {
 /**
  * Upload a Post Image or other file based on the postid, saves the file as the id for the name
  * NOTE: ONLY SUPPORTS ONE FILE PER POST RIGHT NOW
- * Example: action='/content/posts/post123/any123'
+ * POST -> '/content/posts/:pid/:id'
  */
 router.post('/posts/:pid/:id', function (req, res, next) {
 	utils.upload(req, 'posts/' + req.params.pid + '/', req.params.id, function (result) {

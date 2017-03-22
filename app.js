@@ -63,7 +63,6 @@ app.use(
 		extended: false
 	})
 );
-app.use(cookieParser());
 //Public folder accessible everywhere
 app.use(express.static(path.join(__dirname, 'public')));
 //Index Page

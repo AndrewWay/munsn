@@ -30,10 +30,10 @@ router.get('/logout', function (req, res, next) {
 	if (req.session.user) {
 		req.session.destroy();
 		//TODO: This doesn't fix the URL and causes logging into the resulting render to not work or something
-		res.render('login', {
-			title: 'login'
-		});
+
 	}
+
+	res.redirect('../');
 });
 
 router.get('/chat', function (req, res, next) {
