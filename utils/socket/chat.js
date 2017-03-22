@@ -116,10 +116,11 @@ nsChat.on('connection', function (socket) {
         DB.Socket.findSid(socket.id, function (err, result) {
             if (err) {
                 console.error("[Socket]", err);
+            } else {
+                console.log("[CHAT][MESSAGE]", JSON.stringify(result));
+                //console.log(JSON.stringify(IO.sockets.connected[result.socketid]));
+                nsChat.in(room).emit('chat message', "[ROOM " + room + "] " + result._id + ": " + msg);
             }
-            console.log("[CHAT][MESSAGE]", JSON.stringify(result));
-            //console.log(JSON.stringify(IO.sockets.connected[result.socketid]));
-            nsChat.in(room).emit('chat message', "[ROOM " + room + "] " + result._id + ": " + msg);
         });
     });
 
