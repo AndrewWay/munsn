@@ -88,7 +88,7 @@ module.exports = function (DBAuth, collectionAuths, collectionUsers, MAX_VALIDAT
 	};
 	//Check for an existing authkey
 	DBAuth.find = function (req, res, callback) {
-		console.error("[DBAuth] Find", "'" + req.query.key + "'");
+		console.log("[DBAuth] Find", "'" + req.query.key + "'");
 		collectionAuths.findOne({
 			key: req.query.key
 		}, function (err, result) {
@@ -131,13 +131,13 @@ module.exports = function (DBAuth, collectionAuths, collectionUsers, MAX_VALIDAT
 					upsert: true
 				}, function (err, result) {
 					if (err) {
-						console.error("[DBUsers] Update", err.message);
+						console.error("[DBAuth] Remove", err.message);
 						callback({
 							session: req.session,
 							status: 'fail'
 						});
 					} else {
-						console.error("[DBUsers] Update", "'" + auth.userid + "'->'{auth:'true'}");
+						console.log("[DBAuth] Remove->Update", "'{auth:'true'}'->'" + auth.userid + "'");
 						callback({
 							session: req.session,
 							status: 'ok'
