@@ -201,6 +201,7 @@ module.exports = function (DBUsers, DBAuth, collectionUsers) {
 								session: req.session,
 								status: 'ok'
 							});
+							console.log("[SESSION]: 'Created'->'" + JSON.stringify(req.session) + "'");
 						} else {
 							console.log("[DBUsers] Login->isAuth?: 'Failed'->'" + result._id + "'");
 							callback({
@@ -208,7 +209,6 @@ module.exports = function (DBUsers, DBAuth, collectionUsers) {
 								status: 'fail'
 							});
 						}
-						console.log("[SESSION]: 'Created'->'" + JSON.stringify(req.session) + "'");
 					}
 				});
 			} else {
