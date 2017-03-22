@@ -1,6 +1,10 @@
+var currentRoom;
+
 $(function () {
     var socket = io("/chat");
-    socket.emit('initChat', null);
+    socket.emit('initChat', null, function(result) {
+        currentRoom = result;
+    });
     console.log("init chat");
     $('form').submit(function () {
         var cmdName = "/name";
@@ -9,6 +13,7 @@ $(function () {
         if (str.indexOf(cmdRoom) != -1) {
             var room = str.substring(cmdRoom.length).trim();
             socket.emit('room', room, function (result) {
+                currentRoom = result;
                 console.log(JSON.stringify(result));
             });
             $('#m').val('');
@@ -23,7 +28,7 @@ $(function () {
             console.log("NAME: " + name);
         }
         else {
-            socket.emit('chat message', str);
+            socket.emit('chat message', currentRoom, str);
             $('#m').val('');
             console.log("MESSAGE: " + str);
         } 

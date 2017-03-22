@@ -18,11 +18,7 @@ nsChat.on('connection', function (socket) {
         //Get session
         var session = socket.handshake.session;
         if (session && session.user) {
-            //Update users socketid
-            var updates = {
-                "socket.id": socket.id
-            };
-            DB.Socket.update(session.user._id, updates, function (err, result) {
+            DB.Socket.findAndUpdate(session.user._id, socket.id, function (err, result) {
                 if (err) {
                     console.error("[DBSocket] Update: " + err.message);
                     callback({
@@ -31,11 +27,12 @@ nsChat.on('connection', function (socket) {
                     });
                 } else {
                     //Set random room
-                    var room = Math.floor((Math.random() * 2) + 1);
+                    var room = Math.floor((Math.random() * 10) + 1);
                     //Print to console and chat room
-                    console.log("[CHAT][ROOM " + room + "][" + session.user._id + "][ID " + socket.id + "] Connected!");
+                    console.log(result);
+                    console.log("[CHAT][ROOM " + room + "][" + result.value._id + "][ID " + result.value.socketid + "] Connected!");
                     socket.join(room);
-                    nsChat.in(room).emit('chat message', "[ROOM " + room + "] " + session.user._id + " Connected!");
+                    nsChat.in(room).emit('chat message', "[ROOM " + room + "] " + result.value._id + " Connected!");
                     callback(room);
                 }
             });
@@ -87,8 +84,9 @@ nsChat.on('connection', function (socket) {
 
     socket.on('room', function (data, callback) {
         socket.join(data);
+        nsChat.in(data).emit('chat message', "[ROOM " + data + "] " + socket.id + " Connected!");
         console.log("[CHAT][" + socket.id + "] joined room " + data);
-        callback(room);
+        callback(data);
     });
     /*
         //User disconnects
@@ -103,11 +101,13 @@ nsChat.on('connection', function (socket) {
         */
 
     //Chat message
-    //TODO: cleanup
+    //TODO: cleanup 
     socket.on('chat message', function (room, msg) {
-        DB.Socket.find(socket, function (err, result) {
-            console.log(JSON.stringify(socket.rooms));
-            ncChat.in(room).emit('chat message', "[ROOM " + room + "] " + result._id + ": " + msg);
+        DB.Socket.find(socket.id, function (err, result) {
+            console.log("ERROR " + err);
+            console.log("chat message " + JSON.stringify(result));
+            console.log(JSON.stringify(IO.sockets.connected[result.socketid]));
+            nsChat.in(room).emit('chat message', "[ROOM " + room + "] " + result._id + ": " + msg);
         });
     });
 
