@@ -94,9 +94,30 @@ $(document).ready(function () {
 						console.log("post");
 					}
 				)
-				.done(function () {
+				.done(function(data) {
 					console.log("success");
+					console.log(data);
+					
+					//Send multipart/formdata with the image
+					$.ajax({
+						url: '/content/image/profile/:uid', //Get :uid from the return.
+						type: 'post',
+						data: new FormData($("#picUp").files[0]),
+						cache: false,
+						contentType: false,
+						processData: false,
+						
+					})
+					$.done(function(data) {
+						console.log("img uploaded");
+					})
+					$.fail(function(data) {
+						console.log("img no uploaded");
+					})
+					
 					$("#regFields")[0].reset();
+					
+					
 					//$("#someDiv").val("Check yo email");
 				})
 				.fail(function () {
