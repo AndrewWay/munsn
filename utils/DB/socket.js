@@ -14,9 +14,22 @@ module.exports = function (DBSocket, collectionSocket) {
 	};
 
     	//Find users matching query
-	DBSocket.find = function (socketid, callback) {
+	DBSocket.findSid = function (socketid, callback) {
 		console.log("[DBSocket] Find: '" + socketid  + "'");
 		collectionSocket.findOne({socketid: socketid}, function (err, result) {
+            if (err) {
+                console.error("[DBSocket] Find: " + err.message);
+                callback(err, result);
+            } else {
+                callback(err, result);
+            }
+		});
+	};
+	
+    	//Find users matching query
+	DBSocket.findUid = function (uid, callback) {
+		console.log("[DBSocket] Find: '" + uid  + "'");
+		collectionSocket.findOne({_id: uid}, function (err, result) {
             if (err) {
                 console.error("[DBSocket] Find: " + err.message);
                 callback(err, result);
@@ -28,10 +41,10 @@ module.exports = function (DBSocket, collectionSocket) {
 
         	//Find users matching query
 	DBSocket.findAndUpdate = function (uid, socketid, callback) {
-		console.log("[DBSocket] Find: '" + socketid  + "'");
-		collectionSocket.findAndModify({_id: uid}, [['_id', 'ascending']], {$set: {socketid: socketid}}, {upsert: true, new: true}, function (err, result) {
+		console.log("[DBSocket] FindAndModify: '" + socketid  + "'");
+		collectionSocket.findAndModify({_id: uid}, [['_id', 'ascending']], {$set: {_id: uid, socketid: socketid}}, {upsert: true, new: true}, function (err, result) {
             if (err) {
-                console.error("[DBSocket] Find: " + err.message);
+                console.error("[DBSocket] FindAndModify: " + err.message);
                 callback(err, result);
             } else {
                 callback(err, result);

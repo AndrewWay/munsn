@@ -88,6 +88,16 @@ nsChat.on('connection', function (socket) {
         console.log("[CHAT][" + socket.id + "] joined room " + data);
         callback(data);
     });
+
+    socket.on('pm', function(user, msg) {
+        DB.Socket.findUid(user, function(err, uidResult) {
+            console.log("Private message to " + user + ": " + msg);
+            console.log("PM RESULT: " + JSON.stringify(uidResult));
+            DB.Socket.findSid(socket.id, function(err, sidResult) {
+                nsChat.to(uidResult.socketid).emit('chat message', "[PM: " + sidResult._id + "] " + msg);
+            });
+        });
+    });
     /*
         //User disconnects
         socket.on('disconnect', function () {
@@ -103,10 +113,10 @@ nsChat.on('connection', function (socket) {
     //Chat message
     //TODO: cleanup 
     socket.on('chat message', function (room, msg) {
-        DB.Socket.find(socket.id, function (err, result) {
+        DB.Socket.findSid(socket.id, function (err, result) {
             console.log("ERROR " + err);
             console.log("chat message " + JSON.stringify(result));
-            console.log(JSON.stringify(IO.sockets.connected[result.socketid]));
+            //console.log(JSON.stringify(IO.sockets.connected[result.socketid]));
             nsChat.in(room).emit('chat message', "[ROOM " + room + "] " + result._id + ": " + msg);
         });
     });
