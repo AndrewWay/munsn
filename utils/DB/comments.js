@@ -1,3 +1,4 @@
+var console = require('../consoleLogger');
 module.exports = function (DBComments, collectionComments) {
 	//Add a comment
 	DBComments.add = function (req, res, callback) {
@@ -11,7 +12,7 @@ module.exports = function (DBComments, collectionComments) {
 				date: date.getTime()
 			}]
 		};
-		console.log("[DBComments] Add: '" + postId + "'->'" + JSON.stringify(comment) + "'");
+		console.log("[DBComments] Add", "'" + postId + "'->'" + JSON.stringify(comment) + "'");
 		collectionComments.update({
 			_id: postId
 		}, {
@@ -22,7 +23,7 @@ module.exports = function (DBComments, collectionComments) {
 			upsert: true
 		}, function (err, result) {
 			if (err) {
-				console.error("[DBComments] Add: " + err.message);
+				console.error("[DBComments] Add", err.message);
 				callback({
 					session: req.session,
 					status: 'fail'
@@ -40,7 +41,7 @@ module.exports = function (DBComments, collectionComments) {
 	DBComments.removeById = function (req, res, callback) {
 		var postId = req.body.pid;
 		var commentId = req.body.cid;
-		console.log("[DBComments] RemoveByID: '" + commentId + "'->'" + postId + "'");
+		console.log("[DBComments] RemoveByID", "'" + commentId + "'->'" + postId + "'");
 		collectionComments.remove({
 			_id: postId,
 			comments: {
@@ -48,7 +49,7 @@ module.exports = function (DBComments, collectionComments) {
 			}
 		}, function (err, result) {
 			if (err) {
-				console.error("[DBComments] RemoveByID:" + err.message);
+				console.error("[DBComments] RemoveByID", err.message);
 				callback({
 					session: req.session,
 					status: 'fail'
@@ -65,12 +66,12 @@ module.exports = function (DBComments, collectionComments) {
 	//Get comments per userid
 	DBComments.findByPostId = function (req, res, callback) {
 		var pid = req.body.pid;
-		console.log("[DBComments] FindByPID: '" + userId + "'");
+		console.log("[DBComments] FindByPID", "'" + userId + "'");
 		collectionComments.find({
 			_id: pid
 		}).toArray(function (err, result) {
 			if (err) {
-				console.error("[DBComments] FindByPID: " + err.message);
+				console.error("[DBComments] FindByPID", err.message);
 				callback({
 					session: req.session,
 					status: 'fail'
@@ -95,7 +96,7 @@ module.exports = function (DBComments, collectionComments) {
 			_id: req.params.pid,
 			"comments.commentid": req.params.commentid
 		};
-		console.log("[DBComments] Update: '" + JSON.stringify(updates) + "'->'" + JSON.stringify(query) + "'");
+		console.log("[DBComments] Update", "'" + JSON.stringify(updates) + "'->'" + JSON.stringify(query) + "'");
 		collectionComments.update(query, {
 			$push: {
 				"comments.data": updates
@@ -104,7 +105,7 @@ module.exports = function (DBComments, collectionComments) {
 			upsert: true
 		}, function (err, result) {
 			if (err) {
-				console.error("[DBComments] Update: " + err);
+				console.error("[DBComments] Update", err);
 				callback({
 					session: req.session,
 					status: 'fail'

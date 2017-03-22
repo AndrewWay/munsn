@@ -1,7 +1,7 @@
 var IO = require('../../bin/www');
 var app = require('../../app');
 var DB = require('../db');
-
+var console = require('../consoleLogger');
 var clients = [];
 var nsChat = IO.of("/chat").use(IO.sharedsession(app.session, {
     autoSave: true
@@ -24,7 +24,7 @@ nsChat.on('connection', function (socket) {
             };
             DB.Socket.update(session.user._id, updates, function (err, result) {
                 if (err) {
-                    console.error("[DBSocket] Update: " + err.message);
+                    console.error("[DBSocket] Update", err.message);
                     callback({
                         session: session,
                         status: 'fail'
@@ -33,7 +33,7 @@ nsChat.on('connection', function (socket) {
                     //Set random room
                     var room = Math.floor((Math.random() * 2) + 1);
                     //Print to console and chat room
-                    console.log("[CHAT][ROOM " + room + "][" + session.user._id + "][ID " + socket.id + "] Connected!");
+                    console.log("[CHAT][ROOM " + room + "][" + session.user._id + "]", "'Connected'->'{id: '" + socket.id + "}'");
                     socket.join(room);
                     nsChat.in(room).emit('chat message', "[ROOM " + room + "] " + session.user._id + " Connected!");
                     callback(room);
@@ -87,7 +87,7 @@ nsChat.on('connection', function (socket) {
 
     socket.on('room', function (data, callback) {
         socket.join(data);
-        console.log("[CHAT][" + socket.id + "] joined room " + data);
+        console.log("[CHAT][" + socket.id + "]", "'Joined'->'Room [" + data + "]'");
         callback(room);
     });
     /*
@@ -106,7 +106,7 @@ nsChat.on('connection', function (socket) {
     //TODO: cleanup
     socket.on('chat message', function (room, msg) {
         DB.Socket.find(socket, function (err, result) {
-            console.log(JSON.stringify(socket.rooms));
+            console.log("[CHAT][Message]", "'" + JSON.stringify(socket.rooms) + "'");
             ncChat.in(room).emit('chat message', "[ROOM " + room + "] " + result._id + ": " + msg);
         });
     });

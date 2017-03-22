@@ -4,12 +4,13 @@ var mime = require("mime");
 var imagemin = require("imagemin");
 var imageminMozjpeg = require("imagemin-mozjpeg");
 var imageminPngquant = require("imagemin-pngquant");
+var console = require("./consoleLogger");
 /**
  * Extracts the ID from an emailstring
  * @param {string} email - The string representation of the email
  * @returns {string} - Userid
  */
-function getIdFromEmail(email) {
+function EmailToID(email) {
 	return email.substring(0, email.indexOf("@"));
 }
 
@@ -30,8 +31,9 @@ function addMinsToDate(date, mins) {
  * @param {string} directory - The full path to search
  */
 function* findFiles(filter, directory) {
+	console.log("[Utils] FindFiles", "'" + filter + "'->'" + directory + "'");
 	if (!fs.existsSync(directory)) {
-		console.log("ERR: " + directory + " does not exist");
+		console.warn("[Utils] FindFiles", "'NotExist'->'" + directory + "'");
 		return;
 	}
 	var files = fs.readdirSync(directory);
@@ -39,6 +41,7 @@ function* findFiles(filter, directory) {
 		var filename = path.join(directory, files[i]);
 		var stat = fs.lstatSync(filename);
 		if (!stat.isDirectory() && filename.indexOf(filter) >= 0) {
+			console.log("[Utils] FindFiles", "'Found'->'" + files[i] + "'");
 			yield filename;
 		}
 	}
@@ -52,12 +55,15 @@ function* findFiles(filter, directory) {
  */
 function remove(filter, directory, callback) {
 	var file = findFiles(filter, directory).next().value;
+	console.log("[Content] Remove", "'" + filter + "'->'" + directory + "'");
 	if (file) {
 		fs.unlinkSync(file);
 		callback({
 			status: 'ok'
 		});
+		console.log("[Content] Remove", "'Deleted'->'" + file + "'");
 	} else {
+		console.error("[Content] Remove", "'Fail'->'" + file + "'");
 		callback({
 			status: 'fail'
 		});
@@ -72,6 +78,7 @@ function remove(filter, directory, callback) {
  */
 function download(req, res, file, callback) {
 	//TODO: John, Test this
+	console.log("[Content] Download", "'Requested'->'" + file + "'");
 	fs.exists(file, function (exist) {
 		if (exist) {
 			var filename = path.basename(file);
@@ -81,11 +88,13 @@ function download(req, res, file, callback) {
 			var fstream = fs.createReadStream(file);
 			fstream.pipe(res);
 			fstream.on('finish', function () {
+				console.log("[Content] Download", "'Success'->'" + file + "'");
 				callback({
 					status: 'ok'
 				});
 			});
 		} else {
+			console.log("[Content] Download", "'Fail'->'" + file + "'");
 			callback({
 				status: 'fail'
 			});
@@ -103,10 +112,9 @@ function download(req, res, file, callback) {
 function upload(req, dest, name, callback) {
 	//TODO: John, Test this to break it
 	try {
-		var error = false;
-
 		req.pipe(req.busboy);
 		req.busboy.on("file", function (fieldname, file, filename) {
+			console.log("[Content] Upload", filename);
 			var fstream;
 			var dir = path.join(__dirname, "../content/" + dest);
 			//File extension
@@ -114,11 +122,6 @@ function upload(req, dest, name, callback) {
 			//Path where file will be uploaded
 			fs.exists(dir, function (exist) {
 				//If upload(req,dest) then change set name to filename
-				if (!name) {
-					name = filename;
-				} else {
-					name = name + fext;
-				}
 				//Create the directory if it doesn't exist
 				if (!exist) {
 					fs.mkdirsSync(dir);
@@ -130,12 +133,17 @@ function upload(req, dest, name, callback) {
 						}
 					}
 				}
+				if (!name) {
+					name = filename;
+				} else {
+					name = name + fext;
+				}
 				fstream = fs.createWriteStream(path.join(dir, name));
 				fstream.on("close", function () {
-					console.log("Uploaded: " + name);
+					console.log("[Content] Upload", "'" + filename + "'->'" + name + "'");
 				});
 				fstream.on('error', function (err) {
-					error = true;
+					console.error("[Content] Upload", err);
 					req.unpipe(req.busboy);
 				});
 				switch (fext.toLowerCase()) {
@@ -145,28 +153,18 @@ function upload(req, dest, name, callback) {
 						//There's literally no usage guide that makes sense to me
 						//The API for all this stuff is teeeeerrrrible
 					default:
-						console.log("Uploading: " + filename);
+						console.log("[Content] Upload", "'Writing'->'" + name + "'");
 						file.pipe(fstream);
 						break;
 				}
 			});
 		});
 		req.busboy.on('error', function () {
-			error = true;
+			console.error("[Content] Upload", "'Error'->'busboy'");
 			req.unpipe(req.busboy);
 		});
-		req.busboy.on('finish', function () {
-			if (!error) {
-				callback({
-					status: 'ok'
-				});
-			} else {
-				callback({
-					status: 'fail'
-				});
-			}
-		});
 	} catch (err) {
+		console.error("[Content] Upload", "'Error'->'generic'");
 		callback({
 			status: 'fail'
 		});
@@ -194,12 +192,12 @@ function debugObject(obj, name) {
 	Object.keys(obj).forEach(function (key, index) {
 		// key: the name of the object key
 		// index: the ordinal position of the key within the object
-		console.log("[DEBUG OBJECT] " + name + ": " + key + " = " + obj[key]);
+		console.log("[DEBUG OBJECT]", "'" + name + "'->'" + key + "':'" + obj[key] + "'");
 	});
 }
 
 // Exports
-exports.getIdFromEmail = getIdFromEmail;
+exports.EmailToID = EmailToID;
 exports.addMinsToDate = addMinsToDate;
 exports.findFiles = findFiles;
 exports.download = download;

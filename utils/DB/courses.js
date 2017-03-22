@@ -1,3 +1,4 @@
+var console = require('../consoleLogger');
 module.exports = function (DBCourses, collectionCourses) {
 	//Add a course
 	DBCourses.add = function (req, res, callback) {
@@ -14,10 +15,10 @@ module.exports = function (DBCourses, collectionCourses) {
 			timeStart: req.body.timeStart,
 			timeEnd: req.body.timeEnd
 		};
-		console.log("[DBCourses] Add: '" + course.label);
+		console.log("[DBCourses] Add", "'" + course.label + "'");
 		collectionCourses.insert(course, function (err, result) {
 			if (err) {
-				console.error("[DBCourses] Add: " + err.message);
+				console.error("[DBCourses] Add", err.message);
 				callback({
 					session: req.session,
 					status: 'fail'
@@ -33,13 +34,13 @@ module.exports = function (DBCourses, collectionCourses) {
 
 	//Find a course by unique course id
 	DBCourses.findById = function (req, res, callback) {
-		console.log("[DBCourses] FindById: '" + req.params.uid + "'");
+		console.log("[DBCourses] FindById", "'" + req.params.uid + "'");
 		if (req.params.uid) {
 			collectionCourses.findOne({
 				_id: req.params.uid
 			}, function (err, result) {
 				if (err) {
-					console.log("[DBCourses]: " + err.message);
+					console.log("[DBCourses]", err.message);
 					callback({
 						session: req.session,
 						status: 'fail'
@@ -54,7 +55,7 @@ module.exports = function (DBCourses, collectionCourses) {
 				}
 			});
 		} else {
-			console.error("[DBCourses] FindById: Missing Fields");
+			console.error("[DBCourses] FindById", "'Missing Fields'");
 			callback({
 				session: req.session,
 				status: 'fail'
@@ -64,10 +65,10 @@ module.exports = function (DBCourses, collectionCourses) {
 
 	//Find courses matching query
 	DBCourses.find = function (req, res, callback) {
-		console.log("[DBCourses] Find: '" + JSON.stringify(req.body) + "'");
+		console.log("[DBCourses] Find", "'" + JSON.stringify(req.body) + "'");
 		collectionCourses.find(req.body).toArray(function (err, result) {
 			if (err) {
-				console.error("[DBCourses]: " + err.message);
+				console.error("[DBCourses]", err.message);
 				callback({
 					session: req.session,
 					status: 'fail'
@@ -84,7 +85,7 @@ module.exports = function (DBCourses, collectionCourses) {
 
 	//Updates the course
 	DBCourses.update = function (req, res, callback) {
-		console.log("[DBCourses] Update: '" + JSON.stringify(req.body) + "'->'" + req.params.uid + "'");
+		console.log("[DBCourses] Update", "'" + JSON.stringify(req.body) + "'->'" + req.params.uid + "'");
 		if (req.params.uid) {
 			var updates = {
 				label: req.body.label,
@@ -107,7 +108,7 @@ module.exports = function (DBCourses, collectionCourses) {
 				upsert: true
 			}, function (err, result) {
 				if (err) {
-					console.error("[DBCourses] Update: " + err.message);
+					console.error("[DBCourses] Update", err.message);
 					callback({
 						session: req.session,
 						status: 'fail'
@@ -120,7 +121,7 @@ module.exports = function (DBCourses, collectionCourses) {
 				}
 			});
 		} else {
-			console.warn("[DBCourses] Update: Missing Fields");
+			console.warn("[DBCourses] Update", "'Missing Fields'");
 			callback({
 				session: req.session,
 				status: "fail"
@@ -130,7 +131,7 @@ module.exports = function (DBCourses, collectionCourses) {
 
 	//Removes the course
 	DBCourses.remove = function (req, res, callback) {
-		console.log("[DBCourses] Remove: '" + req.params.uid + "'");
+		console.log("[DBCourses] Remove", "'" + req.params.uid + "'");
 		if (req.params.uid) {
 			collectionCourses.remove({
 				_id: req.params.id
@@ -138,7 +139,7 @@ module.exports = function (DBCourses, collectionCourses) {
 				single: true
 			}, function (err, result) {
 				if (err) {
-					console.error("[DBCourses] Remove: " + err.message);
+					console.error("[DBCourses] Remove", err.message);
 					callback({
 						session: req.session,
 						status: 'fail'
@@ -152,7 +153,7 @@ module.exports = function (DBCourses, collectionCourses) {
 				}
 			});
 		} else {
-			console.warn("[DBCourses] Remove: Missing Fields");
+			console.warn("[DBCourses] Remove", "'Missing Fields'");
 			callback({
 				session: req.session,
 				status: "fail"

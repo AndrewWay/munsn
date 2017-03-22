@@ -1,3 +1,4 @@
+var console = require('../consoleLogger');
 var ObjectID = require('mongodb').ObjectID;
 module.exports = function (DBPosts, collectionPosts) {
 	//Add a post
@@ -13,7 +14,7 @@ module.exports = function (DBPosts, collectionPosts) {
 			dataType: req.body.dataType,
 			data: req.body.data
 		};
-		console.log("[DBPosts] Add: '" + row.authorid + "'->'{id:'" + row.origin.id + "',type:'" + row.origin.type + "'}'");
+		console.log("[DBPosts] Add", "'" + row.authorid + "'->'{id:'" + row.origin.id + "',type:'" + row.origin.type + "'}'");
 		collectionPosts.insert(row, function (err, result) {
 			if (err) {
 				console.error("[DBPosts] Add: " + err.message);
@@ -32,12 +33,12 @@ module.exports = function (DBPosts, collectionPosts) {
 
 	//Remove a post by id
 	DBPosts.remove = function (req, res, callback) {
-		console.log("[DBPosts] Remove: '" + req.body.pid + "'");
+		console.log("[DBPosts] Remove", "'" + req.body.pid + "'");
 		collectionPosts.remove({
 			_id: new ObjectID(req.body.pid)
 		}, function (err, result) {
 			if (err) {
-				console.error("[DBPosts] Remove: " + err.message);
+				console.error("[DBPosts] Remove", err.message);
 				callback({
 					session: req.session,
 					status: 'fail'
@@ -53,12 +54,12 @@ module.exports = function (DBPosts, collectionPosts) {
 
 	//Get posts per user
 	DBPosts.findByUserId = function (req, res, callback) {
-		console.log("[DBPosts] FindByUID: '" + req.params.uid + "'");
+		console.log("[DBPosts] FindByUID", "'" + req.params.uid + "'");
 		collectionPosts.find({
 			authorid: req.params.uid
 		}).toArray(function (err, result) {
 			if (err) {
-				console.error("[DBPosts] FindByUID: " + err.message);
+				console.error("[DBPosts] FindByUID", err.message);
 				callback({
 					session: req.session,
 					status: 'fail'
@@ -75,12 +76,12 @@ module.exports = function (DBPosts, collectionPosts) {
 
 	//Get posts per post id
 	DBPosts.findByPostId = function (req, res, callback) {
-		console.log("[DBPosts] FindByPID: '" + req.params.pid + "'");
+		console.log("[DBPosts] FindByPID", "'" + req.params.pid + "'");
 		collectionPosts.find({
 			_id: new ObjectID(req.params.pid)
 		}).toArray(function (err, result) {
 			if (err) {
-				console.error("[DBPosts] FindByPID: " + err.message);
+				console.error("[DBPosts] FindByPID", err.message);
 				callback({
 					session: req.session,
 					status: 'fail'
@@ -103,7 +104,7 @@ module.exports = function (DBPosts, collectionPosts) {
 			modified: date,
 			visibility: req.body.visibility
 		};
-		console.log("[DBPosts] Update: '" + req.body.pid + "'->'" + JSON.stringify(updates) + "'");
+		console.log("[DBPosts] Update", "'" + req.body.pid + "'->'" + JSON.stringify(updates) + "'");
 		collectionPosts.update({
 			_id: new ObjectID(req.body.pid)
 		}, {
@@ -112,7 +113,7 @@ module.exports = function (DBPosts, collectionPosts) {
 			upsert: true
 		}, function (err, result) {
 			if (err) {
-				console.error("[DBPosts] Update: " + err.message);
+				console.error("[DBPosts] Update", err.message);
 				callback({
 					session: req.session,
 					status: 'fail'

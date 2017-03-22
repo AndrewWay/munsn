@@ -5,7 +5,7 @@ module.exports = function (DBUsers, DBAuth, collectionUsers) {
 		console.log("[DBUsers] Add", "'" + JSON.stringify(req.body) + "'");
 		var result = {};
 		if (!Object.keys(req.body).length) {
-			console.warn("[DBUsers] Add", "Missing Data");
+			console.warn("[DBUsers] Add", "'Missing Fields'");
 			callback({
 				session: req.session,
 				status: 'fail'
@@ -23,7 +23,7 @@ module.exports = function (DBUsers, DBAuth, collectionUsers) {
 					email: req.body.email,
 					auth: false,
 					visibility: req.body.visibility ? req.body.visibility : "default",
-					_id: utils.getIdFromEmail(req.body.email)
+					_id: utils.EmailToID(req.body.email)
 				};
 
 				//Create auth key and store it in auths
@@ -35,14 +35,14 @@ module.exports = function (DBUsers, DBAuth, collectionUsers) {
 							status: 'fail'
 						});
 					} else {
-						console.log("[DBUsers] Inserted", "'" + result.insertedIds[0] + "'");
+						console.log("[DBUsers] Add->Insert", "'" + result.insertedIds[0] + "'");
 						DBAuth.add(req, res, row, function (result) {
 							callback(result);
 						});
 					}
 				});
 			} catch (err) {
-				console.error("[DBUsers] Registration", "Missing fields or other error");
+				console.error("[DBUsers] Registration", "'Missing fields or Other'");
 				callback({
 					session: req.session,
 					status: 'fail'
@@ -74,7 +74,7 @@ module.exports = function (DBUsers, DBAuth, collectionUsers) {
 				}
 			});
 		} else {
-			console.error("[DBUsers] FindById", "Missing Fields");
+			console.error("[DBUsers] FindById", "'Missing Fields'");
 			callback({
 				session: req.session,
 				status: 'fail'
@@ -133,7 +133,7 @@ module.exports = function (DBUsers, DBAuth, collectionUsers) {
 				}
 			});
 		} else {
-			console.warn("[DBUsers] Update", "Missing Fields");
+			console.warn("[DBUsers] Update", "'Missing Fields'");
 			callback({
 				session: req.session,
 				status: "fail"
@@ -164,7 +164,7 @@ module.exports = function (DBUsers, DBAuth, collectionUsers) {
 				}
 			});
 		} else {
-			console.warn("[DBUsers] Remove", "Missing Fields");
+			console.warn("[DBUsers] Remove", "'Missing Fields'");
 			callback({
 				session: req.session,
 				status: "fail"
@@ -220,7 +220,7 @@ module.exports = function (DBUsers, DBAuth, collectionUsers) {
 					}
 				});
 			} else {
-				console.warn("[DBUsers] Login", "Missing fields");
+				console.warn("[DBUsers] Login", "'Missing fields'");
 				callback({
 					session: req.session,
 					status: 'fail'

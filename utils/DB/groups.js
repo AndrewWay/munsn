@@ -1,3 +1,4 @@
+var console = require('../consoleLogger');
 module.exports = function (DBGroups, collectionGroups, collectionGroupMembers, collectionGroupRequests) {
 	//Add a group
 	DBGroups.add = function (req, res, callback) {
@@ -10,12 +11,12 @@ module.exports = function (DBGroups, collectionGroups, collectionGroupMembers, c
 			courses: undefined,
 			created: new Date()
 		};
-		console.log("[DBGroups] Add: '" + row.ownerid + "'->'" + row.name + "'");
+		console.log("[DBGroups] Add", "'" + row.ownerid + "'->'" + row.name + "'");
 		if (row.name && row.ownerid) {
 			var date = new Date();
 			collectionGroups.insert(row, function (err, result) {
 				if (err) {
-					console.error("[DBGroups] Add: " + err.message);
+					console.error("[DBGroups] Add", err.message);
 					callback({
 						session: req.session,
 						status: 'fail'
@@ -31,7 +32,7 @@ module.exports = function (DBGroups, collectionGroups, collectionGroupMembers, c
 						upsert: true
 					}, function (err, result) {
 						if (err) {
-							console.error("[DBGroups] Add: " + err.message);
+							console.error("[DBGroups] Add", err.message);
 							callback({
 								session: req.session,
 								status: 'fail'
@@ -46,7 +47,7 @@ module.exports = function (DBGroups, collectionGroups, collectionGroupMembers, c
 				}
 			});
 		} else {
-			console.warn("[DBGroups] Add Group: Missing Fields");
+			console.warn("[DBGroups] Add Group", "'Missing Fields'");
 			callback({
 				session: req.session,
 				status: 'fail'
@@ -58,13 +59,13 @@ module.exports = function (DBGroups, collectionGroups, collectionGroupMembers, c
 	//Find a group by user
 	DBGroups.findByUserId = function (req, res, callback) {
 		var userId = req.params.uid;
-		console.log("[DBGroups] FindByUID: '" + req.params.uid + "'");
+		console.log("[DBGroups] FindByUID", "'" + req.params.uid + "'");
 		if (userId) {
 			collectionGroups.find({
 				creatorid: userId
 			}).toArray(function (err, result) {
 				if (err) {
-					console.error("[DBGroups] FindByUID: " + err.message);
+					console.error("[DBGroups] FindByUID", err.message);
 					callback({
 						session: req.session,
 						status: 'fail'
@@ -78,7 +79,7 @@ module.exports = function (DBGroups, collectionGroups, collectionGroupMembers, c
 				}
 			});
 		} else {
-			console.warn("[DBGroups] FindByUID: Missing Fields");
+			console.warn("[DBGroups] FindByUID", "'Missing Fields'");
 			callback({
 				session: req.session,
 				status: 'fail'
@@ -184,7 +185,7 @@ module.exports = function (DBGroups, collectionGroups, collectionGroupMembers, c
 	//GROUP REQUESTS
 	//======================================================================================================
 
-		//Add a friend request
+	//Add a friend request
 	DBGroups.addRequest = function (req, res, callback) {
 		//Declare body variables
 		var userId = req.body.uid;
@@ -193,7 +194,9 @@ module.exports = function (DBGroups, collectionGroups, collectionGroupMembers, c
 		console.log("[DBGroups] AddRequest: '" + userId + "'->'" + groupName + "'");
 		if (userId && groupName) {
 			//Check to see if group exists
-			collectionGroups.find({ name: groupName},
+			collectionGroups.find({
+					name: groupName
+				},
 				function (err, result) {
 					if (err) {
 						console.error("[DBGroups] AddRequest: " + err.message);

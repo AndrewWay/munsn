@@ -1,7 +1,8 @@
+var console = require("../consoleLogger");
 module.exports = function (DBFriends, collectionFriends, collectionFriendRequests, collectionUsers) {
 	//Adds the friendId to the userId's friend list
 	DBFriends.add = function (userId, friendId, callback) {
-		console.log("[DBFriends] Add: '" + userId + "'->'" + friendId + "'");
+		console.log("[DBFriends] Add", "'" + userId + "'->'" + friendId + "'");
 		collectionFriends.update({
 			_id: userId
 		}, {
@@ -12,7 +13,7 @@ module.exports = function (DBFriends, collectionFriends, collectionFriendRequest
 			upsert: true
 		}, function (err, result) {
 			if (err) {
-				console.error("[DBFriends] Add: " + err.message);
+				console.error("[DBFriends] Add", err.message);
 				callback({
 					status: 'fail'
 				});
@@ -26,7 +27,7 @@ module.exports = function (DBFriends, collectionFriends, collectionFriendRequest
 
 	//Finds all friends of a userId and returns it as an array
 	DBFriends.find = function (req, res, callback) {
-		console.log("[DBFriends] Find: '" + req.params.uid + "'");
+		console.log("[DBFriends] Find", "'" + req.params.uid + "'");
 		if (req.params.uid) {
 			collectionFriends.find({
 				_id: req.params.uid
@@ -34,7 +35,7 @@ module.exports = function (DBFriends, collectionFriends, collectionFriendRequest
 				friends: true
 			}).toArray(function (err, result) {
 				if (err) {
-					console.error("[DBFriends] Find: " + err.message);
+					console.error("[DBFriends] Find", err.message);
 					callback({
 						session: req.session,
 						status: 'fail'
@@ -47,7 +48,7 @@ module.exports = function (DBFriends, collectionFriends, collectionFriendRequest
 				}
 			});
 		} else {
-			console.warn("[DBFriends] Find: " + req.params.uid);
+			console.warn("[DBFriends] Find", "'" + req.params.uid + "'");
 			callback({
 				session: req.session,
 				status: 'fail'
@@ -61,7 +62,7 @@ module.exports = function (DBFriends, collectionFriends, collectionFriendRequest
 		var userId = req.body.uid;
 		var friendId = req.body.fid;
 		//Check if body variables are not null, or undefined
-		console.log("[DBFriends] Remove: '" + userId + "'<->'" + friendId + "'");
+		console.log("[DBFriends] Remove", "'" + userId + "'<->'" + friendId + "'");
 		if (userId && friendId) {
 			collectionFriends.update({
 				_id: userId
@@ -71,7 +72,7 @@ module.exports = function (DBFriends, collectionFriends, collectionFriendRequest
 				}
 			}, function (err, result) {
 				if (err) {
-					console.warn("[DBFriends] Remove: " + err.message);
+					console.warn("[DBFriends] Remove", err.message);
 					callback({
 						session: req.session,
 						status: 'fail'
@@ -84,7 +85,7 @@ module.exports = function (DBFriends, collectionFriends, collectionFriendRequest
 				}
 			});
 		} else {
-			console.warn("[DBFriends] Remove: Missing Fields");
+			console.warn("[DBFriends] Remove", "'Missing Fields'");
 			callback({
 				session: req.session,
 				status: 'fail'
@@ -94,7 +95,7 @@ module.exports = function (DBFriends, collectionFriends, collectionFriendRequest
 
 	//Suggest friends
 	DBFriends.suggest = function (req, res, callback) {
-		console.log("[DBFriends] Suggest: '" + req.params.uid + "'");
+		console.log("[DBFriends] Suggest", "'" + req.params.uid + "'");
 		var users = {};
 		//Find friends of friends
 		collectionFriends.aggregate([{
@@ -112,7 +113,7 @@ module.exports = function (DBFriends, collectionFriends, collectionFriendRequest
 			}
 		}], function (err, fof) {
 			if (err) {
-				console.error("[DBFriends] Suggest: " + err.message);
+				console.error("[DBFriends] Suggest", err.message);
 				callback({
 					session: req.session,
 					status: 'fail'
@@ -136,7 +137,7 @@ module.exports = function (DBFriends, collectionFriends, collectionFriendRequest
 						data: Object.keys(users)
 					});
 				} else {
-					console.warn("[DBFriends] '" + req.params.uid + "': No Data Found");
+					console.warn("[DBFriends] Suggest", "'NoDataFound'->'" + req.params.uid + "'");
 					callback({
 						session: req.session,
 						status: 'fail'
@@ -155,7 +156,7 @@ module.exports = function (DBFriends, collectionFriends, collectionFriendRequest
 		var userId = req.body.uid;
 		var friendId = req.body.fid;
 		//Check if body variables are not null, or undefined
-		console.log("[DBFriends] AddRequest: '" + userId + "'->'" + friendId + "'");
+		console.log("[DBFriends] AddRequest", "'" + userId + "'->'" + friendId + "'");
 		if (userId && friendId) {
 			//Check to see if both users exist
 			collectionUsers.find({
@@ -166,7 +167,7 @@ module.exports = function (DBFriends, collectionFriends, collectionFriendRequest
 				function (err, result) {
 					//TODO: Devin, Will changing this to err,result affect this?
 					if (err) {
-						console.error("[DBFriends] AddRequest: " + err.message);
+						console.error("[DBFriends] AddRequest", err.message);
 						callback({
 							session: req.session,
 							status: 'fail'
@@ -178,7 +179,7 @@ module.exports = function (DBFriends, collectionFriends, collectionFriendRequest
 								friendid: friendId
 							}, function (err, result) {
 								if (err) {
-									console.error("[DBFriends] AddRequest: " + err.message);
+									console.error("[DBFriends] AddRequest", err.message);
 									callback({
 										session: req.session,
 										status: 'fail'
@@ -192,7 +193,12 @@ module.exports = function (DBFriends, collectionFriends, collectionFriendRequest
 								}
 							});
 						} else {
-							console.warn("[DBFriends] AddRequest: User(s) not found");
+							console.warn("[DBFriends] AddRequest",
+								"'" + result[result.findIndex((x) => {
+									return x._id === userId;
+								})]._id + "'->'" + result[result.findIndex((x) => {
+									return x._id === friendId;
+								})]._id + "'");
 							callback({
 								session: req.session,
 								status: 'fail'
@@ -201,7 +207,7 @@ module.exports = function (DBFriends, collectionFriends, collectionFriendRequest
 					}
 				});
 		} else {
-			console.warn("[DBFriends] AddRequest:  Missing Fields");
+			console.warn("[DBFriends] AddRequest", "'Missing Fields'");
 			callback({
 				session: req.session,
 				status: 'fail'
@@ -215,11 +221,11 @@ module.exports = function (DBFriends, collectionFriends, collectionFriendRequest
 			friendid: req.params.fid,
 			userid: req.params.uid
 		};
-		console.log("[DBFriends] FindRequests: '" + query.friendid ? query.friendid : "*" + "'->'" + query.userid ? query.userid : "*" + "'");
+		console.log("[DBFriends] FindRequests", "'" + query.friendid ? query.friendid : "*" + "'->'" + query.userid ? query.userid : "*" + "'");
 		if (!Object.keys(query).length) {
 			collectionFriendRequests.find(query).toArray(function (err, result) {
 				if (err) {
-					console.error("[DBFriends] FindRequests: " + err.message);
+					console.error("[DBFriends] FindRequests", err.message);
 					callback({
 						session: req.session,
 						status: 'fail'
@@ -232,7 +238,7 @@ module.exports = function (DBFriends, collectionFriends, collectionFriendRequest
 				}
 			});
 		} else {
-			console.warn("[DBFriends] FindRequests: Missing Fields");
+			console.warn("[DBFriends] FindRequests", "'Missing Fields'");
 			callback({
 				session: req.session,
 				status: 'fail'
@@ -247,11 +253,11 @@ module.exports = function (DBFriends, collectionFriends, collectionFriendRequest
 			userid: req.body.uid,
 			friendid: req.body.fid
 		};
-		console.log("[DBFriends] RemoveRequest: '" + query.friendid ? query.friendid : "*" + "'->'" + query.userid ? query.userid : "*" + "'");
+		console.log("[DBFriends] RemoveRequest", "'" + query.friendid ? query.friendid : "*" + "'->'" + query.userid ? query.userid : "*" + "'");
 		if (Object.keys(query).length === 2) {
 			collectionFriendRequests.remove(query, function (err, result) {
 				if (err) {
-					console.error("[DBFriends] RemoveRequest: " + err.message);
+					console.error("[DBFriends] RemoveRequest", err.message);
 					callback({
 						session: req.session,
 						status: 'fail'
@@ -264,7 +270,7 @@ module.exports = function (DBFriends, collectionFriends, collectionFriendRequest
 				}
 			});
 		} else {
-			console.warn("[DBFriends] RemoveRequest: Missing Fields");
+			console.warn("[DBFriends] RemoveRequest", "'Missing Fields'");
 			callback({
 				session: req.session,
 				status: 'fail'

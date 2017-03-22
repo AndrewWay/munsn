@@ -3,6 +3,7 @@ var path = require('path');
 var googleFuncs = require('../googleFuncs');
 var googleapi = require('googleapis');
 var calendar = googleapi.calendar('v3');
+var console = require('../consoleLogger');
 var MUNSNCal = {};
 MUNSNCal.add = function (data, callback) {
 	googleFuncs.getKey(function (key) {
@@ -92,13 +93,13 @@ MUNSNCal.remove = function (data, callback) {
 
 module.exports = function (DBCalendar, collectionCalendar) {
 	DBCalendar.add = function (req, res, callback) {
-		console.log("[DBCalendar] Add: '" + req.params.uid + "'");
+		console.log("[DBCalendar] Add", "'" + req.params.uid + "'");
 		googleFuncs.getKey(function (key) {
 			collectionCalendar.findOne({
 				_id: req.params.uid
 			}, function (err, result) {
 				if (err) {
-					console.log("[DBCalendar] Add: " + err.message);
+					console.log("[DBCalendar] Add", err.message);
 					callback({
 						status: 'fail'
 					});
@@ -108,7 +109,7 @@ module.exports = function (DBCalendar, collectionCalendar) {
 							uid: req.params.uid
 						}, function (err, result) {
 							if (err) {
-								console.log("[DBCalendar] Add: '" + err.message + "'");
+								console.log("[DBCalendar] Add", "'" + err.message + "'");
 								callback({
 									status: 'fail'
 								});
@@ -118,12 +119,12 @@ module.exports = function (DBCalendar, collectionCalendar) {
 									calendarid: result.id
 								}, function (err, result) {
 									if (err) {
-										console.log("[DBCalendar] Add: '" + JSON.stringify(err) + "'");
+										console.log("[DBCalendar] Add", "'" + JSON.stringify(err) + "'");
 										callback({
 											status: 'err'
 										});
 									} else {
-										console.log("[DBCalendar] Add: '" + JSON.stringify(result) + "'->'" + req.params.uid + "'");
+										console.log("[DBCalendar] Add", "'" + JSON.stringify(result) + "'->'" + req.params.uid + "'");
 										callback({
 											data: result,
 											status: 'ok'
@@ -133,7 +134,7 @@ module.exports = function (DBCalendar, collectionCalendar) {
 							}
 						});
 					} else {
-						console.log("[DBCalendar] Add: 'Exists'->'" + req.params.uid + "'");
+						console.log("[DBCalendar] Add", "'Exists'->'" + req.params.uid + "'");
 						callback({
 							status: 'fail'
 						});
@@ -143,12 +144,12 @@ module.exports = function (DBCalendar, collectionCalendar) {
 		});
 	};
 	DBCalendar.find = function (req, res, callback) {
-		console.log("[DBCalendar] Find: '" + req.params.uid + "'");
+		console.log("[DBCalendar] Find", "'" + req.params.uid + "'");
 		collectionCalendar.findOne({
 			_id: req.params.uid
 		}, function (err, result) {
 			if (err) {
-				console.error("[DBCalendar] Find: " + err.message);
+				console.error("[DBCalendar] Find", err.message);
 				callback({
 					status: 'fail'
 				});
@@ -161,12 +162,12 @@ module.exports = function (DBCalendar, collectionCalendar) {
 		});
 	};
 	DBCalendar.remove = function (req, res, callback) {
-		console.log("[DBCalendar] Remove: '" + req.params.uid + "'");
+		console.log("[DBCalendar] Remove", "'" + req.params.uid + "'");
 		collectionCalendar.findOne({
 			_id: req.params.uid
 		}, function (err, result) {
 			if (err) {
-				console.log("[DBCalendar] Remove: " + err.message);
+				console.log("[DBCalendar] Remove", err.message);
 				callback({
 					status: 'fail'
 				});
@@ -176,14 +177,14 @@ module.exports = function (DBCalendar, collectionCalendar) {
 					_id: req.params.uid
 				}, function (err, result) {
 					if (err) {
-						console.log("[DBCalendar] Remove: " + err.message);
+						console.log("[DBCalendar] Remove", err.message);
 						callback({
 							status: 'fail'
 						});
 					} else {
 						MUNSNCal.remove(row, function (err, result) {
 							if (err) {
-								console.log("[MUNSNCal] Remove: '" + err + "'");
+								console.log("[MUNSNCal] Remove", "'" + err + "'");
 								callback({
 									status: 'fail'
 								});
@@ -203,7 +204,7 @@ module.exports = function (DBCalendar, collectionCalendar) {
 			function (key) {
 				calendar.events.insert({
 						auth: key,
-						calendarId: "6rqlb7jaeqrgrd0ov5j73tijkg@group.calendar.google.com",
+						calendarId: req.body.calendarid,
 						resource: {
 
 						}
@@ -214,21 +215,5 @@ module.exports = function (DBCalendar, collectionCalendar) {
 				);
 			}
 		);
-	};
-	DBCalendar.removeACL = function (req, res, callback) {
-		collectionCalendar.getOne({
-			_id: req.params.uid
-		}, function (err, result) {
-			if (err) {
-
-			} else {
-				MUNSNCal.removeACL({
-					calendarid: result.calendarid,
-					ruleid: req.params.ruleid
-				}, function (err, result) {
-
-				});
-			}
-		});
 	};
 };
