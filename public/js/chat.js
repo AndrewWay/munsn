@@ -1,6 +1,8 @@
 $(function () {
     var socket = io("/chat");
-    socket.emit('initChat', null);
+    socket.emit('initChat', null, function(result) {
+		console.log(result);
+	});
     console.log("init chat");
     $('form').submit(function () {
         var cmdName = "/name";
