@@ -1,5 +1,6 @@
 var EMS = require('../ems');
 var utils = require('../utils');
+var console = require('../consoleLogger');
 /**
  * @param {object} DBAuth
  * @param {object} collectionAuths
@@ -17,10 +18,10 @@ module.exports = function (DBAuth, collectionAuths, collectionUsers, MAX_VALIDAT
 			key: authkey,
 			expiry: expiry
 		};
-		console.log("[DBAuth] Add: '" + JSON.stringify(auth) + "'");
+		console.log("[DBAuth] Add", "'" + JSON.stringify(auth) + "'");
 		collectionAuths.insert(auth, function (err, result) {
 			if (err) {
-				console.error("[DBAuth]: " + err.message);
+				console.error("[DBAuth] Add", err.message);
 				callback({
 					session: req.session,
 					status: 'fail'
@@ -29,13 +30,14 @@ module.exports = function (DBAuth, collectionAuths, collectionUsers, MAX_VALIDAT
 				//Send auth email to the user with the auth link
 				EMS.sendAuthEmail(auth, function (err, message) {
 					if (err) {
-						console.error('[EMS]: ' + err);
+						console.error('[EMS]', err);
 						callback({
 							session: req.session,
 							status: 'fail'
 						});
 					} else {
-						console.log('[EMS] Sent To: ' + message.header.to + '\n[EMS] Subject: ' + message.header.subject);
+						console.log('[EMS] Sent To', message.header.to);
+						console.log('[EMS] Subject', message.header.subject);
 						callback({
 							session: req.session,
 							data: {
@@ -50,7 +52,7 @@ module.exports = function (DBAuth, collectionAuths, collectionUsers, MAX_VALIDAT
 
 	};
 	DBAuth.update = function (req, res, auth, callback) {
-		console.log("[DBAuth] Update: '" + JSON.stringify(auth) + "'->'" + auth.userid + "'");
+		console.log("[DBAuth] Update", "'" + JSON.stringify(auth) + "'->'" + auth.userid + "'");
 		collectionAuths.update({
 			userid: auth.userid
 		}, {
@@ -59,7 +61,7 @@ module.exports = function (DBAuth, collectionAuths, collectionUsers, MAX_VALIDAT
 			upsert: true
 		}, function (err, result) {
 			if (err) {
-				console.error("[DBAuth] Update: " + err.message);
+				console.error("[DBAuth] Update", err.message);
 				callback({
 					session: req.session,
 					status: 'fail'
@@ -67,13 +69,14 @@ module.exports = function (DBAuth, collectionAuths, collectionUsers, MAX_VALIDAT
 			} else {
 				EMS.resendAuthEmail(auth, function (err, message) {
 					if (err) {
-						console.error("[EMS]: " + err);
+						console.error("[EMS]", err);
 						callback({
 							session: req.session,
 							status: 'fail'
 						});
 					} else {
-						console.log('[EMS] To: ' + message.header.to + '\n[EMS] Subject: ' + message.header.subject);
+						console.log('[EMS] To', message.header.to);
+						console.log('[EMS] Subject', message.header.subject);
 						callback({
 							session: req.session,
 							status: 'ok'
@@ -85,12 +88,12 @@ module.exports = function (DBAuth, collectionAuths, collectionUsers, MAX_VALIDAT
 	};
 	//Check for an existing authkey
 	DBAuth.find = function (req, res, callback) {
-		console.error("[DBAuth] Find: '" + req.query.key + "'");
+		console.error("[DBAuth] Find", "'" + req.query.key + "'");
 		collectionAuths.findOne({
 			key: req.query.key
 		}, function (err, result) {
 			if (err) {
-				console.error("[DBAuth] Find: " + err.message);
+				console.error("[DBAuth] Find", err.message);
 				callback({
 					session: req.session,
 					status: 'fail',
@@ -107,12 +110,12 @@ module.exports = function (DBAuth, collectionAuths, collectionUsers, MAX_VALIDAT
 
 	//Delete authkey
 	DBAuth.remove = function (req, res, auth, callback) {
-		console.log("[DBAuth] Remove: '" + auth.key + "'->'" + auth.userid + "'");
+		console.log("[DBAuth] Remove", "'" + auth.key + "'->'" + auth.userid + "'");
 		collectionAuths.remove(auth, {
 			single: true
 		}, function (err, result) {
 			if (err) {
-				console.error("[DBAuth] Remove: " + err.message);
+				console.error("[DBAuth] Remove", err.message);
 				callback({
 					session: req.session,
 					status: 'fail'
@@ -128,13 +131,13 @@ module.exports = function (DBAuth, collectionAuths, collectionUsers, MAX_VALIDAT
 					upsert: true
 				}, function (err, result) {
 					if (err) {
-						console.error("[DBUsers] Update: " + err.message);
+						console.error("[DBUsers] Update", err.message);
 						callback({
 							session: req.session,
 							status: 'fail'
 						});
 					} else {
-						console.error("[DBUsers] Update: '" + auth.userid + "'->'{auth:'true'}");
+						console.error("[DBUsers] Update", "'" + auth.userid + "'->'{auth:'true'}");
 						callback({
 							session: req.session,
 							status: 'ok'
