@@ -1,6 +1,9 @@
 $(function () {
     var socket = io("/chat");
-    socket.emit('initChat', null);
+    var room = {};
+    socket.emit('initChat', null, function(result) {
+        console.log("CALLBACK: " + result);
+    });
     console.log("init chat");
     $('form').submit(function () {
         var cmdName = "/name";
@@ -10,6 +13,7 @@ $(function () {
             var room = str.substring(cmdRoom.length).trim();
             socket.emit('room', room, function (result) {
                 console.log(JSON.stringify(result));
+                room = result;
             });
             $('#m').val('');
             console.log("ROOM: " + room);
@@ -23,7 +27,7 @@ $(function () {
             console.log("NAME: " + name);
         }
         else {
-            socket.emit('chat message', str);
+            socket.emit('chat message', room, str);
             $('#m').val('');
             console.log("MESSAGE: " + str);
         } 

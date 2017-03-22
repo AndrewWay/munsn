@@ -1,5 +1,6 @@
 var IO = require('../../bin/www');
 var app = require('../../app');
+var DB = require('../db');
 
 var clients = [];
 var nsChat = IO.of("/chat").use(IO.sharedsession(app.session, {
@@ -14,6 +15,35 @@ nsChat.on('connection', function(socket) {
 
     //Init chat event
     socket.on('initChat', function(data, callback) {
+        //Get session
+        var session = socket.handshake.session;
+        if (session && session.user) {
+            //Update users socketid
+            var updates = {
+                "socket.id": socket.id
+            };
+            DB.Socket.update(session.user._id, updates, function(err, result) {
+                if (err) {
+					console.error("[DBSocket] Update: " + err.message);
+                    callback({
+						session: session,
+						status: 'fail'
+					});
+                }
+                else {
+                    //Set random room
+                    var room = Math.floor((Math.random() * 2) + 1);
+                    //Print to console and chat room
+                    console.log("[CHAT][ROOM " + room + "]["  + session.user._id + "][ID " + socket.id + "] Connected!");
+                    socket.join(room);
+                    nsChat.in(room).emit('chat message', "[ROOM " + room + "] " + session.user._id + " Connected!");
+                    callback(room);
+                }
+            });
+        }
+
+        //TODO: Just old reference code
+        /*
         console.log("session user " + JSON.stringify(socket.handshake.session.user));
         var user = socket.handshake.session.user;
         socket.handshake.session.socketid = socket.id;
@@ -33,8 +63,10 @@ nsChat.on('connection', function(socket) {
         console.log("[CHAT][ROOM " + client.room + "]["  + client.name + "][ID " + client.socket.id + "] Connected!");
         socket.join(client.room);
         nsChat.in(room).emit('chat message', "[ROOM " + client.room + "] " + client.name + " Connected!");
+        */
     });
 
+/*
     //Name
     socket.on('name', function(data, callback) {
         console.log("NAME:" + data);
@@ -48,23 +80,14 @@ nsChat.on('connection', function(socket) {
             callback({status: "fail"});
         }
     });
-
+*/
     //Room
     socket.on('room', function(data, callback) {
-        console.log("ROOM:" + data);
-        var index = clientsIndexOf(socket);
-        console.log("INDEX: " + index);
-        if (index != -1) {
-            socket.leave(clients[index].room);
-            socket.join(data);
-            clients[index].room = data;
-            callback({status: "ok"});
-        }
-        else {
-            callback({status: "fail"});
-        }
+        socket.join(data);
+        console.log("[CHAT][" + socket.id + "] joined room " + data);
+        callback(room);
     });
-
+/*
     //User disconnects
     socket.on('disconnect', function() {
         var index = clientsIndexOf(socket);
@@ -74,10 +97,19 @@ nsChat.on('connection', function(socket) {
             clients.splice(index, 1);
         }
     });
+    */
 
     //Chat message
     //TODO: cleanup
-    socket.on('chat message', function(msg){
+    socket.on('chat message', function(room, msg){
+        DB.Socket.find(socket, function (err, result) {
+            console.log(JSON.stringify(socket.rooms));
+            ncChat.in(room).emit('chat message', "[ROOM " + room + "] " + result._id + ": " + msg);
+        });
+    });
+
+        //TODO: Just old reference code
+        /*
         var name;
         var index = clientsIndexOf(socket);
         if (index != -1) {
@@ -89,7 +121,8 @@ nsChat.on('connection', function(socket) {
             nsChat.in(clients[index].room).emit('chat message', "[ROOM " + clients[index].room + "] " + clients[index].name + ": " + msg);
             //IO.emit('chat message', socket.id + ": " + msg);
             console.log("[CHAT][ROOM " + clients[index].room + "] " + clients[index].name + ": " + msg);        }
-    });
+
+            */
 });
 
 /**
