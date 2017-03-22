@@ -46,9 +46,7 @@ MUNSNCal.removeACL = function (data, callback) {
 		calendar.acl.delete({
 			auth: key,
 			calendarId: data.calendarid,
-			resource: {
-				ruleId: 'user:' + data.uid + '@mun.ca'
-			}
+			ruleId: 'user:' + data.rid + '@mun.ca'
 		}, callback);
 	});
 };
@@ -57,10 +55,19 @@ MUNSNCal.addEvent = function (data, callback) {
 		calendar.events.insert({
 			auth: key,
 			calendarId: data.calendarid,
+			resource: {}
+		}, callback);
+	});
+};
+MUNSNCal.updateEvent = function (data, callback) {
+	googleFuncs.getKey(function (key) {
+		calendar.events.update({
+			auth: key,
+			calendarId: data.calendarid,
 			resource: {
 
 			}
-		}, callback);
+		});
 	});
 };
 MUNSNCal.removeEvent = function (data, callback) {
@@ -82,6 +89,7 @@ MUNSNCal.remove = function (data, callback) {
 		}, callback);
 	});
 };
+
 module.exports = function (DBCalendar, collectionCalendar) {
 	DBCalendar.add = function (req, res, callback) {
 		console.log("[DBCalendar] Add: '" + req.params.uid + "'");
@@ -207,18 +215,20 @@ module.exports = function (DBCalendar, collectionCalendar) {
 			}
 		);
 	};
-	DBCalendar.addACL = function (req, res, callback) {
-		googleFuncs.getKey(
-			function (key) {
-				calendar.acl.insert({
-						auth: key,
-						calendarId: "6rqlb7jaeqrgrd0ov5j73tijkg@group.calendar.google.com"
-					},
-					function (err, acl) {
+	DBCalendar.removeACL = function (req, res, callback) {
+		collectionCalendar.getOne({
+			_id: req.params.uid
+		}, function (err, result) {
+			if (err) {
 
-					}
-				);
+			} else {
+				MUNSNCal.removeACL({
+					calendarid: result.calendarid,
+					ruleid: req.params.ruleid
+				}, function (err, result) {
+
+				});
 			}
-		);
+		});
 	};
 };

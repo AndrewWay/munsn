@@ -44,4 +44,9 @@ router.delete('/calendar/:uid', function (req, res, next) {
 		res.json(result);
 	});
 });
+router.delete('/calendar/acl/:uid/:rid', function (req, res, next) {
+	DB.Calendar.removeACL(req, res, function (result) {
+		res.json(result);
+	});
+});
 module.exports = router;

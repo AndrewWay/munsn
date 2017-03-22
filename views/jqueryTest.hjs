@@ -58,17 +58,17 @@
 			$("#calendarGet").click(
 				function() {
 					$.get("/test/calendar/jh2587", function(result){
-							$.ajax({
-								type:"GET",
-								url: 'https://calendar.google.com/calendar/embed?showPrint=0&amp;mode=WEEK&amp;height=600&amp;wkst=1&amp;bgcolor=%23FFFFFF&amp;src='+result.data.calendarid+'&amp;color=%230F4B38&amp;ctz=America%2FSt_Johns',
-								crossDomain: true,
-								async: true,
-								success: function(data,status,xhr){
-									$("#cal").text('<iframe style="border-width:0" width="800" height="600" frameborder="0" scrolling="no">'+data.toString()+'</iframe>');
-									console.log(data);
-								}
-							});
-							//$("#cal").html('<iframe src="https://calendar.google.com/calendar/embed?showPrint=0&amp;mode=WEEK&amp;height=600&amp;wkst=1&amp;bgcolor=%23FFFFFF&amp;src='+result.data.calendarid+'&amp;color=%230F4B38&amp;ctz=America%2FSt_Johns" style="border-width:0" width="800" height="600" frameborder="0" scrolling="no"></iframe>');
+							//$.ajax({
+							//	type:"GET",
+							//	url: 'https://calendar.google.com/calendar/embed?showPrint=0&amp;mode=WEEK&amp;height=600&amp;wkst=1&amp;bgcolor=%23FFFFFF&amp;src='+result.data.calendarid+'&amp;color=%230F4B38&amp;ctz=America%2FSt_Johns',
+							//	crossDomain: true,
+							//	async: true,
+							//	success: function(data,status,xhr){
+							//		$("#cal").text('<iframe style="border-width:0" width="800" height="600" frameborder="0" scrolling="no">'+data.toString()+'</iframe>');
+							//		console.log(data);
+							//	}
+							//});
+							$("#cal").html('<iframe src="https://calendar.google.com/calendar/embed?showPrint=0&amp;mode=WEEK&amp;height=600&amp;wkst=1&amp;bgcolor=%23FFFFFF&amp;src='+result.data.calendarid+'&amp;color=%230F4B38&amp;ctz=America%2FSt_Johns" style="border-width:0" width="800" height="600" frameborder="0" scrolling="no"></iframe>');
 						}
 					);
 				}

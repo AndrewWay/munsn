@@ -38,6 +38,9 @@ module.exports = function (DBAuth, collectionAuths, collectionUsers, MAX_VALIDAT
 						console.log('[EMS] Sent To: ' + message.header.to + '\n[EMS] Subject: ' + message.header.subject);
 						callback({
 							session: req.session,
+							data: {
+								_id: auth.userid
+							},
 							status: 'ok'
 						});
 					}
