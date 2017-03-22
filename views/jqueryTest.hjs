@@ -3,10 +3,28 @@
 <head>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <script src="http://twitter.github.com/hogan.js/builds/3.0.1/hogan-3.0.1.js"></script>
-<script src="/js/test.js"></script>
+<script src="/js/jqueryTest.js"></script>
 <script>
 	$(document).ready(
+
 		function(){
+			jQuery.each( [ "put", "delete" ], function( i, method ) {
+				jQuery[ method ] = function( url, data, callback, type ) {
+					if ( jQuery.isFunction( data ) ) {
+						type = type || callback;
+						callback = data;
+						data = undefined;
+					}
+
+					return jQuery.ajax({
+						url: url,
+						type: method,
+						dataType: type,
+						data: data,
+						success: callback
+					});
+				};
+			});
 			$("#get").click(
 				function(){
 					$.get("/api/user/info/jh2587",function(data){
@@ -23,7 +41,7 @@
 							email: "jh2587@mun.ca"
 						},
 						function(data){
-							alert(JSON.stringify(data));
+							console.log(JSON.stringify(data));
 							window.location = data.redirect;
 						}
 					);
@@ -32,7 +50,7 @@
 			$("#calendarPost").click(
 				function(){
 					$.post("/test/calendar/jh2587",function(result){
-							alert(JSON.stringify(data));
+							console.log(JSON.stringify(result));
 						}
 					);
 				}
@@ -40,15 +58,32 @@
 			$("#calendarGet").click(
 				function() {
 					$.get("/test/calendar/jh2587", function(result){
-							$("#cal").html('<iframe src="https://calendar.google.com/calendar/embed?src='+result.data.calendarid+'&ctz=America/St_Johns" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>');
+							//$.ajax({
+							//	type:"GET",
+							//	url: 'https://calendar.google.com/calendar/embed?showPrint=0&amp;mode=WEEK&amp;height=600&amp;wkst=1&amp;bgcolor=%23FFFFFF&amp;src='+result.data.calendarid+'&amp;color=%230F4B38&amp;ctz=America%2FSt_Johns',
+							//	crossDomain: true,
+							//	async: true,
+							//	success: function(data,status,xhr){
+							//		$("#cal").text('<iframe style="border-width:0" width="800" height="600" frameborder="0" scrolling="no">'+data.toString()+'</iframe>');
+							//		console.log(data);
+							//	}
+							//});
+							$("#cal").html('<iframe src="https://calendar.google.com/calendar/embed?showPrint=0&amp;mode=WEEK&amp;height=600&amp;wkst=1&amp;bgcolor=%23FFFFFF&amp;src='+result.data.calendarid+'&amp;color=%230F4B38&amp;ctz=America%2FSt_Johns" style="border-width:0" width="800" height="600" frameborder="0" scrolling="no"></iframe>');
 						}
 					);
 				}
 			);
-			alert(new Date(Date.now()).toISOString());
+			$("#calendarDelete").click(
+				function() {
+					$.delete("/test/calendar/jh2587", function(result){
+						$("#cal").html('');
+					})
+				}
+			);
 		}
 	);
 </script>
+<link  rel="stylesheet" href="/stylesheets/jqueryTest.css"/>
 </head>
 <body>
 
@@ -57,6 +92,7 @@
 <button id="post">POST STUFF</button>
 <button id="calendarPost">Post Calendar</button>
 <button id="calendarGet">Get Calendar</button>
+<button id="calendarDelete">Delete Calendar</button>
 
 <br>
 <br><div id="div1"><h2>GET DATA WILL APPEAR HERE</h2></div>
