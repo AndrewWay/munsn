@@ -182,23 +182,32 @@ module.exports = function (DBUsers, DBAuth, collectionUsers) {
 			});
 		} else {
 			if (req.body.uid && req.body.pass) {
-				collectionUsers.find({
+				collectionUsers.findOne({
 					_id: req.body.uid,
 					pass: req.body.pass
-				}).toArray(function (err, results) {
-					console.log("results: " + JSON.stringify(results));
-					if (err && results.length) {
+				}, function (err, result) {
+					if (err) {
 						callback({
 							session: req.session,
 							status: 'fail'
 						});
 						console.error("[DBUsers] Login: 'NotFound'->'" + req.body.uid + "'");
 					} else {
-						req.session.user = results[0];
-						callback({
-							session: req.session,
-							status: 'ok'
-						});
+						console.log("[DBUsers] Login: 'Found'->'" + JSON.stringify(result) + "'");
+						if (result.auth) {
+							console.log("[DBUsers] Login->isAuth?: 'Success'->'" + result._id + "'");
+							req.session.user = result;
+							callback({
+								session: req.session,
+								status: 'ok'
+							});
+						} else {
+							console.log("[DBUsers] Login->isAuth?: 'Failed'->'" + result._id + "'");
+							callback({
+								session: req.session,
+								status: 'fail'
+							});
+						}
 						console.log("[SESSION]: 'Created'->'" + JSON.stringify(req.session) + "'");
 					}
 				});

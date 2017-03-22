@@ -113,7 +113,6 @@ function upload(req, dest, name, callback) {
 			var fext = path.extname(filename);
 			//Path where file will be uploaded
 			fs.exists(dir, function (exist) {
-				var name;
 				//If upload(req,dest) then change set name to filename
 				if (!name) {
 					name = filename;
