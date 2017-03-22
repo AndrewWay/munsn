@@ -94,9 +94,32 @@ $(document).ready(function () {
 						console.log("post");
 					}
 				)
-				.done(function () {
+				.done(function(result) {
 					console.log("success");
+					console.log(result);
+					
+					var picForm = new FormData(); 
+					picForm.append("image", $("#picUp")[0].files[0]);
+					//Send multipart/formdata with the image
+					$.ajax({
+						url: '/content/image/profile/'+result.data._id, //Get :uid from the return.
+						type: 'post',
+						data: picForm,
+						cache: false,
+						contentType: false,
+						processData: false,
+						
+					})
+					.done(function(data) {
+						console.log("img uploaded");
+					})
+					.fail(function(data) {
+						console.log("img no uploaded");
+					})
+					
 					$("#regFields")[0].reset();
+					
+					
 					//$("#someDiv").val("Check yo email");
 				})
 				.fail(function () {
