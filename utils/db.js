@@ -15,6 +15,7 @@ var collectionFriendRequests; //Good
 var collectionGroups; //Good
 var collectionGroupMembers; //Good
 var collectionGroupAdmins; //TODO: John, EVALUATE
+var collectionGroupRequests;
 var collectionPosts; //TODO: John, EVALUATE
 var collectionCalendar;
 var collectionComments; //TODO: John, EVALUATE
@@ -202,6 +203,23 @@ mongoClient.connect(dbURL, function (err, DB) {
 		validationLevel: 'strict',
 		validationAction: 'error'
 	});
+
+	DB.createCollection('gRequests', {
+		validator: {
+			$and: [{
+				userid: {
+					$type: 'string'
+				}
+			}, {
+				groupName: {
+					$type: 'string'
+				}
+			}]
+		},
+		validationLevel: 'strict',
+		validationAction: 'error'
+	});
+
 	DB.createCollection('posts', {
 		validator: {
 			$and: [{
@@ -240,7 +258,7 @@ mongoClient.connect(dbURL, function (err, DB) {
 				}
 			}, {
 				data: {
-					$type: 'string'
+					$type: 'object'
 				}
 			}]
 		},
@@ -381,6 +399,7 @@ mongoClient.connect(dbURL, function (err, DB) {
 	collectionGroups = DB.collection('groups');
 	collectionGroupMembers = DB.collection('gMembers');
 	collectionGroupAdmins = DB.collection('gAdmins');
+	collectionGroupRequests = DB.collection('gRequests');
 	collectionPosts = DB.collection('posts');
 	collectionComments = DB.collection('comments');
 	collectionCourses = DB.collection('courses');
@@ -388,7 +407,7 @@ mongoClient.connect(dbURL, function (err, DB) {
 	require('./DB/users')(DBUsers, DBAuth, collectionUsers);
 	require('./DB/auths')(DBAuth, collectionAuths, collectionUsers, MAX_VALIDATE_MINUTES);
 	require('./DB/friends')(DBFriends, collectionFriends, collectionFriendRequests, collectionUsers);
-	require('./DB/groups')(DBGroups, collectionGroups, collectionGroupMembers);
+	require('./DB/groups')(DBGroups, collectionGroups, collectionGroupMembers, collectionGroupRequests, collectionUsers);
 	require('./DB/admins')(DBGroupAdmins, collectionGroupAdmins);
 	require('./DB/members')(DBGroupMembers, collectionGroupMembers);
 	require('./DB/posts')(DBPosts, collectionPosts);

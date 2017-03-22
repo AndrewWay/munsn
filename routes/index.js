@@ -8,8 +8,7 @@ var DB = require('../utils/db');
 router.get('/', function (req, res, next) {
 	if (req.session.user) {
 		res.render('portal', {});
-	}
-	else {
+	} else {
 		res.render('login', {
 			title: 'Login'
 		});
@@ -28,12 +27,13 @@ router.get('/register', function (req, res, next) {
  * logout
  */
 router.get('/logout', function (req, res, next) {
-    if (req.session.user) {
-        req.session.destroy();
-        res.render('login', {
-            title: 'login'
-        });
-    }
+	if (req.session.user) {
+		req.session.destroy();
+		//TODO: This doesn't fix the URL and causes logging into the resulting render to not work or something
+		res.render('login', {
+			title: 'login'
+		});
+	}
 });
 
 router.get('/chat', function (req, res, next) {

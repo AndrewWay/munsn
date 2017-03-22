@@ -30,24 +30,25 @@ var app = express();
 
 //Busboy used for file uploading to the server
 app.use(busboy());
-app.use(
-	session({
-		secret: 'faeb4453e5d14fe6f6d04637f78077c76c73d1b4',
-		proxy: true,
-		resave: true,
-		saveUninitialized: false,
-		cookie: {
-			path: '/',
-			httpOnly: true,
-			maxAge: 600000
-		},
-		unset: 'destroy',
-		rolling: true,
-		store: new MongoStore({
-			url: db.DB_URL
-		})
+
+var sess = session({
+	secret: 'faeb4453e5d14fe6f6d04637f78077c76c73d1b4',
+	proxy: true,
+	resave: true,
+	saveUninitialized: false,
+	cookie: {
+		path: '/',
+		httpOnly: false,
+		maxAge: 600000
+	},
+	unset: 'destroy',
+	rolling: true,
+	store: new MongoStore({
+		url: db.DB_URL,
+		stringify: false
 	})
-);
+});
+app.use(sess);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -84,7 +85,7 @@ app.use('/settings', routerSettings);
 //Resume pages
 app.use('/resume', routerResume);
 //Lost&Found pages
-app.use('/lostfound', routerLostFound)
+app.use('/lostfound', routerLostFound);
 //Test
 app.use('/test', routerTest);
 // catch 404 and forward to error handler
@@ -105,4 +106,5 @@ app.use(function (err, req, res, next) {
 	res.render('error');
 });
 
+app.session = sess;
 module.exports = app;

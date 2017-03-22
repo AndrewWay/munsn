@@ -1,4 +1,4 @@
-module.exports = function (DBGroups, collectionGroups, collectionGroupMembers) {
+module.exports = function (DBGroups, collectionGroups, collectionGroupMembers, collectionGroupRequests) {
 	//Add a group
 	DBGroups.add = function (req, res, callback) {
 		var creatorId = req.body.gid;
@@ -174,6 +174,127 @@ module.exports = function (DBGroups, collectionGroups, collectionGroupMembers) {
 			});
 		} else {
 			console.warn("[DBGroups] Remove: Missing Fields");
+			callback({
+				session: req.session,
+				status: 'fail'
+			});
+		}
+	};
+
+	//GROUP REQUESTS
+	//======================================================================================================
+
+		//Add a friend request
+	DBGroups.addRequest = function (req, res, callback) {
+		//Declare body variables
+		var userId = req.body.uid;
+		var groupName = req.body.gid;
+		//Check if body variables are not null, or undefined
+		console.log("[DBGroups] AddRequest: '" + userId + "'->'" + groupName + "'");
+		if (userId && groupName) {
+			//Check to see if group exists
+			collectionGroups.find({ name: groupName},
+				function (err, result) {
+					if (err) {
+						console.error("[DBGroups] AddRequest: " + err.message);
+						callback({
+							session: req.session,
+							status: 'fail'
+						});
+					} else {
+						if (result) {
+							collectionGroupRequests.insert({
+								userid: userId,
+								groupName: groupName
+							}, function (err, result) {
+								if (err) {
+									console.error("[DBGroups] AddRequest: " + err.message);
+									callback({
+										session: req.session,
+										status: 'fail'
+									});
+								} else {
+									callback({
+										session: req.session,
+										status: 'ok',
+										data: result
+									});
+								}
+							});
+						} else {
+							console.warn("[DBGroups] AddRequest: Group(s) not found");
+							callback({
+								session: req.session,
+								status: 'fail'
+							});
+						}
+					}
+				});
+		} else {
+			console.warn("[DBGroups] AddRequest:  Missing Fields");
+			callback({
+				session: req.session,
+				status: 'fail'
+			});
+		}
+	};
+
+	//Find all group requests from a user
+	DBGroups.findRequests = function (req, res, callback) {
+		var query = {
+			groupName: req.params.gid,
+			userid: req.params.uid
+		};
+		console.log("[DBGroups] FindRequests: '" + query.groupName ? query.groupName : "*" + "'->'" + query.userid ? query.userid : "*" + "'");
+		if (!Object.keys(query).length) {
+			collectionGroupRequests.find(query).toArray(function (err, result) {
+				if (err) {
+					console.error("[DBGroups] FindRequests: " + err.message);
+					callback({
+						session: req.session,
+						status: 'fail'
+					});
+				} else {
+					callback({
+						session: req.session,
+						status: 'ok'
+					});
+				}
+			});
+		} else {
+			console.warn("[DBGroups] FindRequests: Missing Fields");
+			callback({
+				session: req.session,
+				status: 'fail'
+			});
+		}
+	};
+
+	//Remove friend request
+	DBGroups.removeRequest = function (req, res, callback) {
+		//Declare body variables
+		var query = {
+			userid: req.body.uid,
+			groupName: req.body.gid
+		};
+		console.log("[DBGroups] RemoveRequest: '" + query.groupName ? query.groupName : "*" + "'->'" + query.userid ? query.userid : "*" + "'");
+		if (Object.keys(query).length === 2) {
+			collectionGroupRequests.remove(query, function (err, result) {
+				if (err) {
+					console.error("[DBGroups] RemoveRequest: " + err.message);
+					callback({
+						session: req.session,
+						status: 'fail'
+					});
+				} else {
+					callback({
+						session: req.session,
+						status: 'ok'
+					});
+				}
+			});
+		} else {
+			console.warn("[DBGroups] RemoveRequest: Missing Fields");
 			callback({
 				session: req.session,
 				status: 'fail'

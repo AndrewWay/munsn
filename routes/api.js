@@ -260,6 +260,38 @@ var findLost = "/lost/find";
 var findGroupAdmins = "/group/admins/:gid";
 
 /**
+ * findGroupSent
+ *
+ * URL:
+ * 		- %server%/api/user/group/sent/:uid
+ * Descript:
+ *      - Gets the group requests sent from a user
+ * Method:
+ *      - GET
+ * Params:
+ *      - uid: The user id to get requests sent from
+ * Returns:
+ *      - JSON array containing group request objects
+ */
+var findGroupSent = "/user/group/sent/:uid";
+
+/**
+ * findGroupReceived
+ *
+ * URL:
+ * 		- %server%/api/user/group/received/:gid
+ * Descript:
+ *      - Gets the group requests recieved for a group
+ * Method:
+ *      - GET
+ * Params:
+ *      - gid: The group id to get requests recieved from
+ * Returns:
+ *      - JSON array containing group request objects
+ */
+var findGroupReceived = "/group/received/:fid";
+
+/**
  * findCommentById
  *
  * URL:
@@ -761,6 +793,75 @@ var updateComment = "/comment/update";
  *      - JSON mongo result
  */
 var removeComment = "/comment/remove";
+
+/**
+ * sendGroupRequest
+ *
+ * URL:
+ * 		- %server%/api/user/group/request/add
+ * Descript:
+ *      - Add a group request
+ * Method:
+ *      - POST
+ * Params:
+ *      uid: The user id
+ *      groupName: The group name to join
+ * Returns:
+ *      - JSON mongo result
+ */
+var sendGroupRequest = "/user/group/request/add";
+
+/**
+ * removeGroupRequest
+ *
+ * URL:
+ * 		- %server%/api/user/group/request/remove
+ * Descript:
+ *      - Remove a group request
+ * Method:
+ *      - POST
+ * Params:
+ *      uid: The user id
+ *      groupName: The group name to remove teh request from
+ * Returns:
+ *      - JSON mongo result
+ */
+var removeGroupRequest = "/user/group/request/remove";
+
+/**
+ * sendFriendRequest
+ *
+ * URL:
+ * 		- %server%/api/user/friend/request/add
+ * Descript:
+ *      - Add a friend request
+ * Method:
+ *      - POST
+ * Params:
+ *      uid: The user id
+ *      fid: The friend id
+ * Returns:
+ *      - JSON mongo result
+ */
+var sendFriendRequest = "/user/friend/sent/add";
+
+/**
+ * removeFriendRequest
+ *
+ * URL:
+ * 		- %server%/api/user/friend/request/remove
+ * Descript:
+ *      - Remove a friend request
+ * Method:
+ *      - POST
+ * Params:
+ *      uid: The user id
+ *      fid: The friend id
+ * Returns:
+ *      - JSON mongo result
+ */
+var removeFriendRequest = "/user/friend/request/remove";
+
 //==========================================================================================
 
 router.get(findUserById, function (req, res, next) {
@@ -1046,6 +1147,44 @@ router.post(removeComment, function (req, res, next) {
 
 router.post(updateComment, function (req, res, next) {
 	DB.Comments.update(req, res, function (result) {
+		res.json(result);
+	});
+});
+
+//GET get friend requests for a specified user
+router.get(findGroupSent, function (req, res, next) {
+	DB.Groups.findRequests(req, res, function (result) {
+		res.json(result);
+	});
+});
+ 
+//GET get recieved friend requests for a specified user
+router.get(findGroupReceived, function (req, res, next) {
+	DB.Groups.findRequest(req, res, function (result) {
+		res.json(result);
+	});
+});
+
+router.get(sendGroupRequest, function (req, res, next) {
+	DB.Groups.addRequest(req, res, function (result) {
+		res.json(result);
+	});
+});
+
+router.get(removeGroupRequest, function (req, res, next) {
+	DB.Groups.removeRequest(req, res, function (result) {
+		res.json(result);
+	});
+});
+
+router.get(sendFriendRequest, function (req, res, next) {
+	DB.Friends.addRequest(req, res, function (result) {
+		res.json(result);
+	});
+});
+
+router.get(removeFriendRequest, function (req, res, next) {
+	DB.Friends.removeRequest(req, res, function (result) {
 		res.json(result);
 	});
 });

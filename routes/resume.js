@@ -6,9 +6,8 @@ var DB = require('../utils/db');
 
 router.get('/', function (req, res, next) {
 	if (req.session.user) {
-    	res.render('resume', {});
-	}
-	else {
+		res.render('resume', {});
+	} else {
 		res.render('resume', {});
 	}
 });
