@@ -21,6 +21,7 @@ var collectionCalendar;
 var collectionComments; //TODO: John, EVALUATE
 var collectionCourses;
 var collectionLostFound;
+var collectionSocket;
 var DBAuth = {};
 var DBPosts = {};
 var DBGroups = {};
@@ -32,6 +33,7 @@ var DBComments = {};
 var DBCourses = {};
 var DBLostFound = {};
 var DBCalendar = {};
+var DBSocket = {};
 //TODO: Devin, TESTING
 //Connect to the database
 mongoClient.connect(dbURL, function (err, DB) {
@@ -390,6 +392,22 @@ mongoClient.connect(dbURL, function (err, DB) {
 		validationLevel: 'strict',
 		validationAction: 'error'
 	});
+
+	DB.createCollection('socket', {
+		validator: {
+			$and: [{
+				_id: {
+					$type: 'string'
+				},
+				socket: {
+					$type: 'object'
+				}
+			},
+			]
+		},
+		validationLevel: 'strict',
+		validationAction: 'error'
+	});
 	//Variables set to mongo collections
 	collectionAuths = DB.collection('authkeys');
 	collectionCalendar = DB.collection('calendars');
@@ -404,6 +422,7 @@ mongoClient.connect(dbURL, function (err, DB) {
 	collectionComments = DB.collection('comments');
 	collectionCourses = DB.collection('courses');
 	collectionLostFound = DB.collection('lost');
+	collectionSocket = DB.collection('socket');
 	require('./DB/users')(DBUsers, DBAuth, collectionUsers);
 	require('./DB/auths')(DBAuth, collectionAuths, collectionUsers, MAX_VALIDATE_MINUTES);
 	require('./DB/friends')(DBFriends, collectionFriends, collectionFriendRequests, collectionUsers);
@@ -415,6 +434,7 @@ mongoClient.connect(dbURL, function (err, DB) {
 	require('./DB/courses')(DBCourses, collectionCourses);
 	require('./DB/lostfound')(DBLostFound, collectionLostFound);
 	require('./DB/calendar')(DBCalendar, collectionCalendar);
+	require('./DB/socket')(DBSocket, collectionSocket);
 });
 
 
@@ -430,6 +450,7 @@ module.exports = {
 	Comments: DBComments,
 	Courses: DBCourses,
 	LostFound: DBLostFound,
+	Socket: DBSocket,
 	DB_URL: dbURL,
 	MAX_VALIDATE_MINUTES: MAX_VALIDATE_MINUTES
 };
