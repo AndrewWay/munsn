@@ -14,11 +14,24 @@ module.exports = function (DBSocket, collectionSocket) {
 	};
 
     	//Find users matching query
-	DBSocket.find = function (socket, callback) {
-		console.log("[DBSocket] Find: '" + JSON.stringify(socket)  + "'");
-		collectionSocket.find({socket: socket}).toArray(function (err, result) {
+	DBSocket.find = function (socketid, callback) {
+		console.log("[DBSocket] Find: '" + socketid  + "'");
+		collectionSocket.findOne({socketid: socketid}, function (err, result) {
             if (err) {
-                console.error("[DBSocket] Update: " + err.message);
+                console.error("[DBSocket] Find: " + err.message);
+                callback(err, result);
+            } else {
+                callback(err, result);
+            }
+		});
+	};
+
+        	//Find users matching query
+	DBSocket.findAndUpdate = function (uid, socketid, callback) {
+		console.log("[DBSocket] Find: '" + socketid  + "'");
+		collectionSocket.findAndModify({_id: uid}, [['_id', 'ascending']], {$set: {socketid: socketid}}, {upsert: true, new: true}, function (err, result) {
+            if (err) {
+                console.error("[DBSocket] Find: " + err.message);
                 callback(err, result);
             } else {
                 callback(err, result);

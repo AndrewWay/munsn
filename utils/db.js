@@ -399,8 +399,8 @@ mongoClient.connect(dbURL, function (err, DB) {
 				_id: {
 					$type: 'string'
 				},
-				socket: {
-					$type: 'object'
+				socketid: {
+					$type: 'string'
 				}
 			},
 			]
