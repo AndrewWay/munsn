@@ -95,6 +95,7 @@ nsChat.on('connection', function (socket) {
             console.log("[Socket] FindUid->Result", JSON.stringify(uidResult));
             DB.Socket.findSid(socket.id, function (err, sidResult) {
                 nsChat.to(uidResult.socketid).emit('chat message', "[PM: " + sidResult._id + "] " + msg);
+                nsChat.to(sidResult.socketid).emit('chat message', "[PM: " + sidResult._id + "] " + msg);
             });
         });
     });
