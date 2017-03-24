@@ -17,7 +17,7 @@ $(function () {
         var str = input.split(" ");
         //Check for cmdRoom
         if (str[0].indexOf(cmdRoom) == 0) {
-            var room = str[0].substring(cmdRoom.length).trim();
+            var room = str[1];
             socket.emit('room', room, function (result) {
                 currentRoom = result;
                 console.log(JSON.stringify(result));
