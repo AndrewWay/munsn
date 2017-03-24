@@ -186,32 +186,40 @@ module.exports = function (DBUsers, DBAuth, collectionUsers) {
 					_id: req.body.uid
 				}, function (err, result) {
 					if (err) {
-						console.error("[DBUsers] Login", "'NotFound'->'" + req.body.uid + "'");
+						console.error("[DBUsers] Login", err.message);
 						callback({
 							session: req.session,
 							status: 'fail'
 						});
 					} else {
-						console.log("[DBUsers] Login", "'Found'->'" + JSON.stringify(result) + "'");
-						if (result.pass == req.body.pass) {
-							console.log("[DBUsers] Login->Password?", "'" + result.pass + "'->'" + req.body.pass + "'");
-							if (result.auth) {
-								console.log("[DBUsers] Login->isAuth?", " 'Success'->'" + result._id + "'");
-								req.session.user = result;
-								callback({
-									session: req.session,
-									status: 'ok'
-								});
-								console.log("[SESSION]", "'Created'->'" + JSON.stringify(req.session) + "'");
+						if (result) {
+							console.log("[DBUsers] Login", "'Found'->'" + JSON.stringify(result) + "'");
+							if (result.pass == req.body.pass) {
+								console.log("[DBUsers] Login->Password?", "'" + result.pass + "'->'" + req.body.pass + "'");
+								if (result.auth) {
+									console.log("[DBUsers] Login->isAuth?", " 'Success'->'" + result._id + "'");
+									req.session.user = result;
+									console.log("[SESSION]", "'Created'->'" + JSON.stringify(req.session) + "'");
+									callback({
+										session: req.session,
+										status: 'ok'
+									});
+								} else {
+									console.warn("[DBUsers] Login->isAuth?", "'Failed'->'" + result._id + "'");
+									callback({
+										session: req.session,
+										status: 'fail'
+									});
+								}
 							} else {
-								console.warn("[DBUsers] Login->isAuth?", "'Failed'->'" + result._id + "'");
+								console.warn("[DBUsers] Login->Password?", "'" + result.pass + "'->'" + req.body.pass + "'");
 								callback({
 									session: req.session,
 									status: 'fail'
 								});
 							}
 						} else {
-							console.error("[DBUsers] Login->Password?", "'" + result.pass + "'->'" + req.body.pass + "'");
+							console.warn("[DBUsers] Login", "'NotFound'->'" + req.body.uid + "'");
 							callback({
 								session: req.session,
 								status: 'fail'

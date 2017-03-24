@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var path = require('path');
 var utils = require('../utils/utils');
+var console = require('../utils/consoleLogger');
 
 /**
  * Return User profile picture named 'profile'

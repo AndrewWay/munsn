@@ -28,9 +28,9 @@
 			$("#get").click(
 				function(){
 					$.get("/api/user/info/jh2587",function(data){
-							$("#div1").text(JSON.stringify(data));
+							$("#div1").append(JSON.stringify(data));
 					});
-					}
+				}
 			);
 			$("#post").click(
 				function(){
@@ -49,35 +49,50 @@
 			);
 			$("#calendarPost").click(
 				function(){
-					$.post("/test/calendar/jh2587",function(result){
-							console.log(JSON.stringify(result));
+					$.post("/test/calendar/user/jh2587",function(result){
+						if(result.data){
+							$("#cal").html('<iframe src="https://calendar.google.com/calendar/embed?showPrint=0&amp;mode=WEEK&amp;height=600&amp;wkst=1&amp;bgcolor=%23FFFFFF&amp;src='+result.data.id+'&amp;color=%230F4B38&amp;ctz=America%2FSt_Johns" style="border-width:0" width="800" height="600" frameborder="0" scrolling="no"></iframe>');
 						}
-					);
+						console.log(result);
+					});
 				}
 			);
 			$("#calendarGet").click(
 				function() {
-					$.get("/test/calendar/jh2587", function(result){
-							//$.ajax({
-							//	type:"GET",
-							//	url: 'https://calendar.google.com/calendar/embed?showPrint=0&amp;mode=WEEK&amp;height=600&amp;wkst=1&amp;bgcolor=%23FFFFFF&amp;src='+result.data.calendarid+'&amp;color=%230F4B38&amp;ctz=America%2FSt_Johns',
-							//	crossDomain: true,
-							//	async: true,
-							//	success: function(data,status,xhr){
-							//		$("#cal").text('<iframe style="border-width:0" width="800" height="600" frameborder="0" scrolling="no">'+data.toString()+'</iframe>');
-							//		console.log(data);
-							//	}
-							//});
-							$("#cal").html('<iframe src="https://calendar.google.com/calendar/embed?showPrint=0&amp;mode=WEEK&amp;height=600&amp;wkst=1&amp;bgcolor=%23FFFFFF&amp;src='+result.data.calendarid+'&amp;color=%230F4B38&amp;ctz=America%2FSt_Johns" style="border-width:0" width="800" height="600" frameborder="0" scrolling="no"></iframe>');
+					$.get("/test/calendar/user/jh2587", function(result){
+						if(result.data){
+							$("#cal").html('<iframe src="https://calendar.google.com/calendar/embed?showPrint=0&amp;mode=WEEK&amp;height=600&amp;wkst=1&amp;bgcolor=%23FFFFFF&amp;src='+result.data.id+'&amp;color=%230F4B38&amp;ctz=America%2FSt_Johns" style="border-width:0" width="800" height="600" frameborder="0" scrolling="no"></iframe>');
 						}
-					);
+						console.log(result);
+					});
 				}
 			);
 			$("#calendarDelete").click(
 				function() {
-					$.delete("/test/calendar/jh2587", function(result){
+					$.delete("/test/calendar/user/jh2587", function(result){
 						$("#cal").html('');
+						console.log(result);
 					})
+				}
+			);
+			$("#calendarEventsPost").click(
+				function(){
+					var evnt = {
+						'start' : {
+							'dateTime':'2017-01-01T11:00:00',
+							'timeZone':'America/St_Johns'
+						},
+						'end':{
+							'dateTime':'2017-01-01T11:50:00',
+							'timeZone':'America/St_Johns'
+						},
+						'recurrence':['RRULE:FREQ=WEEKLY;UNTIL=20170405T023000Z;WKST=MO;BYDAY=MO,WE,FR'],
+						'summary':'test',
+						'description':'descriptionstuff'
+					};
+					$.post("/test/calendar/events/jh2587",evnt,function(result) {
+						console.log(result)
+					});
 				}
 			);
 		}
@@ -90,10 +105,16 @@
 
 <button id="get">GET STUFF</button>
 <button id="post">POST STUFF</button>
+<br>
+<h2>CALENDAR USER</h2>
 <button id="calendarPost">Post Calendar</button>
 <button id="calendarGet">Get Calendar</button>
 <button id="calendarDelete">Delete Calendar</button>
-
+<br>
+<h2>CALENDAR USER EVENT</h2>
+<button id="calendarEventsPost">Post Calendar Event</button>
+<button id="calendarEventsGet">Get Calendar Event</button>
+<button id="calendarEventsDelete">Delete Calendar Event</button>
 <br>
 <br><div id="div1"><h2>GET DATA WILL APPEAR HERE</h2></div>
 <br><div id="div2"><h2>POST DATA HERE</h2></div>

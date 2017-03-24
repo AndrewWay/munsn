@@ -33,18 +33,33 @@ router.post('/', function (req, res, next) {
 });
 
 //TODO: Finish calendar features and move them to the content router
-router.post('/calendar/:uid', function (req, res, next) {
+router.get('/calendar/user/:uid', function (req, res, next) {
+	DB.Calendar.get(req, res, function (result) {
+		res.json(result);
+	});
+});
+router.post('/calendar/user/:uid', function (req, res, next) {
 	DB.Calendar.add(req, res, function (result) {
 		res.json(result);
 	});
 });
-router.get('/calendar/:uid', function (req, res, next) {
-	DB.Calendar.find(req, res, function (result) {
+router.delete('/calendar/user/:uid', function (req, res, next) {
+	DB.Calendar.remove(req, res, function (result) {
 		res.json(result);
 	});
 });
-router.delete('/calendar/:uid', function (req, res, next) {
-	DB.Calendar.remove(req, res, function (result) {
+router.get('/calendar/events/:uid', function (req, res, next) {
+	DB.Calendar.findEvent(req, res, function (result) {
+		res.json(result);
+	});
+});
+router.post('/calendar/events/:uid', function (req, res, next) {
+	DB.Calendar.insertEvent(req, res, function (result) {
+		res.json(result);
+	});
+});
+router.delete('/calendar/events/:uid', function (req, res, next) {
+	DB.Calendar.removeEvent(req, res, function (result) {
 		res.json(result);
 	});
 });

@@ -387,10 +387,13 @@ mongoClient.connect(dbURL, function (err, DB) {
 				calendarid: {
 					$type: 'string'
 				}
+				/*
+				events: {
+					$type: 'array'
+				}
+				*/
 			}]
-		},
-		validationLevel: 'strict',
-		validationAction: 'error'
+		}
 	});
 
 	DB.createCollection('socket', {
@@ -402,8 +405,7 @@ mongoClient.connect(dbURL, function (err, DB) {
 				socketid: {
 					$type: 'string'
 				}
-			},
-			]
+			}, ]
 		},
 		validationLevel: 'strict',
 		validationAction: 'error'

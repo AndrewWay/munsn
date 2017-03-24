@@ -12,19 +12,37 @@ MUNSNCal.add = function (data, callback) {
 			resource: {
 				summary: data.uid
 			}
-		}, function (err, result) {
+		}, function (err1, result1) {
 			var acl = {
-				calendarId: result.id,
+				calendarId: result1.id,
 				role: 'writer',
 				type: 'user',
 				value: data.uid + '@mun.ca'
 			};
 			MUNSNCal.addACL({
 				calendarId: acl.calendarId
+			}, function (err2, result2) {
+				MUNSNCal.addACL(acl, function (err3, result3) {
+					callback(err1, result1);
+				});
 			});
-			MUNSNCal.addACL(acl);
-			callback(err, result);
 		});
+	});
+};
+MUNSNCal.get = function (data, callback) {
+	googleFuncs.getKey(function (key) {
+		calendar.calendars.get({
+			auth: key,
+			calendarId: data.calendarid
+		}, callback);
+	});
+};
+MUNSNCal.remove = function (data, callback) {
+	googleFuncs.getKey(function (key) {
+		calendar.calendars.delete({
+			auth: key,
+			calendarId: data.calendarid
+		}, callback);
 	});
 };
 MUNSNCal.addACL = function (data, callback) {
@@ -56,7 +74,7 @@ MUNSNCal.addEvent = function (data, callback) {
 		calendar.events.insert({
 			auth: key,
 			calendarId: data.calendarid,
-			resource: {}
+			resource: data.resource
 		}, callback);
 	});
 };
@@ -65,11 +83,34 @@ MUNSNCal.updateEvent = function (data, callback) {
 		calendar.events.update({
 			auth: key,
 			calendarId: data.calendarid,
-			resource: {
-
-			}
-		});
+			resource: data.resource
+		}, callback);
 	});
+};
+MUNSNCal.findEvents = function (data, callback) {
+	googleFuncs.getKey(
+		function (key) {
+			calendar.events.insert({
+					auth: key,
+					calendarId: result.calendarid,
+					resource: evnt
+				},
+				function (err, result) {
+					if (err) {
+						console.error("[DBCalendar] InsertEvent", err.message);
+						callback({
+							status: 'fail'
+						});
+					} else {
+						callback({
+							status: 'ok',
+							data: result
+						});
+					}
+				}
+			);
+		}
+	);
 };
 MUNSNCal.removeEvent = function (data, callback) {
 	googleFuncs.getKey(function (key) {
@@ -82,14 +123,6 @@ MUNSNCal.removeEvent = function (data, callback) {
 		}, callback);
 	});
 };
-MUNSNCal.remove = function (data, callback) {
-	googleFuncs.getKey(function (key) {
-		calendar.calendars.delete({
-			auth: key,
-			calendarId: data.calendarid
-		}, callback);
-	});
-};
 
 module.exports = function (DBCalendar, collectionCalendar) {
 	DBCalendar.add = function (req, res, callback) {
@@ -97,17 +130,17 @@ module.exports = function (DBCalendar, collectionCalendar) {
 		googleFuncs.getKey(function (key) {
 			collectionCalendar.findOne({
 				_id: req.params.uid
-			}, function (err, result) {
+			}, function (err, fResult) {
 				if (err) {
 					console.log("[DBCalendar] Add", err.message);
 					callback({
 						status: 'fail'
 					});
 				} else {
-					if (!result) {
+					if (!fResult) {
 						MUNSNCal.add({
 							uid: req.params.uid
-						}, function (err, result) {
+						}, function (err, aResult) {
 							if (err) {
 								console.log("[DBCalendar] Add", "'" + err.message + "'");
 								callback({
@@ -116,17 +149,18 @@ module.exports = function (DBCalendar, collectionCalendar) {
 							} else {
 								collectionCalendar.insert({
 									_id: req.params.uid,
-									calendarid: result.id
-								}, function (err, result) {
+									calendarid: aResult.id,
+									events: []
+								}, function (err, iResult) {
 									if (err) {
 										console.log("[DBCalendar] Add", "'" + JSON.stringify(err) + "'");
 										callback({
 											status: 'err'
 										});
 									} else {
-										console.log("[DBCalendar] Add", "'" + JSON.stringify(result) + "'->'" + req.params.uid + "'");
+										console.log("[DBCalendar] Add", "'{uid:'" + req.params.uid + "', data:'" + JSON.stringify(aResult) + "'}'->'" + JSON.stringify(iResult) + "'");
 										callback({
-											data: result,
+											data: aResult,
 											status: 'ok'
 										});
 									}
@@ -143,21 +177,38 @@ module.exports = function (DBCalendar, collectionCalendar) {
 			});
 		});
 	};
-	DBCalendar.find = function (req, res, callback) {
+	DBCalendar.get = function (req, res, callback) {
 		console.log("[DBCalendar] Find", "'" + req.params.uid + "'");
 		collectionCalendar.findOne({
 			_id: req.params.uid
-		}, function (err, result) {
+		}, function (err, fResult) {
+			var row = fResult;
 			if (err) {
-				console.error("[DBCalendar] Find", err.message);
+				console.error("[DBCalendar] Get", err.message);
 				callback({
 					status: 'fail'
 				});
 			} else {
-				callback({
-					status: 'ok',
-					data: result
-				});
+				if (!row) {
+					console.warn("[DBCalendar] Get", "'NotExist'->'" + req.params.uid + "'");
+					callback({
+						status: 'fail'
+					});
+				} else {
+					MUNSNCal.get(row, function (err, gResult) {
+						if (err) {
+							console.error("[DBCalendar] Get", "'" + err + "'");
+							callback({
+								status: 'fail'
+							});
+						} else {
+							callback({
+								status: 'ok',
+								data: gResult
+							});
+						}
+					});
+				}
 			}
 		});
 	};
@@ -165,55 +216,87 @@ module.exports = function (DBCalendar, collectionCalendar) {
 		console.log("[DBCalendar] Remove", "'" + req.params.uid + "'");
 		collectionCalendar.findOne({
 			_id: req.params.uid
-		}, function (err, result) {
+		}, function (err, fResult) {
 			if (err) {
 				console.log("[DBCalendar] Remove", err.message);
 				callback({
 					status: 'fail'
 				});
 			} else {
-				var row = result;
+				var row = fResult;
 				collectionCalendar.remove({
 					_id: req.params.uid
-				}, function (err, result) {
+				}, function (err, rResult) {
 					if (err) {
 						console.log("[DBCalendar] Remove", err.message);
 						callback({
 							status: 'fail'
 						});
 					} else {
-						MUNSNCal.remove(row, function (err, result) {
-							if (err) {
-								console.log("[MUNSNCal] Remove", "'" + err + "'");
-								callback({
-									status: 'fail'
-								});
-							} else {
-								callback({
-									status: 'ok'
-								});
-							}
-						});
+						if (!fResult) {
+							console.warn("[DBCalendar] Remove", "'NotExist'->'" + req.params.uid + "'");
+							callback({
+								status: 'fail'
+							});
+						} else {
+							MUNSNCal.remove(row, function (err, result) {
+								if (err) {
+									console.log("[MUNSNCal] Remove", "'" + err + "'");
+									callback({
+										status: 'fail',
+										data: result
+									});
+								} else {
+									callback({
+										status: 'ok',
+										data: result
+									});
+								}
+							});
+						}
 					}
 				});
 			}
 		});
 	};
 	DBCalendar.insertEvent = function (req, res, callback) {
-		googleFuncs.getKey(
-			function (key) {
-				calendar.events.insert({
-						auth: key,
-						calendarId: req.body.calendarid,
-						resource: {
-
-						}
-					},
-					function (err, event) {
-
+		var evnt = {
+			start: req.body.start,
+			end: req.body.end,
+			recurrence: req.body.recurrence,
+			summary: req.body.summary,
+			description: req.body.description
+		};
+		console.log("[DBCalendar] InsertEvent", "'" + JSON.stringify(evnt) + "'->'" + req.params.uid + "'");
+		collectionCalendar.findOne({
+			_id: req.params.uid
+		}, function (err, result) {
+			if (err) {
+				console.error("[DBCalendar] InsertEvent", err.message);
+				callback({
+					status: 'fail'
+				});
+			} else {
+				var data = {
+					calendarid: result.calendarid,
+					resource: evnt
+				};
+				MUNSNCal.addEvent(data, function (err, result) {
+					if (err) {
+						console.log("[DBCalendar] InsertEvent", err.message);
+						callback({
+							status: 'fail',
+							data: result
+						});
+					} else {
+						console.log("[DBCalendar] InsertEvent", "'" + JSON.stringify(result) + "'->'" + "'{uid:'" + req.params.uid + "', calendarId:'" + data.calendarid + "'}'");
+						callback({
+							status: 'ok',
+							data: result
+						});
 					}
-				);
+				});
 			}
-		);
+		});
 	};
 };
