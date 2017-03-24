@@ -1,5 +1,5 @@
 var console = require('../consoleLogger');
-module.exports = function (DBSocket, collectionSocket) {
+module.exports = function (DBSocket, collectionSocket, collectionMessages) {
 
 	//Updates the user
 	DBSocket.update = function (uid, updates, callback) {
@@ -75,4 +75,47 @@ module.exports = function (DBSocket, collectionSocket) {
 			}
 		});
 	};
+
+	//Save a message to the collectionMessages
+	//Will check to see if the message object exists in the collection, if not then insert and update
+	DBSocket.saveMessage = function (sender, reciever, msg, callback) {
+		console.log("[DBSocket] SaveMessage", "'{sender:'" + sender + "'}->{reciever:'" + reciever + "', message:'" + msg + "}");
+		//Find the doc first
+		collectionMessages.findOne({users: {$all: [sender, reciever]}}, function(findErr, findResult) {
+			if (findErr) {
+				console.error("[DBSocket] SaveMessage: FindOne", findErr.message);
+				callback(findErr, findResult);
+			} else {
+				console.log("MESSAGE RESULT: " + JSON.stringify(findResult));	
+				//If found then continue with _id
+				if (findResult) {
+					collectionMessages.update({_id: findResult._id}, {$addToSet: {users: {$each: [sender, reciever]}}, $push: {messages: msg}}, function(updateErr, updateResult) {
+						if (updateErr) {
+							console.error("[DBSocket] SaveMessage: UpdateWithId", updateErr.message);
+							callback(updateErr, updateResult);
+						}
+						else {
+							console.log("[DBSocket] SaveMessage: UpdateWithId", updateResult);
+							callback(updateErr, updateResult);	
+						}
+					});
+				}
+				//Else use query
+				else {
+					collectionMessages.update({users: {$all: [{$elemMatch: {sender}}, {$elemMatch: {reciever}}]}}, {$addToSet: {users: {$each: [sender, reciever]}}, $push: {messages: msg}}, {upsert: true}, function(updateErr, updateResult) {
+						if (updateErr) {
+							console.error("[DBSocket] SaveMessage: UpdateWithQuery", updateErr.message);
+							callback(updateErr, updateResult);
+						}
+						else {
+							console.log("[DBSocket] SaveMessage: UpdateWithQuery", updateResult);
+							callback(updateErr, updateResult);	
+						}
+					});
+				}
+			}
+		});
+	};
 };
+
+//		collectionMessages.findAndModify({users: {$all: [{$elemMatch: {sender} }, {$elemMatch: {reciever}}]}}, [['users', 'ascending']], {$addToSet: {users: {$each: [sender, reciever]}}, $push: {messages: msg}}, {upsert: true, new: true}, function(err, result) {
