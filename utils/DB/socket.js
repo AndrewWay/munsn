@@ -116,6 +116,21 @@ module.exports = function (DBSocket, collectionSocket, collectionMessages) {
 			}
 		});
 	};
-};
 
-//		collectionMessages.findAndModify({users: {$all: [{$elemMatch: {sender} }, {$elemMatch: {reciever}}]}}, [['users', 'ascending']], {$addToSet: {users: {$each: [sender, reciever]}}, $push: {messages: msg}}, {upsert: true, new: true}, function(err, result) {
+	DBSocket.loadMessages = function (req, res, callback) {
+		console.log(JSON.stringify(req.params));
+		var user1 = req.params.uid1;
+		var user2 = req.params.uid2;
+		console.log("[DBSocket] LoadMessage", "'{user1:'" + user1 + "'}->{user2:'" + user2 + "'}");
+		collectionMessages.find({users: {$all: [{$elemMatch: {user1}}, {$elemMatch: {user2}}]}}, {'messages': 1}).toArray(function(err, results) {
+			if (err) {
+				console.error("[DBSocket] LoadMessage: ", err.message);
+				callback(err, results);
+			}
+			else {
+				console.log("[DBSocket] LoadMessage: ", results);
+				callback(err, results);	
+			}
+		});
+	};
+};
