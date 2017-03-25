@@ -4,7 +4,7 @@ var fs = require('fs-extra');
 var path = require('path');
 var mp = require('multiparty');
 var utils = require('../utils/utils');
-var DB = require("../utils/db");
+
 
 /* GET Test upload page. */
 router.get('/upload', function (req, res, next) {
@@ -33,34 +33,5 @@ router.post('/', function (req, res, next) {
 });
 
 //TODO: Finish calendar features and move them to the content router
-router.get('/calendar/user/:uid', function (req, res, next) {
-	DB.Calendar.get(req, res, function (result) {
-		res.json(result);
-	});
-});
-router.post('/calendar/user/:uid', function (req, res, next) {
-	DB.Calendar.add(req, res, function (result) {
-		res.json(result);
-	});
-});
-router.delete('/calendar/user/:uid', function (req, res, next) {
-	DB.Calendar.remove(req, res, function (result) {
-		res.json(result);
-	});
-});
-router.get('/calendar/events/:uid', function (req, res, next) {
-	DB.Calendar.findEvent(req, res, function (result) {
-		res.json(result);
-	});
-});
-router.post('/calendar/events/:uid', function (req, res, next) {
-	DB.Calendar.insertEvent(req, res, function (result) {
-		res.json(result);
-	});
-});
-router.delete('/calendar/events/:uid', function (req, res, next) {
-	DB.Calendar.removeEvent(req, res, function (result) {
-		res.json(result);
-	});
-});
+
 module.exports = router;

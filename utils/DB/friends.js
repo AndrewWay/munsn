@@ -3,34 +3,41 @@ module.exports = function (DBFriends, collectionFriends, collectionFriendRequest
 	//Adds the friendId to the userId's friend list
 	DBFriends.add = function (userId, friendId, callback) {
 		console.log("[DBFriends] Add", "'" + userId + "'->'" + friendId + "'");
-		collectionFriends.update({
-			_id: userId
-		}, {
-			$push: {
-				friends: friendId
-			}
-		}, {
-			upsert: true
-		}, function (err, result) {
-			if (err) {
-				console.error("[DBFriends] Add", err.message);
-				callback({
-					status: 'fail'
-				});
-			} else {
-				callback({
-					status: 'ok'
-				});
-			}
-		});
+		if (userId && friendId) {
+			collectionFriends.update({
+				_id: userId
+			}, {
+				$push: {
+					friends: friendId
+				}
+			}, {
+				upsert: true
+			}, function (err, result) {
+				if (err) {
+					console.error("[DBFriends] Add", err.message);
+					callback({
+						status: 'fail'
+					});
+				} else {
+					callback({
+						status: 'ok'
+					});
+				}
+			});
+		} else {
+			console.warn("[DBFriends] Add", "'Missing Fields'");
+			callback({
+				status: 'ok'
+			});
+		}
 	};
 
 	//Finds all friends of a userId and returns it as an array
 	DBFriends.find = function (req, res, callback) {
-		console.log("[DBFriends] Find", "'" + req.params.uid + "'");
-		if (req.params.uid) {
+		console.log("[DBFriends] Find", "'" + req.UserID + "'");
+		if (req.UserID) {
 			collectionFriends.find({
-				_id: req.params.uid
+				_id: req.UserID
 			}, {
 				friends: true
 			}).toArray(function (err, result) {
@@ -48,7 +55,7 @@ module.exports = function (DBFriends, collectionFriends, collectionFriendRequest
 				}
 			});
 		} else {
-			console.warn("[DBFriends] Find", "'" + req.params.uid + "'");
+			console.warn("[DBFriends] Find", "'Missing Fields'");
 			callback({
 				session: req.session,
 				status: 'fail'
@@ -95,7 +102,7 @@ module.exports = function (DBFriends, collectionFriends, collectionFriendRequest
 
 	//Suggest friends
 	DBFriends.suggest = function (req, res, callback) {
-		console.log("[DBFriends] Suggest", "'" + req.params.uid + "'");
+		console.log("[DBFriends] Suggest", "'" + req.UserID + "'");
 		var users = {};
 		//Find friends of friends
 		collectionFriends.aggregate([{
@@ -109,7 +116,7 @@ module.exports = function (DBFriends, collectionFriends, collectionFriendRequest
 			}
 		}, {
 			$match: {
-				_id: req.params.uid
+				_id: req.UserID
 			}
 		}], function (err, fof) {
 			if (err) {
@@ -125,7 +132,7 @@ module.exports = function (DBFriends, collectionFriends, collectionFriendRequest
 						//Iterate through the friends of friends
 						for (var j = 0; j < fof[i].fof[0].friends.length; j++) {
 							//Skip if an index is the user itself, we don't want to add theirselves
-							if (fof[i].fof[0].friends[j] === req.params.uid) {
+							if (fof[i].fof[0].friends[j] === req.UserID) {
 								continue;
 							}
 							users[fof[i].fof[0].friends[j]] = true;
@@ -137,7 +144,7 @@ module.exports = function (DBFriends, collectionFriends, collectionFriendRequest
 						data: Object.keys(users)
 					});
 				} else {
-					console.warn("[DBFriends] Suggest", "'NoDataFound'->'" + req.params.uid + "'");
+					console.warn("[DBFriends] Suggest", "'None'->'" + req.UserID + "'");
 					callback({
 						session: req.session,
 						status: 'fail'
@@ -219,10 +226,10 @@ module.exports = function (DBFriends, collectionFriends, collectionFriendRequest
 	DBFriends.findRequests = function (req, res, callback) {
 		var query = {
 			friendid: req.params.fid,
-			userid: req.params.uid
+			userid: req.UserID
 		};
 		console.log("[DBFriends] FindRequests", "'" + query.friendid ? query.friendid : "*" + "'->'" + query.userid ? query.userid : "*" + "'");
-		if (!Object.keys(query).length) {
+		if (Object.keys(query).length === 2) {
 			collectionFriendRequests.find(query).toArray(function (err, result) {
 				if (err) {
 					console.error("[DBFriends] FindRequests", err.message);

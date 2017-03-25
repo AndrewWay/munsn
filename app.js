@@ -11,7 +11,6 @@ var assert = require('assert');
 var db = require('./utils/db');
 var ems = require('./utils/ems');
 var busboy = require('connect-busboy');
-
 //Routes
 var routerIndex = require('./routes/index');
 var routerApi = require('./routes/api');
@@ -57,6 +56,7 @@ app.set('view engine', 'hjs');
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
+
 app.use(
 	bodyParser.urlencoded({
 		extended: true
@@ -103,6 +103,7 @@ app.use(function (err, req, res, next) {
 	res.status(err.status || 500);
 	res.render('error');
 });
+
 
 app.session = sess;
 module.exports = app;

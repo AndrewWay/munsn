@@ -49,7 +49,7 @@
 			);
 			$("#calendarPost").click(
 				function(){
-					$.post("/test/calendar/user/jh2587",function(result){
+					$.post("/content/calendar/user/jh2587",function(result){
 						if(result.data){
 							$("#cal").html('<iframe src="https://calendar.google.com/calendar/embed?showPrint=0&amp;mode=WEEK&amp;height=600&amp;wkst=1&amp;bgcolor=%23FFFFFF&amp;src='+result.data.id+'&amp;color=%230F4B38&amp;ctz=America%2FSt_Johns" style="border-width:0" width="800" height="600" frameborder="0" scrolling="no"></iframe>');
 						}
@@ -59,7 +59,7 @@
 			);
 			$("#calendarGet").click(
 				function() {
-					$.get("/test/calendar/user/jh2587", function(result){
+					$.get("/content/calendar/user/jh2587", function(result){
 						if(result.data){
 							$("#cal").html('<iframe src="https://calendar.google.com/calendar/embed?showPrint=0&amp;mode=WEEK&amp;height=600&amp;wkst=1&amp;bgcolor=%23FFFFFF&amp;src='+result.data.id+'&amp;color=%230F4B38&amp;ctz=America%2FSt_Johns" style="border-width:0" width="800" height="600" frameborder="0" scrolling="no"></iframe>');
 						}
@@ -69,7 +69,7 @@
 			);
 			$("#calendarDelete").click(
 				function() {
-					$.delete("/test/calendar/user/jh2587", function(result){
+					$.delete("/content/calendar/user/jh2587", function(result){
 						$("#cal").html('');
 						console.log(result);
 					})
@@ -90,8 +90,15 @@
 						'summary':'test',
 						'description':'descriptionstuff'
 					};
-					$.post("/test/calendar/events/jh2587",evnt,function(result) {
+					$.post("/content/calendar/events/jh2587",evnt,function(result) {
 						console.log(result)
+					});
+				}
+			);
+			$("#calendarEventsGet").click(
+				function() {
+					$.get("/content/calendar/events/session",undefined,function(result){
+						console.log(result);
 					});
 				}
 			);

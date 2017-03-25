@@ -66,6 +66,7 @@ module.exports = function (DBComments, collectionComments) {
 	//Get comments per userid
 	DBComments.findByPostId = function (req, res, callback) {
 		var pid = req.body.pid;
+		//TODO: Devin, This userId variable is undefined.
 		console.log("[DBComments] FindByPID", "'" + userId + "'");
 		collectionComments.find({
 			_id: pid
