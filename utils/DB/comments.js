@@ -67,7 +67,7 @@ module.exports = function (DBComments, collectionComments) {
 	DBComments.findByPostId = function (req, res, callback) {
 		var pid = req.body.pid;
 		//TODO: Devin, This userId variable is undefined.
-		console.log("[DBComments] FindByPID", "'" + userId + "'");
+		console.log("[DBComments] FindByPID", "'" + pid + "'");
 		collectionComments.find({
 			_id: pid
 		}).toArray(function (err, result) {

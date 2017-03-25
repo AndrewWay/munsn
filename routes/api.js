@@ -290,7 +290,7 @@ var findGroupSent = "/user/group/sent/:uid";
  * Returns:
  *      - JSON array containing group request objects
  */
-var findGroupReceived = "/group/received/:fid";
+var findGroupReceived = "/group/received/:gid";
 
 /**
  * findCommentById
