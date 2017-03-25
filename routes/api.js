@@ -1183,29 +1183,25 @@ router.get(findGroupReceived, UserID, function (req, res, next) {
 	});
 });
 
-<<<<<<< .merge_file_a28944
-router.get(sendGroupRequest, UserID, function (req, res, next) {
-=======
-router.post(sendGroupRequest, function (req, res, next) {
->>>>>>> .merge_file_a20048
+router.post(sendGroupRequest, UserID, function (req, res, next) {
 	DB.Groups.addRequest(req, res, function (result) {
 		res.json(result);
 	});
 });
 
-router.get(removeGroupRequest, UserID, function (req, res, next) {
+router.post(removeGroupRequest, UserID, function (req, res, next) {
 	DB.Groups.removeRequest(req, res, function (result) {
 		res.json(result);
 	});
 });
 
-router.get(sendFriendRequest, UserID, function (req, res, next) {
+router.post(sendFriendRequest, UserID, function (req, res, next) {
 	DB.Friends.addRequest(req, res, function (result) {
 		res.json(result);
 	});
 });
 
-router.get(removeFriendRequest, UserID, function (req, res, next) {
+router.postget(removeFriendRequest, UserID, function (req, res, next) {
 	DB.Friends.removeRequest(req, res, function (result) {
 		res.json(result);
 	});
