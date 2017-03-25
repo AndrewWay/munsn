@@ -307,6 +307,23 @@ var findGroupReceived = "/group/received/:fid";
  */
 var findCommentById = "/comment/find/:uid";
 
+/**
+ * loadMessages
+ *
+ * URL:
+ * 		- %server%/api/messages/load/
+ * Descript:
+ *      - Get messages from a conversation
+ * Method:
+ *      - GET
+ * Params:
+ *      - uid1: The first user id
+ * 		- uid2: The second user id
+ * Returns:
+ *      - JSON array containing messages
+ */
+var loadMessages = "/messages/load";
+
 //=============================POST VERBS=============================
 
 /**
@@ -1165,7 +1182,7 @@ router.get(findGroupReceived, function (req, res, next) {
 	});
 });
 
-router.get(sendGroupRequest, function (req, res, next) {
+router.post(sendGroupRequest, function (req, res, next) {
 	DB.Groups.addRequest(req, res, function (result) {
 		res.json(result);
 	});
@@ -1185,6 +1202,12 @@ router.get(sendFriendRequest, function (req, res, next) {
 
 router.get(removeFriendRequest, function (req, res, next) {
 	DB.Friends.removeRequest(req, res, function (result) {
+		res.json(result);
+	});
+});
+
+router.get(loadMessages, function (req, res, next) {
+	DB.Socket.loadMessages(req, res, function (err, result) {
 		res.json(result);
 	});
 });
