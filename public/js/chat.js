@@ -3,9 +3,16 @@ $(function () {
     var socket = io("/chat");
     //Init chat
     socket.emit('initChat', null, function(result) {
+        console.log("init chat");
         currentRoom = result;
+        //TODO: GET THIS WORKING
+        $.get('/api/messages/load', {uid1: 'dfcm15', uid2: 'bro'}, function(data) {
+            for (var i = 0; i < data.length; i++) {
+                $('#messages').append($('<li>').text(data[i]));
+                console.log("LOADING MESSAGES: " + i + ": " + data[i]);
+            }
+        });
 	});
-    console.log("init chat");
     //Fired when enter is pressed
     $('form').submit(function () {
         //Declare commands
