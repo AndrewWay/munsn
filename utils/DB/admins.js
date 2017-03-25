@@ -1,9 +1,10 @@
+var console = require('../consoleLogger');
 module.exports = function (DBGroupAdmins, collectionGroupAdmins) {
 	//Add admin to group
 	DBGroupAdmins.add = function (req, res, callback) {
 		var groupId = req.body.gid;
 		var adminId = req.body.uid;
-		console.log("[DBGroupAdmins] Add: '" + adminId + "'->'" + groupId + "'");
+		console.log("[DBGroupAdmins] Add", "'" + adminId + "'->'" + groupId + "'");
 		if (groupId && adminId) {
 			collectionGroupAdmins.update({
 				_id: groupId
@@ -15,7 +16,7 @@ module.exports = function (DBGroupAdmins, collectionGroupAdmins) {
 				upsert: true
 			}, function (err, result) {
 				if (err) {
-					console.error("[DBGroupAdmins] Add: " + err.message);
+					console.error("[DBGroupAdmins] Add", err.message);
 					callback({
 						session: req.session,
 						status: 'fail'
@@ -28,7 +29,7 @@ module.exports = function (DBGroupAdmins, collectionGroupAdmins) {
 				}
 			});
 		} else {
-			console.warn("[DBGroupAdmins] Add: Missing Fields");
+			console.warn("[DBGroupAdmins] Add", "Missing Fields");
 			callback({
 				session: req.session,
 				status: 'fail'
@@ -39,7 +40,7 @@ module.exports = function (DBGroupAdmins, collectionGroupAdmins) {
 	//Finds all admins of a group and returns it as an array
 	DBGroupAdmins.find = function (req, res, callback) {
 		var groupId = req.params.gid;
-		console.log("[DBGroupAdmins] Find: '" + groupId + "'");
+		console.log("[DBGroupAdmins] Find", "'" + groupId + "'");
 		if (groupId) {
 			collectionGroupAdmins.find({
 				_id: groupId
@@ -47,7 +48,7 @@ module.exports = function (DBGroupAdmins, collectionGroupAdmins) {
 				admins: true
 			}).toArray(function (err, result) {
 				if (err) {
-					console.error("[DBGroupsAdmins] Find: " + err.message);
+					console.error("[DBGroupsAdmins] Find", "" + err.message);
 					callback({
 						session: req.session,
 						status: 'fail'
@@ -61,7 +62,7 @@ module.exports = function (DBGroupAdmins, collectionGroupAdmins) {
 				}
 			});
 		} else {
-			console.warn("[DBGroupsAdmins] Find: Missing Fields");
+			console.warn("[DBGroupsAdmins] Find", "Missing Fields");
 			callback({
 				session: req.session,
 				status: 'fail'
@@ -73,7 +74,7 @@ module.exports = function (DBGroupAdmins, collectionGroupAdmins) {
 	DBGroupAdmins.remove = function (req, res, callback) {
 		var groupId = req.body.gid;
 		var adminId = req.body.uid;
-		console.log("[DBGroupAdmins] Remove: '" + adminId + "'->'" + groupId + "'");
+		console.log("[DBGroupAdmins] Remove", "'" + adminId + "'->'" + groupId + "'");
 		if (groupId && adminId) {
 			collectionGroupAdmins.update({
 				_id: groupId
@@ -83,7 +84,7 @@ module.exports = function (DBGroupAdmins, collectionGroupAdmins) {
 				}
 			}, function (err, result) {
 				if (err) {
-					console.error("[DBGroupAdmins] Remove: " + err.message);
+					console.error("[DBGroupAdmins] Remove", err.message);
 					callback({
 						session: req.session,
 						status: 'fail'
@@ -96,7 +97,7 @@ module.exports = function (DBGroupAdmins, collectionGroupAdmins) {
 				}
 			});
 		} else {
-			console.warn("[DBGroupAdmins] Remove: Missing Fields");
+			console.warn("[DBGroupAdmins] Remove", "Missing Fields");
 			callback({
 				session: req.session,
 				status: 'fail'

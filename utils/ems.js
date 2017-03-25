@@ -1,5 +1,4 @@
 var email = require('emailjs/email');
-
 //The MUNSN email used to send emails to users
 var emsSender = {
 	name: 'Mun Social Network',

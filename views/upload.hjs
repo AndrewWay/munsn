@@ -2,14 +2,48 @@
 <html>
   <head>
     <title>{{ title }}</title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link href="/stylesheets/blank.css" rel="stylesheet"/>
+    <link href="/stylesheets/resume.css" rel="stylesheet"/>
+    <link href="/stylesheets/jqueryTest.css" rel="stylesheet"/>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+    <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+    <script src="//mozilla.github.io/pdf.js/build/pdf.js"></script>
+  	<script src="/js/blank.js"></script>
+	  <script src="/js/resume.js"></script>
+    <script src="/js/jqueryTest.js"></script>
+    <script>
+      $(document).ready(
+
+        function(){
+          jQuery.each( [ "put", "delete" ], function( i, method ) {
+            jQuery[ method ] = function( url, data, callback, type ) {
+              if ( jQuery.isFunction( data ) ) {
+                type = type || callback;
+                callback = data;
+                data = undefined;
+              }
+
+              return jQuery.ajax({
+                url: url,
+                type: method,
+                dataType: type,
+                data: data,
+                success: callback
+              });
+            };
+          });
+
+        }
+      );
+    </script>
   </head>
   <body>
+  <center>
     <h1>{{ title }}</h1>
     <p>Welcome to {{ title }}</p>
-    <img src="content/image/profile/test"/>
-    <form action="/content/image/profile/test" method="post" enctype="multipart/form-data">
-      <input type="file" name="datafile"><br>
+    <img src="/content/image/profile/jh2587"/>
+    <form action="/content/image/profile/jh2587" method="post" enctype="multipart/form-data">
+      <input type="file" name="datafile"></input><br>
       <input type="submit" name="Submit"><br>
     </form>
     <br>
@@ -18,6 +52,21 @@
       <input type="file" name="resume"><br>
       <input type="submit" name="Submit"><br>
     </form>
+    <form>
+    <text>UserID</text>
+      <input type="text" id="pathResume"></input><br>
+      <input type="button" value="Load" id="loadResume"></input><br>
+    </form>
+    <div id="canvasContainer">
+			<div>
+				<button class="pdfButton" id="pdfPrev">Previous</button>
+
+				<span>Page: <span id="page_num"></span> / <span id="page_count"></span></span>
+
+				<button class="pdfButton" id="pdfNext">Next</button>
+			</div>
+			<canvas id="canvas" width="680px"></canvas>
+		</div>
     <h1>Object Test</h1>
     <form action="/test" method="post" enctype="multipart/form-data">
       <input type="text" name="option"><br>

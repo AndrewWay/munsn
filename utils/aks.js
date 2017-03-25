@@ -1,5 +1,6 @@
 var DB = require('./db');
 var utils = require('./utils');
+var console = require('./consoleLogger');
 /**
  * This function takes a key and validates it, reacts accordingly.
  * If the key is not found, nothing happens.
@@ -14,13 +15,13 @@ var validate = function (req, res, callback) {
 		//console.log(JSON.stringify(checkResult));
 		if (result.data) {
 			var auth = result.data;
-			console.log("[AKS]: 'Found'->'" + auth.key + "'");
+			console.log("[AKS]", "'Found'->'" + auth.key + "'");
 			var date = new Date();
 			var userid = auth.userid;
 			//Check to see if key expired
 			//If not then auth the user, and delete the key from regauths
 			if (date.getTime() <= auth.expiry) {
-				console.log("[AKS]: 'Valid'->'" + auth.userid + "'");
+				console.log("[AKS]", "'Valid'->'" + auth.userid + "'");
 				DB.Auth.remove(req, res, auth, function (result) {
 					if (result.status === 'ok') {
 						callback(true, result);
@@ -30,8 +31,8 @@ var validate = function (req, res, callback) {
 				});
 			} else {
 				//If key expired, then send a new key with a new email
-				console.warn("[AKS]: 'Expired'->'" + auth.userid + "'");
-				console.log("[AKS]: 'New'->'" + auth.userid + "'");
+				console.warn("[AKS]", "'Expired'->'" + auth.userid + "'");
+				console.log("[AKS]", "'New'->'" + auth.userid + "'");
 				//Create relevant data
 				date = new Date();
 				auth = {
@@ -49,7 +50,7 @@ var validate = function (req, res, callback) {
 				});
 			}
 		} else {
-			console.error("[AKS]: 'Invalid'->'" + JSON.stringify(result.data) + "'");
+			console.error("[AKS]", "'Invalid'->'" + JSON.stringify(result.data) + "'");
 			callback(false, result);
 		}
 	});

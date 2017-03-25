@@ -1,18 +1,19 @@
+var console = require('../consoleLogger');
 module.exports = function (DBLostFound, collectionLost) {
 
 	//Add a lost
 	DBLostFound.add = function (req, res, callback) {
 		var lost = {
-            name: req.body.name,
+			name: req.body.name,
 			imagePath: req.body.imagePath,
 			description: req.body.description,
 			long: req.body.long,
 			lat: req.body.lat
 		};
-		console.log("[DBLost] Add: '" + lost.name);
+		console.log("[DBLost] Add", "'" + lost.name + "'");
 		collectionLost.insert(lost, function (err, result) {
 			if (err) {
-				console.error("[DBLost] Add: " + err.message);
+				console.error("[DBLost] Add", err.message);
 				callback({
 					session: req.session,
 					status: 'fail'
@@ -28,13 +29,13 @@ module.exports = function (DBLostFound, collectionLost) {
 
 	//Find a lost by unique lost id
 	DBLostFound.findById = function (req, res, callback) {
-		console.log("[DBLost] FindById: '" + req.params.uid + "'");
+		console.log("[DBLost] FindById", "'" + req.params.uid + "'");
 		if (req.params.uid) {
 			collectionLost.findOne({
 				_id: req.params.uid
 			}, function (err, result) {
 				if (err) {
-					console.log("[DBLost]: " + err.message);
+					console.log("[DBLost] FindById", err.message);
 					callback({
 						session: req.session,
 						status: 'fail'
@@ -49,7 +50,7 @@ module.exports = function (DBLostFound, collectionLost) {
 				}
 			});
 		} else {
-			console.error("[DBLost] FindById: Missing Fields");
+			console.error("[DBLost] FindById", "'Missing Fields'");
 			callback({
 				session: req.session,
 				status: 'fail'
@@ -59,10 +60,10 @@ module.exports = function (DBLostFound, collectionLost) {
 
 	//Find lost matching query
 	DBLostFound.find = function (req, res, callback) {
-		console.log("[DBLost] Find: '" + JSON.stringify(req.body) + "'");
+		console.log("[DBLost] Find", "'" + JSON.stringify(req.body) + "'");
 		collectionLost.find(req.body).toArray(function (err, result) {
 			if (err) {
-				console.error("[DBLost]: " + err.message);
+				console.error("[DBLost] Find", err.message);
 				callback({
 					session: req.session,
 					status: 'fail'
@@ -79,10 +80,10 @@ module.exports = function (DBLostFound, collectionLost) {
 
 	//Updates the lost
 	DBLostFound.update = function (req, res, callback) {
-		console.log("[DBLost] Update: '" + JSON.stringify(req.body) + "'->'" + req.params.uid + "'");
+		console.log("[DBLost] Update", "'" + JSON.stringify(req.body) + "'->'" + req.params.uid + "'");
 		if (req.params.uid) {
 			var updates = {
-                name: req.body.name,
+				name: req.body.name,
 				imagePath: req.body.imagePath,
 				description: req.body.description,
 				long: req.body.long,
@@ -96,7 +97,7 @@ module.exports = function (DBLostFound, collectionLost) {
 				upsert: true
 			}, function (err, result) {
 				if (err) {
-					console.error("[DBLost] Update: " + err.message);
+					console.error("[DBLost] Update", err.message);
 					callback({
 						session: req.session,
 						status: 'fail'
@@ -109,7 +110,7 @@ module.exports = function (DBLostFound, collectionLost) {
 				}
 			});
 		} else {
-			console.warn("[DBLost] Update: Missing Fields");
+			console.warn("[DBLost] Update", "'Missing Fields'");
 			callback({
 				session: req.session,
 				status: "fail"
@@ -119,7 +120,7 @@ module.exports = function (DBLostFound, collectionLost) {
 
 	//Removes the course
 	DBLostFound.remove = function (req, res, callback) {
-		console.log("[DBLost] Remove: '" + req.params.uid + "'");
+		console.log("[DBLost] Remove", "'" + req.params.uid + "'");
 		if (req.params.uid) {
 			collectionLost.remove({
 				_id: req.params.id
@@ -127,7 +128,7 @@ module.exports = function (DBLostFound, collectionLost) {
 				single: true
 			}, function (err, result) {
 				if (err) {
-					console.error("[DBLost] Remove: " + err.message);
+					console.error("[DBLost] Remove", err.message);
 					callback({
 						session: req.session,
 						status: 'fail'
@@ -141,7 +142,7 @@ module.exports = function (DBLostFound, collectionLost) {
 				}
 			});
 		} else {
-			console.warn("[DBLost] Remove: Missing Fields");
+			console.warn("[DBLost] Remove", "'Missing Fields'");
 			callback({
 				session: req.session,
 				status: "fail"

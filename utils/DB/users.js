@@ -1,11 +1,11 @@
 var utils = require('../utils');
-
+var console = require('../consoleLogger');
 module.exports = function (DBUsers, DBAuth, collectionUsers) {
 	DBUsers.add = function (req, res, callback) {
-		console.log("[DBUsers] Add: '" + JSON.stringify(req.body) + "'");
+		console.log("[DBUsers] Add", "'" + JSON.stringify(req.body) + "'");
 		var result = {};
 		if (!Object.keys(req.body).length) {
-			console.warn("[DBUsers] Add: Missing Data");
+			console.warn("[DBUsers] Add", "'Missing Fields'");
 			callback({
 				session: req.session,
 				status: 'fail'
@@ -23,26 +23,26 @@ module.exports = function (DBUsers, DBAuth, collectionUsers) {
 					email: req.body.email,
 					auth: false,
 					visibility: req.body.visibility ? req.body.visibility : "default",
-					_id: utils.getIdFromEmail(req.body.email)
+					_id: utils.EmailToID(req.body.email)
 				};
 
 				//Create auth key and store it in auths
 				collectionUsers.insert(row, function (err, result) {
 					if (err) {
-						console.error("[DBUsers] Add: " + err.message);
+						console.error("[DBUsers] Add", err.message);
 						callback({
 							session: req.session,
 							status: 'fail'
 						});
 					} else {
-						console.log("[DBUsers] Inserted: '" + result.insertedIds[0] + "'");
+						console.log("[DBUsers] Add->Insert", "'" + result.insertedIds[0] + "'");
 						DBAuth.add(req, res, row, function (result) {
 							callback(result);
 						});
 					}
 				});
 			} catch (err) {
-				console.error("[DBUsers] Registration: Missing fields or other error");
+				console.error("[DBUsers] Registration", "'Missing fields or Other'");
 				callback({
 					session: req.session,
 					status: 'fail'
@@ -53,13 +53,13 @@ module.exports = function (DBUsers, DBAuth, collectionUsers) {
 
 	//Find a user by unique object id
 	DBUsers.findById = function (req, res, callback) {
-		console.log("[DBUsers] FindById: '" + req.params.uid + "'");
+		console.log("[DBUsers] FindById", "'" + req.params.uid + "'");
 		if (req.params.uid) {
 			collectionUsers.findOne({
 				_id: req.params.uid
 			}, function (err, result) {
 				if (err) {
-					console.log("[DBUsers]: " + err.message);
+					console.log("[DBUsers]", err.message);
 					callback({
 						session: req.session,
 						status: 'fail'
@@ -74,7 +74,7 @@ module.exports = function (DBUsers, DBAuth, collectionUsers) {
 				}
 			});
 		} else {
-			console.error("[DBUsers] FindById: Missing Fields");
+			console.error("[DBUsers] FindById", "'Missing Fields'");
 			callback({
 				session: req.session,
 				status: 'fail'
@@ -84,10 +84,10 @@ module.exports = function (DBUsers, DBAuth, collectionUsers) {
 
 	//Find users matching query
 	DBUsers.find = function (req, res, callback) {
-		console.log("[DBUsers] Find: '" + JSON.stringify(req.body) + "'");
+		console.log("[DBUsers] Find", "'" + JSON.stringify(req.body) + "'");
 		collectionUsers.find(req.body).toArray(function (err, result) {
 			if (err) {
-				console.error("[DBUsers]: " + err.message);
+				console.error("[DBUsers]", err.message);
 				callback({
 					session: req.session,
 					status: 'fail'
@@ -104,7 +104,7 @@ module.exports = function (DBUsers, DBAuth, collectionUsers) {
 
 	//Updates the user
 	DBUsers.update = function (req, res, callback) {
-		console.log("[DBUsers] Update: '" + JSON.stringify(req.body) + "'->'" + req.params.uid + "'");
+		console.log("[DBUsers] Update", "'" + JSON.stringify(req.body) + "'->'" + req.params.uid + "'");
 		if (req.params.uid) {
 			var updates = {
 				pass: req.body.pass,
@@ -120,7 +120,7 @@ module.exports = function (DBUsers, DBAuth, collectionUsers) {
 				upsert: true
 			}, function (err, result) {
 				if (err) {
-					console.error("[DBUsers] Update: " + err.message);
+					console.error("[DBUsers] Update", err.message);
 					callback({
 						session: req.session,
 						status: 'fail'
@@ -133,7 +133,7 @@ module.exports = function (DBUsers, DBAuth, collectionUsers) {
 				}
 			});
 		} else {
-			console.warn("[DBUsers] Update: Missing Fields");
+			console.warn("[DBUsers] Update", "'Missing Fields'");
 			callback({
 				session: req.session,
 				status: "fail"
@@ -143,7 +143,7 @@ module.exports = function (DBUsers, DBAuth, collectionUsers) {
 
 	//Removes the user
 	DBUsers.remove = function (req, res, callback) {
-		console.log("[DBUsers] Remove: '" + req.params.uid + "'");
+		console.log("[DBUsers] Remove", "'" + req.params.uid + "'");
 		if (req.params.uid) {
 			collectionUsers.remove({
 				_id: req.params.id
@@ -151,7 +151,7 @@ module.exports = function (DBUsers, DBAuth, collectionUsers) {
 				single: true
 			}, function (err, result) {
 				if (err) {
-					console.error("[DBUsers] Remove: " + err.message);
+					console.error("[DBUsers] Remove", err.message);
 					callback({
 						session: req.session,
 						status: 'fail'
@@ -164,7 +164,7 @@ module.exports = function (DBUsers, DBAuth, collectionUsers) {
 				}
 			});
 		} else {
-			console.warn("[DBUsers] Remove: Missing Fields");
+			console.warn("[DBUsers] Remove", "'Missing Fields'");
 			callback({
 				session: req.session,
 				status: "fail"
@@ -173,37 +173,62 @@ module.exports = function (DBUsers, DBAuth, collectionUsers) {
 	};
 
 	DBUsers.login = function (req, res, callback) {
-		console.log("[DBUsers] Login: '" + req.body.uid + "'");
+		console.log("[DBUsers] Login", "'" + JSON.stringify(req.body) + "'");
 		if (req.session.user) {
-			console.log("[SESSION]: 'Exists'->'" + JSON.stringify(req.session.user) + "'");
+			console.warn("[SESSION]", "'Exists'->'" + JSON.stringify(req.session.user) + "'");
 			callback({
 				session: req.session,
 				status: 'ok'
 			});
 		} else {
 			if (req.body.uid && req.body.pass) {
-				collectionUsers.find({
-					_id: req.body.uid,
-					pass: req.body.pass
-				}).toArray(function (err, results) {
-					console.log("results: " + JSON.stringify(results));
-					if (err && results.length) {
+				collectionUsers.findOne({
+					_id: req.body.uid
+				}, function (err, result) {
+					if (err) {
+						console.error("[DBUsers] Login", err.message);
 						callback({
 							session: req.session,
 							status: 'fail'
 						});
-						console.error("[DBUsers] Login: 'NotFound'->'" + req.body.uid + "'");
 					} else {
-						req.session.user = results[0];
-						callback({
-							session: req.session,
-							status: 'ok'
-						});
-						console.log("[SESSION]: 'Created'->'" + JSON.stringify(req.session) + "'");
+						if (result) {
+							console.log("[DBUsers] Login", "'Found'->'" + JSON.stringify(result) + "'");
+							if (result.pass == req.body.pass) {
+								console.log("[DBUsers] Login->Password?", "'" + result.pass + "'->'" + req.body.pass + "'");
+								if (result.auth) {
+									console.log("[DBUsers] Login->isAuth?", " 'Success'->'" + result._id + "'");
+									req.session.user = result;
+									console.log("[SESSION]", "'Created'->'" + JSON.stringify(req.session) + "'");
+									callback({
+										session: req.session,
+										status: 'ok'
+									});
+								} else {
+									console.warn("[DBUsers] Login->isAuth?", "'Failed'->'" + result._id + "'");
+									callback({
+										session: req.session,
+										status: 'fail'
+									});
+								}
+							} else {
+								console.warn("[DBUsers] Login->Password?", "'" + result.pass + "'->'" + req.body.pass + "'");
+								callback({
+									session: req.session,
+									status: 'fail'
+								});
+							}
+						} else {
+							console.warn("[DBUsers] Login", "'NotFound'->'" + req.body.uid + "'");
+							callback({
+								session: req.session,
+								status: 'fail'
+							});
+						}
 					}
 				});
 			} else {
-				console.warn("[DBUsers] Login: Missing fields");
+				console.warn("[DBUsers] Login", "'Missing fields'");
 				callback({
 					session: req.session,
 					status: 'fail'

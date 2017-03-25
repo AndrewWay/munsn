@@ -2,8 +2,9 @@ var express = require("express");
 var router = express.Router();
 var utils = require("../utils/utils");
 var aks = require("../utils/aks");
+var console = require("../utils/consoleLogger");
 router.get("/", function (req, res, next) {
-	console.log("[ROUTER] Auth: 'Validate'->'" + req.query.key + "'");
+	console.log("[ROUTER] Auth", "'Validate'->'" + req.query.key + "'");
 	if (req.query.key) {
 		aks.validate(req, res, function (success, result) {
 			if (success) {

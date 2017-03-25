@@ -22,6 +22,7 @@ var collectionComments; //TODO: John, EVALUATE
 var collectionCourses;
 var collectionLostFound;
 var collectionSocket;
+var collectionMessages;
 var DBAuth = {};
 var DBPosts = {};
 var DBGroups = {};
@@ -387,10 +388,13 @@ mongoClient.connect(dbURL, function (err, DB) {
 				calendarid: {
 					$type: 'string'
 				}
+				/*
+				events: {
+					$type: 'array'
+				}
+				*/
 			}]
-		},
-		validationLevel: 'strict',
-		validationAction: 'error'
+		}
 	});
 
 	DB.createCollection('socket', {
@@ -399,15 +403,24 @@ mongoClient.connect(dbURL, function (err, DB) {
 				_id: {
 					$type: 'string'
 				},
-				socket: {
-					$type: 'object'
+				socketid: {
+					$type: 'string'
 				}
-			},
-			]
+			}, ]
 		},
 		validationLevel: 'strict',
 		validationAction: 'error'
 	});
+
+/*
+TODO:
+There is another collection: collectionMessages
+It doesn't have a validator because its just arrays
+It has the following fields:
+- (array[string]) users: An array of the users who can access the messages
+- (array[string]) messages: An array of messages
+*/
+
 	//Variables set to mongo collections
 	collectionAuths = DB.collection('authkeys');
 	collectionCalendar = DB.collection('calendars');
@@ -423,6 +436,7 @@ mongoClient.connect(dbURL, function (err, DB) {
 	collectionCourses = DB.collection('courses');
 	collectionLostFound = DB.collection('lost');
 	collectionSocket = DB.collection('socket');
+	collectionMessages = DB.collection('messages');
 	require('./DB/users')(DBUsers, DBAuth, collectionUsers);
 	require('./DB/auths')(DBAuth, collectionAuths, collectionUsers, MAX_VALIDATE_MINUTES);
 	require('./DB/friends')(DBFriends, collectionFriends, collectionFriendRequests, collectionUsers);
@@ -434,7 +448,7 @@ mongoClient.connect(dbURL, function (err, DB) {
 	require('./DB/courses')(DBCourses, collectionCourses);
 	require('./DB/lostfound')(DBLostFound, collectionLostFound);
 	require('./DB/calendar')(DBCalendar, collectionCalendar);
-	require('./DB/socket')(DBSocket, collectionSocket);
+	require('./DB/socket')(DBSocket, collectionSocket, collectionMessages);
 });
 
 
