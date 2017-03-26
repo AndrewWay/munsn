@@ -449,6 +449,23 @@ var addFriendReq = "/friends/add/request";
 var delFriendReq = "/friends/remove/request";
 
 /**
+ * addFriend
+ *
+ * URL:
+ * 		- %server%/api/friends/add/friend
+ * Descript:
+ *      - Add a friend
+ * Method:
+ *      - POST
+ * Params:
+ *      - uid: The user id to delete the friend from
+ * 		- fid: The friend id to delete the friendship from
+ * Returns:
+ *      - Mongo result
+ */
+var addFriend = "/friends/add";
+
+/**
  * delFriend
  *
  * URL:
@@ -463,6 +480,7 @@ var delFriendReq = "/friends/remove/request";
  * Returns:
  *      - Mongo result
  */
+
 var delFriend = "/friends/remove";
 
 /**
@@ -1217,8 +1235,8 @@ router.post(removeGroupRequest, UserID, function (req, res, next) {
 	});
 });
 
-router.post(sendFriendRequest, UserID, function (req, res, next) {
-	DB.Friends.addRequest(req, res, function (result) {
+router.post(addFriend, UserID, function (req, res, next) {
+	DB.Friends.add(req, res, function (result) {
 		res.json(result);
 	});
 });

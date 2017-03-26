@@ -1,26 +1,36 @@
 var console = require("../consoleLogger");
 module.exports = function (DBFriends, collectionFriends, collectionFriendRequests, collectionUsers) {
 	//Adds the friendId to the userId's friend list
-	DBFriends.add = function (userId, friendId, callback) {
-		console.log("[DBFriends] Add", "'" + userId + "'->'" + friendId + "'");
-		if (userId && friendId) {
+	DBFriends.add = function (req, res, callback) {
+		console.log("[DBFriends] Add", "'" + req.body.uid + "'->'" + req.body.fid + "'");
+		if (req.body.uid && req.body.fid) {
 			collectionFriends.update({
-				_id: userId
+				_id: req.body.uid
 			}, {
 				$push: {
-					friends: friendId
+					friends: req.body.fid
 				}
 			}, {
 				upsert: true
-			}, function (err, result) {
-				if (err) {
+			}, function (uidErr, uidResult) {
+				if (uidErr) {
 					console.error("[DBFriends] Add", err.message);
 					callback({
 						status: 'fail'
 					});
 				} else {
-					callback({
-						status: 'ok'
+					collectionFriends.update({_id: req.body.fid}, {$push: {friends: req.body.uid}}, {upsert: true}, function(fidErr, fidResult) {
+						if (fidErr) {
+							console.error("[DBFriends] Add", err.message);
+							callback({
+								status: 'fail'
+							});
+						}
+						else {
+							callback({
+								status: 'ok'
+							});
+						}
 					});
 				}
 			});
