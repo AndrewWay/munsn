@@ -121,7 +121,7 @@ module.exports = function (DBAuth, collectionAuths, collectionUsers, MAX_VALIDAT
 					status: 'fail'
 				});
 			} else {
-				collectionUsers.update({
+				collectionUsers.findOneAndUpdate({
 					_id: auth.userid
 				}, {
 					$set: {
@@ -138,6 +138,7 @@ module.exports = function (DBAuth, collectionAuths, collectionUsers, MAX_VALIDAT
 						});
 					} else {
 						console.log("[DBAuth] Remove->Update", "'{auth:'true'}'->'" + auth.userid + "'");
+						req.session.user = result.value;
 						callback({
 							session: req.session,
 							status: 'ok'

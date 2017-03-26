@@ -4,7 +4,10 @@ var path = require('path');
 var EMS = require('./ems');
 var utils = require('./utils');
 
-var dbURL = 'mongodb://localhost:27017/db';
+var dbURL = 'mongodb://localhost:27017/munsn';
+/**
+ * Max time a user has to authenticate
+ */
 var MAX_VALIDATE_MINUTES = 5;
 
 //Collections
@@ -412,14 +415,14 @@ mongoClient.connect(dbURL, function (err, DB) {
 		validationAction: 'error'
 	});
 
-/*
-TODO:
-There is another collection: collectionMessages
-It doesn't have a validator because its just arrays
-It has the following fields:
-- (array[string]) users: An array of the users who can access the messages
-- (array[string]) messages: An array of messages
-*/
+	/*
+	TODO:
+	There is another collection: collectionMessages
+	It doesn't have a validator because its just arrays
+	It has the following fields:
+	- (array[string]) users: An array of the users who can access the messages
+	- (array[string]) messages: An array of messages
+	*/
 
 	//Variables set to mongo collections
 	collectionAuths = DB.collection('authkeys');

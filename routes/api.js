@@ -1201,13 +1201,13 @@ router.post(sendFriendRequest, UserID, function (req, res, next) {
 	});
 });
 
-router.postget(removeFriendRequest, UserID, function (req, res, next) {
+router.post(removeFriendRequest, UserID, function (req, res, next) {
 	DB.Friends.removeRequest(req, res, function (result) {
 		res.json(result);
 	});
 });
 
-router.get(loadMessages, function (req, res, next) {
+router.get(loadMessages, UserID, function (req, res, next) {
 	DB.Socket.loadMessages(req, res, function (err, result) {
 		res.json(result);
 	});
