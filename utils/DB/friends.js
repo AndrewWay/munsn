@@ -199,12 +199,18 @@ module.exports = function (DBFriends, collectionFriends, collectionFriendRequest
 								}
 							});
 						} else {
+							var uid = fResult[fResult.findIndex((x) => {
+								return x._id === userId;
+							})] || {
+								_id: 'NotFound'
+							};
+							var fid = fResult[fResult.findIndex((x) => {
+								return x._id === friendId;
+							})] || {
+								_id: 'NotFound'
+							};
 							console.warn("[DBFriends] AddRequest",
-								"'" + fResult[fResult.findIndex((x) => {
-									return x._id === userId;
-								})]._id + "'->'" + fResult[fResult.findIndex((x) => {
-									return x._id === friendId;
-								})]._id + "'");
+								"'" + uid._id + "'->'" + fid._id + "'");
 							callback({
 								session: req.session,
 								status: 'fail'
