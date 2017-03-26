@@ -23,6 +23,22 @@ var UserID = require("../middleware/functions").UserID;
 var findUserById = "/user/info/:uid";
 
 /**
+ * findUser
+ *
+ * URL:
+ * 		- %server%/api/user/info/
+ * Descript:
+ *      - Gets the user object with a query
+ * Method:
+ *      - GET
+ * Params:
+ *      - uid: The user id to get
+ * Returns:
+ *      - JSON user object
+ */
+var findUser = "/users";
+
+/**
  * findFriendsById
  *
  * URL:
@@ -884,6 +900,12 @@ var removeFriendRequest = "/user/friend/request/remove";
 
 router.get(findUserById, UserID, function (req, res, next) {
 	DB.Users.findById(req, res, function (result) {
+		res.json(result);
+	});
+});
+
+router.get(findUser, UserID, function (req, res, next) {
+	DB.Users.find(req, res, function (result) {
 		res.json(result);
 	});
 });
