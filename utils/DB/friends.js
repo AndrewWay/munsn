@@ -7,6 +7,7 @@ module.exports = function (DBFriends, collectionFriends, collectionFriendRequest
 		var friendId = req.body.fid;
 		console.log("[DBFriends] Add", "'" + userId + "'->'" + friendId + "'");
 		if (userId && friendId) {
+<<<<<<< HEAD
 			collectionUsers.find({_id: {$in: [userId, friendId]}}).toArray(function(findErr, findResult) {
 				console.log(JSON.stringify(findResult));
 				if (findResult.length == 2) {
@@ -20,11 +21,39 @@ module.exports = function (DBFriends, collectionFriends, collectionFriendRequest
 						upsert: true
 					}, function (uidErr, uidResult) {
 						if (uidErr) {
+=======
+			collectionFriends.update({
+				_id: userId
+			}, {
+				$push: {
+					friends: friendId
+				}
+			}, {
+				upsert: true
+			}, function (uidErr, uidResult) {
+				if (uidErr) {
+					console.error("[DBFriends] Add", err.message);
+					callback({
+						status: 'fail'
+					});
+				} else {
+					collectionFriends.update({
+						_id: friendId
+					}, {
+						$push: {
+							friends: userId
+						}
+					}, {
+						upsert: true
+					}, function (fidErr, fidResult) {
+						if (fidErr) {
+>>>>>>> f65dd92e53c111f910feaf824fc1c9717bb6205a
 							console.error("[DBFriends] Add", err.message);
 							callback({
 								status: 'fail'
 							});
 						} else {
+<<<<<<< HEAD
 							collectionFriends.update({_id: friendId}, {$addToSet: {friends: userId}}, {upsert: true}, function(fidErr, fidResult) {
 								if (fidErr) {
 									console.error("[DBFriends] Add", err.message);
@@ -37,6 +66,10 @@ module.exports = function (DBFriends, collectionFriends, collectionFriendRequest
 										status: 'ok'
 									});
 								}
+=======
+							callback({
+								status: 'ok'
+>>>>>>> f65dd92e53c111f910feaf824fc1c9717bb6205a
 							});
 						}
 					});
@@ -110,19 +143,24 @@ module.exports = function (DBFriends, collectionFriends, collectionFriendRequest
 						status: 'fail'
 					});
 				} else {
-					collectionFriends.update({_id: friendId}, {$pull: {friends: userId}}, function(fidErr, fidResult) {
+					collectionFriends.update({
+						_id: friendId
+					}, {
+						$pull: {
+							friends: userId
+						}
+					}, function (fidErr, fidResult) {
 						if (fidErr) {
 							console.warn("[DBFriends] Remove", err.message);
 							callback({
 								session: req.session,
 								status: 'fail'
-							});					
-						}
-						else {
+							});
+						} else {
 							callback({
 								session: req.session,
 								status: 'ok'
-							});	
+							});
 						}
 					});
 				}
