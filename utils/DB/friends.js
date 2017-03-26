@@ -167,11 +167,11 @@ module.exports = function (DBFriends, collectionFriends, collectionFriendRequest
 		if (userId && friendId) {
 			//Check to see if both users exist
 			collectionUsers.find({
-					_id: {
-						$in: [userId, friendId]
-					}
-				},
-				function (err, result) {
+				_id: {
+					$in: [userId, friendId]
+				}
+			}).toArray(
+				function (err, fResult) {
 					if (err) {
 						console.error("[DBFriends] AddRequest", err.message);
 						callback({
@@ -179,11 +179,11 @@ module.exports = function (DBFriends, collectionFriends, collectionFriendRequest
 							status: 'fail'
 						});
 					} else {
-						if (result.length === 2) {
+						if (fResult.length === 2) {
 							collectionFriendRequests.insert({
 								userid: userId,
 								friendid: friendId
-							}, function (err, result) {
+							}, function (err, iResult) {
 								if (err) {
 									console.error("[DBFriends] AddRequest", err.message);
 									callback({
@@ -194,15 +194,15 @@ module.exports = function (DBFriends, collectionFriends, collectionFriendRequest
 									callback({
 										session: req.session,
 										status: 'ok',
-										data: result
+										data: iResult
 									});
 								}
 							});
 						} else {
 							console.warn("[DBFriends] AddRequest",
-								"'" + result[result.findIndex((x) => {
+								"'" + fResult[fResult.findIndex((x) => {
 									return x._id === userId;
-								})]._id + "'->'" + result[result.findIndex((x) => {
+								})]._id + "'->'" + fResult[fResult.findIndex((x) => {
 									return x._id === friendId;
 								})]._id + "'");
 							callback({

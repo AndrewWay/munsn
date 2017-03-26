@@ -153,7 +153,7 @@ module.exports = function (DBUsers, DBAuth, collectionUsers) {
 		console.log("[DBUsers] Remove", "'" + req.UserID + "'");
 		if (req.UserID) {
 			collectionUsers.remove({
-				_id: req.params.id
+				_id: req.UserID
 			}, {
 				single: true
 			}, function (err, result) {
