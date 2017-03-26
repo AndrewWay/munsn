@@ -233,6 +233,11 @@ module.exports = function (DBFriends, collectionFriends, collectionFriendRequest
 			friendid: req.params.fid,
 			userid: req.UserID
 		};
+		Object.keys(query).forEach(k => {
+			if (!query[k]) {
+				delete query[k];
+			}
+		});
 		console.log("[DBFriends] FindRequests", "'" + (query.friendid ? query.friendid : "*") + "'->'" + (query.userid ? query.userid : "*") + "'");
 		if (Object.keys(query).length > 0) {
 			collectionFriendRequests.find(query).toArray(function (err, result) {
