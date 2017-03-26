@@ -54,7 +54,11 @@ $(function () {
         }
         //Else send message to current room
         else {
-            socket.emit('chat message', currentRoom, str[0]);
+            var msg = "";
+            for (var i = 0; i < str.length; i++) {
+                msg = msg + str[i] + " ";
+            }
+            socket.emit('chat message', currentRoom, msg);
             $('#m').val('');
             console.log("MESSAGE: " + str[0]);
         } 
