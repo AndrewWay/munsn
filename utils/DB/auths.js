@@ -121,30 +121,31 @@ module.exports = function (DBAuth, collectionAuths, collectionUsers, MAX_VALIDAT
 					status: 'fail'
 				});
 			} else {
-				collectionUsers.findOneAndUpdate({
-					_id: auth.userid
-				}, {
-					$set: {
-						auth: true
-					}
-				}, {
-					upsert: true
-				}, function (err, result) {
-					if (err) {
-						console.error("[DBAuth] Remove", err.message);
-						callback({
-							session: req.session,
-							status: 'fail'
-						});
-					} else {
-						console.log("[DBAuth] Remove->Update", "'{auth:'true'}'->'" + auth.userid + "'");
-						req.session.user = result.value;
-						callback({
-							session: req.session,
-							status: 'ok'
-						});
-					}
-				});
+				collectionUsers.findAndModify({
+						_id: auth.userid
+					}, [], {
+						$set: {
+							auth: true
+						}
+					}, {
+						new: true
+					},
+					function (err, result) {
+						if (err) {
+							console.error("[DBAuth] Remove", err.message);
+							callback({
+								session: req.session,
+								status: 'fail'
+							});
+						} else {
+							console.log("[DBAuth] Remove->Update", "'{auth:'true'}'->'" + auth.userid + "'");
+							req.session.user = result.value;
+							callback({
+								session: req.session,
+								status: 'ok'
+							});
+						}
+					});
 			}
 		});
 	};
