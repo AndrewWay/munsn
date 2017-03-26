@@ -119,8 +119,8 @@ module.exports = function (DBSocket, collectionSocket, collectionMessages) {
 
 	DBSocket.loadMessages = function (req, res, callback) {
 		console.log(JSON.stringify(req.params));
-		var user1 = req.params.uid1;
-		var user2 = req.params.uid2;
+		var user1 = req.query.uid1;
+		var user2 = req.query.uid2;
 		console.log("[DBSocket] LoadMessage", "'{user1:'" + user1 + "'}->{user2:'" + user2 + "'}");
 		collectionMessages.find({users: {$all: [{$elemMatch: {user1}}, {$elemMatch: {user2}}]}}, {'messages': 1}).toArray(function(err, results) {
 			if (err) {
