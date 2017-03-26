@@ -233,8 +233,8 @@ module.exports = function (DBFriends, collectionFriends, collectionFriendRequest
 			friendid: req.params.fid,
 			userid: req.UserID
 		};
-		console.log("[DBFriends] FindRequests", "'" + query.friendid ? query.friendid : "*" + "'->'" + query.userid ? query.userid : "*" + "'");
-		if (Object.keys(query).length === 2) {
+		console.log("[DBFriends] FindRequests", "'" + (query.friendid ? query.friendid : "*") + "'->'" + (query.userid ? query.userid : "*") + "'");
+		if (Object.keys(query).length > 0) {
 			collectionFriendRequests.find(query).toArray(function (err, result) {
 				if (err) {
 					console.error("[DBFriends] FindRequests", err.message);
@@ -245,7 +245,8 @@ module.exports = function (DBFriends, collectionFriends, collectionFriendRequest
 				} else {
 					callback({
 						session: req.session,
-						status: 'ok'
+						status: 'ok',
+						data: result
 					});
 				}
 			});
