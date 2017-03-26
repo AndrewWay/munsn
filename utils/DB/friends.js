@@ -248,7 +248,7 @@ module.exports = function (DBFriends, collectionFriends, collectionFriendRequest
 				delete query[k];
 			}
 		});
-		console.log("[DBFriends] FindRequests", "'" + (query.friendid ? query.friendid : "*") + "'->'" + (query.userid ? query.userid : "*") + "'");
+		console.log("[DBFriends] FindRequests", "'" + (query.userid ? query.userid : "*") + "'->'" + (query.friendid ? query.friendid : "*") + "'");
 		if (Object.keys(query).length > 0) {
 			collectionFriendRequests.find(query).toArray(function (err, result) {
 				if (err) {
