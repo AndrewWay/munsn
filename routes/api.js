@@ -52,7 +52,7 @@ var findUser = "/users";
  * Returns:
  *      - JSON array containing user objects
  */
-var findFriendsById = "/user/friends/:uid";
+var findFriendsById = "/friends/:uid";
 
 /**
  * findFriendSent
@@ -68,7 +68,7 @@ var findFriendsById = "/user/friends/:uid";
  * Returns:
  *      - JSON array containing friend request objects
  */
-var findFriendSent = "/user/friends/sent/:uid";
+var findFriendSent = "/friends/sent/:uid";
 
 /**
  * findFriendReceived
@@ -84,7 +84,7 @@ var findFriendSent = "/user/friends/sent/:uid";
  * Returns:
  *      - JSON array containing friend request objects
  */
-var findFriendReceived = "/user/friends/received/:fid";
+var findFriendReceived = "/friends/received/:fid";
 /**
  * findGroupsByID
  *
@@ -179,7 +179,7 @@ var findPostByUid = "/post/user/:uid";
  * Returns:
  *      - JSON user object array
  */
-var suggestFriends = "/user/friends/suggest/:uid";
+var suggestFriends = "/friends/suggest/:uid";
 
 /**
  * findCourseById
@@ -463,7 +463,7 @@ var delFriendReq = "/friends/remove/request";
  * Returns:
  *      - Mongo result
  */
-var addFriend = "/friends/add/friend";
+var addFriend = "/friends/add";
 
 /**
  * delFriend
@@ -480,7 +480,8 @@ var addFriend = "/friends/add/friend";
  * Returns:
  *      - Mongo result
  */
-var delFriend = "/friends/remove/friend";
+
+var delFriend = "/friends/remove";
 
 /**
  * createGroup
@@ -1232,7 +1233,7 @@ router.post(removeGroupRequest, UserID, function (req, res, next) {
 	DB.Groups.removeRequest(req, res, function (result) {
 		res.json(result);
 	});
-}); 
+});
 
 router.post(addFriend, UserID, function (req, res, next) {
 	DB.Friends.add(req, res, function (result) {
