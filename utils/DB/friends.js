@@ -13,7 +13,7 @@ module.exports = function (DBFriends, collectionFriends, collectionFriendRequest
 				}
 			}).toArray(function (findErr, findResult) {
 				console.log("[DBFriends] Add", "'" + JSON.stringify(findResult) + "'");
-				if (findResult.length == 2) {
+				if (findResult.length === 2) {
 					collectionFriends.update({
 						_id: userId
 					}, {
@@ -24,7 +24,7 @@ module.exports = function (DBFriends, collectionFriends, collectionFriendRequest
 						upsert: true
 					}, function (uidErr, uidResult) {
 						if (uidErr) {
-							console.error("[DBFriends] Add", err.message);
+							console.error("[DBFriends] Add", uidErr.message);
 							callback({
 								status: 'fail'
 							});
@@ -39,7 +39,7 @@ module.exports = function (DBFriends, collectionFriends, collectionFriendRequest
 								upsert: true
 							}, function (fidErr, fidResult) {
 								if (fidErr) {
-									console.error("[DBFriends] Add", err.message);
+									console.error("[DBFriends] Add", fidErr.message);
 									callback({
 										status: 'fail'
 									});
