@@ -19,14 +19,21 @@ module.exports = function (DBFriends, collectionFriends, collectionFriendRequest
 						status: 'fail'
 					});
 				} else {
-					collectionFriends.update({_id: req.body.fid}, {$push: {friends: req.body.uid}}, {upsert: true}, function(fidErr, fidResult) {
+					collectionFriends.update({
+						_id: req.body.fid
+					}, {
+						$push: {
+							friends: req.body.uid
+						}
+					}, {
+						upsert: true
+					}, function (fidErr, fidResult) {
 						if (fidErr) {
 							console.error("[DBFriends] Add", err.message);
 							callback({
 								status: 'fail'
 							});
-						}
-						else {
+						} else {
 							callback({
 								status: 'ok'
 							});
@@ -37,7 +44,7 @@ module.exports = function (DBFriends, collectionFriends, collectionFriendRequest
 		} else {
 			console.warn("[DBFriends] Add", "'Missing Fields'");
 			callback({
-				status: 'ok'
+				status: 'fail'
 			});
 		}
 	};
