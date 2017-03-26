@@ -2,13 +2,16 @@ var console = require("../consoleLogger");
 module.exports = function (DBFriends, collectionFriends, collectionFriendRequests, collectionUsers) {
 	//Adds the friendId to the userId's friend list
 	DBFriends.add = function (req, res, callback) {
-		console.log("[DBFriends] Add", "'" + req.body.uid + "'->'" + req.body.fid + "'");
-		if (req.body.uid && req.body.fid) {
+		//Declare body variables
+		var userId = req.body.uid;
+		var friendId = req.body.fid;
+		console.log("[DBFriends] Add", "'" + userId + "'->'" + friendId + "'");
+		if (userId && friendId) {
 			collectionFriends.update({
-				_id: req.body.uid
+				_id: userId
 			}, {
 				$push: {
-					friends: req.body.fid
+					friends: friendId
 				}
 			}, {
 				upsert: true
@@ -19,7 +22,7 @@ module.exports = function (DBFriends, collectionFriends, collectionFriendRequest
 						status: 'fail'
 					});
 				} else {
-					collectionFriends.update({_id: req.body.fid}, {$push: {friends: req.body.uid}}, {upsert: true}, function(fidErr, fidResult) {
+					collectionFriends.update({_id: friendId}, {$push: {friends: userId}}, {upsert: true}, function(fidErr, fidResult) {
 						if (fidErr) {
 							console.error("[DBFriends] Add", err.message);
 							callback({
@@ -60,7 +63,8 @@ module.exports = function (DBFriends, collectionFriends, collectionFriendRequest
 				} else {
 					callback({
 						session: req.session,
-						status: 'ok'
+						status: 'ok',
+						data: result
 					});
 				}
 			});
@@ -87,17 +91,28 @@ module.exports = function (DBFriends, collectionFriends, collectionFriendRequest
 				$pull: {
 					friends: friendId
 				}
-			}, function (err, result) {
-				if (err) {
+			}, function (uidErr, uidResult) {
+				if (uidErr) {
 					console.warn("[DBFriends] Remove", err.message);
 					callback({
 						session: req.session,
 						status: 'fail'
 					});
 				} else {
-					callback({
-						session: req.session,
-						status: 'ok'
+					collectionFriends.update({_id: friendId}, {$pull: {friends: userId}}, function(fidErr, fidResult) {
+						if (fidErr) {
+							console.warn("[DBFriends] Remove", err.message);
+							callback({
+								session: req.session,
+								status: 'fail'
+							});					
+						}
+						else {
+							callback({
+								session: req.session,
+								status: 'ok'
+							});	
+						}
 					});
 				}
 			});
