@@ -12,7 +12,7 @@ module.exports = function (DBFriends, collectionFriends, collectionFriendRequest
 					$in: [userId, friendId]
 				}
 			}).toArray(function (findErr, findResult) {
-				console.log(JSON.stringify(findResult));
+				console.log("[DBFriends] Add", "'" + JSON.stringify(findResult) + "'");
 				if (findResult.length == 2) {
 					collectionFriends.update({
 						_id: userId
