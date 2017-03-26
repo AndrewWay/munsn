@@ -429,7 +429,7 @@ var loginUser = "/user/login";
  * Returns:
  *      - JSON friend request object
  */
-var addFriendReq = "/user/add/request";
+var addFriendReq = "/friends/add/request";
 
 /**
  * delFriendReq
@@ -446,7 +446,24 @@ var addFriendReq = "/user/add/request";
  * Returns:
  *      - JSON friend request object after deletion
  */
-var delFriendReq = "/user/remove/request";
+var delFriendReq = "/friends/remove/request";
+
+/**
+ * addFriend
+ *
+ * URL:
+ * 		- %server%/api/friends/add/friend
+ * Descript:
+ *      - Add a friend
+ * Method:
+ *      - POST
+ * Params:
+ *      - uid: The user id to delete the friend from
+ * 		- fid: The friend id to delete the friendship from
+ * Returns:
+ *      - Mongo result
+ */
+var addFriend = "/friends/add/friend";
 
 /**
  * delFriend
@@ -463,7 +480,7 @@ var delFriendReq = "/user/remove/request";
  * Returns:
  *      - Mongo result
  */
-var delFriend = "/user/remove/friend";
+var delFriend = "/friends/remove/friend";
 
 /**
  * createGroup
@@ -1215,10 +1232,10 @@ router.post(removeGroupRequest, UserID, function (req, res, next) {
 	DB.Groups.removeRequest(req, res, function (result) {
 		res.json(result);
 	});
-});
+}); 
 
-router.post(sendFriendRequest, UserID, function (req, res, next) {
-	DB.Friends.addRequest(req, res, function (result) {
+router.post(addFriend, UserID, function (req, res, next) {
+	DB.Friends.add(req, res, function (result) {
 		res.json(result);
 	});
 });
