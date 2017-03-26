@@ -172,7 +172,6 @@ module.exports = function (DBFriends, collectionFriends, collectionFriendRequest
 					}
 				},
 				function (err, result) {
-					//TODO: Devin, Will changing this to err,result affect this?
 					if (err) {
 						console.error("[DBFriends] AddRequest", err.message);
 						callback({

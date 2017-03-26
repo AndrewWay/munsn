@@ -54,9 +54,9 @@ module.exports = function (DBPosts, collectionPosts) {
 
 	//Get posts per user
 	DBPosts.findByUserId = function (req, res, callback) {
-		console.log("[DBPosts] FindByUID", "'" + req.params.uid + "'");
+		console.log("[DBPosts] FindByUID", "'" + req.UserID + "'");
 		collectionPosts.find({
-			authorid: req.params.uid
+			authorid: req.UserID
 		}).toArray(function (err, result) {
 			if (err) {
 				console.error("[DBPosts] FindByUID", err.message);

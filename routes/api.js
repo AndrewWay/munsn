@@ -290,7 +290,7 @@ var findGroupSent = "/user/group/sent/:uid";
  * Returns:
  *      - JSON array containing group request objects
  */
-var findGroupReceived = "/group/received/:fid";
+var findGroupReceived = "/group/received/:gid";
 
 /**
  * findCommentById
@@ -307,6 +307,23 @@ var findGroupReceived = "/group/received/:fid";
  *      - JSON array containing comment objects
  */
 var findCommentById = "/comment/find/:uid";
+
+/**
+ * loadMessages
+ *
+ * URL:
+ * 		- %server%/api/messages/load/
+ * Descript:
+ *      - Get messages from a conversation
+ * Method:
+ *      - GET
+ * Params:
+ *      - uid1: The first user id
+ * 		- uid2: The second user id
+ * Returns:
+ *      - JSON array containing messages
+ */
+var loadMessages = "/messages/load";
 
 //=============================POST VERBS=============================
 
@@ -1166,26 +1183,32 @@ router.get(findGroupReceived, UserID, function (req, res, next) {
 	});
 });
 
-router.get(sendGroupRequest, UserID, function (req, res, next) {
+router.post(sendGroupRequest, UserID, function (req, res, next) {
 	DB.Groups.addRequest(req, res, function (result) {
 		res.json(result);
 	});
 });
 
-router.get(removeGroupRequest, UserID, function (req, res, next) {
+router.post(removeGroupRequest, UserID, function (req, res, next) {
 	DB.Groups.removeRequest(req, res, function (result) {
 		res.json(result);
 	});
 });
 
-router.get(sendFriendRequest, UserID, function (req, res, next) {
+router.post(sendFriendRequest, UserID, function (req, res, next) {
 	DB.Friends.addRequest(req, res, function (result) {
 		res.json(result);
 	});
 });
 
-router.get(removeFriendRequest, UserID, function (req, res, next) {
+router.post(removeFriendRequest, UserID, function (req, res, next) {
 	DB.Friends.removeRequest(req, res, function (result) {
+		res.json(result);
+	});
+});
+
+router.get(loadMessages, UserID, function (req, res, next) {
+	DB.Socket.loadMessages(req, res, function (err, result) {
 		res.json(result);
 	});
 });

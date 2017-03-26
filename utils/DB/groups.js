@@ -2,8 +2,6 @@ var console = require('../consoleLogger');
 module.exports = function (DBGroups, collectionGroups, collectionGroupMembers, collectionGroupRequests) {
 	//Add a group
 	DBGroups.add = function (req, res, callback) {
-		var creatorId = req.body.gid;
-		var groupName = req.body.name;
 		var row = {
 			name: req.body.name,
 			creatorid: req.body.uid,
@@ -11,7 +9,7 @@ module.exports = function (DBGroups, collectionGroups, collectionGroupMembers, c
 			courses: undefined,
 			created: new Date()
 		};
-		console.log("[DBGroups] Add", "'" + row.ownerid + "'->'" + row.name + "'");
+		console.log("[DBGroups] Add", "'" + row.creatorid + "'->'" + row.name + "'");
 		if (row.name && row.ownerid) {
 			var date = new Date();
 			collectionGroups.insert(row, function (err, result) {
@@ -26,7 +24,7 @@ module.exports = function (DBGroups, collectionGroups, collectionGroupMembers, c
 						_id: result.ops[0]._id
 					}, {
 						$push: {
-							members: creatorId
+							members: row.creatorid
 						}
 					}, {
 						upsert: true
@@ -58,8 +56,8 @@ module.exports = function (DBGroups, collectionGroups, collectionGroupMembers, c
 
 	//Find a group by user
 	DBGroups.findByUserId = function (req, res, callback) {
-		var userId = req.params.uid;
-		console.log("[DBGroups] FindByUID", "'" + req.params.uid + "'");
+		var userId = req.UserID;
+		console.log("[DBGroups] FindByUID", "'" + req.UserID + "'");
 		if (userId) {
 			collectionGroups.find({
 				creatorid: userId
@@ -119,6 +117,7 @@ module.exports = function (DBGroups, collectionGroups, collectionGroupMembers, c
 
 	//Update group
 	DBGroups.update = function (req, res, callback) {
+		//TODO: HOW IS KYLE SUPPOSED TO GET GROUPIDS DEVIN!
 		var groupId = req.body.gid;
 		var updates = req.body.updates;
 		console.log("[DBGroups] Update: '" + JSON.stringify(updates) + "'->'" + groupId + "'");
@@ -154,6 +153,7 @@ module.exports = function (DBGroups, collectionGroups, collectionGroupMembers, c
 
 	//Remove a group
 	DBGroups.remove = function (req, res, callback) {
+		//TODO: DOES THIS MAKE SENSE DEVIN? PROBABLY NOT HOW IS KYLE SUPPOSED TO GET THIS GID SHIT
 		var groupid = req.params.gid;
 		console.log("[DBGroups] Remove: '" + groupid + "'");
 		if (groupid) {
@@ -246,7 +246,7 @@ module.exports = function (DBGroups, collectionGroups, collectionGroupMembers, c
 	DBGroups.findRequests = function (req, res, callback) {
 		var query = {
 			groupName: req.params.gid,
-			userid: req.params.uid
+			userid: req.UserID
 		};
 		console.log("[DBGroups] FindRequests: '" + query.groupName ? query.groupName : "*" + "'->'" + query.userid ? query.userid : "*" + "'");
 		if (!Object.keys(query).length) {
@@ -265,7 +265,7 @@ module.exports = function (DBGroups, collectionGroups, collectionGroupMembers, c
 				}
 			});
 		} else {
-			console.warn("[DBGroups] FindRequests: Missing Fields");
+			console.warn("[DBGroups] FindRequests: 'Missing Fields'");
 			callback({
 				session: req.session,
 				status: 'fail'

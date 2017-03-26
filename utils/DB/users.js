@@ -53,10 +53,10 @@ module.exports = function (DBUsers, DBAuth, collectionUsers) {
 
 	//Find a user by unique object id
 	DBUsers.findById = function (req, res, callback) {
-		console.log("[DBUsers] FindById", "'" + req.params.uid + "'");
-		if (req.params.uid) {
+		console.log("[DBUsers] FindById", "'" + req.UserID + "'");
+		if (req.UserID) {
 			collectionUsers.findOne({
-				_id: req.params.uid
+				_id: req.UserID
 			}, function (err, result) {
 				if (err) {
 					console.log("[DBUsers]", err.message);
@@ -104,8 +104,8 @@ module.exports = function (DBUsers, DBAuth, collectionUsers) {
 
 	//Updates the user
 	DBUsers.update = function (req, res, callback) {
-		console.log("[DBUsers] Update", "'" + JSON.stringify(req.body) + "'->'" + req.params.uid + "'");
-		if (req.params.uid) {
+		console.log("[DBUsers] Update", "'" + JSON.stringify(req.body) + "'->'" + req.UserID + "'");
+		if (req.UserID) {
 			var updates = {
 				pass: req.body.pass,
 				email: req.body.email,
@@ -113,7 +113,7 @@ module.exports = function (DBUsers, DBAuth, collectionUsers) {
 				address: req.body.address
 			};
 			collectionUsers.update({
-				_id: req.params.uid
+				_id: req.UserID
 			}, {
 				$set: updates
 			}, {
@@ -143,8 +143,8 @@ module.exports = function (DBUsers, DBAuth, collectionUsers) {
 
 	//Removes the user
 	DBUsers.remove = function (req, res, callback) {
-		console.log("[DBUsers] Remove", "'" + req.params.uid + "'");
-		if (req.params.uid) {
+		console.log("[DBUsers] Remove", "'" + req.UserID + "'");
+		if (req.UserID) {
 			collectionUsers.remove({
 				_id: req.params.id
 			}, {
@@ -194,7 +194,7 @@ module.exports = function (DBUsers, DBAuth, collectionUsers) {
 					} else {
 						if (result) {
 							console.log("[DBUsers] Login", "'Found'->'" + JSON.stringify(result) + "'");
-							if (result.pass == req.body.pass) {
+							if (result.pass === req.body.pass) {
 								console.log("[DBUsers] Login->Password?", "'" + result.pass + "'->'" + req.body.pass + "'");
 								if (result.auth) {
 									console.log("[DBUsers] Login->isAuth?", " 'Success'->'" + result._id + "'");
