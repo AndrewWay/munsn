@@ -271,7 +271,7 @@ module.exports = function (DBFriends, collectionFriends, collectionFriendRequest
 			userid: req.body.uid,
 			friendid: req.body.fid
 		};
-		console.log("[DBFriends] RemoveRequest", "'" + query.friendid ? query.friendid : "*" + "'->'" + query.userid ? query.userid : "*" + "'");
+		console.log("[DBFriends] RemoveRequest", "'" + (query.userid ? query.userid : "*") + "'->'" + (query.friendid ? query.friendid : "*") + "'");
 		if (Object.keys(query).length === 2) {
 			collectionFriendRequests.remove(query, function (err, result) {
 				if (err) {

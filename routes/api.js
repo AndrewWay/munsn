@@ -52,7 +52,7 @@ var findUser = "/users";
  * Returns:
  *      - JSON array containing user objects
  */
-var findFriendsById = "/user/friends/:uid";
+var findFriendsById = "/friends/:uid";
 
 /**
  * findFriendSent
@@ -68,7 +68,7 @@ var findFriendsById = "/user/friends/:uid";
  * Returns:
  *      - JSON array containing friend request objects
  */
-var findFriendSent = "/user/friends/sent/:uid";
+var findFriendSent = "/friends/sent/:uid";
 
 /**
  * findFriendReceived
@@ -84,7 +84,7 @@ var findFriendSent = "/user/friends/sent/:uid";
  * Returns:
  *      - JSON array containing friend request objects
  */
-var findFriendReceived = "/user/friends/received/:fid";
+var findFriendReceived = "/friends/received/:fid";
 /**
  * findGroupsByID
  *
@@ -179,7 +179,7 @@ var findPostByUid = "/post/user/:uid";
  * Returns:
  *      - JSON user object array
  */
-var suggestFriends = "/user/friends/suggest/:uid";
+var suggestFriends = "/friends/suggest/:uid";
 
 /**
  * findCourseById
@@ -429,7 +429,7 @@ var loginUser = "/user/login";
  * Returns:
  *      - JSON friend request object
  */
-var addFriendReq = "/user/add/request";
+var addFriendReq = "/friends/add/request";
 
 /**
  * delFriendReq
@@ -446,7 +446,7 @@ var addFriendReq = "/user/add/request";
  * Returns:
  *      - JSON friend request object after deletion
  */
-var delFriendReq = "/user/remove/request";
+var delFriendReq = "/friends/remove/request";
 
 /**
  * delFriend
@@ -463,7 +463,7 @@ var delFriendReq = "/user/remove/request";
  * Returns:
  *      - Mongo result
  */
-var delFriend = "/user/remove/friend";
+var delFriend = "/friends/remove";
 
 /**
  * createGroup
