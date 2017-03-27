@@ -195,4 +195,31 @@ module.exports = function (DBCourses, collectionCourses, collectionUserCourses, 
 			});
 		}
 	};
+
+	DBCourses.removeFromUser = function (req, res, callback) {
+		console.log("[DBCourses] RemoveFromUser", "'" + req.body.uid + "'-> " + req.body.cid);
+		if (req.body.uid && req.body.cid) {
+			collectionUserCourses.update({_id: req.body.uid}, {$pull: {courses: [req.body.cid]}}, function(err, result) {
+				if (err) {
+					console.error("[DBCourses] RemoveFromUser", err.message);
+					callback({
+						session: req.session,
+						status: 'fail'
+					});
+				}
+				else {
+					callback(
+						{session: req.session,
+						status: 'ok'
+					});
+				}
+			});
+		} else {
+			console.warn("[DBCourses] RemoveFromUser", "'Missing Fields'");
+			callback({
+				session: req.session,
+				status: "fail"
+			});
+		}
+	};
 };
