@@ -42,7 +42,7 @@ var findUser = "/users";
  * findFriendsById
  *
  * URL:
- * 		- %server%/api/user/friends/:uid
+ * 		- %server%/api/friends/:uid
  * Descript:
  *      - Gets the friends for a given uid
  * Method:
@@ -168,7 +168,7 @@ var findPostByUid = "/post/user/:uid";
  * suggestFriends
  *
  * URL:
- * 		- %server%/api/user/friends/suggest/:uid
+ * 		- %server%/api/friends/suggest/:uid
  * Descript:
  *      - Get a list of suggested friends
  * Method:
