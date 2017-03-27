@@ -346,4 +346,69 @@ module.exports = function (DBFriends, collectionFriends, collectionFriendRequest
 			});
 		}
 	};
+
+	DBFriends.acceptFriendReq = function (req, res, callback) {
+		console.log("[DBFriends] AcceptFriendReq", "'" + (req.body.uid ? req.body.uid : "*") + "'->'" + (req.body.fid ? req.body.fid : "*") + "'");
+		if (req.body.uid && req.body.fid) {
+			collectionFriendRequests.findAndRemove({userid: req.body.uid, friendid: req.body.fid}, function(findErr, findResults) {
+				if (findErr) {
+					console.error("[DBFriends] AcceptFriendReq", findErr.message);
+					callback({
+						session: req.session,
+						status: 'fail'
+					});
+				}
+				else {
+					DBFriends.add(req, res, function(result) {
+						if (result.status === 'fail') {
+							console.error("[DBFriends] AcceptFriendReq", result.status);
+							callback({
+								session: req.session,
+								status: 'fail'
+							});						
+						}
+						else {
+							callback({
+								session: req.session,
+								status: 'ok'
+							});			
+						}
+					});
+				}
+			});
+		} else {
+			console.warn("[DBFriends] AcceptFriendReq", "'Missing Fields'");
+			callback({
+				session: req.session,
+				status: 'fail'
+			});
+		}
+	};
+
+	DBFriends.denyFriendReq = function (req, res, callback) {
+		console.log("[DBFriends] DenyFriendReq", "'" + (req.body.uid ? req.body.uid : "*") + "'->'" + (req.body.fid ? req.body.fid : "*") + "'");
+		if (req.body.uid && req.body.fid) {
+			collectionFriendRequests.findAndRemove({userid: req.body.uid, friendid: req.body.fid}, function(findErr, findResults) {
+				if (findErr) {
+					console.error("[DBFriends] DenyFriendReq", findErr.message);
+					callback({
+						session: req.session,
+						status: 'fail'
+					});
+				}
+				else {
+					callback({
+						session: req.session,
+						status: 'ok'
+					});		
+				}
+			});
+		} else {
+			console.warn("[DBFriends] DenyFriendReq", "'Missing Fields'");
+			callback({
+				session: req.session,
+				status: 'fail'
+			});
+		}
+	};
 };

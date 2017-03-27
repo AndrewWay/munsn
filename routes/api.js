@@ -432,21 +432,38 @@ var loginUser = "/user/login";
 var addFriendReq = "/friends/add/request";
 
 /**
+ * acceptFriendReq
+ *
+ * URL:
+ * 		- %server%/api/friends/accept/request
+ * Descript:
+ *      - Accept a friend request
+ * Method:
+ *      - POST
+ * Params:
+ *      - uid: The user id to accept the request from (reciever)
+ * 		- fid: The friend id to accept the request to (sender)
+ * Returns:
+ *      - JSON friend request object after deletion
+ */
+var acceptFriendReq = "/friends/accept/request";
+
+/**
  * delFriendReq
  *
  * URL:
- * 		- %server%/api/user/remove/request
+ * 		- %server%/api/friends/deny/request
  * Descript:
  *      - Delete a friend request from one user to another
  * Method:
  *      - POST
  * Params:
- *      - uid: The user id to delete the request from
- * 		- fid: The friend id to delete the request to
+ *      - uid: The user id to delete the request from (reciever)
+ * 		- fid: The friend id to delete the request to (sender)
  * Returns:
  *      - JSON friend request object after deletion
  */
-var delFriendReq = "/friends/remove/request";
+var denyFriendReq = "/friends/deny/request";
 
 /**
  * addFriend
@@ -636,12 +653,12 @@ var delPost = "/post/remove";
 var updatePost = "/post/update";
 
 /**
- * addCourse
+ * createCourse
  *
  * URL:
- * 		- %server%/api/course/add
+ * 		- %server%/api/course/create
  * Descript:
- *      - Add a course
+ *      - Create a course
  * Method:
  *      - POST
  * Params:
@@ -659,7 +676,7 @@ var updatePost = "/post/update";
  * Returns:
  *      - JSON mongo result
  */
-var addCourse = "/course/add";
+var createCourse = "/course/create";
 
 /**
  * updateCourse
@@ -901,7 +918,7 @@ var sendFriendRequest = "/user/friend/sent/add";
  * removeFriendRequest
  *
  * URL:
- * 		- %server%/api/user/friend/request/remove
+ * 		- %server%/api/friends/remove/request
  * Descript:
  *      - Remove a friend request
  * Method:
@@ -912,7 +929,7 @@ var sendFriendRequest = "/user/friend/sent/add";
  * Returns:
  *      - JSON mongo result
  */
-var removeFriendRequest = "/user/friend/request/remove";
+var removeFriendRequest = "/friends/remove/request";
 
 //==========================================================================================
 
@@ -991,9 +1008,15 @@ router.get(findFriendReceived, UserID, function (req, res, next) {
 	});
 });
 
+router.post(acceptFriendReq, UserID, function (req, res, next) {
+	DB.Friends.acceptFriendReq(req, res, function (result) {
+		res.json(result);
+	});
+});
+
 //Removes friend request
-router.post(delFriendReq, UserID, function (req, res, next) {
-	DB.Friends.removeRequest(req, res, function (result) {
+router.post(denyFriendReq, UserID, function (req, res, next) {
+	DB.Friends.denyFriendReq(req, res, function (result) {
 		res.json(result);
 	});
 });
@@ -1119,8 +1142,8 @@ router.get(findCourse, UserID, function (req, res, next) {
 	});
 });
 
-router.post(addCourse, UserID, function (req, res, next) {
-	DB.Courses.add(req, res, function (result) {
+router.post(createCourse, UserID, function (req, res, next) {
+	DB.Courses.createCourse(req, res, function (result) {
 		res.json(result);
 	});
 });

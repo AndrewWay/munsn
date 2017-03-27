@@ -1,7 +1,7 @@
 var console = require('../consoleLogger');
-module.exports = function (DBCourses, collectionCourses) {
+module.exports = function (DBCourses, collectionCourses, collectionUserCourses, collectionGroupCourses) {
 	//Add a course
-	DBCourses.add = function (req, res, callback) {
+	DBCourses.createCourse = function (req, res, callback) {
 		var course = {
 			label: req.body.label,
 			name: req.body.name,
@@ -12,13 +12,13 @@ module.exports = function (DBCourses, collectionCourses) {
 			year: req.body.year,
 			cid: req.body.cid,
 			days: req.body.days,
-			timeStart: req.body.timeStart,
-			timeEnd: req.body.timeEnd
+			timeStart: new Date(req.body.timeStart),
+			timeEnd: new Date(req.body.timeEnd)
 		};
-		console.log("[DBCourses] Add", "'" + course.label + "'");
+		console.log("[DBCourses] createCourse", "'" + course.label + "'");
 		collectionCourses.insert(course, function (err, result) {
 			if (err) {
-				console.error("[DBCourses] Add", err.message);
+				console.error("[DBCourses] createCourse", err.message);
 				callback({
 					session: req.session,
 					status: 'fail'

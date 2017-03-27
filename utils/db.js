@@ -23,6 +23,8 @@ var collectionPosts; //TODO: John, EVALUATE
 var collectionCalendar;
 var collectionComments; //TODO: John, EVALUATE
 var collectionCourses;
+var collectionUserCourses;
+var collectionGroupCourses;
 var collectionLostFound;
 var collectionSocket;
 var collectionMessages;
@@ -441,7 +443,7 @@ mongoClient.connect(dbURL, function (err, DB) {
 	require('./DB/members')(DBGroupMembers, collectionGroupMembers);
 	require('./DB/posts')(DBPosts, collectionPosts);
 	require('./DB/comments')(DBComments, collectionComments);
-	require('./DB/courses')(DBCourses, collectionCourses);
+	require('./DB/courses')(DBCourses, collectionCourses, collectionUserCourses, collectionGroupCourses);
 	require('./DB/lostfound')(DBLostFound, collectionLostFound);
 	require('./DB/calendar')(DBCalendar, collectionCalendar);
 	require('./DB/socket')(DBSocket, collectionSocket, collectionMessages);
