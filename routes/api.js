@@ -754,6 +754,39 @@ var addCourseToUser = "/course/user/add";
 var delCourseFromUser = "/course/user/del";
 
 /**
+ * addCourseToGroup
+ *
+ * URL:
+ * 		- %server%/api/course/group/add
+ * Descript:
+ *      - Add a course to a Group
+ * Method:
+ *      - POST
+ * Params:
+ *		_id: The groups unique object id
+ 		cid: The course unique object id
+ * Returns:
+ *      - JSON mongo result
+ */
+var addCourseToGroup = "/course/group/add";
+
+/**
+ * delCourseFromGroup
+ *
+ * URL:
+ * 		- %server%/api/course/group/del
+ * Descript:
+ *      - Delete a course from a Group
+ * Method:
+ *      - POST
+ * Params:
+ *		_id: The course unique object id
+ * Returns:
+ *      - JSON mongo result
+ */
+var delCourseFromGroup = "/course/group/del";
+
+/**
  * addLost
  *
  * URL:
@@ -1200,6 +1233,18 @@ router.post(addCourseToUser, UserID, function (req, res, next) {
 
 router.post(delCourseFromUser, UserID, function (req, res, next) {
 	DB.Courses.removeFromUser(req, res, function (result) {
+		res.json(result);
+	});
+});
+
+router.post(addCourseToGroup, UserID, function (req, res, next) {
+	DB.Courses.addToGroup(req, res, function (result) {
+		res.json(result);
+	});
+});
+
+router.post(delCourseFromGroup, UserID, function (req, res, next) {
+	DB.Courses.removeFromGroup(req, res, function (result) {
 		res.json(result);
 	});
 });

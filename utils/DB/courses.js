@@ -172,7 +172,7 @@ module.exports = function (DBCourses, collectionCourses, collectionUserCourses, 
 	DBCourses.addToUser = function (req, res, callback) {
 		console.log("[DBCourses] AddToUser", "'" + req.body.uid + "'-> " + req.body.cid);
 		if (req.body.uid && req.body.cid) {
-			collectionUserCourses.update({_id: req.body.uid}, {$addToSet: {courses: [req.body.cid]}}, {upsert: true}, function(err, result) {
+			collectionUserCourses.update({_id: req.body.uid}, {$addToSet: {courses: req.body.cid}}, {upsert: true}, function(err, result) {
 				if (err) {
 					console.error("[DBCourses] AddToUser", err.message);
 					callback({
@@ -199,7 +199,7 @@ module.exports = function (DBCourses, collectionCourses, collectionUserCourses, 
 	DBCourses.removeFromUser = function (req, res, callback) {
 		console.log("[DBCourses] RemoveFromUser", "'" + req.body.uid + "'-> " + req.body.cid);
 		if (req.body.uid && req.body.cid) {
-			collectionUserCourses.update({_id: req.body.uid}, {$pull: {courses: [req.body.cid]}}, function(err, result) {
+			collectionUserCourses.update({_id: req.body.uid}, {$pull: {courses: req.body.cid}}, function(err, result) {
 				if (err) {
 					console.error("[DBCourses] RemoveFromUser", err.message);
 					callback({
@@ -216,6 +216,60 @@ module.exports = function (DBCourses, collectionCourses, collectionUserCourses, 
 			});
 		} else {
 			console.warn("[DBCourses] RemoveFromUser", "'Missing Fields'");
+			callback({
+				session: req.session,
+				status: "fail"
+			});
+		}
+	};
+
+		DBCourses.addToGroup = function (req, res, callback) {
+		console.log("[DBCourses] AddToGroup", "'" + req.body._id + "'-> " + req.body.cid);
+		if (req.body._id && req.body.cid) {
+			collectionGroupCourses.update({_id: req.body._id}, {$addToSet: {courses: req.body.cid}}, {upsert: true}, function(err, result) {
+				if (err) {
+					console.error("[DBCourses] AddToGroup", err.message);
+					callback({
+						session: req.session,
+						status: 'fail'
+					});
+				}
+				else {
+					callback(
+						{session: req.session,
+						status: 'ok'
+					});
+				}
+			});
+		} else {
+			console.warn("[DBCourses] AddToGroup", "'Missing Fields'");
+			callback({
+				session: req.session,
+				status: "fail"
+			});
+		}
+	};
+
+	DBCourses.removeFromGroup = function (req, res, callback) {
+		console.log("[DBCourses] removeFromGroup", "'" + req.body._id + "'-> " + req.body.cid);
+		if (req.body._id && req.body.cid) {
+			collectionGroupCourses.update({_id: req.body._id}, {$pull: {courses: req.body.cid}}, function(err, result) {
+				if (err) {
+					console.error("[DBCourses] removeFromGroup", err.message);
+					callback({
+						session: req.session,
+						status: 'fail'
+					});
+				}
+				else {
+					callback(
+						{session: req.session,
+						status: 'ok'
+					});
+				}
+			});
+		} else {
+			console.warn("[DBCourses] removeFromGroup", "'Missing Fields'");
 			callback({
 				session: req.session,
 				status: "fail"
