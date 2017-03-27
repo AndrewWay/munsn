@@ -2,30 +2,34 @@ var utils = require('../utils');
 var console = require('../consoleLogger');
 module.exports = function (DBUsers, DBAuth, collectionUsers) {
 	DBUsers.add = function (req, res, callback) {
-		console.log("[DBUsers] Add", "'" + JSON.stringify(req.body) + "'");
-		var result = {};
-		if (!Object.keys(req.body).length) {
-			console.warn("[DBUsers] Add", "'Missing Fields'");
-			callback({
-				session: req.session,
-				status: 'fail'
-			});
-		} else {
-			//Create user
-			try {
-				var row = {
-					fname: req.body.fname,
-					lname: req.body.lname,
-					pass: req.body.pass,
-					dob: new Date(req.body.dob),
-					address: req.body.address,
-					gender: req.body.gender,
-					email: req.body.email,
-					auth: false,
-					visibility: req.body.visibility ? req.body.visibility : "default",
-					_id: utils.EmailToID(req.body.email)
-				};
 
+		//Create user
+		try {
+			var row = {
+				fname: req.body.fname,
+				lname: req.body.lname,
+				pass: req.body.pass,
+				dob: new Date(req.body.dob),
+				address: req.body.address,
+				gender: req.body.gender,
+				email: req.body.email,
+				auth: false,
+				visibility: req.body.visibility ? req.body.visibility : "default",
+				_id: utils.EmailToID(req.body.email)
+			};
+			for (var k in Object.keys(row)) {
+				if (row[k] === undefined) {
+					delete row[k];
+				}
+			}
+			console.log("[DBUsers] Add", "'" + JSON.stringify(row) + "'");
+			if (Object.keys(row).length !== 10) {
+				console.warn("[DBUsers] Add", "'Missing Fields'");
+				callback({
+					session: req.session,
+					status: 'fail'
+				});
+			} else {
 				//Create auth key and store it in auths
 				collectionUsers.insert(row, function (err, result) {
 					if (err) {
@@ -41,14 +45,15 @@ module.exports = function (DBUsers, DBAuth, collectionUsers) {
 						});
 					}
 				});
-			} catch (err) {
-				console.error("[DBUsers] Registration", "'Missing fields or Other'");
-				callback({
-					session: req.session,
-					status: 'fail'
-				});
 			}
+		} catch (err) {
+			console.error("[DBUsers] Registration", "'Missing fields or Other'");
+			callback({
+				session: req.session,
+				status: 'fail'
+			});
 		}
+
 	};
 
 	//Find a user by unique object id
