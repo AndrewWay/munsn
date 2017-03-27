@@ -1,33 +1,67 @@
 var console = require("../consoleLogger");
 module.exports = function (DBFriends, collectionFriends, collectionFriendRequests, collectionUsers) {
 	//Adds the friendId to the userId's friend list
-	DBFriends.add = function (userId, friendId, callback) {
+	DBFriends.add = function (req, res, callback) {
+		//Declare body variables
+		var userId = req.body.uid;
+		var friendId = req.body.fid;
 		console.log("[DBFriends] Add", "'" + userId + "'->'" + friendId + "'");
 		if (userId && friendId) {
-			collectionFriends.update({
-				_id: userId
-			}, {
-				$push: {
-					friends: friendId
+			collectionUsers.find({
+				_id: {
+					$in: [userId, friendId]
 				}
-			}, {
-				upsert: true
-			}, function (err, result) {
-				if (err) {
-					console.error("[DBFriends] Add", err.message);
-					callback({
-						status: 'fail'
+			}).toArray(function (findErr, findResult) {
+				console.log("[DBFriends] Add", "'" + JSON.stringify(findResult) + "'");
+				if (findResult.length === 2) {
+					collectionFriends.update({
+						_id: userId
+					}, {
+						$addToSet: {
+							friends: friendId
+						}
+					}, {
+						upsert: true
+					}, function (uidErr, uidResult) {
+						if (uidErr) {
+							console.error("[DBFriends] Add", uidErr.message);
+							callback({
+								status: 'fail'
+							});
+						} else {
+							collectionFriends.update({
+								_id: friendId
+							}, {
+								$addToSet: {
+									friends: userId
+								}
+							}, {
+								upsert: true
+							}, function (fidErr, fidResult) {
+								if (fidErr) {
+									console.error("[DBFriends] Add", fidErr.message);
+									callback({
+										status: 'fail'
+									});
+								} else {
+									callback({
+										status: 'ok'
+									});
+								}
+							});
+						}
 					});
 				} else {
+					console.warn("[DBFriends] Add", "'Cannot Find User(s)'");
 					callback({
-						status: 'ok'
+						status: 'fail'
 					});
 				}
 			});
 		} else {
 			console.warn("[DBFriends] Add", "'Missing Fields'");
 			callback({
-				status: 'ok'
+				status: 'fail'
 			});
 		}
 	};
@@ -50,7 +84,8 @@ module.exports = function (DBFriends, collectionFriends, collectionFriendRequest
 				} else {
 					callback({
 						session: req.session,
-						status: 'ok'
+						status: 'ok',
+						data: result
 					});
 				}
 			});
@@ -77,17 +112,33 @@ module.exports = function (DBFriends, collectionFriends, collectionFriendRequest
 				$pull: {
 					friends: friendId
 				}
-			}, function (err, result) {
-				if (err) {
+			}, function (uidErr, uidResult) {
+				if (uidErr) {
 					console.warn("[DBFriends] Remove", err.message);
 					callback({
 						session: req.session,
 						status: 'fail'
 					});
 				} else {
-					callback({
-						session: req.session,
-						status: 'ok'
+					collectionFriends.update({
+						_id: friendId
+					}, {
+						$pull: {
+							friends: userId
+						}
+					}, function (fidErr, fidResult) {
+						if (fidErr) {
+							console.warn("[DBFriends] Remove", err.message);
+							callback({
+								session: req.session,
+								status: 'fail'
+							});
+						} else {
+							callback({
+								session: req.session,
+								status: 'ok'
+							});
+						}
 					});
 				}
 			});
@@ -167,11 +218,11 @@ module.exports = function (DBFriends, collectionFriends, collectionFriendRequest
 		if (userId && friendId) {
 			//Check to see if both users exist
 			collectionUsers.find({
-					_id: {
-						$in: [userId, friendId]
-					}
-				},
-				function (err, result) {
+				_id: {
+					$in: [userId, friendId]
+				}
+			}).toArray(
+				function (err, fResult) {
 					if (err) {
 						console.error("[DBFriends] AddRequest", err.message);
 						callback({
@@ -179,11 +230,11 @@ module.exports = function (DBFriends, collectionFriends, collectionFriendRequest
 							status: 'fail'
 						});
 					} else {
-						if (result.length === 2) {
+						if (fResult.length === 2) {
 							collectionFriendRequests.insert({
 								userid: userId,
 								friendid: friendId
-							}, function (err, result) {
+							}, function (err, iResult) {
 								if (err) {
 									console.error("[DBFriends] AddRequest", err.message);
 									callback({
@@ -194,17 +245,23 @@ module.exports = function (DBFriends, collectionFriends, collectionFriendRequest
 									callback({
 										session: req.session,
 										status: 'ok',
-										data: result
+										data: iResult
 									});
 								}
 							});
 						} else {
+							var uid = fResult[fResult.findIndex((x) => {
+								return x._id === userId;
+							})] || {
+								_id: 'NotFound'
+							};
+							var fid = fResult[fResult.findIndex((x) => {
+								return x._id === friendId;
+							})] || {
+								_id: 'NotFound'
+							};
 							console.warn("[DBFriends] AddRequest",
-								"'" + result[result.findIndex((x) => {
-									return x._id === userId;
-								})]._id + "'->'" + result[result.findIndex((x) => {
-									return x._id === friendId;
-								})]._id + "'");
+								"'" + uid._id + "'->'" + fid._id + "'");
 							callback({
 								session: req.session,
 								status: 'fail'
@@ -227,8 +284,13 @@ module.exports = function (DBFriends, collectionFriends, collectionFriendRequest
 			friendid: req.params.fid,
 			userid: req.UserID
 		};
-		console.log("[DBFriends] FindRequests", "'" + query.friendid ? query.friendid : "*" + "'->'" + query.userid ? query.userid : "*" + "'");
-		if (Object.keys(query).length === 2) {
+		Object.keys(query).forEach(k => {
+			if (!query[k]) {
+				delete query[k];
+			}
+		});
+		console.log("[DBFriends] FindRequests", "'" + (query.userid ? query.userid : "*") + "'->'" + (query.friendid ? query.friendid : "*") + "'");
+		if (Object.keys(query).length > 0) {
 			collectionFriendRequests.find(query).toArray(function (err, result) {
 				if (err) {
 					console.error("[DBFriends] FindRequests", err.message);
@@ -239,7 +301,8 @@ module.exports = function (DBFriends, collectionFriends, collectionFriendRequest
 				} else {
 					callback({
 						session: req.session,
-						status: 'ok'
+						status: 'ok',
+						data: result
 					});
 				}
 			});
@@ -259,7 +322,7 @@ module.exports = function (DBFriends, collectionFriends, collectionFriendRequest
 			userid: req.body.uid,
 			friendid: req.body.fid
 		};
-		console.log("[DBFriends] RemoveRequest", "'" + query.friendid ? query.friendid : "*" + "'->'" + query.userid ? query.userid : "*" + "'");
+		console.log("[DBFriends] RemoveRequest", "'" + (query.userid ? query.userid : "*") + "'->'" + (query.friendid ? query.friendid : "*") + "'");
 		if (Object.keys(query).length === 2) {
 			collectionFriendRequests.remove(query, function (err, result) {
 				if (err) {

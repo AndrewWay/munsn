@@ -107,11 +107,18 @@ module.exports = function (DBUsers, DBAuth, collectionUsers) {
 		console.log("[DBUsers] Update", "'" + JSON.stringify(req.body) + "'->'" + req.UserID + "'");
 		if (req.UserID) {
 			var updates = {
-				pass: req.body.pass,
-				email: req.body.email,
-				visibility: req.body.visibility,
-				address: req.body.address
+				pass: undefined,
+				email: undefined,
+				visibility: undefined,
+				address: undefined
 			};
+			Object.keys(updates).forEach(k => {
+				if (req.body[k] === undefined) {
+					delete updates[k];
+				} else {
+					updates[k] = req.body[k];
+				}
+			});
 			collectionUsers.update({
 				_id: req.UserID
 			}, {
@@ -146,7 +153,7 @@ module.exports = function (DBUsers, DBAuth, collectionUsers) {
 		console.log("[DBUsers] Remove", "'" + req.UserID + "'");
 		if (req.UserID) {
 			collectionUsers.remove({
-				_id: req.params.id
+				_id: req.UserID
 			}, {
 				single: true
 			}, function (err, result) {

@@ -23,10 +23,26 @@ var UserID = require("../middleware/functions").UserID;
 var findUserById = "/user/info/:uid";
 
 /**
+ * findUser
+ *
+ * URL:
+ * 		- %server%/api/user/info/
+ * Descript:
+ *      - Gets the user object with a query
+ * Method:
+ *      - GET
+ * Params:
+ *      - uid: The user id to get
+ * Returns:
+ *      - JSON user object
+ */
+var findUser = "/users";
+
+/**
  * findFriendsById
  *
  * URL:
- * 		- %server%/api/user/friends/:uid
+ * 		- %server%/api/friends/:uid
  * Descript:
  *      - Gets the friends for a given uid
  * Method:
@@ -36,7 +52,7 @@ var findUserById = "/user/info/:uid";
  * Returns:
  *      - JSON array containing user objects
  */
-var findFriendsById = "/user/friends/:uid";
+var findFriendsById = "/friends/:uid";
 
 /**
  * findFriendSent
@@ -52,7 +68,7 @@ var findFriendsById = "/user/friends/:uid";
  * Returns:
  *      - JSON array containing friend request objects
  */
-var findFriendSent = "/user/friends/sent/:uid";
+var findFriendSent = "/friends/sent/:uid";
 
 /**
  * findFriendReceived
@@ -68,7 +84,7 @@ var findFriendSent = "/user/friends/sent/:uid";
  * Returns:
  *      - JSON array containing friend request objects
  */
-var findFriendReceived = "/user/friends/received/:fid";
+var findFriendReceived = "/friends/received/:fid";
 /**
  * findGroupsByID
  *
@@ -152,7 +168,7 @@ var findPostByUid = "/post/user/:uid";
  * suggestFriends
  *
  * URL:
- * 		- %server%/api/user/friends/suggest/:uid
+ * 		- %server%/api/friends/suggest/:uid
  * Descript:
  *      - Get a list of suggested friends
  * Method:
@@ -163,7 +179,7 @@ var findPostByUid = "/post/user/:uid";
  * Returns:
  *      - JSON user object array
  */
-var suggestFriends = "/user/friends/suggest/:uid";
+var suggestFriends = "/friends/suggest/:uid";
 
 /**
  * findCourseById
@@ -413,7 +429,7 @@ var loginUser = "/user/login";
  * Returns:
  *      - JSON friend request object
  */
-var addFriendReq = "/user/add/request";
+var addFriendReq = "/friends/add/request";
 
 /**
  * delFriendReq
@@ -430,7 +446,24 @@ var addFriendReq = "/user/add/request";
  * Returns:
  *      - JSON friend request object after deletion
  */
-var delFriendReq = "/user/remove/request";
+var delFriendReq = "/friends/remove/request";
+
+/**
+ * addFriend
+ *
+ * URL:
+ * 		- %server%/api/friends/add/friend
+ * Descript:
+ *      - Add a friend
+ * Method:
+ *      - POST
+ * Params:
+ *      - uid: The user id to delete the friend from
+ * 		- fid: The friend id to delete the friendship from
+ * Returns:
+ *      - Mongo result
+ */
+var addFriend = "/friends/add";
 
 /**
  * delFriend
@@ -447,7 +480,8 @@ var delFriendReq = "/user/remove/request";
  * Returns:
  *      - Mongo result
  */
-var delFriend = "/user/remove/friend";
+
+var delFriend = "/friends/remove";
 
 /**
  * createGroup
@@ -888,6 +922,12 @@ router.get(findUserById, UserID, function (req, res, next) {
 	});
 });
 
+router.get(findUser, UserID, function (req, res, next) {
+	DB.Users.find(req, res, function (result) {
+		res.json(result);
+	});
+});
+
 /**
  * ??
  */
@@ -1195,8 +1235,8 @@ router.post(removeGroupRequest, UserID, function (req, res, next) {
 	});
 });
 
-router.post(sendFriendRequest, UserID, function (req, res, next) {
-	DB.Friends.addRequest(req, res, function (result) {
+router.post(addFriend, UserID, function (req, res, next) {
+	DB.Friends.add(req, res, function (result) {
 		res.json(result);
 	});
 });

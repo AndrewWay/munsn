@@ -6,12 +6,10 @@ module.exports = function (DBGroups, collectionGroups, collectionGroupMembers, c
 			name: req.body.name,
 			creatorid: req.body.uid,
 			ownerid: req.body.uid,
-			courses: undefined,
 			created: new Date()
 		};
 		console.log("[DBGroups] Add", "'" + row.creatorid + "'->'" + row.name + "'");
 		if (row.name && row.ownerid) {
-			var date = new Date();
 			collectionGroups.insert(row, function (err, result) {
 				if (err) {
 					console.error("[DBGroups] Add", err.message);
@@ -20,15 +18,7 @@ module.exports = function (DBGroups, collectionGroups, collectionGroupMembers, c
 						status: 'fail'
 					});
 				} else {
-					collectionGroupMembers.update({
-						_id: result.ops[0]._id
-					}, {
-						$push: {
-							members: row.creatorid
-						}
-					}, {
-						upsert: true
-					}, function (err, result) {
+					collectionGroupMembers.insert({_id: result.ops[0]._id, members: [row.creatorid]}, function (err, result) {
 						if (err) {
 							console.error("[DBGroups] Add", err.message);
 							callback({
