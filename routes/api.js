@@ -85,8 +85,9 @@ var findFriendSent = "/friends/sent/:uid";
  *      - JSON array containing friend request objects
  */
 var findFriendReceived = "/friends/received/:fid";
+
 /**
- * findGroupsByID
+ * findGroupsByUID
  *
  * URL:
  * 		- %server%/api/user/groups/:uid
@@ -99,7 +100,28 @@ var findFriendReceived = "/friends/received/:fid";
  * Returns:
  *      - JSON array containing group objects
  */
-var findGroupsByID = "/user/groups/:uid";
+var findGroupsByUID = "/user/groups/:uid";
+
+//TODO: Check out the creator/owner id below
+/**
+ * findGroups
+ *
+ * URL:
+ * 		- %server%/api/user/groups/
+ * Descript:
+ *      - Search groups by query
+ * Method:
+ *      - GET
+ * Params:
+ *      - _id: The group object unique id
+ * 		- name: The group name
+ * 		- creatorid: The group creator's id
+ * 		- ownerid: The owners id
+ * 		- created: The creation date
+ * Returns:
+ *      - JSON array containing group objects
+ */
+var findGroups = "/user/groups/";
 
 /**
  * findGroupsUsers
@@ -521,7 +543,7 @@ var createGroup = "/group/create";
  * delGroup
  *
  * URL:
- * 		- %server%/api/group/remove/:gid
+ * 		- %server%/api/group/remove/:_id
  * Descript:
  *      - Delete a group
  * Method:
@@ -531,7 +553,7 @@ var createGroup = "/group/create";
  * Returns:
  *      - JSON group object after deletion
  */
-var delGroup = "/group/remove/:gid";
+var delGroup = "/group/remove/:_id";
 
 /**
  * updateGroup
@@ -1107,8 +1129,15 @@ router.post(delGroup, UserID, function (req, res, next) {
 });
 
 //find groups by userid
-router.get(findGroupsByID, UserID, function (req, res, next) {
+router.get(findGroupsByUID, UserID, function (req, res, next) {
 	DB.Groups.findByUserId(req, res, function (result) {
+		res.json(result);
+	});
+});
+
+//find groups by userid
+router.get(findGroups, UserID, function (req, res, next) {
+	DB.Groups.find(req, res, function (result) {
 		res.json(result);
 	});
 });
