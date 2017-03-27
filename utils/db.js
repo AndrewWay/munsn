@@ -435,6 +435,8 @@ mongoClient.connect(dbURL, function (err, DB) {
 	collectionLostFound = DB.collection('lost');
 	collectionSocket = DB.collection('socket');
 	collectionMessages = DB.collection('messages');
+	collectionUserCourses = DB.collection('userCourses');
+	collectionGroupCourses = DB.collection('groupCourses');
 	require('./DB/users')(DBUsers, DBAuth, collectionUsers);
 	require('./DB/auths')(DBAuth, collectionAuths, collectionUsers, MAX_VALIDATE_MINUTES);
 	require('./DB/friends')(DBFriends, collectionFriends, collectionFriendRequests, collectionUsers);

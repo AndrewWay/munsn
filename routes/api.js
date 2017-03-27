@@ -185,7 +185,7 @@ var suggestFriends = "/friends/suggest/:uid";
  * findCourseById
  *
  * URL:
- * 		- %server%/api/course/find/:uid
+ * 		- %server%/api/course/find/:id
  * Descript:
  *      - Get a course by id
  * Method:
@@ -195,7 +195,7 @@ var suggestFriends = "/friends/suggest/:uid";
  * Returns:
  *      - JSON course object
  */
-var findCourseById = "/course/find/:uid";
+var findCourseById = "/course/find/:id";
 
 /**
  * findCourse
@@ -709,7 +709,7 @@ var updateCourse = "/course/update";
  * removeCourse
  *
  * URL:
- * 		- %server%/api/course/remove
+ * 		- %server%/api/course/delete
  * Descript:
  *      - Remove a course
  * Method:
@@ -719,7 +719,39 @@ var updateCourse = "/course/update";
  * Returns:
  *      - JSON mongo result
  */
-var removeCourse = "/course/remove";
+var deleteCourse = "/course/delete";
+
+/**
+ * addCourseToUser
+ *
+ * URL:
+ * 		- %server%/api/course/user/add
+ * Descript:
+ *      - Add a course to a user
+ * Method:
+ *      - POST
+ * Params:
+ *		_id: The course unique object id
+ * Returns:
+ *      - JSON mongo result
+ */
+var addCourseToUser = "/course/user/add";
+
+/**
+ * delCourseFromUser
+ *
+ * URL:
+ * 		- %server%/api/course/user/del
+ * Descript:
+ *      - Delete a course from a user
+ * Method:
+ *      - POST
+ * Params:
+ *		_id: The course unique object id
+ * Returns:
+ *      - JSON mongo result
+ */
+var delCourseFromUser = "/course/user/del";
 
 /**
  * addLost
@@ -1148,14 +1180,26 @@ router.post(createCourse, UserID, function (req, res, next) {
 	});
 });
 
-router.post(removeCourse, UserID, function (req, res, next) {
-	DB.Courses.remove(req, res, function (result) {
+router.post(deleteCourse, UserID, function (req, res, next) {
+	DB.Courses.delete(req, res, function (result) {
 		res.json(result);
 	});
 });
 
 router.post(updateCourse, UserID, function (req, res, next) {
 	DB.Courses.update(req, res, function (result) {
+		res.json(result);
+	});
+});
+
+router.post(addCourseToUser, UserID, function (req, res, next) {
+	DB.Courses.addToUser(req, res, function (result) {
+		res.json(result);
+	});
+});
+
+router.post(delCourseFromUser, UserID, function (req, res, next) {
+	DB.Courses.removeFromUser(req, res, function (result) {
 		res.json(result);
 	});
 });
