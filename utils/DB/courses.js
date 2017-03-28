@@ -16,10 +16,10 @@ module.exports = function (DBCourses, collectionCourses, collectionUserCourses, 
 			timeStart: new Date(req.body.timeStart),
 			timeEnd: new Date(req.body.timeEnd)
 		};
-		console.log("[DBCourses] createCourse", "'" + course.label + "'");
+		console.log("[DBCourses] CreateCourse", "'" + course.label + "'");
 		collectionCourses.insert(course, function (err, result) {
 			if (err) {
-				console.error("[DBCourses] createCourse", err.message);
+				console.error("[DBCourses] CreateCourse", err.message);
 				callback({
 					session: req.session,
 					status: 'fail'
@@ -172,17 +172,24 @@ module.exports = function (DBCourses, collectionCourses, collectionUserCourses, 
 	DBCourses.addToUser = function (req, res, callback) {
 		console.log("[DBCourses] AddToUser", "'" + req.body.uid + "'-> " + req.body.cid);
 		if (req.body.uid && req.body.cid) {
-			collectionUserCourses.update({_id: req.body.uid}, {$addToSet: {courses: req.body.cid}}, {upsert: true}, function(err, result) {
+			collectionUserCourses.update({
+				_id: req.body.uid
+			}, {
+				$addToSet: {
+					courses: req.body.cid
+				}
+			}, {
+				upsert: true
+			}, function (err, result) {
 				if (err) {
 					console.error("[DBCourses] AddToUser", err.message);
 					callback({
 						session: req.session,
 						status: 'fail'
 					});
-				}
-				else {
-					callback(
-						{session: req.session,
+				} else {
+					callback({
+						session: req.session,
 						status: 'ok'
 					});
 				}
@@ -199,17 +206,22 @@ module.exports = function (DBCourses, collectionCourses, collectionUserCourses, 
 	DBCourses.removeFromUser = function (req, res, callback) {
 		console.log("[DBCourses] RemoveFromUser", "'" + req.body.uid + "'-> " + req.body.cid);
 		if (req.body.uid && req.body.cid) {
-			collectionUserCourses.update({_id: req.body.uid}, {$pull: {courses: req.body.cid}}, function(err, result) {
+			collectionUserCourses.update({
+				_id: req.body.uid
+			}, {
+				$pull: {
+					courses: req.body.cid
+				}
+			}, function (err, result) {
 				if (err) {
 					console.error("[DBCourses] RemoveFromUser", err.message);
 					callback({
 						session: req.session,
 						status: 'fail'
 					});
-				}
-				else {
-					callback(
-						{session: req.session,
+				} else {
+					callback({
+						session: req.session,
 						status: 'ok'
 					});
 				}
@@ -223,20 +235,27 @@ module.exports = function (DBCourses, collectionCourses, collectionUserCourses, 
 		}
 	};
 
-		DBCourses.addToGroup = function (req, res, callback) {
+	DBCourses.addToGroup = function (req, res, callback) {
 		console.log("[DBCourses] AddToGroup", "'" + req.body._id + "'-> " + req.body.cid);
 		if (req.body._id && req.body.cid) {
-			collectionGroupCourses.update({_id: req.body._id}, {$addToSet: {courses: req.body.cid}}, {upsert: true}, function(err, result) {
+			collectionGroupCourses.update({
+				_id: req.body._id
+			}, {
+				$addToSet: {
+					courses: req.body.cid
+				}
+			}, {
+				upsert: true
+			}, function (err, result) {
 				if (err) {
 					console.error("[DBCourses] AddToGroup", err.message);
 					callback({
 						session: req.session,
 						status: 'fail'
 					});
-				}
-				else {
-					callback(
-						{session: req.session,
+				} else {
+					callback({
+						session: req.session,
 						status: 'ok'
 					});
 				}
@@ -253,17 +272,22 @@ module.exports = function (DBCourses, collectionCourses, collectionUserCourses, 
 	DBCourses.removeFromGroup = function (req, res, callback) {
 		console.log("[DBCourses] removeFromGroup", "'" + req.body._id + "'-> " + req.body.cid);
 		if (req.body._id && req.body.cid) {
-			collectionGroupCourses.update({_id: req.body._id}, {$pull: {courses: req.body.cid}}, function(err, result) {
+			collectionGroupCourses.update({
+				_id: req.body._id
+			}, {
+				$pull: {
+					courses: req.body.cid
+				}
+			}, function (err, result) {
 				if (err) {
 					console.error("[DBCourses] removeFromGroup", err.message);
 					callback({
 						session: req.session,
 						status: 'fail'
 					});
-				}
-				else {
-					callback(
-						{session: req.session,
+				} else {
+					callback({
+						session: req.session,
 						status: 'ok'
 					});
 				}

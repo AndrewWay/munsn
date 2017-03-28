@@ -543,7 +543,7 @@ var createGroup = "/group/create";
  * delGroup
  *
  * URL:
- * 		- %server%/api/group/remove/:_id
+ * 		- %server%/api/group/remove/:gid
  * Descript:
  *      - Delete a group
  * Method:
@@ -553,7 +553,7 @@ var createGroup = "/group/create";
  * Returns:
  *      - JSON group object after deletion
  */
-var delGroup = "/group/remove/:_id";
+var delGroup = "/group/remove/:gid";
 
 /**
  * updateGroup

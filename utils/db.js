@@ -164,7 +164,7 @@ mongoClient.connect(dbURL, function (err, DB) {
 				ownerid: {
 					$type: 'string'
 				}
-			},{
+			}, {
 				created: {
 					$type: 'date'
 				}
@@ -173,18 +173,16 @@ mongoClient.connect(dbURL, function (err, DB) {
 		validationLevel: 'strict',
 		validationAction: 'error'
 	});
-	/*
+
 	DB.createCollection('gMembers', {
 		validator: {
 			$and: [{
 				//Group _id
 				_id: {
-					$type: 'string'
+					$type: 'objectid'
 				}
 			}]
-		},
-		validationLevel: 'strict',
-		validationAction: 'error'
+		}
 	});
 
 	DB.createCollection('gAdmins', {
@@ -192,19 +190,12 @@ mongoClient.connect(dbURL, function (err, DB) {
 			$and: [{
 				//Group _id
 				_id: {
-					$type: 'string'
-				}
-			}, {
-				//Array of userids
-				admins: {
-					$type: 'array'
+					$type: 'objectid'
 				}
 			}]
-		},
-		validationLevel: 'strict',
-		validationAction: 'error'
+		}
 	});
-*/
+
 	DB.createCollection('gRequests', {
 		validator: {
 			$and: [{

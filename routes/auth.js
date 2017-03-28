@@ -11,8 +11,8 @@ router.get("/", function (req, res, next) {
 	if (req.query.key) {
 		aks.validate(req, res, function (success, result) {
 			if (success) {
-				//res.redirect('/');
-				res.json(result);
+				res.redirect('/');
+				//res.json(result);
 			} else {
 				// TODO: FILL THESE WITH THE APPROPRIATE FRONTEND DATA
 				res.json(result);
