@@ -249,12 +249,24 @@ $(document).ready(function () {
 
 	//Display terms of service when button is clicked.
 	$('#tosButton').click(function () {
-		//TODO -- Implement
+		$('#tosPop').show();
 	});
 
 	//Display prompt for password recovery.
 	$('#forPass').click(function () {
-		//TODO -- Implement. Needs to integrate with serverside.
+		$('#fpPop').show();
+	});
+
+	//When username is submitted, send email with password recovery.
+	$('#fpSubmit').click(function () {
+		//TODO: Integrate forgot password api call. Does this exist?
+
+		//When done, change text to confirm.
+	});
+
+	//If popup close button pressed, close that popup.
+	$('.popClose').click( function () {
+		$('.popup').hide();
 	});
 
 });
