@@ -30,7 +30,7 @@ router.get('/image/group/:gid', UserID, function (req, res, next) {
  * GET -> src='/content/resume/user/:uid'
  */
 router.get('/resume/user/:uid', UserID, function (req, res, next) {
-	var file = utils.findFiles('resume', path.join(__dirname, '../content/resumes/user/' + req.params.uid)).next().value;
+	var file = utils.findFiles('resume', path.join(__dirname, '../content/resumes/user/' + req.UserID)).next().value;
 	utils.download(req, res, file, function (result) {
 		res.json(result);
 	});
@@ -51,7 +51,7 @@ router.get('/posts/:pid/:id', UserID, function (req, res, next) {
  * POST -> '/content/image/profile/:uid'
  */
 router.post('/image/profile/:uid', UserID, function (req, res, next) {
-	utils.uploadImage(req, 'user/' + req.params.uid, 'profile', function (result) {
+	utils.uploadImage(req, 'user/' + req.UserID, 'profile', function (result) {
 		res.json(result);
 	});
 });
