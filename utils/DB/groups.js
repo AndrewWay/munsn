@@ -93,6 +93,37 @@ module.exports = function (DBGroups, collectionGroups, collectionGroupMembers, c
 		}
 	};
 
+    DBGroups.findUserGroups = function (req, res, callback) {
+        var userId = req.UserID;
+        console.log("[DBGroups] FindUserGroups", "'" + userId + "'");
+        if (userId) {
+            collectionGroupMembers.find({members: userId}, {fields: {_id: 1}}).toArray(function(err, results) {
+                console.log(JSON.stringify(results));
+                if (err) {
+                    console.error("[DBGroups] FindUserGroups", err.message);
+                    callback({
+                        session: req.session,
+                        status: 'fail'
+                    });
+                }
+                else {
+                    callback({
+                        session: req.session,
+                        status: 'ok',
+                        data: results
+                    });
+                }
+            });
+        } else {
+			console.warn("[DBGroups] FindUserGroups", "'Missing Fields'");
+			callback({
+				session: req.session,
+				status: 'fail'
+			});
+		}
+ 
+    };
+
 	//Find group based on query
 	DBGroups.find = function (req, res, callback) {
 		var query = req.body;
