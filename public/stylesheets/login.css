@@ -230,6 +230,18 @@ body, html {
 	left: 5%;
 }
 
+#textAlert {
+	position: relative;
+	display: none;
+	width: 95%;
+	height: 5%;
+	margin: auto;
+	top: 10%;
+	color: red;
+	text-decoration: underline;
+	text-align: center;
+}
+
 /*End of login panel css (unless want to include the obscure?*/
 
 /*Maybe just use wrapper and change it's background to this. But how to animate?*/

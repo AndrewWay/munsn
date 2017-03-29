@@ -27,6 +27,7 @@
 		<div id="leftPanel">
 
 			<div id="loginPanel">
+				<div id="textAlert"> </div>
 				<form id="loginFields" name="loginForm" method="post" action="/">
 					<input class="logField" type="text" name="user" placeholder="Username"><br>
 					<input class="logField" type="password" name="pass" placeholder="Password"><br>
