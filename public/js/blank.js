@@ -21,13 +21,9 @@ $(document).ready(function () {
 
 	});
 
-	$("#log").click(function () {
-		//CALL LOGOUT from api. Not yet implemented.
-	});
+	//Other NavBar buttons handled in page.
 
-	$("#cog").click(function () {
-		//GOTO: Settings
-	});
+
 
 /*******
  * Load left sidebar elements. 
