@@ -363,6 +363,22 @@ var findCommentById = "/comment/find/:uid";
  */
 var loadMessages = "/messages/load";
 
+/**
+ * findUserGroups
+ *
+ * URL:
+ * 		- %server%/api/groups/find/:uid
+ * Descript:
+ *      - Get groups that the user is in
+ * Method:
+ *      - GET
+ * Params:
+ *      - uid: The first user id
+ * Returns:
+ *      - JSON array containing group ids
+ */
+var findUserGroups = "/groups/find/:uid";
+
 //=============================POST VERBS=============================
 
 /**
@@ -1389,7 +1405,13 @@ router.post(removeFriendRequest, UserID, function (req, res, next) {
 });
 
 router.get(loadMessages, UserID, function (req, res, next) {
-	DB.Socket.loadMessages(req, res, function (err, result) {
+	DB.Socket.loadMessages(req, res, function (result) {
+		res.json(result);
+	});
+});
+
+router.get(findUserGroups, UserID, function (req, res, next) {
+	DB.Groups.findUserGroups(req, res, function (result) {
 		res.json(result);
 	});
 });

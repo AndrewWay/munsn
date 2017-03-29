@@ -1,4 +1,5 @@
 var email = require('emailjs/email');
+var http = require('http');
 //The MUNSN email used to send emails to users
 var emsSender = {
 	name: 'Mun Social Network',
@@ -46,11 +47,10 @@ var sendAuthEmail = function (auth, callback) {
 		subject: 'MUNSON - Confirmation Email',
 		to: auth.userid + '@mun.ca',
 		from: emsSender.name + '<' + emsSender.address + '>',
-		text: 'Welcome to MUNSON! In order to continue using the site as a registered user,' +
-			' please confirm your registration by clicking the link: ' +
-			'http://localhost:3000/auth?key=' +
-			auth.key +
-			'. We are glad you can join us! Once registered you can fully access the website!'
+		text: "Welcome to MUNSON! In order to continue using the site as a registered user," +
+			" please confirm your registration by clicking the link: " +
+			"http://" + process.env.IP + ":3000/auth?key=" + auth.key +
+			"\nWe are glad you can join us! Once registered you can fully access the website!"
 	};
 	sendEmail(email, callback);
 };
@@ -66,7 +66,7 @@ var resendAuthEmail = function (auth, callback) {
 		subject: 'MUNSON - Confirmation Email',
 		to: auth.userid + '@mun.ca',
 		from: emsSender.name + '<' + emsSender.address + '>',
-		text: "Looks like your old confirmation email expired. Here's a new one: http://localhost:3000/auth?key=" + auth.key
+		text: "Looks like your old confirmation email expired. Here's a new one: http://" + process.env.IP + ":3000/auth?key=" + auth.key
 	};
 	sendEmail(email, callback);
 };
