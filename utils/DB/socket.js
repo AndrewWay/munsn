@@ -81,35 +81,71 @@ module.exports = function (DBSocket, collectionSocket, collectionMessages) {
 	DBSocket.saveMessage = function (sender, reciever, msg, callback) {
 		console.log("[DBSocket] SaveMessage", "'{sender:'" + sender + "'}->{reciever:'" + reciever + "', message:'" + msg + "}");
 		//Find the doc first
-		collectionMessages.findOne({users: {$all: [sender, reciever]}}, function(findErr, findResult) {
+		collectionMessages.findOne({
+			users: {
+				$all: [sender, reciever]
+			}
+		}, function (findErr, findResult) {
 			if (findErr) {
-				console.error("[DBSocket] SaveMessage: FindOne", findErr.message);
+				console.error("[DBSocket] SaveMessage", findErr.message);
 				callback(findErr, findResult);
 			} else {
-				console.log("MESSAGE RESULT: " + JSON.stringify(findResult));	
+				console.log("[DBSocket] SaveMessage", "'Result'->'" + JSON.stringify(findResult) + "'");
 				//If found then continue with _id
 				if (findResult) {
-					collectionMessages.update({_id: findResult._id}, {$addToSet: {users: {$each: [sender, reciever]}}, $push: {messages: msg}}, function(updateErr, updateResult) {
-						if (updateErr) {
-							console.error("[DBSocket] SaveMessage: UpdateWithId", updateErr.message);
-							callback(updateErr, updateResult);
+					collectionMessages.update({
+						_id: findResult._id
+					}, {
+						$addToSet: {
+							users: {
+								$each: [sender, reciever]
+							}
+						},
+						$push: {
+							messages: msg
 						}
-						else {
-							console.log("[DBSocket] SaveMessage: UpdateWithId", updateResult);
-							callback(updateErr, updateResult);	
+					}, function (updateErr, updateResult) {
+						if (updateErr) {
+							console.error("[DBSocket] SaveMessage->UpdateWithID", updateErr.message);
+							callback(updateErr, updateResult);
+						} else {
+							console.log("[DBSocket] SaveMessage->UpdateWithID", updateResult);
+							callback(updateErr, updateResult);
 						}
 					});
 				}
 				//Else use query
 				else {
-					collectionMessages.update({users: {$all: [{$elemMatch: {sender}}, {$elemMatch: {reciever}}]}}, {$addToSet: {users: {$each: [sender, reciever]}}, $push: {messages: msg}}, {upsert: true}, function(updateErr, updateResult) {
-						if (updateErr) {
-							console.error("[DBSocket] SaveMessage: UpdateWithQuery", updateErr.message);
-							callback(updateErr, updateResult);
+					collectionMessages.update({
+						users: {
+							$all: [{
+								$elemMatch: {
+									sender
+								}
+							}, {
+								$elemMatch: {
+									reciever
+								}
+							}]
 						}
-						else {
-							console.log("[DBSocket] SaveMessage: UpdateWithQuery", updateResult);
-							callback(updateErr, updateResult);	
+					}, {
+						$addToSet: {
+							users: {
+								$each: [sender, reciever]
+							}
+						},
+						$push: {
+							messages: msg
+						}
+					}, {
+						upsert: true
+					}, function (updateErr, updateResult) {
+						if (updateErr) {
+							console.error("[DBSocket] SaveMessage->UpdateWithQuery", updateErr.message);
+							callback(updateErr, updateResult);
+						} else {
+							console.log("[DBSocket] SaveMessage->UpdateWithQuery", updateResult);
+							callback(updateErr, updateResult);
 						}
 					});
 				}
@@ -122,14 +158,27 @@ module.exports = function (DBSocket, collectionSocket, collectionMessages) {
 		var user1 = req.query.uid1;
 		var user2 = req.query.uid2;
 		console.log("[DBSocket] LoadMessage", "'{user1:'" + user1 + "'}->{user2:'" + user2 + "'}");
-		collectionMessages.find({users: {$all: [{$elemMatch: {user1}}, {$elemMatch: {user2}}]}}, {'messages': 1}).toArray(function(err, results) {
-			if (err) {
-				console.error("[DBSocket] LoadMessage: ", err.message);
-				callback(err, results);
+		collectionMessages.find({
+			users: {
+				$all: [{
+					$elemMatch: {
+						user1
+					}
+				}, {
+					$elemMatch: {
+						user2
+					}
+				}]
 			}
-			else {
-				console.log("[DBSocket] LoadMessage: ", results);
-				callback(err, results);	
+		}, {
+			'messages': 1
+		}).toArray(function (err, results) {
+			if (err) {
+				console.error("[DBSocket] LoadMessage", err.message);
+				callback(err, results);
+			} else {
+				console.log("[DBSocket] LoadMessage", results);
+				callback(err, results);
 			}
 		});
 	};

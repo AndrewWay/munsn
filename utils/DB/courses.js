@@ -1,7 +1,8 @@
 var console = require('../consoleLogger');
-module.exports = function (DBCourses, collectionCourses) {
+var ObjectID = require('mongodb').ObjectID;
+module.exports = function (DBCourses, collectionCourses, collectionUserCourses, collectionGroupCourses) {
 	//Add a course
-	DBCourses.add = function (req, res, callback) {
+	DBCourses.createCourse = function (req, res, callback) {
 		var course = {
 			label: req.body.label,
 			name: req.body.name,
@@ -12,13 +13,13 @@ module.exports = function (DBCourses, collectionCourses) {
 			year: req.body.year,
 			cid: req.body.cid,
 			days: req.body.days,
-			timeStart: req.body.timeStart,
-			timeEnd: req.body.timeEnd
+			timeStart: new Date(req.body.timeStart),
+			timeEnd: new Date(req.body.timeEnd)
 		};
-		console.log("[DBCourses] Add", "'" + course.label + "'");
+		console.log("[DBCourses] CreateCourse", "'" + course.label + "'");
 		collectionCourses.insert(course, function (err, result) {
 			if (err) {
-				console.error("[DBCourses] Add", err.message);
+				console.error("[DBCourses] CreateCourse", err.message);
 				callback({
 					session: req.session,
 					status: 'fail'
@@ -34,10 +35,10 @@ module.exports = function (DBCourses, collectionCourses) {
 
 	//Find a course by unique course id
 	DBCourses.findById = function (req, res, callback) {
-		console.log("[DBCourses] FindById", "'" + req.params.uid + "'");
-		if (req.params.uid) {
+		console.log("[DBCourses] FindById", "'" + req.params.id + "'");
+		if (req.params.id) {
 			collectionCourses.findOne({
-				_id: req.params.uid
+				_id: new ObjectID(req.params.id)
 			}, function (err, result) {
 				if (err) {
 					console.log("[DBCourses]", err.message);
@@ -86,7 +87,7 @@ module.exports = function (DBCourses, collectionCourses) {
 	//Updates the course
 	DBCourses.update = function (req, res, callback) {
 		console.log("[DBCourses] Update", "'" + JSON.stringify(req.body) + "'->'" + req.params.uid + "'");
-		if (req.params.uid) {
+		if (req.body._id) {
 			var updates = {
 				label: req.body.label,
 				name: req.body.name,
@@ -100,8 +101,15 @@ module.exports = function (DBCourses, collectionCourses) {
 				timeStart: req.body.timeStart,
 				timeEnd: req.body.timeEnd
 			};
+			Object.keys(updates).forEach(k => {
+				if (req.body[k] === undefined) {
+					delete updates[k];
+				} else {
+					updates[k] = req.body[k];
+				}
+			});
 			collectionCourses.update({
-				_id: req.params.uid
+				_id: new ObjectID(req.body._id)
 			}, {
 				$set: updates
 			}, {
@@ -130,11 +138,11 @@ module.exports = function (DBCourses, collectionCourses) {
 	};
 
 	//Removes the course
-	DBCourses.remove = function (req, res, callback) {
-		console.log("[DBCourses] Remove", "'" + req.params.uid + "'");
-		if (req.params.uid) {
+	DBCourses.delete = function (req, res, callback) {
+		console.log("[DBCourses] Remove", "'" + req.body._id + "'");
+		if (req.body._id) {
 			collectionCourses.remove({
-				_id: req.params.id
+				_id: new ObjectID(req.body._id)
 			}, {
 				single: true
 			}, function (err, result) {
@@ -154,6 +162,138 @@ module.exports = function (DBCourses, collectionCourses) {
 			});
 		} else {
 			console.warn("[DBCourses] Remove", "'Missing Fields'");
+			callback({
+				session: req.session,
+				status: "fail"
+			});
+		}
+	};
+
+	DBCourses.addToUser = function (req, res, callback) {
+		console.log("[DBCourses] AddToUser", "'" + req.body.uid + "'-> " + req.body.cid);
+		if (req.body.uid && req.body.cid) {
+			collectionUserCourses.update({
+				_id: req.body.uid
+			}, {
+				$addToSet: {
+					courses: req.body.cid
+				}
+			}, {
+				upsert: true
+			}, function (err, result) {
+				if (err) {
+					console.error("[DBCourses] AddToUser", err.message);
+					callback({
+						session: req.session,
+						status: 'fail'
+					});
+				} else {
+					callback({
+						session: req.session,
+						status: 'ok'
+					});
+				}
+			});
+		} else {
+			console.warn("[DBCourses] AddToUser", "'Missing Fields'");
+			callback({
+				session: req.session,
+				status: "fail"
+			});
+		}
+	};
+
+	DBCourses.removeFromUser = function (req, res, callback) {
+		console.log("[DBCourses] RemoveFromUser", "'" + req.body.uid + "'-> " + req.body.cid);
+		if (req.body.uid && req.body.cid) {
+			collectionUserCourses.update({
+				_id: req.body.uid
+			}, {
+				$pull: {
+					courses: req.body.cid
+				}
+			}, function (err, result) {
+				if (err) {
+					console.error("[DBCourses] RemoveFromUser", err.message);
+					callback({
+						session: req.session,
+						status: 'fail'
+					});
+				} else {
+					callback({
+						session: req.session,
+						status: 'ok'
+					});
+				}
+			});
+		} else {
+			console.warn("[DBCourses] RemoveFromUser", "'Missing Fields'");
+			callback({
+				session: req.session,
+				status: "fail"
+			});
+		}
+	};
+
+	DBCourses.addToGroup = function (req, res, callback) {
+		console.log("[DBCourses] AddToGroup", "'" + req.body._id + "'-> " + req.body.cid);
+		if (req.body._id && req.body.cid) {
+			collectionGroupCourses.update({
+				_id: req.body._id
+			}, {
+				$addToSet: {
+					courses: req.body.cid
+				}
+			}, {
+				upsert: true
+			}, function (err, result) {
+				if (err) {
+					console.error("[DBCourses] AddToGroup", err.message);
+					callback({
+						session: req.session,
+						status: 'fail'
+					});
+				} else {
+					callback({
+						session: req.session,
+						status: 'ok'
+					});
+				}
+			});
+		} else {
+			console.warn("[DBCourses] AddToGroup", "'Missing Fields'");
+			callback({
+				session: req.session,
+				status: "fail"
+			});
+		}
+	};
+
+	DBCourses.removeFromGroup = function (req, res, callback) {
+		console.log("[DBCourses] removeFromGroup", "'" + req.body._id + "'-> " + req.body.cid);
+		if (req.body._id && req.body.cid) {
+			collectionGroupCourses.update({
+				_id: req.body._id
+			}, {
+				$pull: {
+					courses: req.body.cid
+				}
+			}, function (err, result) {
+				if (err) {
+					console.error("[DBCourses] removeFromGroup", err.message);
+					callback({
+						session: req.session,
+						status: 'fail'
+					});
+				} else {
+					callback({
+						session: req.session,
+						status: 'ok'
+					});
+				}
+			});
+		} else {
+			console.warn("[DBCourses] removeFromGroup", "'Missing Fields'");
 			callback({
 				session: req.session,
 				status: "fail"

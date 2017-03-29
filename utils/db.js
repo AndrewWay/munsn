@@ -23,6 +23,8 @@ var collectionPosts; //TODO: John, EVALUATE
 var collectionCalendar;
 var collectionComments; //TODO: John, EVALUATE
 var collectionCourses;
+var collectionUserCourses;
+var collectionGroupCourses;
 var collectionLostFound;
 var collectionSocket;
 var collectionMessages;
@@ -162,7 +164,7 @@ mongoClient.connect(dbURL, function (err, DB) {
 				ownerid: {
 					$type: 'string'
 				}
-			},{
+			}, {
 				created: {
 					$type: 'date'
 				}
@@ -171,36 +173,27 @@ mongoClient.connect(dbURL, function (err, DB) {
 		validationLevel: 'strict',
 		validationAction: 'error'
 	});
-	/*
+
 	DB.createCollection('gMembers', {
 		validator: {
 			$and: [{
 				//Group _id
 				_id: {
-					$type: 'string'
+					$type: 'objectid'
 				}
 			}]
-		},
-		validationLevel: 'strict',
-		validationAction: 'error'
+		}
 	});
-	*/
+
 	DB.createCollection('gAdmins', {
 		validator: {
 			$and: [{
 				//Group _id
 				_id: {
-					$type: 'string'
-				}
-			}, {
-				//Array of userids
-				admins: {
-					$type: 'array'
+					$type: 'objectid'
 				}
 			}]
-		},
-		validationLevel: 'strict',
-		validationAction: 'error'
+		}
 	});
 
 	DB.createCollection('gRequests', {
@@ -433,15 +426,17 @@ mongoClient.connect(dbURL, function (err, DB) {
 	collectionLostFound = DB.collection('lost');
 	collectionSocket = DB.collection('socket');
 	collectionMessages = DB.collection('messages');
+	collectionUserCourses = DB.collection('userCourses');
+	collectionGroupCourses = DB.collection('groupCourses');
 	require('./DB/users')(DBUsers, DBAuth, collectionUsers);
 	require('./DB/auths')(DBAuth, collectionAuths, collectionUsers, MAX_VALIDATE_MINUTES);
 	require('./DB/friends')(DBFriends, collectionFriends, collectionFriendRequests, collectionUsers);
-	require('./DB/groups')(DBGroups, collectionGroups, collectionGroupMembers, collectionGroupRequests, collectionUsers);
+	require('./DB/groups')(DBGroups, collectionGroups, collectionGroupMembers, collectionGroupAdmins, collectionGroupRequests, collectionUsers);
 	require('./DB/admins')(DBGroupAdmins, collectionGroupAdmins);
 	require('./DB/members')(DBGroupMembers, collectionGroupMembers);
 	require('./DB/posts')(DBPosts, collectionPosts);
 	require('./DB/comments')(DBComments, collectionComments);
-	require('./DB/courses')(DBCourses, collectionCourses);
+	require('./DB/courses')(DBCourses, collectionCourses, collectionUserCourses, collectionGroupCourses);
 	require('./DB/lostfound')(DBLostFound, collectionLostFound);
 	require('./DB/calendar')(DBCalendar, collectionCalendar);
 	require('./DB/socket')(DBSocket, collectionSocket, collectionMessages);

@@ -85,8 +85,9 @@ var findFriendSent = "/friends/sent/:uid";
  *      - JSON array containing friend request objects
  */
 var findFriendReceived = "/friends/received/:fid";
+
 /**
- * findGroupsByID
+ * findGroupsByUID
  *
  * URL:
  * 		- %server%/api/user/groups/:uid
@@ -99,7 +100,28 @@ var findFriendReceived = "/friends/received/:fid";
  * Returns:
  *      - JSON array containing group objects
  */
-var findGroupsByID = "/user/groups/:uid";
+var findGroupsByUID = "/user/groups/:uid";
+
+//TODO: Check out the creator/owner id below
+/**
+ * findGroups
+ *
+ * URL:
+ * 		- %server%/api/user/groups/
+ * Descript:
+ *      - Search groups by query
+ * Method:
+ *      - GET
+ * Params:
+ *      - _id: The group object unique id
+ * 		- name: The group name
+ * 		- creatorid: The group creator's id
+ * 		- ownerid: The owners id
+ * 		- created: The creation date
+ * Returns:
+ *      - JSON array containing group objects
+ */
+var findGroups = "/user/groups/";
 
 /**
  * findGroupsUsers
@@ -185,7 +207,7 @@ var suggestFriends = "/friends/suggest/:uid";
  * findCourseById
  *
  * URL:
- * 		- %server%/api/course/find/:uid
+ * 		- %server%/api/course/find/:id
  * Descript:
  *      - Get a course by id
  * Method:
@@ -195,7 +217,7 @@ var suggestFriends = "/friends/suggest/:uid";
  * Returns:
  *      - JSON course object
  */
-var findCourseById = "/course/find/:uid";
+var findCourseById = "/course/find/:id";
 
 /**
  * findCourse
@@ -432,21 +454,38 @@ var loginUser = "/user/login";
 var addFriendReq = "/friends/add/request";
 
 /**
+ * acceptFriendReq
+ *
+ * URL:
+ * 		- %server%/api/friends/accept/request
+ * Descript:
+ *      - Accept a friend request
+ * Method:
+ *      - POST
+ * Params:
+ *      - uid: The user id to accept the request from (reciever)
+ * 		- fid: The friend id to accept the request to (sender)
+ * Returns:
+ *      - JSON friend request object after deletion
+ */
+var acceptFriendReq = "/friends/accept/request";
+
+/**
  * delFriendReq
  *
  * URL:
- * 		- %server%/api/user/remove/request
+ * 		- %server%/api/friends/deny/request
  * Descript:
  *      - Delete a friend request from one user to another
  * Method:
  *      - POST
  * Params:
- *      - uid: The user id to delete the request from
- * 		- fid: The friend id to delete the request to
+ *      - uid: The user id to delete the request from (reciever)
+ * 		- fid: The friend id to delete the request to (sender)
  * Returns:
  *      - JSON friend request object after deletion
  */
-var delFriendReq = "/friends/remove/request";
+var denyFriendReq = "/friends/deny/request";
 
 /**
  * addFriend
@@ -636,12 +675,12 @@ var delPost = "/post/remove";
 var updatePost = "/post/update";
 
 /**
- * addCourse
+ * createCourse
  *
  * URL:
- * 		- %server%/api/course/add
+ * 		- %server%/api/course/create
  * Descript:
- *      - Add a course
+ *      - Create a course
  * Method:
  *      - POST
  * Params:
@@ -659,7 +698,7 @@ var updatePost = "/post/update";
  * Returns:
  *      - JSON mongo result
  */
-var addCourse = "/course/add";
+var createCourse = "/course/create";
 
 /**
  * updateCourse
@@ -692,7 +731,7 @@ var updateCourse = "/course/update";
  * removeCourse
  *
  * URL:
- * 		- %server%/api/course/remove
+ * 		- %server%/api/course/delete
  * Descript:
  *      - Remove a course
  * Method:
@@ -702,7 +741,72 @@ var updateCourse = "/course/update";
  * Returns:
  *      - JSON mongo result
  */
-var removeCourse = "/course/remove";
+var deleteCourse = "/course/delete";
+
+/**
+ * addCourseToUser
+ *
+ * URL:
+ * 		- %server%/api/course/user/add
+ * Descript:
+ *      - Add a course to a user
+ * Method:
+ *      - POST
+ * Params:
+ *		_id: The course unique object id
+ * Returns:
+ *      - JSON mongo result
+ */
+var addCourseToUser = "/course/user/add";
+
+/**
+ * delCourseFromUser
+ *
+ * URL:
+ * 		- %server%/api/course/user/del
+ * Descript:
+ *      - Delete a course from a user
+ * Method:
+ *      - POST
+ * Params:
+ *		_id: The course unique object id
+ * Returns:
+ *      - JSON mongo result
+ */
+var delCourseFromUser = "/course/user/del";
+
+/**
+ * addCourseToGroup
+ *
+ * URL:
+ * 		- %server%/api/course/group/add
+ * Descript:
+ *      - Add a course to a Group
+ * Method:
+ *      - POST
+ * Params:
+ *		_id: The groups unique object id
+ 		cid: The course unique object id
+ * Returns:
+ *      - JSON mongo result
+ */
+var addCourseToGroup = "/course/group/add";
+
+/**
+ * delCourseFromGroup
+ *
+ * URL:
+ * 		- %server%/api/course/group/del
+ * Descript:
+ *      - Delete a course from a Group
+ * Method:
+ *      - POST
+ * Params:
+ *		_id: The course unique object id
+ * Returns:
+ *      - JSON mongo result
+ */
+var delCourseFromGroup = "/course/group/del";
 
 /**
  * addLost
@@ -901,7 +1005,7 @@ var sendFriendRequest = "/user/friend/sent/add";
  * removeFriendRequest
  *
  * URL:
- * 		- %server%/api/user/friend/request/remove
+ * 		- %server%/api/friends/remove/request
  * Descript:
  *      - Remove a friend request
  * Method:
@@ -912,7 +1016,7 @@ var sendFriendRequest = "/user/friend/sent/add";
  * Returns:
  *      - JSON mongo result
  */
-var removeFriendRequest = "/user/friend/request/remove";
+var removeFriendRequest = "/friends/remove/request";
 
 //==========================================================================================
 
@@ -991,9 +1095,15 @@ router.get(findFriendReceived, UserID, function (req, res, next) {
 	});
 });
 
+router.post(acceptFriendReq, UserID, function (req, res, next) {
+	DB.Friends.acceptFriendReq(req, res, function (result) {
+		res.json(result);
+	});
+});
+
 //Removes friend request
-router.post(delFriendReq, UserID, function (req, res, next) {
-	DB.Friends.removeRequest(req, res, function (result) {
+router.post(denyFriendReq, UserID, function (req, res, next) {
+	DB.Friends.denyFriendReq(req, res, function (result) {
 		res.json(result);
 	});
 });
@@ -1019,8 +1129,15 @@ router.post(delGroup, UserID, function (req, res, next) {
 });
 
 //find groups by userid
-router.get(findGroupsByID, UserID, function (req, res, next) {
+router.get(findGroupsByUID, UserID, function (req, res, next) {
 	DB.Groups.findByUserId(req, res, function (result) {
+		res.json(result);
+	});
+});
+
+//find groups by userid
+router.get(findGroups, UserID, function (req, res, next) {
+	DB.Groups.find(req, res, function (result) {
 		res.json(result);
 	});
 });
@@ -1119,20 +1236,44 @@ router.get(findCourse, UserID, function (req, res, next) {
 	});
 });
 
-router.post(addCourse, UserID, function (req, res, next) {
-	DB.Courses.add(req, res, function (result) {
+router.post(createCourse, UserID, function (req, res, next) {
+	DB.Courses.createCourse(req, res, function (result) {
 		res.json(result);
 	});
 });
 
-router.post(removeCourse, UserID, function (req, res, next) {
-	DB.Courses.remove(req, res, function (result) {
+router.post(deleteCourse, UserID, function (req, res, next) {
+	DB.Courses.delete(req, res, function (result) {
 		res.json(result);
 	});
 });
 
 router.post(updateCourse, UserID, function (req, res, next) {
 	DB.Courses.update(req, res, function (result) {
+		res.json(result);
+	});
+});
+
+router.post(addCourseToUser, UserID, function (req, res, next) {
+	DB.Courses.addToUser(req, res, function (result) {
+		res.json(result);
+	});
+});
+
+router.post(delCourseFromUser, UserID, function (req, res, next) {
+	DB.Courses.removeFromUser(req, res, function (result) {
+		res.json(result);
+	});
+});
+
+router.post(addCourseToGroup, UserID, function (req, res, next) {
+	DB.Courses.addToGroup(req, res, function (result) {
+		res.json(result);
+	});
+});
+
+router.post(delCourseFromGroup, UserID, function (req, res, next) {
+	DB.Courses.removeFromGroup(req, res, function (result) {
 		res.json(result);
 	});
 });
