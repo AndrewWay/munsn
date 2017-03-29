@@ -61,38 +61,6 @@ module.exports = function (DBGroups, collectionGroups, collectionGroupMembers, c
 		}
 	};
 
-
-	//Find a group by id
-	DBGroups.findByUserId = function (req, res, callback) {
-		var userId = req.UserID;
-		console.log("[DBGroups] FindByUID", "'" + req.UserID + "'");
-		if (userId) {
-			collectionGroups.find({
-				creatorid: userId
-			}).toArray(function (err, result) {
-				if (err) {
-					console.error("[DBGroups] FindByUID", err.message);
-					callback({
-						session: req.session,
-						status: 'fail'
-					});
-				} else {
-					callback({
-						session: req.session,
-						status: 'ok',
-						data: result
-					});
-				}
-			});
-		} else {
-			console.warn("[DBGroups] FindByUID", "'Missing Fields'");
-			callback({
-				session: req.session,
-				status: 'fail'
-			});
-		}
-	};
-
     DBGroups.findUserGroups = function (req, res, callback) {
         var userId = req.UserID;
         console.log("[DBGroups] FindUserGroups", "'" + userId + "'");
