@@ -10,7 +10,7 @@ var UserID = require('../middleware/functions').UserID;
  * GET -> '/content/image/profile/:uid'
  */
 router.get('/image/profile/:uid', UserID, function (req, res, next) {
-	var file = utils.findFiles('profile', path.join(__dirname, '../content/images/user/' + req.params.uid)).next().value;
+	var file = utils.findFiles('profile', path.join(__dirname, '../content/images/user/' + req.UserID)).next().value;
 	utils.download(req, res, file, function (result) {
 		res.json(result);
 	});
