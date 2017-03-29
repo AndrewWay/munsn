@@ -38,9 +38,27 @@ $(document).ready(function () {
  *******/
 
 //Load user profile image
-
 $('#userPic a img').attr('src', '/content/image/profile/session');
 
+//Load user groups
+$.get('api/user/groups/session', function(response) {
+	$.each( response, function(i,v) {
+		//TODO: Add html to add groups to sidebar
+
+	});
+});
+
+
+//Load user courses
+$.get('api/user/course/session', function(response) {
+	$.each( response, function(i,v) {
+		//TODO: Add html to add classes to sidebar
+
+	});
+
+});
+
+//TODO: Any other elements of left sidebar?
 
 });
 
