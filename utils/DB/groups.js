@@ -175,7 +175,7 @@ module.exports = function (DBGroups, collectionGroups, collectionGroupMembers, c
 					});
 				} else {
 					collectionGroupMembers.remove({
-						_id: new ObjectID(req.params.id)
+						_id: new ObjectID(req.params.gid)
 					}, function (err, result) {
 						if (err) {
 							console.error("[DBGroups] RemoveMembers", err.message);
@@ -185,7 +185,7 @@ module.exports = function (DBGroups, collectionGroups, collectionGroupMembers, c
 							});
 						} else {
 							collectionGroupAdmins.remove({
-								_id: new ObjectID(req.params.id)
+								_id: new ObjectID(req.params.gid)
 							}, function (err, result) {
 								if (err) {
 									console.error("[DBGroups] RemoveAdmins", err.message);
