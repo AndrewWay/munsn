@@ -26,7 +26,24 @@
 	</div>
 		<div id="leftPanel">
 
+			<div class="popup" id="fpPop">
+				Please enter email to recover your password:
+				<input class="popField" type="text" name="user" placeholder="Enter Email"><br>
+				<div id="fpButton">
+					<button id="fpSubmit"> Submit </button> 
+					<button class="popClose" id="fpClose"> Close </button> 
+				</div>
+			</div>
+
+			<div class="popup" id="tosPop">
+				<div id="body">
+					TOS TEXT HERE.
+				</div> <br>
+				<div id="tosButton"> <button class="popClose" id="tosClose"> Close </button> </div>
+			</div>
+
 			<div id="loginPanel">
+				<div id="textAlert"> </div>
 				<form id="loginFields" name="loginForm" method="post" action="/">
 					<input class="logField" type="text" name="user" placeholder="Username"><br>
 					<input class="logField" type="password" name="pass" placeholder="Password"><br>

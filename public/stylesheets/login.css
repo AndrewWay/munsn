@@ -230,7 +230,102 @@ body, html {
 	left: 5%;
 }
 
+#textAlert {
+	position: relative;
+	display: none;
+	width: 95%;
+	height: 5%;
+	margin: auto;
+	top: 10%;
+	color: red;
+	text-decoration: underline;
+	text-align: center;
+}
+
 /*End of login panel css (unless want to include the obscure?*/
+
+.popup {
+	background-color: #efefef;
+	border: solid 1px #cccccc;
+
+	position: absolute;
+	display: none;
+	z-index: 100;
+}
+
+#fpPop {
+	top: 25%;
+	right: -12%;
+	margin: auto;
+	height: 200px;
+	width: 400px;
+
+	text-align: center;
+
+}
+
+#fpPop * {
+	display: block;
+	margin: auto;
+}
+
+.popField {
+	position: relative;
+	width: 300px;
+	/*width: 198px;*/
+	border-radius: 4px;
+	top: 60px;
+}
+
+.popField:hover {
+	background-color: #f1f1f1;
+}
+
+#fpPop #fpButton {
+	position: relative;
+	margin-top: 10px;
+	top: 50px;
+}
+
+.popup button {
+	background-color: #fcfcfc;
+	border-radius: 5px;
+	cursor: pointer;
+	text-align: center;
+	width: 150px;
+	padding: 5px;
+	margin-top: 5px;
+}
+
+#tosPop {
+	top: 15%;
+	right: -12%;
+	height: 500px;
+	width: 400px;
+}
+
+#tosPop * {
+	display: block;
+	margin: auto;
+}
+
+#tosPop #body {
+	position: relative;
+	width: 90%;
+	height: 80%;
+	top: 5%;
+	margin: auto;
+
+	overflow: scroll;
+
+	background-color: white;
+	color: black;
+}
+
+#tosPop #tosButton {
+	position: relative;
+	margin-top: 10px;
+}
 
 /*Maybe just use wrapper and change it's background to this. But how to animate?*/
 #obscure {
