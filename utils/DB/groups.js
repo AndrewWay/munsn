@@ -1,6 +1,6 @@
 var console = require('../consoleLogger');
 var ObjectID = require('mongodb').ObjectID;
-module.exports = function (DBGroups, collectionGroups, collectionGroupMembers, collectionGroupAdmins, collectionGroupRequests) {
+module.exports = function (DBGroups, collectionGroups, collectionGroupMembers, collectionGroupAdmins, collectionGroupRequests, collectionUsers) {
 	//Add a group
 	DBGroups.add = function (req, res, callback) {
 		var row = {
@@ -22,7 +22,7 @@ module.exports = function (DBGroups, collectionGroups, collectionGroupMembers, c
 					var id = result.ops[0]._id;
 					collectionGroupMembers.insert({
 						_id: id,
-						members: [row.creatorid]
+						members: [{user: row.creatorid, admin: true}]
 					}, function (err, result) {
 						if (err) {
 							console.error("[DBGroups] AddMember", err.message);
@@ -31,22 +31,9 @@ module.exports = function (DBGroups, collectionGroups, collectionGroupMembers, c
 								status: 'fail'
 							});
 						} else {
-							collectionGroupAdmins.insert({
-								_id: id,
-								admins: [row.creatorid]
-							}, function (err, result) {
-								if (err) {
-									console.error("[DBGroups] AddAdmin", err.message);
-									callback({
-										session: req.session,
-										status: 'fail'
-									});
-								} else {
-									callback({
-										session: req.session,
-										status: 'ok'
-									});
-								}
+							callback({
+								session: req.session,
+								status: 'ok'
 							});
 						}
 					});
@@ -65,7 +52,7 @@ module.exports = function (DBGroups, collectionGroups, collectionGroupMembers, c
         var userId = req.UserID;
         console.log("[DBGroups] FindUserGroups", "'" + userId + "'");
         if (userId) {
-            collectionGroupMembers.find({members: userId}, {fields: {_id: 1}}).toArray(function(err, results) {
+            collectionGroupMembers.find({"members.user": userId}, {fields: {_id: 1}}).toArray(function(err, results) {
                 console.log(JSON.stringify(results));
                 if (err) {
                     console.error("[DBGroups] FindUserGroups", err.message);
@@ -183,21 +170,9 @@ module.exports = function (DBGroups, collectionGroups, collectionGroupMembers, c
 								status: 'fail'
 							});
 						} else {
-							collectionGroupAdmins.remove({
-								_id: new ObjectID(req.params.gid)
-							}, function (err, result) {
-								if (err) {
-									console.error("[DBGroups] RemoveAdmins", err.message);
-									callback({
-										session: req.session,
-										status: 'fail'
-									});
-								} else {
-									callback({
-										session: req.session,
-										status: 'ok'
-									});
-								}
+							callback({
+								session: req.session,
+								status: 'ok'
 							});
 						}
 					});
@@ -215,56 +190,53 @@ module.exports = function (DBGroups, collectionGroups, collectionGroupMembers, c
 	//GROUP REQUESTS
 	//======================================================================================================
 
-	//Add a friend request
-	DBGroups.addRequest = function (req, res, callback) {
+	//Send a group request
+	DBGroups.sendRequest = function (req, res, callback) {
 		//Declare body variables
 		var userId = req.body.uid;
-		var groupName = req.body.gid;
+		var gid = req.body.gid;
 		//Check if body variables are not null, or undefined
-		console.log("[DBGroups] AddRequest", "'" + userId + "'->'" + groupName + "'");
-		if (userId && groupName) {
-			//Check to see if group exists
-			collectionGroups.find({
-					name: groupName
-				},
-				function (err, result) {
-					if (err) {
-						console.error("[DBGroups] AddRequest", err.message);
-						callback({
-							session: req.session,
-							status: 'fail'
-						});
-					} else {
-						if (result) {
-							collectionGroupRequests.insert({
-								userid: userId,
-								groupName: groupName
-							}, function (err, result) {
-								if (err) {
-									console.error("[DBGroups] AddRequest", err.message);
-									callback({
-										session: req.session,
-										status: 'fail'
-									});
-								} else {
-									callback({
-										session: req.session,
-										status: 'ok',
-										data: result
-									});
-								}
-							});
-						} else {
-							console.warn("[DBGroups] AddRequest", "'NotFound'->'" + groupName + "'");
+		console.log("[DBGroups] sendRequest", "'" + userId + "'->'" + gid + "'");
+		if (userId && gid) {
+			//Check to see if both users exist
+			collectionUsers.find({_id: userId}).toArray(function (err, uResult) {
+				if (err) {
+					console.error("[DBGroups] sendRequest", err.message);
+					callback({
+						session: req.session,
+						status: 'fail'
+					});
+				} else {
+					collectionGroups.find({_id: new ObjectID(gid)}, function(err, gResult) {
+						if (err) {
+							console.error("[DBGroups] sendRequest", err.message);
 							callback({
 								session: req.session,
 								status: 'fail'
 							});
 						}
-					}
-				});
+						else {
+							collectionGroupRequests.update({_id: new ObjectID(gid)}, {$addToSet: {requests: userId}}, {upsert: true}, function(err, results) {
+								if (err) {
+									console.error("[DBGroups] sendRequest", err.message);
+									callback({
+										session: req.session,
+										status: 'fail'
+									});
+								}
+								else {
+									callback({
+										session: req.session,
+										status: 'ok'
+									});
+								}
+							});
+						}
+					});
+				}
+			});
 		} else {
-			console.warn("[DBGroups] AddRequest", "'Missing Fields'");
+			console.warn("[DBGroups] sendRequest", "'Missing Fields'");
 			callback({
 				session: req.session,
 				status: 'fail'
@@ -274,28 +246,26 @@ module.exports = function (DBGroups, collectionGroups, collectionGroupMembers, c
 
 	//Find all group requests from a user
 	DBGroups.findRequests = function (req, res, callback) {
-		var query = {
-			groupName: req.params.gid,
-			userid: req.UserID
-		};
-		console.log("[DBGroups] FindRequests", "'" + query.groupName ? query.groupName : "*" + "'->'" + query.userid ? query.userid : "*" + "'");
-		if (!Object.keys(query).length) {
-			collectionGroupRequests.find(query).toArray(function (err, result) {
+		console.log("[DBGroups] findRequests", "'" + req.params.gid);
+		if (req.params.gid) {
+			collectionGroupRequests.find({_id: new ObjectID(req.params.gid)}).toArray(function(err, results) {
 				if (err) {
-					console.error("[DBGroups] FindRequests", err.message);
+					console.error("[DBGroups] sendRequest", err.message);
 					callback({
 						session: req.session,
 						status: 'fail'
 					});
-				} else {
+				}
+				else {
 					callback({
 						session: req.session,
-						status: 'ok'
-					});
+						status: 'ok',
+						data: results
+					});	
 				}
 			});
 		} else {
-			console.warn("[DBGroups] FindRequests", "'Missing Fields'");
+			console.warn("[DBGroups] findRequests", "'Missing Fields'");
 			callback({
 				session: req.session,
 				status: 'fail'
@@ -308,9 +278,9 @@ module.exports = function (DBGroups, collectionGroups, collectionGroupMembers, c
 		//Declare body variables
 		var query = {
 			userid: req.body.uid,
-			groupName: req.body.gid
+			friendid: req.body.gid
 		};
-		console.log("[DBGroups] RemoveRequest", "'" + query.groupName ? query.groupName : "*" + "'->'" + query.userid ? query.userid : "*" + "'");
+		console.log("[DBGroups] RemoveRequest", "'" + (query.userid ? query.userid : "*") + "'->'" + (query.friendid ? query.friendid : "*") + "'");
 		if (Object.keys(query).length === 2) {
 			collectionGroupRequests.remove(query, function (err, result) {
 				if (err) {
@@ -328,6 +298,71 @@ module.exports = function (DBGroups, collectionGroups, collectionGroupMembers, c
 			});
 		} else {
 			console.warn("[DBGroups] RemoveRequest", "'Missing Fields'");
+			callback({
+				session: req.session,
+				status: 'fail'
+			});
+		}
+	};
+
+	DBGroups.acceptGroupReq = function (req, res, callback) {
+		console.log("[DBGroups] acceptGroupRequest", "'" + (req.body.uid ? req.body.uid : "*") + "'->'" + (req.body.gid ? req.body.gid : "*") + "'");
+		if (req.body.uid && req.body.gid) {
+			collectionGroupRequests.findAndModify({_id: req.body.gid}, [['_id', 'ascending']], {$pull: {requests: req.body.uid}}, {new: true, upsert: true}, function(findErr, findResults) {
+				if (findErr) {
+					console.error("[DBGroups] acceptGroupRequest", findErr.message);
+					callback({
+						session: req.session,
+						status: 'fail'
+					});
+				}
+				else {
+					collectionGroupMembers.findAndModify({_id: new ObjectID(req.body.gid)}, [['_id', 'ascending']],{$addToSet: {members: {user: req.body.uid, admin: false}}}, {new: true, upsert: true}, function(err, results) {
+						if (err) {
+							console.error("[DBGroups] acceptGroupRequest", findErr.message);
+							callback({
+								session: req.session,
+								status: 'fail'
+							});
+						}
+						else {
+							callback({
+								session: req.session,
+								status: 'ok'
+							});		
+						}
+					});
+				}
+			});
+		} else {
+			console.warn("[DBGroups] acceptGroupRequest", "'Missing Fields'");
+			callback({
+				session: req.session,
+				status: 'fail'
+			});
+		}
+	};
+
+	DBGroups.denyGroupReq = function (req, res, callback) {
+		console.log("[DBGroups] denyGroupRequest", "'" + (req.body.uid ? req.body.uid : "*") + "'->'" + (req.body.gid ? req.body.gid : "*") + "'");
+		if (req.body.uid && req.body.gid) {
+			collectionGroupRequests.findAndModify({_id: new ObjectID(req.body.gid)}, [['_id', 'ascending']], {$pull: {requests: req.body.uid}}, {new: true, upsert: true}, function(findErr, findResults) {
+				if (findErr) {
+					console.error("[DBGroups] denyGroupRequest", findErr.message);
+					callback({
+						session: req.session,
+						status: 'fail'
+					});
+				}
+				else {
+					callback({
+						session: req.session,
+						status: 'ok'
+					});		
+				}
+			});
+		} else {
+			console.warn("[DBGroups] denyGroupRequest", "'Missing Fields'");
 			callback({
 				session: req.session,
 				status: 'fail'

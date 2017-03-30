@@ -379,6 +379,22 @@ var loadMessages = "/messages/load";
  */
 var findUserGroups = "/groups/find/:uid";
 
+/**
+ * findGroupRequests
+ *
+ * URL:
+ * 		- %server%/api/groups/find/requests/:gid
+ * Descript:
+ *      - Get group requests for a group
+ * Method:
+ *      - GET
+ * Params:
+ *      - gid: The group id
+ * Returns:
+ *      - JSON array containing group requests
+ */
+var findGroupRequests = "/groups/find/requests/:gid";
+
 //=============================POST VERBS=============================
 
 /**
@@ -967,6 +983,40 @@ var updateComment = "/comment/update";
 var removeComment = "/comment/remove";
 
 /**
+ * acceptGroupReq
+ *
+ * URL:
+ * 		- %server%/api/groups/accept/request
+ * Descript:
+ *      - Accept a group request
+ * Method:
+ *      - POST
+ * Params:
+ *      - uid: The user id
+ * 		- gid: The group id
+ * Returns:
+ *      - JSON group request object
+ */
+var acceptGroupReq = "/groups/accept/request";
+
+/**
+ * denyGroupReq
+ *
+ * URL:
+ * 		- %server%/api/groups/deny/request
+ * Descript:
+ *      - Delete a group request
+ * Method:
+ *      - POST
+ * Params:
+ *      - uid: The user id
+ * 		- gid: The group id
+ * Returns:
+ *      - JSON friend request object after deletion
+ */
+var denyGroupReq = "/groups/deny/request";
+
+/**
  * sendGroupRequest
  *
  * URL:
@@ -1381,13 +1431,32 @@ router.get(findGroupReceived, UserID, function (req, res, next) {
 });
 
 router.post(sendGroupRequest, UserID, function (req, res, next) {
-	DB.Groups.addRequest(req, res, function (result) {
+	DB.Groups.sendRequest(req, res, function (result) {
 		res.json(result);
 	});
 });
 
 router.post(removeGroupRequest, UserID, function (req, res, next) {
 	DB.Groups.removeRequest(req, res, function (result) {
+		res.json(result);
+	});
+});
+
+router.post(acceptGroupReq, UserID, function (req, res, next) {
+	DB.Groups.acceptGroupReq(req, res, function (result) {
+		res.json(result);
+	});
+});
+
+//Removes friend request
+router.post(denyGroupReq, UserID, function (req, res, next) {
+	DB.Groups.denyGroupReq(req, res, function (result) {
+		res.json(result);
+	});
+});
+
+router.get(findGroupRequests, UserID, function (req, res, next) {
+	DB.Groups.findRequests(req, res, function (result) {
 		res.json(result);
 	});
 });
