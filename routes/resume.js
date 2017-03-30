@@ -8,7 +8,8 @@ router.get('/', function (req, res, next) {
 	if (req.session.user) {
 		res.render('resume', {});
 	} else {
-		res.render('resume', {});
+		//res.render('resume', {});
+		res.redirect('/');
 	}
 });
 
