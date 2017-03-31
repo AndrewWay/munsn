@@ -90,14 +90,14 @@
 			<div class="userLists" id="group">
 				<h5> GROUP LIST </h5>
 				<ul id="groupList">
-					<li><a id="createGroup" href="#"> Create New Group </a></li>
+					<li><a id="createGroup" href="javascript:void(0)"> Create New Group </a></li>
 				</ul>
 			</div>
 		
 			<div class="userLists" id="course">
 				<h5> COURSE LIST </h5>
 				<ul id="courseList">
-					<li><a id="createCourse" href="#"> Add New Class </a></li>
+					<li><a id="createCourse" href="javascript:void(0)"> Add New Class </a></li>
 				</ul>
 			</div>
 			

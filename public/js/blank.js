@@ -56,12 +56,12 @@ $(document).ready(function () {
 	 ***************************/
 
 	 //Display create group popup
-	$('#createGroup').click(function () {
+	$('#createGroup').on('click',function () {
 		$('#popGroup').show();
 	});
 
 	//Display create course popup
-	$('#createCourse').click(function() {
+	$('#createCourse').on('click',function() {
 		$('#popGroup').show();
 	});
 
@@ -79,15 +79,15 @@ $(document).ready(function () {
 	$('#gCreate').click(function() {
 		$.post('/api/group', {
 			name: $('#popGroup input[name="gName"]').val(),
-			uid: a
+			uid: uid
 		})
 	});
 
 	//Create new course
 	$('#gCreate').click(function() {
-		$.post('/api/group', {
+		$.post('/api/course/', {
 			name: $('#popGroup input[name="cgName"]').val(),
-			uid: a
+			cid: uid
 		}, function() {
 
 		})
