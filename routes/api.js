@@ -1196,7 +1196,7 @@ router.get(suggestFriends, UserID, function (req, res, next) {
 	});
 });
 router.get(findCoursesByUID, UserID, function (req, res, next) {
-	DB.Courses.findById(req, res, function (result) {
+	DB.Courses.findByUserID(req, res, function (result) {
 		res.json(result);
 	});
 });
