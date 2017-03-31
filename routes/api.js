@@ -908,7 +908,7 @@ var addGroupUser = "/groups/user"; //POST
  *      - JSON group users object after deletion
  */
 var delGroupUser = "/groups/user"; //DELETE
-//TODO: To fix this api comment DEVIN
+//TODO: DEVIN, To fix updateGroupUser api comment
 /**
  * updateGroupUser
  *
