@@ -4,7 +4,13 @@ module.exports = function (DBPosts, collectionPosts) {
 	//Add a post
 	DBPosts.add = function (req, res, callback) {
 		var date = new Date();
-        
+        var post = {
+            uid: req.body.uid,
+            visibility: req.body.visibility,
+            history: [{
+                text: req.body.text
+            }],
+        };
 	};
 
 	//Remove a post by id
