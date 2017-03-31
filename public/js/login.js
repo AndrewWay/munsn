@@ -12,7 +12,7 @@ $(function () {
 $(document).ready(function () {
 	//When btn is clicked, convert to register page
 	$("#regBtn").click(function () {
-		
+
 		$('#textAlert').hide();
 		$("#obscure").fadeIn(500);
 		$("#loginFields").hide()
@@ -27,7 +27,7 @@ $(document).ready(function () {
 			}, 500, function () {
 				$("#regFields").fadeIn(300)
 			})
-		}); 
+		});
 
 	});
 
@@ -71,8 +71,8 @@ $(document).ready(function () {
 	//TODO -- Maybe remove requirement on profile picture field?
 	$("#regSubmit").click(function () {
 		$('#regFields input[name="user"]').val($('input[name="email"]').val().split('@')[0]); //This is only need because user isn't parsed on server
-		if (!($("#regFields input").filter(function () { 
-			//If any field is empty: Clear password fields, highlight empty fields. Display text alert.
+		if (!($("#regFields input").filter(function () {
+				//If any field is empty: Clear password fields, highlight empty fields. Display text alert.
 				return $.trim($(this).val()).length === 0
 			}).length === 0)) {
 
@@ -84,31 +84,39 @@ $(document).ready(function () {
 				color: "#ffb6c1"
 			}, 500);
 
-			$('#textAlert').css({color: 'red'});
+			$('#textAlert').css({
+				color: 'red'
+			});
 			$('#textAlert').html('Missing required fields.');
 			$('#textAlert').show();
 
-		} else if (!($('#regFields input[name=pass]').val() === $('#regFields input[name=passConf]').val())) { 
+		} else if (!($('#regFields input[name=pass]').val() === $('#regFields input[name=passConf]').val())) {
 			//If password fields do not match: Clear fields and highlight. Display text alert.
 			$('#regFields input[type="password"]').val('');
-			$('#regFields input[type="password"]').effect("highlight", { color: "#ffb6c1"	}, 500);
+			$('#regFields input[type="password"]').effect("highlight", {
+				color: "#ffb6c1"
+			}, 500);
 
-			$('#textAlert').css({color: 'red'});
+			$('#textAlert').css({
+				color: 'red'
+			});
 			$('#textAlert').html('Entered passwords do not match');
 			$('#textAlert').show();
 
 
-		} else if (!($('#regFields input[name="checkTOS"]').is(':checked'))) { 
+		} else if (!($('#regFields input[name="checkTOS"]').is(':checked'))) {
 			//If TOS agreement is not checked: Clear password fields and TODO: Display text message
 			$('#regFields input[type="password"]').val('');
 
-			$('#textAlert').css({color: 'red'});
+			$('#textAlert').css({
+				color: 'red'
+			});
 			$('#textAlert').html('Must agree to terms of service.');
 			$('#textAlert').show();
-		
+
 		} else {
 			var dob = $('#regFields #datePick').val().split('/');
-			var jqxhr = $.post("/api/user/register", {
+			var jqxhr = $.post("/api/register", {
 						fname: $('#regFields input[name="fname"]').val(),
 						lname: $('#regFields input[name="lname"]').val(),
 						email: $('#regFields input[name="email"]').val(),
@@ -121,51 +129,55 @@ $(document).ready(function () {
 						console.log("post");
 					}
 				)
-				.done(function(result) {
+				.done(function (result) {
 					console.log(result.status);
-					
-					if(result.status === 'fail') {
-					//If ajax request returns false: Display text alert. Clear all fields.
 
-						$('#textAlert').css({color: 'red'});
+					if (result.status === 'fail') {
+						//If ajax request returns false: Display text alert. Clear all fields.
+
+						$('#textAlert').css({
+							color: 'red'
+						});
 						$('#textAlert').html('Account not created: User already exists.');
 						$('#textAlert').show();
 
 					} else {
-						var picForm = new FormData(); 
+						var picForm = new FormData();
 						picForm.append("image", $("#picUp")[0].files[0]);
 						//Send multipart/formdata with the image
 						$.ajax({
-							url: '/content/image/profile/'+result.data._id, //Get :uid from the return.
-							type: 'post',
-							data: picForm,
-							cache: false,
-							contentType: false,
-							processData: false,
-						
-						})
-						.done(function(data) {
-							console.log("img uploaded");
+								url: '/content/image/profile/' + result.data._id, //Get :uid from the return.
+								type: 'post',
+								data: picForm,
+								cache: false,
+								contentType: false,
+								processData: false,
 
-							//Display text alert to check email
-							$('#textAlert').css({color: 'black'});
-							$('#textAlert').html('Account created. Check email for confirmation.');
-							$('#textAlert').show();							
-						})
-						.fail(function(data) {
-							console.log("img not uploaded");
-						})
+							})
+							.done(function (data) {
+								console.log("img uploaded");
+
+								//Display text alert to check email
+								$('#textAlert').css({
+									color: 'black'
+								});
+								$('#textAlert').html('Account created. Check email for confirmation.');
+								$('#textAlert').show();
+							})
+							.fail(function (data) {
+								console.log("img not uploaded");
+							})
 					}
 
 					$("#regFields")[0].reset();
 					$("#picDisp").attr('src', '/img/SEAHAWK_SIL.jpg');
-					
-					
-					
+
+
+
 				})
 				.fail(function () {
 					console.log("failure");
-					
+
 				})
 		}
 
@@ -190,12 +202,14 @@ $(document).ready(function () {
 				color: "#ffb6c1"
 			}, 500);
 
-			$('#textAlert').css({color: 'red'});
+			$('#textAlert').css({
+				color: 'red'
+			});
 			$('#textAlert').html('Required fields missing.');
 			$('#textAlert').show();
 
 		} else {
-			var jqxhr = $.post("/api/user/login", {
+			var jqxhr = $.post("/api/login", {
 						uid: $('#loginFields input[name="user"]').val(),
 						pass: $('#loginFields input[name="pass"]').val(),
 					},
@@ -204,17 +218,19 @@ $(document).ready(function () {
 					}
 				)
 				.done(function (response) {
-					
-					if(response.status==='fail'){
+
+					if (response.status === 'fail') {
 						//Login is not successful: Clear fields. Display text alert.
 						$("#loginFields")[0].reset();
-						$('#textAlert').css({color: 'red'});
+						$('#textAlert').css({
+							color: 'red'
+						});
 						$('#textAlert').html('Login failed: Incorrect username or password.');
 						$('#textAlert').show();
 
 					} else {
 						//Reload page after successful login post.
-						window.location.reload("true"); 
+						window.location.reload("true");
 					}
 				})
 				.fail(function () {
@@ -265,7 +281,7 @@ $(document).ready(function () {
 	});
 
 	//If popup close button pressed, close that popup.
-	$('.popClose').click( function () {
+	$('.popClose').click(function () {
 		$('.popup').hide();
 	});
 

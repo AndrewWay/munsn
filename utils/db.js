@@ -196,22 +196,6 @@ mongoClient.connect(dbURL, function (err, DB) {
 		}
 	});
 
-	DB.createCollection('gRequests', {
-		validator: {
-			$and: [{
-				userid: {
-					$type: 'string'
-				}
-			}, {
-				groupName: {
-					$type: 'string'
-				}
-			}]
-		},
-		validationLevel: 'strict',
-		validationAction: 'error'
-	});
-
 	DB.createCollection('posts', {
 		validator: {
 			$and: [{

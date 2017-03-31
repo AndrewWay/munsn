@@ -6,12 +6,12 @@
 	<link href="/stylesheets/blank.css" rel="stylesheet"/>
 	<link href="/stylesheets/post.css" rel="stylesheet"/>
 	<link href="/stylesheets/lostfound.css" rel="stylesheet"/>
-	
+
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
 	<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 	<script type="text/javascript" src='http://maps.google.com/maps/api/js?libraries=places&key=AIzaSyAOvv4l4DtmVnBj7_5R7P_lccMyffm03to'></script>
     <script src="https://cdn.rawgit.com/Logicify/jquery-locationpicker-plugin/master/dist/locationpicker.jquery.js"></script>
-	
+
 	<script src="/js/blank.js"></script>
 	<script src="/js/lostfound.js"></script>
 
@@ -27,21 +27,21 @@
             <li><a href="#">Friends</a></li>
         </ul>
         </div>
-            
+
         <div class="search">
 	        <form>
-			  	<input type="search" name="sitesearch" placeholder="Search MunSN"><button class="searchbtn">Search</button>			  	
+			  	<input type="search" name="sitesearch" placeholder="Search MunSN"><button class="searchbtn">Search</button>
 			</form>
 		</div>
 
 		<div class="buttons">
 			<a href="#"><img id="not" src="/img/notification-red.png"></a>
-			<a href="/logout"><img id="log" src="/img/logout.png"></a>
+			<a href="/api/logout"><img id="log" src="/img/logout.png"></a>
 			<a href="/settings"><img id="cog" src="/img/settings.png"></a>
 		</div>
 	</div>
 	</nav>
-	
+
 	<div id="not-center">
 		<a href="#"><div id="note">
 			{{NOT_INFO}}
@@ -60,7 +60,7 @@
 	<div class="container">
 	<div class="sidebars" id="section-left">
 		<div class="userInfo" id="userPic">
-			<a href="/profile"><img src="/img/SEAHAWK_SIL.jpg"></a>	
+			<a href="/profile"><img src="/img/SEAHAWK_SIL.jpg"></a>
 		</div>
 		<div class="userInfo" id="lists">
 			<div class="userLists" id="groupList">
@@ -71,7 +71,7 @@
 					<li><a href="#"> TEST3 </a></li>
 				</ul>
 			</div>
-		
+
 			<div class="userLists" id="classList">
 				<h5> CLASS LIST </h5>
 				<ul id="classList">
@@ -80,7 +80,7 @@
 					<li><a href="#"> TEST3 </a></li>
 				</ul>
 			</div>
-			
+
 			<div class="userLists" id="etc">
 				<h5> OTHER LIST </h5>
 				<ul id="otherList">
@@ -89,19 +89,19 @@
 					<li><a href="#"> TEST3 </a></li>
 				</ul>
 			</div>
-		
+
 		</div>
 	</div>
 	<div class="timeline">
-		
+
 		<div id="mapHolder"><div id="map"> </div></div>
-		
+
 		<!-- RANDOM POSTS FOR TESTING -->
 		<div class="postTemp">
 				<div class="postInfo">
 					<div class="postPic">
 						<img src="/img/SEAHAWK_SIL.jpg">
-					</div> 
+					</div>
 					<div class="postName">
 						<a href="{{ POST_LINK }}"> {{ POST_NAME }} </a> <br>
 						<span>{{ POST_TIME }}</span>
@@ -110,7 +110,7 @@
 				<div class="postCont">
 					<p> {{ POST_TEXT }}</p><img src="/img/postImg.png">
 				</div>
-				
+
 				<div class="postComm">
 					<div class="commTemp">
 						<div class="commInfo">
@@ -131,12 +131,12 @@
 					</div>
 				</div>
 		</div>
-		
+
 		<div class="postTemp">
 				<div class="postInfo">
 					<div class="postPic">
 						<img src="/img/SEAHAWK_SIL.jpg">
-					</div> 
+					</div>
 					<div class="postName">
 						<a href="{{ POST_LINK }}"> {{ POST_NAME }} </a> <br>
 						<span>{{ POST_TIME }}</span>
@@ -145,7 +145,7 @@
 				<div class="postCont">
 					<p> {{ POST_TEXT }}</p><img src="/img/postImg.png">
 				</div>
-				
+
 				<div class="postComm">
 					<div class="commTemp">
 						<div class="commInfo">
@@ -169,14 +169,14 @@
 	</div>
 	<div class="sidebars" id="section-right">
 		<div class= "content-1">
-			<div id="choiceButtons"> 
+			<div id="choiceButtons">
 				<button id="lostChoice"> LOST </button>
 				<button id="foundChoice"> FOUND</button>
 			</div>
 		</div>
-		
+
 		<!-- TODO: Make consistent. Should these divs be classes or ids. Class seems superfluous, but seperate ids allow for specialization-->
-		
+
 		<div class="content-2" id="lostContent">
 			<div class="lostClass" id="lostImage">
 				<img id="lostImgDisp" src="/img/SEAHAWK_SIL.jpg">
@@ -190,19 +190,19 @@
 				<input type="hidden" name="lat" id="lat"/>
 
 				<input type="hidden" name="long" id="long"/>
-				
-				<label for="long">Location</label> 
+
+				<label for="long">Location</label>
 				<input type="text" name="locate" class="locate"/>
-				
-				<label for="name">Contact Info</label> 
+
+				<label for="name">Contact Info</label>
 				<input class="contact" type="text" name="name" id="name" placeholder="Name"/>
 				<input class="contact" type="text" name="phone" id="phone" placeholder="Phone #"/>
 				<input class="contact" type="text" name="email" id="email" placeholder="E-Mail"/>
-				
+
 				<button class="submitLF" id="submitLost"> Submit Lost Item </button>
 			</div>
 		</div>
-		
+
 		<div class="content-2" id="foundContent">
 			<div class="foundClass" id="lostImage">
 				<img id="lostImgDisp" src="/img/SEAHAWK_SIL.jpg">
@@ -213,15 +213,15 @@
 			</div>
 			<div class="foundClass" id="lostLocation">
 				<button class="mapToggle"> Map </button> <br>
-				
-				<label for="long">Location</label> 
+
+				<label for="long">Location</label>
 				<input type="text" class="locate" name="locate"/>
-				
-				<label for="name">Contact Info</label> 
+
+				<label for="name">Contact Info</label>
 				<input class="contact" type="text" name="name" id="name" placeholder="Name"/>
 				<input class="contact" type="text" name="phone" id="phone" placeholder="Phone #"/>
 				<input class="contact" type="text" name="email" id="email" placeholder="E-Mail"/>
-				
+
 				<button class="submitLF" id="submitFound"> Submit Found Item </button>
 			</div>
 		</div>

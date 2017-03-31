@@ -5,11 +5,11 @@
 	<title>{{Title}}</title>
 	<link href="/stylesheets/blank.css" rel="stylesheet"/>
 	<link href="/stylesheets/resume.css" rel="stylesheet"/>
-	
+
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
 	<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 	<script src="//mozilla.github.io/pdf.js/build/pdf.js"></script>
-	
+
 	<script src="/js/blank.js"></script>
 	<script src="/js/resume.js"></script>
 
@@ -25,21 +25,21 @@
             <li><a href="#">Friends</a></li>
         </ul>
         </div>
-            
+
         <div class="search">
 	        <form>
-			  	<input type="search" name="sitesearch" placeholder="Search MunSN"><button class="searchbtn">Search</button>			  	
+			  	<input type="search" name="sitesearch" placeholder="Search MunSN"><button class="searchbtn">Search</button>
 			</form>
 		</div>
 
 		<div class="buttons">
 			<a href="#"><img id="not" src="/img/notification-red.png"></a>
-			<a href="/logout"><img id="log" src="/img/logout.png"></a>
+			<a href="/api/logout"><img id="log" src="/img/logout.png"></a>
 			<a href="/settings"><img id="cog" src="/img/settings.png"></a>
 		</div>
 	</div>
 	</nav>
-	
+
 	<div id="not-center">
 		<a href="#"><div id="note">
 			{{NOT_INFO}}
@@ -58,7 +58,7 @@
 	<div class="container">
 	<div class="sidebars" id="section-left">
 		<div class="userInfo" id="userPic">
-			<a href="/profile"><img src="/img/SEAHAWK_SIL.jpg"></a>	
+			<a href="/profile"><img src="/img/SEAHAWK_SIL.jpg"></a>
 		</div>
 		<div class="userInfo" id="lists">
 			<div class="userLists" id="groupList">
@@ -69,7 +69,7 @@
 					<li><a href="#"> TEST3 </a></li>
 				</ul>
 			</div>
-		
+
 			<div class="userLists" id="classList">
 				<h5> CLASS LIST </h5>
 				<ul id="classList">
@@ -78,7 +78,7 @@
 					<li><a href="#"> TEST3 </a></li>
 				</ul>
 			</div>
-			
+
 			<div class="userLists" id="etc">
 				<h5> OTHER LIST </h5>
 				<ul id="otherList">
@@ -87,25 +87,25 @@
 					<li><a href="#"> TEST3 </a></li>
 				</ul>
 			</div>
-		
+
 		</div>
 	</div>
 
 
 	<div class="timeline">
-		
+
 		<div id="canvasContainer">
 			<div>
 				<button class="pdfButton" id="pdfPrev">Previous</button>
-			
+
 				<span>Page: <span id="page_num"></span> / <span id="page_count"></span></span>
-			
+
 				<button class="pdfButton" id="pdfNext">Next</button>
 			</div>
 			<canvas id="canvas" width="680px"></canvas>
 		</div>
 	</div>
-		
+
 	<div class="sidebars" id="section-right">
 		<div class= "content-1">
 			<div id="uploadResume">
@@ -124,8 +124,8 @@
 			</div>
 		</div>
 	</div>
-		
 
-	
+
+
 </body>
 </html>

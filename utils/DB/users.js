@@ -184,6 +184,22 @@ module.exports = function (DBUsers, DBAuth, collectionUsers) {
 		}
 	};
 
+	DBUsers.logout = function (req, res, callback) {
+		//TODO: Maybe in the future we need this.
+		var User = req.session.user;
+		if (User) {
+			req.session.destroy();
+			console.log("[DBUsers] Logout", "'" + User._id + "'");
+			callback({
+				status: 'ok'
+			});
+		} else {
+			console.log("[DBUsers] Logout", "'No Session'");
+			callback({
+				status: 'fail'
+			});
+		}
+	};
 	DBUsers.login = function (req, res, callback) {
 		console.log("[DBUsers] Login", "'" + JSON.stringify(req.body) + "'");
 		if (req.session.user) {

@@ -4,7 +4,6 @@ var DB = require("../utils/db");
 var EMS = require("../utils/ems");
 var utils = require("../utils/utils");
 var UserID = require("../middleware/functions").UserID;
-//==============================GET VERBS=============================
 
 /**
  * findUserById
@@ -20,8 +19,7 @@ var UserID = require("../middleware/functions").UserID;
  * Returns:
  *      - JSON user object
  */
-var findUserById = "/user/info/:uid";
-
+var findUserById = "/user/:uid"; //GET
 /**
  * findUser
  *
@@ -36,156 +34,204 @@ var findUserById = "/user/info/:uid";
  * Returns:
  *      - JSON user object
  */
-var findUser = "/users";
-
+var findUser = "/user"; //GET
 /**
- * findFriendsById
+ * updateUser
  *
  * URL:
- * 		- %server%/api/friends/:uid
+ * 		- %server%/api/user/update/:uid
  * Descript:
- *      - Gets the friends for a given uid
+ *      - Updates an user's fields
  * Method:
- *      - GET
+ *      - PATCH
  * Params:
- *      - uid: The user id to get
+ *      - uid: The user id
+ * 		- email: The email address
+ * 		- pass: The password
  * Returns:
- *      - JSON array containing user objects
+ *      - JSON updated user object
  */
-var findFriendsById = "/friends/:uid";
-
+var updateUser = "/user/:uid"; //PATCH
 /**
- * findFriendSent
+ * deleteUser
  *
  * URL:
- * 		- %server%/api/user/friends/sent/:uid
+ * 		- %server%/api/user/remove/:uid
  * Descript:
- *      - Gets the friend requests sent from a user
+ *      - Deletes a user from the server
  * Method:
- *      - GET
- * Params:
- *      - uid: The user id to get requests sent from
- * Returns:
- *      - JSON array containing friend request objects
- */
-var findFriendSent = "/friends/sent/:uid";
-
-/**
- * findFriendReceived
- *
- * URL:
- * 		- %server%/api/user/friends/received/:fid
- * Descript:
- *      - Gets the friend requests recieved from a user
- * Method:
- *      - GET
- * Params:
- *      - uid: The user id to get requests recieved from
- * Returns:
- *      - JSON array containing friend request objects
- */
-var findFriendReceived = "/friends/received/:fid";
-
-/**
- * findGroupsByUID
- *
- * URL:
- * 		- %server%/api/user/groups/:uid
- * Descript:
- *      - Gets all groups that the user is in
- * Method:
- *      - GET
- * Params:
- *      - uid: The user id to get groups from
- * Returns:
- *      - JSON array containing group objects
- */
-var findGroupsByUID = "/user/groups/:uid";
-
-//TODO: Check out the creator/owner id below
-/**
- * findGroups
- *
- * URL:
- * 		- %server%/api/user/groups/
- * Descript:
- *      - Search groups by query
- * Method:
- *      - GET
- * Params:
- *      - _id: The group object unique id
- * 		- name: The group name
- * 		- creatorid: The group creator's id
- * 		- ownerid: The owners id
- * 		- created: The creation date
- * Returns:
- *      - JSON array containing group objects
- */
-var findGroups = "/user/groups/";
-
-/**
- * findGroupsUsers
- *
- * URL:
- * 		- %server%/api/group/users/:gid
- * Descript:
- *      - Gets all users in a group
- * Method:
- *      - GET
- * Params:
- *      - gid: The group id to get users from
- * Returns:
- *      - JSON array containing user objects
- */
-var findGroupUsers = "/group/users/:gid";
-
-/**
- * findGroupById
- *
- * URL:
- * 		- %server%/api/group/info/:gid
- * Descript:
- *      - Gets group from a group id
- * Method:
- *      - GET
- * Params:
- *      - gid: The group id
- * Returns:
- *      - JSON group object
- */
-var findGroupById = "/group/info/:gid";
-
-/**
- * findPostByPid
- *
- * URL:
- * 		- %server%/api/post/:pid
- * Descript:
- *      - Get a singular post by PostID
- * Method:
- *      - GET
- * Params:
- *      - pid: The post id
- * Returns:
- *      - JSON mongo result
- */
-var findPostByPid = "/post/:pid";
-/**
- * findPostByUid
- *
- * URL:
- * 		- %server%/api/post/user/:uid
- * Descript:
- *      - Get ALL posts by UserID
- * Method:
- *      - GET
+ *      - DELETE
  * Params:
  *      - uid: The user id
  * Returns:
+ *      - JSON user object before deletion
+ */
+var deleteUser = "/user/:uid"; //DELETE
+/**
+ * registerUser
+ *
+ * URL:
+ * 		- %server%/api/user/register
+ * Descript:
+ *      - Registers a user
+ * Method:
+ *      - POST
+ * Params:
+ * 		- fName: First name
+ * 		- lName: Last name
+ * 		- gender: gender
+ * 		- dob: Birthdate
+ * 		- email: Email address from @mun.ca
+ * 		- pass: Password
+ * 		- address: Address
+ * Returns:
+ *      - JSON user object after creation
+ */
+var registerUser = "/register"; //POST
+/**
+ * loginUser
+ *
+ * URL:
+ * 		- %server%/api/login
+ * Descript:
+ *      - Logs user into the site
+ * Method:
+ *      - POST
+ * Params:
+ *      - uid: User's id
+ *      - pass: User's password
+ * Returns:
+ *      - JSON user
+ */
+var loginUser = "/login";
+/**
+ * loginUser
+ *
+ * URL:
+ * 		- %server%/api/logout
+ * Descript:
+ *      - Logs the user out of the site
+ * Method:
+ *      - GET
+ * Params:
+ *      - NONE
+ * Returns:
+ *      - JSON user
+ */
+var logoutUser = "/logout";
+/**
+ * loadMessages
+ *
+ * URL:
+ * 		- %server%/api/messages/load/
+ * Descript:
+ *      - Get messages from a conversation
+ * Method:
+ *      - GET
+ * Params:
+ *      - uid1: The first user id
+ * 		- uid2: The second user id
+ * Returns:
+ *      - JSON array containing messages
+ */
+var loadMessages = "/messages/load"; //GET
+/**
+ * addFriend
+ *
+ * URL:
+ * 		- %server%/api/friends/add/friend
+ * Descript:
+ *      - Add a friend
+ * Method:
+ *      - POST
+ * Params:
+ *      - uid: The user id to delete the friend from
+ * 		- fid: The friend id to delete the friendship from
+ * Returns:
+ *      - Mongo result
+ */
+var addFriend = "/friend"; //POST
+/**
+ * delFriend
+ *
+ * URL:
+ * 		- %server%/api/user/remove/friend
+ * Descript:
+ *      - Delete a friend
+ * Method:
+ *      - DELETE
+ * Params:
+ *      - uid: The user id to delete the friend from
+ * 		- fid: The friend id to delete the friendship from
+ * Returns:
+ *      - Mongo result
+ */
+
+var delFriend = "/friend"; //DELETE
+/**
+ * addFriendReq
+ *
+ * URL:
+ * 		- %server%/api/user/add/request
+ * Descript:
+ *      - Send a friend request from one user to another
+ * Method:
+ *      - POST
+ * Params:
+ *      - uid: The user id to send the request from
+ * 		- fid: The friend id to send the request to
+ * Returns:
+ *      - JSON friend request object
+ */
+var addFriendReq = "/friend/request"; //POST
+/**
+ * removeFriendRequest
+ *
+ * URL:
+ * 		- %server%/api/friends/remove/request
+ * Descript:
+ *      - Remove a friend request
+ * Method:
+ *      - DELETE
+ * Params:
+ *      uid: The user id
+ *      fid: The friend id
+ * Returns:
  *      - JSON mongo result
  */
-var findPostByUid = "/post/user/:uid";
-
+var removeFriendRequest = "/friend/request"; //DELETE
+/**
+ * acceptFriendReq
+ *
+ * URL:
+ * 		- %server%/api/friends/accept/request
+ * Descript:
+ *      - Accept a friend request
+ * Method:
+ *      - POST
+ * Params:
+ *      - uid: The user id to accept the request from (reciever)
+ * 		- fid: The friend id to accept the request to (sender)
+ * Returns:
+ *      - JSON friend request object after deletion
+ */
+var acceptFriendReq = "/friend/request/accept"; //POST
+/**
+ * delFriendReq
+ *
+ * URL:
+ * 		- %server%/api/friends/deny/request
+ * Descript:
+ *      - Delete a friend request from one user to another
+ * Method:
+ *      - POST
+ * Params:
+ *      - uid: The user id to delete the request from (reciever)
+ * 		- fid: The friend id to delete the request to (sender)
+ * Returns:
+ *      - JSON friend request object after deletion
+ */
+var denyFriendReq = "/friend/request/deny"; //POST
 /**
  * suggestFriends
  *
@@ -201,8 +247,179 @@ var findPostByUid = "/post/user/:uid";
  * Returns:
  *      - JSON user object array
  */
-var suggestFriends = "/friends/suggest/:uid";
-
+var suggestFriends = "/friend/suggest/:uid"; //GET
+/**
+ * findFriendsById
+ *
+ * URL:
+ * 		- %server%/api/friends/:uid
+ * Descript:
+ *      - Gets the friends for a given uid
+ * Method:
+ *      - GET
+ * Params:
+ *      - uid: The user id to get
+ * Returns:
+ *      - JSON array containing user objects
+ */
+var findFriendsById = "/friends/:uid"; //GET
+/**
+ * findFriendSent
+ *
+ * URL:
+ * 		- %server%/api/user/friends/sent/:uid
+ * Descript:
+ *      - Gets the friend requests sent from a user
+ * Method:
+ *      - GET
+ * Params:
+ *      - uid: The user id to get requests sent from
+ * Returns:
+ *      - JSON array containing friend request objects
+ */
+var findFriendSent = "/friend/sent/:uid"; //GET
+/**
+ * findFriendReceived
+ *
+ * URL:
+ * 		- %server%/api/user/friends/received/:fid
+ * Descript:
+ *      - Gets the friend requests recieved from a user
+ * Method:
+ *      - GET
+ * Params:
+ *      - uid: The user id to get requests recieved from
+ * Returns:
+ *      - JSON array containing friend request objects
+ */
+var findFriendReceived = "/friend/received/:fid"; //GET
+/**
+ * createCourse
+ *
+ * URL:
+ * 		- %server%/api/course/create
+ * Descript:
+ *      - Create a course
+ * Method:
+ *      - POST
+ * Params:
+ *		label: Shorthand name, ex. "COMP 4770"
+ *		name: Full name, ex. "Team Project"
+ *		description: Description
+ *		semester: Semester, ex. "winter"
+ *		department: Department that the course belongs to, ex. "cs"
+ *		location: Room number, ex. "EN 1051"
+ *		year: Current year the course is offered
+ *		cid: Creator id
+ *		days: Array of strings of days the course is every week, ex. days["monday", "wednesday", "friday"]
+ *		timeStart: (date)The course start date, ex. "Jan. 1"
+ *		timeEnd: (date) The course end date, ex. "Apr. 12"
+ * Returns:
+ *      - JSON mongo result
+ */
+var createCourse = "/course"; //POST
+/**
+ * updateCourse
+ *
+ * URL:
+ * 		- %server%/api/course/update
+ * Descript:
+ *      - Update a course
+ * Method:
+ *      - PATCH
+ * Params:
+ *		_id: The course unique object id
+ *		label: Shorthand name, ex. "COMP 4770"
+ *		name: Full name, ex. "Team Project"
+ *		description: Description
+ *		semester: Semester, ex. "winter"
+ *		department: Department that the course belongs to, ex. "cs"
+ *		location: Room number, ex. "EN 1051"
+ *		year: Current year the course is offered
+ *		cid: Creator id
+ *		days: Array of strings of days the course is every week, ex. days["monday", "wednesday", "friday"]
+ *		timeStart: (date)The course start date, ex. "Jan. 1"
+ *		timeEnd: (date) The course end date, ex. "Apr. 12"
+ * Returns:
+ *      - JSON mongo result
+ */
+var updateCourse = "/course"; //PATCH
+/**
+ * removeCourse
+ *
+ * URL:
+ * 		- %server%/api/course/delete
+ * Descript:
+ *      - Remove a course
+ * Method:
+ *      - DELETE
+ * Params:
+ *		_id: The course unique object id
+ * Returns:
+ *      - JSON mongo result
+ */
+var deleteCourse = "/course"; //DELETE
+/**
+ * addCourseToUser
+ *
+ * URL:
+ * 		- %server%/api/course/user/add
+ * Descript:
+ *      - Add a course to a user
+ * Method:
+ *      - PUT
+ * Params:
+ *		_id: The course unique object id
+ * Returns:
+ *      - JSON mongo result
+ */
+var addCourseToUser = "/course/user"; //PUT
+/**
+ * delCourseFromUser
+ *
+ * URL:
+ * 		- %server%/api/course/user/del
+ * Descript:
+ *      - Delete a course from a user
+ * Method:
+ *      - DELETE
+ * Params:
+ *		_id: The course unique object id
+ * Returns:
+ *      - JSON mongo result
+ */
+var delCourseFromUser = "/course/user"; //DELETE
+/**
+ * addCourseToGroup
+ *
+ * URL:
+ * 		- %server%/api/course/group/add
+ * Descript:
+ *      - Add a course to a Group
+ * Method:
+ *      - PUT
+ * Params:
+ *		_id: The groups unique object id
+ 		cid: The course unique object id
+ * Returns:
+ *      - JSON mongo result
+ */
+var addCourseToGroup = "/course/group"; //PUT
+/**
+ * delCourseFromGroup
+ *
+ * URL:
+ * 		- %server%/api/course/group/del
+ * Descript:
+ *      - Delete a course from a Group
+ * Method:
+ *      - DELETE
+ * Params:
+ *		_id: The course unique object id
+ * Returns:
+ *      - JSON mongo result
+ */
+var delCourseFromGroup = "/course/group"; //DELETE
 /**
  * findCourseById
  *
@@ -217,8 +434,7 @@ var suggestFriends = "/friends/suggest/:uid";
  * Returns:
  *      - JSON course object
  */
-var findCourseById = "/course/find/:id";
-
+var findCourseById = "/course/:id"; //GET
 /**
  * findCourse
  *
@@ -244,8 +460,59 @@ var findCourseById = "/course/find/:id";
  * Returns:
  *      - JSON course object array
  */
-var findCourse = "/course/find";
-
+var findCourse = "/course/"; //GET
+/**
+ * addLost
+ *
+ * URL:
+ * 		- %server%/api/lost/add
+ * Descript:
+ *      - Add a Lost
+ * Method:
+ *      - POST
+ * Params:
+ *		imagePath: The path to an image if supplied
+ *		description: Description
+ *		long: Longitude
+ *		lat: Latitude
+ * Returns:
+ *      - JSON mongo result
+ */
+var addLost = "/lostfound"; //POST
+/**
+ * updateLost
+ *
+ * URL:
+ * 		- %server%/api/lost/update
+ * Descript:
+ *      - Update a Lost
+ * Method:
+ *      - PATCH
+ * Params:
+ *		_id: The lost unique object id
+ *		imagePath: The path to an image if supplied
+ *		description: Description
+ *		long: Longitude
+ *		lat: Latitude
+ * Returns:
+ *      - JSON mongo result
+ */
+var updateLost = "/lostfound"; //PATCH
+/**
+ * removeLost
+ *
+ * URL:
+ * 		- %server%/api/lost/remove
+ * Descript:
+ *      - Remove a Lost
+ * Method:
+ *      - DELETE
+ * Params:
+ *		_id: The Lost unique object id
+ * Returns:
+ *      - JSON mongo result
+ */
+var removeLost = "/lostfound"; //DELETE
 /**
  * findLostById
  *
@@ -260,8 +527,7 @@ var findCourse = "/course/find";
  * Returns:
  *      - JSON lost object
  */
-var findLostById = "/lost/find/:uid";
-
+var findLostFoundById = "/lostfound/:uid"; //GET
 /**
  * findLost
  *
@@ -280,349 +546,7 @@ var findLostById = "/lost/find/:uid";
  * Returns:
  *      - JSON lost object array
  */
-var findLost = "/lost/find";
-
-/**
- * findGroupsAdmins
- *
- * URL:
- * 		- %server%/api/group/admins/:gid
- * Descript:
- *      - Gets all admins in a group
- * Method:
- *      - GET
- * Params:
- *      - gid: The group id to get admins from
- * Returns:
- *      - JSON array containing user objects
- */
-var findGroupAdmins = "/group/admins/:gid";
-
-/**
- * findGroupSent
- *
- * URL:
- * 		- %server%/api/user/group/sent/:uid
- * Descript:
- *      - Gets the group requests sent from a user
- * Method:
- *      - GET
- * Params:
- *      - uid: The user id to get requests sent from
- * Returns:
- *      - JSON array containing group request objects
- */
-var findGroupSent = "/user/group/sent/:uid";
-
-/**
- * findGroupReceived
- *
- * URL:
- * 		- %server%/api/user/group/received/:gid
- * Descript:
- *      - Gets the group requests recieved for a group
- * Method:
- *      - GET
- * Params:
- *      - gid: The group id to get requests recieved from
- * Returns:
- *      - JSON array containing group request objects
- */
-var findGroupReceived = "/group/received/:gid";
-
-/**
- * findCommentById
- *
- * URL:
- * 		- %server%/api/comment/find/:uid
- * Descript:
- *      - Get comments by user id
- * Method:
- *      - GET
- * Params:
- *      - uid: The user id
- * Returns:
- *      - JSON array containing comment objects
- */
-var findCommentById = "/comment/find/:uid";
-
-/**
- * loadMessages
- *
- * URL:
- * 		- %server%/api/messages/load/
- * Descript:
- *      - Get messages from a conversation
- * Method:
- *      - GET
- * Params:
- *      - uid1: The first user id
- * 		- uid2: The second user id
- * Returns:
- *      - JSON array containing messages
- */
-var loadMessages = "/messages/load";
-
-/**
- * findUserGroups
- *
- * URL:
- * 		- %server%/api/groups/find/:uid
- * Descript:
- *      - Get groups that the user is in
- * Method:
- *      - GET
- * Params:
- *      - uid: The first user id
- * Returns:
- *      - JSON array containing group ids
- */
-var findUserGroups = "/groups/find/:uid";
-
-//=============================POST VERBS=============================
-
-/**
- * updateUser
- *
- * URL:
- * 		- %server%/api/user/update/:uid
- * Descript:
- *      - Updates an user's fields
- * Method:
- *      - POST
- * Params:
- *      - uid: The user id
- * 		- email: The email address
- * 		- pass: The password
- * Returns:
- *      - JSON updated user object
- */
-var updateUser = "/user/update/:uid";
-
-/**
- * deleteUser
- *
- * URL:
- * 		- %server%/api/user/remove/:uid
- * Descript:
- *      - Deletes a user from the server
- * Method:
- *      - POST
- * Params:
- *      - uid: The user id
- * Returns:
- *      - JSON user object before deletion
- */
-var deleteUser = "/user/remove/:uid";
-
-/**
- * registerUser
- *
- * URL:
- * 		- %server%/api/user/register
- * Descript:
- *      - Registers a user
- * Method:
- *      - POST
- * Params:
- * 		- fName: First name
- * 		- lName: Last name
- * 		- gender: gender
- * 		- dob: Birthdate
- * 		- email: Email address from @mun.ca
- * 		- pass: Password
- * 		- address: Address
- * Returns:
- *      - JSON user object after creation
- */
-var registerUser = "/user/register";
-/**
- * loginUser
- *
- * URL:
- * 		- %server%/api/user/login
- * Descript:
- *      - Logs user into the site
- * Method:
- *      - POST
- * Params:
- *      - uid: User's id
- *      - pass: User's password
- * Returns:
- *      - JSON user
- */
-var loginUser = "/user/login";
-/**
- * addFriendReq
- *
- * URL:
- * 		- %server%/api/user/add/request
- * Descript:
- *      - Send a friend request from one user to another
- * Method:
- *      - POST
- * Params:
- *      - uid: The user id to send the request from
- * 		- fid: The friend id to send the request to
- * Returns:
- *      - JSON friend request object
- */
-var addFriendReq = "/friends/add/request";
-
-/**
- * acceptFriendReq
- *
- * URL:
- * 		- %server%/api/friends/accept/request
- * Descript:
- *      - Accept a friend request
- * Method:
- *      - POST
- * Params:
- *      - uid: The user id to accept the request from (reciever)
- * 		- fid: The friend id to accept the request to (sender)
- * Returns:
- *      - JSON friend request object after deletion
- */
-var acceptFriendReq = "/friends/accept/request";
-
-/**
- * delFriendReq
- *
- * URL:
- * 		- %server%/api/friends/deny/request
- * Descript:
- *      - Delete a friend request from one user to another
- * Method:
- *      - POST
- * Params:
- *      - uid: The user id to delete the request from (reciever)
- * 		- fid: The friend id to delete the request to (sender)
- * Returns:
- *      - JSON friend request object after deletion
- */
-var denyFriendReq = "/friends/deny/request";
-
-/**
- * addFriend
- *
- * URL:
- * 		- %server%/api/friends/add/friend
- * Descript:
- *      - Add a friend
- * Method:
- *      - POST
- * Params:
- *      - uid: The user id to delete the friend from
- * 		- fid: The friend id to delete the friendship from
- * Returns:
- *      - Mongo result
- */
-var addFriend = "/friends/add";
-
-/**
- * delFriend
- *
- * URL:
- * 		- %server%/api/user/remove/friend
- * Descript:
- *      - Delete a friend
- * Method:
- *      - POST
- * Params:
- *      - uid: The user id to delete the friend from
- * 		- fid: The friend id to delete the friendship from
- * Returns:
- *      - Mongo result
- */
-
-var delFriend = "/friends/remove";
-
-/**
- * createGroup
- *
- * URL:
- * 		- %server%/api/group/create
- * Descript:
- *      - Create a group
- * Method:
- *      - POST
- * Params:
- *      - uid: The user id that is creating the group
- * 		- name: The group name
- * Returns:
- *      - JSON group object after creation
- */
-var createGroup = "/group/create";
-
-/**
- * delGroup
- *
- * URL:
- * 		- %server%/api/group/remove/:gid
- * Descript:
- *      - Delete a group
- * Method:
- *      - POST
- * Params:
- *      - gid: The group id to be deleted
- * Returns:
- *      - JSON group object after deletion
- */
-var delGroup = "/group/remove/:gid";
-
-/**
- * updateGroup
- *
- * URL:
- * 		- %server%/api/group/update
- * Descript:
- *      - Update a group
- * Method:
- *      - POST
- * Params:
- *      - gid: The group id to be updated
- * 		- name: The group name
- * 		- descrip: The group description
- * Returns:
- *      - JSON group object after update
- */
-var updateGroup = "/group/update";
-
-/**
- * addGroupUser
- *
- * URL:
- * 		- %server%/api/group/add/user
- * Descript:
- *      - Add a user to a group
- * Method:
- *      - POST
- * Params:
- *      - gid: The group id
- * 		- uid: The user id to be added
- * Returns:
- *      - JSON group users object after creation
- */
-var addGroupUser = "/group/add/user";
-
-/**
- * delGroupUser
- *
- * URL:
- * 		- %server%/api/group/remove/user
- * Descript:
- *      - Delete a user from a group
- * Method:
- *      - POST
- * Params:
- *      - gid: The group id
- * 		- uid: The user id to be deleted
- * Returns:
- *      - JSON group users object after deletion
- */
-var delGroupUser = "/group/remove/user";
-
+var findLostFound = "/lostfound"; //GET
 /**
  * addTimelinePost
  *
@@ -640,7 +564,7 @@ var delGroupUser = "/group/remove/user";
  * Returns:
  *      - JSON mongo result
  */
-var addTimelinePost = "/post/add/timeline";
+var addTimelinePost = "/post/timeline"; //POST
 /**
  * addGroupPost
  *
@@ -656,8 +580,7 @@ var addTimelinePost = "/post/add/timeline";
  * 		- dataType: Text, picture, etc
  * 		- data: Actual data
  */
-var addGroupPost = "/post/add/group";
-
+var addGroupPost = "/post/group"; //POST
 /**
  * delPost
  *
@@ -666,14 +589,13 @@ var addGroupPost = "/post/add/group";
  * Descript:
  *      - Delete a post
  * Method:
- *      - POST
+ *      - DELETE
  * Params:
  *      - pid: The post id
  * Returns:
  *      - JSON mongo result
  */
-var delPost = "/post/remove";
-
+var delPost = "/post"; //DELETE
 /**
  * updatePost
  *
@@ -682,203 +604,311 @@ var delPost = "/post/remove";
  * Descript:
  *      - Update a post
  * Method:
- *      - POST
+ *      - PATCH
  * Params:
  * 		- data: Actual data
  * Returns:
  *      - JSON mongo result
  */
-var updatePost = "/post/update";
-
+var updatePost = "/post"; //PATCH
 /**
- * createCourse
+ * findPostByPid
  *
  * URL:
- * 		- %server%/api/course/create
+ * 		- %server%/api/post/:pid
  * Descript:
- *      - Create a course
+ *      - Get a singular post by PostID
  * Method:
- *      - POST
+ *      - GET
  * Params:
- *		label: Shorthand name, ex. "COMP 4770"
- *		name: Full name, ex. "Team Project"
- *		description: Description
- *		semester: Semester, ex. "winter"
- *		department: Department that the course belongs to, ex. "cs"
- *		location: Room number, ex. "EN 1051"
- *		year: Current year the course is offered
- *		cid: Creator id
- *		days: Array of strings of days the course is every week, ex. days["monday", "wednesday", "friday"]
- *		timeStart: (date)The course start date, ex. "Jan. 1"
- *		timeEnd: (date) The course end date, ex. "Apr. 12"
+ *      - pid: The post id
  * Returns:
  *      - JSON mongo result
  */
-var createCourse = "/course/create";
-
+var findPostByPid = "/post/:pid"; //GET
 /**
- * updateCourse
+ * findPostByUid
  *
  * URL:
- * 		- %server%/api/course/update
+ * 		- %server%/api/post/user/:uid
  * Descript:
- *      - Update a course
+ *      - Get ALL posts by UserID
  * Method:
- *      - POST
+ *      - GET
  * Params:
- *		_id: The course unique object id
- *		label: Shorthand name, ex. "COMP 4770"
- *		name: Full name, ex. "Team Project"
- *		description: Description
- *		semester: Semester, ex. "winter"
- *		department: Department that the course belongs to, ex. "cs"
- *		location: Room number, ex. "EN 1051"
- *		year: Current year the course is offered
- *		cid: Creator id
- *		days: Array of strings of days the course is every week, ex. days["monday", "wednesday", "friday"]
- *		timeStart: (date)The course start date, ex. "Jan. 1"
- *		timeEnd: (date) The course end date, ex. "Apr. 12"
+ *      - uid: The user id
  * Returns:
  *      - JSON mongo result
  */
-var updateCourse = "/course/update";
-
+var findPostByUid = "/posts/:uid"; //GET
 /**
- * removeCourse
+ * addComment
  *
  * URL:
- * 		- %server%/api/course/delete
+ * 		- %server%/api/comment/add
  * Descript:
- *      - Remove a course
+ *      - Add a comment
  * Method:
  *      - POST
  * Params:
- *		_id: The course unique object id
+ *      pid: The post id to which the comment belongs to
+ *      authorid: The author's id
+ *      data: The comment data
  * Returns:
  *      - JSON mongo result
  */
-var deleteCourse = "/course/delete";
-
+var addComment = "/comment"; //POST
 /**
- * addCourseToUser
+ * updateComment
  *
  * URL:
- * 		- %server%/api/course/user/add
+ * 		- %server%/api/comment/update
  * Descript:
- *      - Add a course to a user
+ *      - Update a comment
+ * Method:
+ *      - PATCH
+ * Params:
+ *      data: The comment data/text
+ *      commentid: The comment id
+ * Returns:
+ *      - JSON mongo result
+ */
+var updateComment = "/comment"; //PATCH
+/**
+ * removeComment
+ *
+ * URL:
+ * 		- %server%/api/comment/remove
+ * Descript:
+ *      - Remove a comment
+ * Method:
+ *      - DELETE
+ * Params:
+ *      pid: The post id to which the comment belongs to
+ *      commentid: The comment id
+ * Returns:
+ *      - JSON mongo result
+ */
+var removeComment = "/comment"; //DELETE
+/**
+ * findCommentById
+ *
+ * URL:
+ * 		- %server%/api/comment/find/:uid
+ * Descript:
+ *      - Get comments by user id
+ * Method:
+ *      - GET
+ * Params:
+ *      - uid: The user id
+ * Returns:
+ *      - JSON array containing comment objects
+ */
+var findCommentById = "/comment/:uid"; //GET
+/**
+ * createGroup
+ *
+ * URL:
+ * 		- %server%/api/group/create
+ * Descript:
+ *      - Create a group
  * Method:
  *      - POST
  * Params:
- *		_id: The course unique object id
+ *      - uid: The user id that is creating the group
+ * 		- name: The group name
  * Returns:
- *      - JSON mongo result
+ *      - JSON group object after creation
  */
-var addCourseToUser = "/course/user/add";
-
+var createGroup = "/group"; //POST
 /**
- * delCourseFromUser
+ * delGroup
  *
  * URL:
- * 		- %server%/api/course/user/del
+ * 		- %server%/api/group/remove/:gid
  * Descript:
- *      - Delete a course from a user
+ *      - Delete a group
+ * Method:
+ *      - DELETE
+ * Params:
+ *      - gid: The group id to be deleted
+ * Returns:
+ *      - JSON group object after deletion
+ */
+var delGroup = "/group/:gid"; //DELETE
+/**
+ * updateGroup
+ *
+ * URL:
+ * 		- %server%/api/group/update
+ * Descript:
+ *      - Update a group
+ * Method:
+ *      - PATCH
+ * Params:
+ *      - gid: The group id to be updated
+ * 		- name: The group name
+ * 		- descrip: The group description
+ * Returns:
+ *      - JSON group object after update
+ */
+var updateGroup = "/group"; //PATCH
+/**
+ * findGroups
+ *
+ * URL:
+ * 		- %server%/api/user/groups/
+ * Descript:
+ *      - Search groups by query
+ * Method:
+ *      - GET
+ * Params:
+ *      - _id: The group object unique id
+ * 		- name: The group name
+ * 		- creatorid: The group creator's id
+ * 		- ownerid: The owners id
+ * 		- created: The creation date
+ * Returns:
+ *      - JSON array containing group objects
+ */
+var findGroups = "/group"; //GET
+/**
+ * findGroupById
+ *
+ * URL:
+ * 		- %server%/api/group/info/:gid
+ * Descript:
+ *      - Gets group from a group id
+ * Method:
+ *      - GET
+ * Params:
+ *      - gid: The group id
+ * Returns:
+ *      - JSON group object
+ */
+var findGroupById = "/group/:gid"; //GET
+/**
+ * findGroupsUsers
+ *
+ * URL:
+ * 		- %server%/api/group/users/:gid
+ * Descript:
+ *      - Gets all users in a group
+ * Method:
+ *      - GET
+ * Params:
+ *      - gid: The group id to get users from
+ * Returns:
+ *      - JSON array containing user objects
+ */
+var findGroupUsers = "/groups/users/:gid"; //GET
+/**
+ * findGroupSent
+ *
+ * URL:
+ * 		- %server%/api/user/group/sent/:uid
+ * Descript:
+ *      - Gets the group requests sent from a user
+ * Method:
+ *      - GET
+ * Params:
+ *      - uid: The user id to get requests sent from
+ * Returns:
+ *      - JSON array containing group request objects
+ */
+var findGroupSent = "/groups/sent/:uid"; //GET
+/**
+ * findGroupReceived
+ *
+ * URL:
+ * 		- %server%/api/user/group/received/:gid
+ * Descript:
+ *      - Gets the group requests recieved for a group
+ * Method:
+ *      - GET
+ * Params:
+ *      - gid: The group id to get requests recieved from
+ * Returns:
+ *      - JSON array containing group request objects
+ */
+var findGroupReceived = "/groups/received/:gid"; //GET
+/**
+ * findUserGroups
+ *
+ * URL:
+ * 		- %server%/api/groups/find/:uid
+ * Descript:
+ *      - Get groups that the user is in
+ * Method:
+ *      - GET
+ * Params:
+ *      - uid: The first user id
+ * Returns:
+ *      - JSON array containing group ids
+ */
+var findGroupsByUID = "/groups/user/:uid"; //GET
+/**
+ * findGroupRequests
+ *
+ * URL:
+ * 		- %server%/api/groups/find/requests/:gid
+ * Descript:
+ *      - Get group requests for a group
+ * Method:
+ *      - GET
+ * Params:
+ *      - gid: The group id
+ * Returns:
+ *      - JSON array containing group requests
+ */
+var findGroupRequests = "/groups/requests/:gid"; //GET
+/**
+ * addGroupUser
+ *
+ * URL:
+ * 		- %server%/api/group/add/user
+ * Descript:
+ *      - Add a user to a group
  * Method:
  *      - POST
  * Params:
- *		_id: The course unique object id
+ *      - gid: The group id
+ * 		- uid: The user id to be added
  * Returns:
- *      - JSON mongo result
+ *      - JSON group users object after creation
  */
-var delCourseFromUser = "/course/user/del";
-
+var addGroupUser = "/groups/user"; //POST
 /**
- * addCourseToGroup
+ * delGroupUser
  *
  * URL:
- * 		- %server%/api/course/group/add
+ * 		- %server%/api/group/remove/user
  * Descript:
- *      - Add a course to a Group
+ *      - Delete a user from a group
  * Method:
- *      - POST
+ *      - DELETE
  * Params:
- *		_id: The groups unique object id
- 		cid: The course unique object id
+ *      - gid: The group id
+ * 		- uid: The user id to be deleted
  * Returns:
- *      - JSON mongo result
+ *      - JSON group users object after deletion
  */
-var addCourseToGroup = "/course/group/add";
-
+var delGroupUser = "/groups/user"; //DELETE
 /**
- * delCourseFromGroup
+ * findGroupsAdmins
  *
  * URL:
- * 		- %server%/api/course/group/del
+ * 		- %server%/api/group/admins/:gid
  * Descript:
- *      - Delete a course from a Group
+ *      - Gets all admins in a group
  * Method:
- *      - POST
+ *      - GET
  * Params:
- *		_id: The course unique object id
+ *      - gid: The group id to get admins from
  * Returns:
- *      - JSON mongo result
+ *      - JSON array containing user objects
  */
-var delCourseFromGroup = "/course/group/del";
-
-/**
- * addLost
- *
- * URL:
- * 		- %server%/api/lost/add
- * Descript:
- *      - Add a Lost
- * Method:
- *      - POST
- * Params:
- *		imagePath: The path to an image if supplied
- *		description: Description
- *		long: Longitude
- *		lat: Latitude
- * Returns:
- *      - JSON mongo result
- */
-var addLost = "/lost/add";
-
-/**
- * updateLost
- *
- * URL:
- * 		- %server%/api/lost/update
- * Descript:
- *      - Update a Lost
- * Method:
- *      - POST
- * Params:
- *		_id: The lost unique object id
- *		imagePath: The path to an image if supplied
- *		description: Description
- *		long: Longitude
- *		lat: Latitude
- * Returns:
- *      - JSON mongo result
- */
-var updateLost = "/lost/update";
-
-/**
- * removeLost
- *
- * URL:
- * 		- %server%/api/lost/remove
- * Descript:
- *      - Remove a Lost
- * Method:
- *      - POST
- * Params:
- *		_id: The Lost unique object id
- * Returns:
- *      - JSON mongo result
- */
-var removeLost = "/lost/remove";
-
+var findGroupAdmins = "/groups/admin/:gid"; //GET
 /**
  * addGroupAdmin
  *
@@ -896,8 +926,7 @@ var removeLost = "/lost/remove";
  * Returns:
  *      - JSON mongo result
  */
-var addGroupAdmin = "/group/add/admin";
-
+var addGroupAdmin = "/groups/admins"; //POST
 /**
  * removeGroupAdmin
  *
@@ -906,66 +935,45 @@ var addGroupAdmin = "/group/add/admin";
  * Descript:
  *      - Remove an admin
  * Method:
- *      - POST
+ *      - DELETE
  * Params:
  *		_id: The admin unique object id
  * Returns:
  *      - JSON mongo result
  */
-var removeGroupAdmin = "/group/remove/admin";
-
+var removeGroupAdmin = "/groups/admins"; //DELETE
 /**
- * addComment
+ * acceptGroupReq
  *
  * URL:
- * 		- %server%/api/comment/add
+ * 		- %server%/api/groups/accept/request
  * Descript:
- *      - Add a comment
+ *      - Accept a group request
  * Method:
  *      - POST
  * Params:
- *      pid: The post id to which the comment belongs to
- *      authorid: The author's id
- *      data: The comment data
+ *      - uid: The user id
+ * 		- gid: The group id
  * Returns:
- *      - JSON mongo result
+ *      - JSON group request object
  */
-var addComment = "/comment/add";
-
+var acceptGroupReq = "/groups/request/accept"; //POST
 /**
- * updateComment
+ * denyGroupReq
  *
  * URL:
- * 		- %server%/api/comment/update
+ * 		- %server%/api/groups/deny/request
  * Descript:
- *      - Update a comment
+ *      - Delete a group request
  * Method:
  *      - POST
  * Params:
- *      data: The comment data/text
- *      commentid: The comment id
+ *      - uid: The user id
+ * 		- gid: The group id
  * Returns:
- *      - JSON mongo result
+ *      - JSON friend request object after deletion
  */
-var updateComment = "/comment/update";
-
-/**
- * removeComment
- *
- * URL:
- * 		- %server%/api/comment/remove
- * Descript:
- *      - Remove a comment
- * Method:
- *      - POST
- * Params:
- *      pid: The post id to which the comment belongs to
- *      commentid: The comment id
- * Returns:
- *      - JSON mongo result
- */
-var removeComment = "/comment/remove";
-
+var denyGroupReq = "/groups/request/deny"; //POST
 /**
  * sendGroupRequest
  *
@@ -981,8 +989,7 @@ var removeComment = "/comment/remove";
  * Returns:
  *      - JSON mongo result
  */
-var sendGroupRequest = "/user/group/request/add";
-
+var sendGroupRequest = "/groups/request"; //POST
 /**
  * removeGroupRequest
  *
@@ -991,51 +998,17 @@ var sendGroupRequest = "/user/group/request/add";
  * Descript:
  *      - Remove a group request
  * Method:
- *      - POST
+ *      - DELETE
  * Params:
  *      uid: The user id
  *      groupName: The group name to remove teh request from
  * Returns:
  *      - JSON mongo result
  */
-var removeGroupRequest = "/user/group/request/remove";
+var removeGroupRequest = "/groups/request"; //DELETE
 
-/**
- * sendFriendRequest
- *
- * URL:
- * 		- %server%/api/user/friend/request/add
- * Descript:
- *      - Add a friend request
- * Method:
- *      - POST
- * Params:
- *      uid: The user id
- *      fid: The friend id
- * Returns:
- *      - JSON mongo result
- */
-var sendFriendRequest = "/user/friend/sent/add";
-
-/**
- * removeFriendRequest
- *
- * URL:
- * 		- %server%/api/friends/remove/request
- * Descript:
- *      - Remove a friend request
- * Method:
- *      - POST
- * Params:
- *      uid: The user id
- *      fid: The friend id
- * Returns:
- *      - JSON mongo result
- */
-var removeFriendRequest = "/friends/remove/request";
 
 //==========================================================================================
-
 router.get(findUserById, UserID, function (req, res, next) {
 	DB.Users.findById(req, res, function (result) {
 		res.json(result);
@@ -1051,7 +1024,7 @@ router.get(findUser, UserID, function (req, res, next) {
 /**
  * ??
  */
-router.post(updateUser, UserID, function (req, res, next) {
+router.patch(updateUser, UserID, function (req, res, next) {
 	DB.Users.update(req, res, function (result) {
 		res.json(result);
 	});
@@ -1059,7 +1032,7 @@ router.post(updateUser, UserID, function (req, res, next) {
 
 //POST remove the user
 
-router.post(deleteUser, UserID, function (req, res, next) {
+router.delete(deleteUser, UserID, function (req, res, next) {
 	DB.Users.remove(req, res, function (result) {
 		res.json(result);
 	});
@@ -1082,7 +1055,11 @@ router.post(loginUser, UserID, function (req, res, next) {
 		res.json(result);
 	});
 });
-
+router.get('/logout', function (req, res, next) {
+	DB.Users.logout(req, res, function (result) {
+		res.redirect('../');
+	});
+});
 //GET list of friends from userId
 router.get(findFriendsById, UserID, function (req, res, next) {
 	DB.Friends.find(req, res, function (result) {
@@ -1124,7 +1101,7 @@ router.post(denyFriendReq, UserID, function (req, res, next) {
 	});
 });
 
-router.post(delFriend, UserID, function (req, res, next) {
+router.delete(delFriend, UserID, function (req, res, next) {
 	DB.Friends.remove(req, res, function (result) {
 		res.json(result);
 	});
@@ -1138,15 +1115,8 @@ router.post(createGroup, UserID, function (req, res, next) {
 });
 
 //Remove a group
-router.post(delGroup, UserID, function (req, res, next) {
+router.delete(delGroup, UserID, function (req, res, next) {
 	DB.Groups.remove(req, res, function (result) {
-		res.json(result);
-	});
-});
-
-//find groups by userid
-router.get(findGroupsByUID, UserID, function (req, res, next) {
-	DB.Groups.findByUserId(req, res, function (result) {
 		res.json(result);
 	});
 });
@@ -1159,7 +1129,7 @@ router.get(findGroups, UserID, function (req, res, next) {
 });
 
 //Update a group
-router.post(updateGroup, UserID, function (req, res, next) {
+router.patch(updateGroup, UserID, function (req, res, next) {
 	DB.Groups.update(req, res, function (result) {
 		res.json(result);
 	});
@@ -1173,7 +1143,7 @@ router.post(addGroupUser, UserID, function (req, res, next) {
 });
 
 //Remove member from group
-router.post(delGroupUser, UserID, function (req, res, next) {
+router.delete(delGroupUser, UserID, function (req, res, next) {
 	DB.GroupMembers.remove(req, res, function (result) {
 		res.json(result);
 	});
@@ -1210,14 +1180,14 @@ router.post(addGroupPost, UserID, function (req, res, next) {
 });
 
 //Remove post
-router.post(delPost, UserID, function (req, res, next) {
+router.delete(delPost, UserID, function (req, res, next) {
 	DB.Posts.remove(req, res, function (result) {
 		res.json(result);
 	});
 });
 
 //Update post
-router.post(updatePost, UserID, function (req, res, next) {
+router.patch(updatePost, UserID, function (req, res, next) {
 	DB.Posts.update(req, res, function (result) {
 		res.json(result);
 	});
@@ -1258,49 +1228,49 @@ router.post(createCourse, UserID, function (req, res, next) {
 	});
 });
 
-router.post(deleteCourse, UserID, function (req, res, next) {
+router.delete(deleteCourse, UserID, function (req, res, next) {
 	DB.Courses.delete(req, res, function (result) {
 		res.json(result);
 	});
 });
 
-router.post(updateCourse, UserID, function (req, res, next) {
+router.patch(updateCourse, UserID, function (req, res, next) {
 	DB.Courses.update(req, res, function (result) {
 		res.json(result);
 	});
 });
 
-router.post(addCourseToUser, UserID, function (req, res, next) {
+router.put(addCourseToUser, UserID, function (req, res, next) {
 	DB.Courses.addToUser(req, res, function (result) {
 		res.json(result);
 	});
 });
 
-router.post(delCourseFromUser, UserID, function (req, res, next) {
+router.delete(delCourseFromUser, UserID, function (req, res, next) {
 	DB.Courses.removeFromUser(req, res, function (result) {
 		res.json(result);
 	});
 });
 
-router.post(addCourseToGroup, UserID, function (req, res, next) {
+router.put(addCourseToGroup, UserID, function (req, res, next) {
 	DB.Courses.addToGroup(req, res, function (result) {
 		res.json(result);
 	});
 });
 
-router.post(delCourseFromGroup, UserID, function (req, res, next) {
+router.delete(delCourseFromGroup, UserID, function (req, res, next) {
 	DB.Courses.removeFromGroup(req, res, function (result) {
 		res.json(result);
 	});
 });
 
-router.get(findLostById, UserID, function (req, res, next) {
+router.get(findLostFoundById, UserID, function (req, res, next) {
 	DB.LostFound.findById(req, res, function (result) {
 		res.json(result);
 	});
 });
 
-router.get(findLost, UserID, function (req, res, next) {
+router.get(findLostFound, UserID, function (req, res, next) {
 	DB.LostFound.find(req, res, function (result) {
 		res.json(result);
 	});
@@ -1312,13 +1282,13 @@ router.post(addLost, UserID, function (req, res, next) {
 	});
 });
 
-router.post(removeLost, UserID, function (req, res, next) {
+router.delete(removeLost, UserID, function (req, res, next) {
 	DB.LostFound.remove(req, res, function (result) {
 		res.json(result);
 	});
 });
 
-router.post(updateLost, UserID, function (req, res, next) {
+router.patch(updateLost, UserID, function (req, res, next) {
 	DB.LostFound.update(req, res, function (result) {
 		res.json(result);
 	});
@@ -1336,7 +1306,7 @@ router.post(addGroupAdmin, UserID, function (req, res, next) {
 	});
 });
 
-router.post(removeGroupAdmin, UserID, function (req, res, next) {
+router.delete(removeGroupAdmin, UserID, function (req, res, next) {
 	DB.GroupAdmins.remove(req, res, function (result) {
 		res.json(result);
 	});
@@ -1354,13 +1324,13 @@ router.post(addComment, UserID, function (req, res, next) {
 	});
 });
 
-router.post(removeComment, UserID, function (req, res, next) {
+router.delete(removeComment, UserID, function (req, res, next) {
 	DB.Comments.removeById(req, res, function (result) {
 		res.json(result);
 	});
 });
 
-router.post(updateComment, UserID, function (req, res, next) {
+router.patch(updateComment, UserID, function (req, res, next) {
 	DB.Comments.update(req, res, function (result) {
 		res.json(result);
 	});
@@ -1381,13 +1351,32 @@ router.get(findGroupReceived, UserID, function (req, res, next) {
 });
 
 router.post(sendGroupRequest, UserID, function (req, res, next) {
-	DB.Groups.addRequest(req, res, function (result) {
+	DB.Groups.sendRequest(req, res, function (result) {
 		res.json(result);
 	});
 });
 
-router.post(removeGroupRequest, UserID, function (req, res, next) {
+router.delete(removeGroupRequest, UserID, function (req, res, next) {
 	DB.Groups.removeRequest(req, res, function (result) {
+		res.json(result);
+	});
+});
+
+router.post(acceptGroupReq, UserID, function (req, res, next) {
+	DB.Groups.acceptGroupReq(req, res, function (result) {
+		res.json(result);
+	});
+});
+
+//Removes friend request
+router.post(denyGroupReq, UserID, function (req, res, next) {
+	DB.Groups.denyGroupReq(req, res, function (result) {
+		res.json(result);
+	});
+});
+
+router.get(findGroupRequests, UserID, function (req, res, next) {
+	DB.Groups.findRequests(req, res, function (result) {
 		res.json(result);
 	});
 });
@@ -1398,7 +1387,7 @@ router.post(addFriend, UserID, function (req, res, next) {
 	});
 });
 
-router.post(removeFriendRequest, UserID, function (req, res, next) {
+router.delete(removeFriendRequest, UserID, function (req, res, next) {
 	DB.Friends.removeRequest(req, res, function (result) {
 		res.json(result);
 	});
@@ -1410,8 +1399,8 @@ router.get(loadMessages, UserID, function (req, res, next) {
 	});
 });
 
-router.get(findUserGroups, UserID, function (req, res, next) {
-	DB.Groups.findUserGroups(req, res, function (result) {
+router.get(findGroupsByUID, UserID, function (req, res, next) {
+	DB.Groups.findByUserID(req, res, function (result) {
 		res.json(result);
 	});
 });
