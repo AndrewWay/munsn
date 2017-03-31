@@ -34,11 +34,11 @@ module.exports = function (DBCourses, collectionCourses, collectionUserCourses, 
 	};
 
 	//Find a course by unique course id
-	DBCourses.findById = function (req, res, callback) {
-		console.log("[DBCourses] FindById", "'" + req.params.id + "'");
-		if (req.params.id) {
-			collectionCourses.findOne({
-				_id: new ObjectID(req.params.id)
+	DBCourses.findByUserID = function (req, res, callback) {
+		console.log("[DBCourses] FindByUserID", "'" + req.UserID + "'");
+		if (req.UserID) {
+			collectionUserCourses.findOne({
+				_id: req.UserID
 			}, function (err, result) {
 				if (err) {
 					console.log("[DBCourses]", err.message);
