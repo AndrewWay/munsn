@@ -4,31 +4,7 @@ module.exports = function (DBPosts, collectionPosts) {
 	//Add a post
 	DBPosts.add = function (req, res, callback) {
 		var date = new Date();
-		var row = {
-			authorid: req.body.authorid,
-			visibility: req.body.visibility,
-			list: [],
-			origin: req.body.origin,
-			created: date,
-			modified: date,
-			dataType: req.body.dataType,
-			data: req.body.data
-		};
-		console.log("[DBPosts] Add", "'" + row.authorid + "'->'{id:'" + row.origin.id + "',type:'" + row.origin.type + "'}'");
-		collectionPosts.insert(row, function (err, result) {
-			if (err) {
-				console.error("[DBPosts] Add: " + err.message);
-				callback({
-					session: req.session,
-					status: 'fail'
-				});
-			} else {
-				callback({
-					session: req.session,
-					status: 'ok'
-				});
-			}
-		});
+        
 	};
 
 	//Remove a post by id

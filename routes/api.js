@@ -1162,6 +1162,7 @@ router.get(findGroupUsers, UserID, function (req, res, next) {
 		res.json(result);
 	});
 });
+
 router.post(addTimelinePost, UserID, function (req, res, next) {
 	//Set type before pass to db
 	req.body.origin = {
@@ -1172,6 +1173,7 @@ router.post(addTimelinePost, UserID, function (req, res, next) {
 		res.json(result);
 	});
 });
+
 router.post(addGroupPost, UserID, function (req, res, next) {
 	//Set type before pass to db
 	req.body.origin = {
