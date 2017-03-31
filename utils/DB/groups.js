@@ -300,16 +300,11 @@ module.exports = function (DBGroups, collectionGroups, collectionGroupMembers, c
 		}
 	};
 
-	//Remove friend request
+	//Remove group request
 	DBGroups.removeRequest = function (req, res, callback) {
-		//Declare body variables
-		var query = {
-			userid: req.body.uid,
-			friendid: req.body.gid
-		};
-		console.log("[DBGroups] RemoveRequest", "'" + (query.userid ? query.userid : "*") + "'->'" + (query.friendid ? query.friendid : "*") + "'");
-		if (Object.keys(query).length === 2) {
-			collectionGroupRequests.remove(query, function (err, result) {
+		console.log("[DBGroups] RemoveRequest", "'" + (req.body.uid ? req.body.uid : "*") + "'->'" + (req.body.gid ? req.body.gid : "*") + "'");
+		if (req.body.uid && req.body.gid) {
+			collectionGroupRequests.findAndModify({_id: new ObjectID(req.body.gid)}, [['_id', 'ascending']], {$pull: {requests: req.body.uid}}, {new: true, upsert: true}, function (err, result) {
 				if (err) {
 					console.error("[DBGroups] RemoveRequest", err.message);
 					callback({
