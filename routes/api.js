@@ -4,9 +4,23 @@ var DB = require("../utils/db");
 var EMS = require("../utils/ems");
 var utils = require("../utils/utils");
 var UserID = require("../middleware/functions").UserID;
-
 /**
- * findUserById
+ * session
+ *
+ * URL:
+ * 		- %server%/api/session
+ * Descript:
+ *      - Gets the current session for this instance
+ * Method:
+ *      - GET
+ * Params:
+ *      - NONE
+ * Returns:
+ *      - JSON session object
+ */
+var session = "/session";
+/**
+ * findUserByUID
  *
  * URL:
  * 		- %server%/api/user/:uid
@@ -19,7 +33,7 @@ var UserID = require("../middleware/functions").UserID;
  * Returns:
  *      - JSON user object
  */
-var findUserById = "/user/:uid"; //GET
+var findUserByUID = "/user/:uid"; //GET
 /**
  * findUser
  *
@@ -460,9 +474,9 @@ var findCourseById = "/course/:id"; //GET
  * Returns:
  *      - JSON course object array
  */
-var findCourse = "/course/"; //GET
+var findCourse = "/course"; //GET
 /**
- * addLost
+ * addLostFound
  *
  * URL:
  * 		- %server%/api/lost/add
@@ -478,9 +492,9 @@ var findCourse = "/course/"; //GET
  * Returns:
  *      - JSON mongo result
  */
-var addLost = "/lostfound"; //POST
+var addLostFound = "/lostfound"; //POST
 /**
- * updateLost
+ * updateLostFound
  *
  * URL:
  * 		- %server%/api/lost/update
@@ -497,9 +511,9 @@ var addLost = "/lostfound"; //POST
  * Returns:
  *      - JSON mongo result
  */
-var updateLost = "/lostfound"; //PATCH
+var updateLostFound = "/lostfound"; //PATCH
 /**
- * removeLost
+ * removeLostFound
  *
  * URL:
  * 		- %server%/api/lost/remove
@@ -512,7 +526,7 @@ var updateLost = "/lostfound"; //PATCH
  * Returns:
  *      - JSON mongo result
  */
-var removeLost = "/lostfound"; //DELETE
+var removeLostFound = "/lostfound"; //DELETE
 /**
  * findLostById
  *
@@ -1009,154 +1023,116 @@ var removeGroupRequest = "/groups/request"; //DELETE
 
 
 //==========================================================================================
-router.get(findUserById, UserID, function (req, res, next) {
+router.get(session, function (req, res, next) {
+	res.json(req.session);
+});
+router.get(findUserByUID, UserID, function (req, res, next) {
 	DB.Users.findById(req, res, function (result) {
 		res.json(result);
 	});
 });
-
 router.get(findUser, UserID, function (req, res, next) {
 	DB.Users.find(req, res, function (result) {
 		res.json(result);
 	});
 });
-
-/**
- * ??
- */
 router.patch(updateUser, UserID, function (req, res, next) {
 	DB.Users.update(req, res, function (result) {
 		res.json(result);
 	});
 });
-
-//POST remove the user
-
 router.delete(deleteUser, UserID, function (req, res, next) {
 	DB.Users.remove(req, res, function (result) {
 		res.json(result);
 	});
 });
-
-//POST register the user
-/**
- * Register the user by HTMLForm.
- */
 router.post(registerUser, UserID, function (req, res, next) {
 	//Insert user with false auth into colUsers
 	DB.Users.add(req, res, function (result) {
 		res.json(result);
 	});
 });
-
-//POST login user
 router.post(loginUser, UserID, function (req, res, next) {
 	DB.Users.login(req, res, function (result) {
 		res.json(result);
 	});
 });
-router.get('/logout', function (req, res, next) {
+router.get(logoutUser, function (req, res, next) {
 	DB.Users.logout(req, res, function (result) {
 		res.redirect('../');
 	});
 });
-//GET list of friends from userId
 router.get(findFriendsById, UserID, function (req, res, next) {
 	DB.Friends.find(req, res, function (result) {
 		res.json(result);
 	});
 
 });
-
 router.post(addFriendReq, UserID, function (req, res, next) {
 	DB.Friends.addRequest(req, res, function (result) {
 		res.json(result);
 	});
 });
-
-//GET get friend requests for a specified user
 router.get(findFriendSent, UserID, function (req, res, next) {
 	DB.Friends.findRequests(req, res, function (result) {
 		res.json(result);
 	});
 });
-
-//GET get recieved friend requests for a specified user
 router.get(findFriendReceived, UserID, function (req, res, next) {
 	DB.Friends.findRequests(req, res, function (result) {
 		res.json(result);
 	});
 });
-
 router.post(acceptFriendReq, UserID, function (req, res, next) {
 	DB.Friends.acceptFriendReq(req, res, function (result) {
 		res.json(result);
 	});
 });
-
-//Removes friend request
 router.post(denyFriendReq, UserID, function (req, res, next) {
 	DB.Friends.denyFriendReq(req, res, function (result) {
 		res.json(result);
 	});
 });
-
 router.delete(delFriend, UserID, function (req, res, next) {
 	DB.Friends.remove(req, res, function (result) {
 		res.json(result);
 	});
 });
-
-//Create a group
 router.post(createGroup, UserID, function (req, res, next) {
 	DB.Groups.add(req, res, function (result) {
 		res.json(result);
 	});
 });
-
-//Remove a group
 router.delete(delGroup, UserID, function (req, res, next) {
 	DB.Groups.remove(req, res, function (result) {
 		res.json(result);
 	});
 });
-
-//find groups by userid
 router.get(findGroups, UserID, function (req, res, next) {
 	DB.Groups.find(req, res, function (result) {
 		res.json(result);
 	});
 });
-
-//Update a group
 router.patch(updateGroup, UserID, function (req, res, next) {
 	DB.Groups.update(req, res, function (result) {
 		res.json(result);
 	});
 });
-
-//Add member to group
 router.post(addGroupUser, UserID, function (req, res, next) {
 	DB.Groups.add(req, res, function (result) {
 		res.json(result);
 	});
 });
-
-//Remove member from group
 router.delete(delGroupUser, UserID, function (req, res, next) {
 	DB.GroupMembers.remove(req, res, function (result) {
 		res.json(result);
 	});
 });
-
-//Find members for group
 router.get(findGroupUsers, UserID, function (req, res, next) {
 	DB.GroupMembers.find(req, res, function (result) {
 		res.json(result);
 	});
 });
-
-//Add timeline post
 router.post(addTimelinePost, UserID, function (req, res, next) {
 	//Set type before pass to db
 	req.body.origin = {
@@ -1167,7 +1143,6 @@ router.post(addTimelinePost, UserID, function (req, res, next) {
 		res.json(result);
 	});
 });
-//Add group post
 router.post(addGroupPost, UserID, function (req, res, next) {
 	//Set type before pass to db
 	req.body.origin = {
@@ -1178,21 +1153,16 @@ router.post(addGroupPost, UserID, function (req, res, next) {
 		res.json(result);
 	});
 });
-
-//Remove post
 router.delete(delPost, UserID, function (req, res, next) {
 	DB.Posts.remove(req, res, function (result) {
 		res.json(result);
 	});
 });
-
-//Update post
 router.patch(updatePost, UserID, function (req, res, next) {
 	DB.Posts.update(req, res, function (result) {
 		res.json(result);
 	});
 });
-
 router.get(findPostByUid, UserID, function (req, res, next) {
 	DB.Posts.findByUserId(req, res, function (result) {
 		res.json(result);
@@ -1203,202 +1173,166 @@ router.get(findPostByPid, UserID, function (req, res, next) {
 		res.json(result);
 	});
 });
-
 router.get(suggestFriends, UserID, function (req, res, next) {
 	DB.Friends.suggest(req, res, function (result) {
 		res.json(result);
 	});
 });
-
 router.get(findCourseById, UserID, function (req, res, next) {
 	DB.Courses.findById(req, res, function (result) {
 		res.json(result);
 	});
 });
-
 router.get(findCourse, UserID, function (req, res, next) {
 	DB.Courses.find(req, res, function (result) {
 		res.json(result);
 	});
 });
-
 router.post(createCourse, UserID, function (req, res, next) {
 	DB.Courses.createCourse(req, res, function (result) {
 		res.json(result);
 	});
 });
-
 router.delete(deleteCourse, UserID, function (req, res, next) {
 	DB.Courses.delete(req, res, function (result) {
 		res.json(result);
 	});
 });
-
 router.patch(updateCourse, UserID, function (req, res, next) {
 	DB.Courses.update(req, res, function (result) {
 		res.json(result);
 	});
 });
-
 router.put(addCourseToUser, UserID, function (req, res, next) {
 	DB.Courses.addToUser(req, res, function (result) {
 		res.json(result);
 	});
 });
-
 router.delete(delCourseFromUser, UserID, function (req, res, next) {
 	DB.Courses.removeFromUser(req, res, function (result) {
 		res.json(result);
 	});
 });
-
 router.put(addCourseToGroup, UserID, function (req, res, next) {
 	DB.Courses.addToGroup(req, res, function (result) {
 		res.json(result);
 	});
 });
-
 router.delete(delCourseFromGroup, UserID, function (req, res, next) {
 	DB.Courses.removeFromGroup(req, res, function (result) {
 		res.json(result);
 	});
 });
-
 router.get(findLostFoundById, UserID, function (req, res, next) {
 	DB.LostFound.findById(req, res, function (result) {
 		res.json(result);
 	});
 });
-
 router.get(findLostFound, UserID, function (req, res, next) {
 	DB.LostFound.find(req, res, function (result) {
 		res.json(result);
 	});
 });
-
-router.post(addLost, UserID, function (req, res, next) {
+router.post(addLostFound, UserID, function (req, res, next) {
 	DB.LostFound.add(req, res, function (result) {
 		res.json(result);
 	});
 });
-
-router.delete(removeLost, UserID, function (req, res, next) {
+router.delete(removeLostFound, UserID, function (req, res, next) {
 	DB.LostFound.remove(req, res, function (result) {
 		res.json(result);
 	});
 });
-
-router.patch(updateLost, UserID, function (req, res, next) {
+router.patch(updateLostFound, UserID, function (req, res, next) {
 	DB.LostFound.update(req, res, function (result) {
 		res.json(result);
 	});
 });
-
 router.get(findGroupAdmins, UserID, function (req, res, next) {
 	DB.GroupAdmins.find(req, res, function (result) {
 		res.json(result);
 	});
 });
-
 router.post(addGroupAdmin, UserID, function (req, res, next) {
 	DB.GroupAdmins.add(req, res, function (result) {
 		res.json(result);
 	});
 });
-
 router.delete(removeGroupAdmin, UserID, function (req, res, next) {
 	DB.GroupAdmins.remove(req, res, function (result) {
 		res.json(result);
 	});
 });
-
 router.get(findCommentById, UserID, function (req, res, next) {
 	DB.Comments.findByPostId(req, res, function (result) {
 		res.json(result);
 	});
 });
-
 router.post(addComment, UserID, function (req, res, next) {
 	DB.Comments.add(req, res, function (result) {
 		res.json(result);
 	});
 });
-
 router.delete(removeComment, UserID, function (req, res, next) {
 	DB.Comments.removeById(req, res, function (result) {
 		res.json(result);
 	});
 });
-
 router.patch(updateComment, UserID, function (req, res, next) {
 	DB.Comments.update(req, res, function (result) {
 		res.json(result);
 	});
 });
-
-//GET get friend requests for a specified user
 router.get(findGroupSent, UserID, function (req, res, next) {
 	DB.Groups.findRequests(req, res, function (result) {
 		res.json(result);
 	});
 });
-
-//GET get recieved friend requests for a specified user
 router.get(findGroupReceived, UserID, function (req, res, next) {
 	DB.Groups.findRequest(req, res, function (result) {
 		res.json(result);
 	});
 });
-
 router.post(sendGroupRequest, UserID, function (req, res, next) {
 	DB.Groups.sendRequest(req, res, function (result) {
 		res.json(result);
 	});
 });
-
 router.delete(removeGroupRequest, UserID, function (req, res, next) {
 	DB.Groups.removeRequest(req, res, function (result) {
 		res.json(result);
 	});
 });
-
 router.post(acceptGroupReq, UserID, function (req, res, next) {
 	DB.Groups.acceptGroupReq(req, res, function (result) {
 		res.json(result);
 	});
 });
-
-//Removes friend request
 router.post(denyGroupReq, UserID, function (req, res, next) {
 	DB.Groups.denyGroupReq(req, res, function (result) {
 		res.json(result);
 	});
 });
-
 router.get(findGroupRequests, UserID, function (req, res, next) {
 	DB.Groups.findRequests(req, res, function (result) {
 		res.json(result);
 	});
 });
-
 router.post(addFriend, UserID, function (req, res, next) {
 	DB.Friends.add(req, res, function (result) {
 		res.json(result);
 	});
 });
-
 router.delete(removeFriendRequest, UserID, function (req, res, next) {
 	DB.Friends.removeRequest(req, res, function (result) {
 		res.json(result);
 	});
 });
-
 router.get(loadMessages, UserID, function (req, res, next) {
 	DB.Socket.loadMessages(req, res, function (result) {
 		res.json(result);
 	});
 });
-
 router.get(findGroupsByUID, UserID, function (req, res, next) {
 	DB.Groups.findByUserID(req, res, function (result) {
 		res.json(result);
