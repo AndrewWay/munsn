@@ -1164,7 +1164,7 @@ router.get(findGroupUsers, UserID, function (req, res, next) {
 });
 
 router.post(addTimelinePost, UserID, function (req, res, next) {
-	DB.Posts.add(req, res, UserID, function (result) {
+	DB.Posts.add(req, res, function (result) {
 		res.json(result);
 	});
 });

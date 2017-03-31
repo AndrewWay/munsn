@@ -5,13 +5,21 @@ module.exports = function (DBPosts, collectionPosts) {
 	DBPosts.add = function (req, res, callback) {
 		var date = new Date();
 		if (req.body.uid) {
+			/**
+			 * Keys in req.body.fields have the following data if exists
+			 *
+			 * Image: true/false
+			 * Text: string
+			 * location: object {x: decimal, y: decimal}
+			 * poll: object {options...}
+			 */
 			var post = {
-				uid: undefined,
-				//Either userids for users, or object ids for groups
-				timelineType: undefined,
-				//If timelineType is user, then the target timeline is the targets user id
-				timeline: undefined,
-				visibility: undefined,
+				uid: undefined, //The User who made this post
+				type: undefined, //The type of post this is
+				targetid: undefined, //The target of this post, Group, Timeline, undefined for lostfound
+				visibility: undefined, //public, friends, private
+				whitelist: undefined, //Override visibility, as a whitelist
+				comments: []
 			};
 			// Loop through body, if field is not found, then set null
 			Object.keys(post).forEach(k => {
@@ -23,18 +31,15 @@ module.exports = function (DBPosts, collectionPosts) {
 			});
 
 			//Push the postObject to post.history array
-			var postObject = req.body.postObject;
-			postObject.date = date;
-			post.history = [postObject];
-
+			post.history = [Object.assign({
+				date: date
+			}, req.body.fields)];
 			//Push allowed users to post.allowedUsers array if the visibility is specific
-			if (post.visibility === 'specific') {
-				post.allowedUsers = req.body.allowedUsers;
-			}
 
-			collectionPosts.insert(post, function(err, result) {
+			console.log("[DBPosts] Add->'" + post.type + "'", "'" + JSON.stringify(post) + "'");
+			collectionPosts.insert(post, function (err, result) {
 				if (err) {
-					console.error("[DBPosts] Add", err.message);
+					console.error("[DBPosts] Add->'" + post.type + "'", err.message);
 					callback({
 						session: req.session,
 						status: 'fail'
@@ -42,6 +47,7 @@ module.exports = function (DBPosts, collectionPosts) {
 				} else {
 					callback({
 						session: req.session,
+						data: post,
 						status: 'ok'
 					});
 				}

@@ -199,28 +199,31 @@ mongoClient.connect(dbURL, function (err, DB) {
 	DB.createCollection('posts', {
 		validator: {
 			$and: [{
-				uid: {
-					$type: 'string'
+					uid: {
+						$type: 'string'
+					}
+				},
+				{
+					type: {
+						$type: 'string'
+					}
+				},
+				{
+					targetid: {
+						$type: 'string'
+					}
+				},
+				{
+					visibility: {
+						$type: 'string'
+					}
+				}, {
+					"history.0": {
+						$exists: true
+					}
 				}
-			},
-			{
-				timelineType: {
-					$type: 'string'
-				}
-			},
-			{
-				timeline: {
-					$type: 'string'
-				}
-			},
-			{
-				visibility: {
-					$type: 'string'
-				}
-			}]
-		},
-		validationLevel: 'strict',
-		validationAction: 'error'
+			]
+		}
 	});
 
 	/**
@@ -298,11 +301,11 @@ mongoClient.connect(dbURL, function (err, DB) {
 						$type: 'string'
 					}
 				},
-                {
-                    gCal: {
-                        $type: 'object'
-                    }
-                }
+				{
+					gCal: {
+						$type: 'object'
+					}
+				}
 			]
 		}
 	});
