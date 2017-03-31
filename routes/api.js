@@ -435,7 +435,7 @@ var addCourseToGroup = "/course/group"; //PUT
  */
 var delCourseFromGroup = "/course/group"; //DELETE
 /**
- * findCourseById
+ * findCoursesByUID
  *
  * URL:
  * 		- %server%/api/course/:uid
@@ -448,7 +448,7 @@ var delCourseFromGroup = "/course/group"; //DELETE
  * Returns:
  *      - JSON course object
  */
-var findCoursesByUserID = "/course/:uid"; //GET
+var findCoursesByUID = "/course/:uid"; //GET
 /**
  * findCourse
  *
@@ -1195,7 +1195,7 @@ router.get(suggestFriends, UserID, function (req, res, next) {
 		res.json(result);
 	});
 });
-router.get(findCoursesByUserID, UserID, function (req, res, next) {
+router.get(findCoursesByUID, UserID, function (req, res, next) {
 	DB.Courses.findById(req, res, function (result) {
 		res.json(result);
 	});
