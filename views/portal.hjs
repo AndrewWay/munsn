@@ -34,7 +34,7 @@
 
 		<div class="buttons">
 			<a href="#"><img id="not" src="/img/notification-red.png"></a>
-			<a href="/logout"><img id="log" src="/img/logout.png"></a>
+			<a href="/api/logout"><img id="log" src="/img/logout.png"></a>
 			<a href="/settings"><img id="cog" src="/img/settings.png"></a>
 		</div>
 	</div>
