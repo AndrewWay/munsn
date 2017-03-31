@@ -801,21 +801,7 @@ var findGroups = "/group"; //GET
  *      - JSON group object
  */
 var findGroupById = "/group/:gid"; //GET
-/**
- * findGroupsUsers
- *
- * URL:
- * 		- %server%/api/group/users/:gid
- * Descript:
- *      - Gets all users in a group
- * Method:
- *      - GET
- * Params:
- *      - gid: The group id to get users from
- * Returns:
- *      - JSON array containing user objects
- */
-var findGroupUsers = "/groups/users/:gid"; //GET
+
 /**
  * findGroupSent
  *
@@ -908,7 +894,7 @@ var addGroupUser = "/groups/user"; //POST
  *      - JSON group users object after deletion
  */
 var delGroupUser = "/groups/user"; //DELETE
-//TODO: DEVIN, To fix updateGroupUser api comment
+
 /**
  * updateGroupUser
  *
@@ -920,7 +906,8 @@ var delGroupUser = "/groups/user"; //DELETE
  *      - PATCH
  * Params:
  *      - gid: The group id
- * 		- uid: The user id to be deleted
+ * 		- uid: The user id to be updated
+ *      - admin: true/dalse if user should be admin
  * Returns:
  *      - JSON group users object after deletion
  */
@@ -1038,6 +1025,23 @@ var sendGroupRequest = "/groups/request"; //POST
  */
 var removeGroupRequest = "/groups/request"; //DELETE
 
+/**
+ * findGroupUsers
+ *
+ * URL:
+ * 		- %server%/api/groups/members/:gid
+ * Descript:
+ *      - Remove a group request
+ * Method:
+ *      - GET
+ * Params:
+ *      uid: The user id
+ *      groupName: The group name to remove teh request from
+ * Returns:
+ *      - JSON mongo result
+ */
+var findGroupUsers = "/groups/members/:gid"; //GET
+
 
 //==========================================================================================
 router.get(session, function (req, res, next) {
@@ -1135,21 +1139,30 @@ router.patch(updateGroup, UserID, function (req, res, next) {
 		res.json(result);
 	});
 });
+
+router.patch(updateGroupUser, UserID, function (req, res, next) {
+	DB.Groups.updateMember(req, res, function (result) {
+		res.json(result);
+	});
+});
+
 router.post(addGroupUser, UserID, function (req, res, next) {
 	DB.Groups.add(req, res, function (result) {
 		res.json(result);
 	});
 });
 router.delete(delGroupUser, UserID, function (req, res, next) {
-	DB.GroupMembers.remove(req, res, function (result) {
+	DB.Groups.removeMember(req, res, function (result) {
 		res.json(result);
 	});
 });
+
 router.get(findGroupUsers, UserID, function (req, res, next) {
-	DB.GroupMembers.find(req, res, function (result) {
+	DB.Groups.findMembers(req, res, function (result) {
 		res.json(result);
 	});
 });
+
 router.post(addTimelinePost, UserID, function (req, res, next) {
 	//Set type before pass to db
 	req.body.origin = {
@@ -1160,6 +1173,7 @@ router.post(addTimelinePost, UserID, function (req, res, next) {
 		res.json(result);
 	});
 });
+
 router.post(addGroupPost, UserID, function (req, res, next) {
 	//Set type before pass to db
 	req.body.origin = {
