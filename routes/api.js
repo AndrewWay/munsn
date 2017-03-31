@@ -9,7 +9,7 @@ var UserID = require("../middleware/functions").UserID;
  * findUserById
  *
  * URL:
- * 		- %server%/api/user/info/:uid
+ * 		- %server%/api/user/:uid
  * Descript:
  *      - Gets the user object from the database if they exist
  * Method:
@@ -24,7 +24,7 @@ var findUserById = "/user/:uid"; //GET
  * findUser
  *
  * URL:
- * 		- %server%/api/user/info/
+ * 		- %server%/api/user
  * Descript:
  *      - Gets the user object with a query
  * Method:
@@ -39,7 +39,7 @@ var findUser = "/user"; //GET
  * updateUser
  *
  * URL:
- * 		- %server%/api/user/update/:uid
+ * 		- %server%/api/user/:uid
  * Descript:
  *      - Updates an user's fields
  * Method:
@@ -56,7 +56,7 @@ var updateUser = "/user/:uid"; //PATCH
  * deleteUser
  *
  * URL:
- * 		- %server%/api/user/remove/:uid
+ * 		- %server%/api/user/:uid
  * Descript:
  *      - Deletes a user from the server
  * Method:
@@ -71,7 +71,7 @@ var deleteUser = "/user/:uid"; //DELETE
  * registerUser
  *
  * URL:
- * 		- %server%/api/user/register
+ * 		- %server%/api/register
  * Descript:
  *      - Registers a user
  * Method:
@@ -139,7 +139,7 @@ var loadMessages = "/messages/load"; //GET
  * addFriend
  *
  * URL:
- * 		- %server%/api/friends/add/friend
+ * 		- %server%/api/friend
  * Descript:
  *      - Add a friend
  * Method:
@@ -155,7 +155,7 @@ var addFriend = "/friend"; //POST
  * delFriend
  *
  * URL:
- * 		- %server%/api/user/remove/friend
+ * 		- %server%/api/friend
  * Descript:
  *      - Delete a friend
  * Method:
@@ -172,7 +172,7 @@ var delFriend = "/friend"; //DELETE
  * addFriendReq
  *
  * URL:
- * 		- %server%/api/user/add/request
+ * 		- %server%/api/friend/request
  * Descript:
  *      - Send a friend request from one user to another
  * Method:
@@ -188,7 +188,7 @@ var addFriendReq = "/friend/request"; //POST
  * removeFriendRequest
  *
  * URL:
- * 		- %server%/api/friends/remove/request
+ * 		- %server%/api/friend/request
  * Descript:
  *      - Remove a friend request
  * Method:
@@ -204,7 +204,7 @@ var removeFriendRequest = "/friend/request"; //DELETE
  * acceptFriendReq
  *
  * URL:
- * 		- %server%/api/friends/accept/request
+ * 		- %server%/api/friend/request/accept
  * Descript:
  *      - Accept a friend request
  * Method:
@@ -220,7 +220,7 @@ var acceptFriendReq = "/friend/request/accept"; //POST
  * delFriendReq
  *
  * URL:
- * 		- %server%/api/friends/deny/request
+ * 		- %server%/api/friend/request/deny
  * Descript:
  *      - Delete a friend request from one user to another
  * Method:
@@ -236,7 +236,7 @@ var denyFriendReq = "/friend/request/deny"; //POST
  * suggestFriends
  *
  * URL:
- * 		- %server%/api/friends/suggest/:uid
+ * 		- %server%/api/friend/suggest/:uid
  * Descript:
  *      - Get a list of suggested friends
  * Method:
@@ -267,7 +267,7 @@ var findFriendsById = "/friends/:uid"; //GET
  * findFriendSent
  *
  * URL:
- * 		- %server%/api/user/friends/sent/:uid
+ * 		- %server%/api/friend/sent/:uid
  * Descript:
  *      - Gets the friend requests sent from a user
  * Method:
