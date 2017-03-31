@@ -19,7 +19,7 @@ var UserID = require("../middleware/functions").UserID;
  * Returns:
  *      - JSON user object
  */
-var findUserById = "/user/info/:uid";
+var findUserById = "/user/:uid"; //GET
 /**
  * findUser
  *
@@ -34,7 +34,7 @@ var findUserById = "/user/info/:uid";
  * Returns:
  *      - JSON user object
  */
-var findUser = "/users";
+var findUser = "/user"; //GET
 /**
  * updateUser
  *
@@ -43,7 +43,7 @@ var findUser = "/users";
  * Descript:
  *      - Updates an user's fields
  * Method:
- *      - POST
+ *      - PATCH
  * Params:
  *      - uid: The user id
  * 		- email: The email address
@@ -51,7 +51,7 @@ var findUser = "/users";
  * Returns:
  *      - JSON updated user object
  */
-var updateUser = "/user/update/:uid";
+var updateUser = "/user/:uid"; //PATCH
 /**
  * deleteUser
  *
@@ -60,13 +60,13 @@ var updateUser = "/user/update/:uid";
  * Descript:
  *      - Deletes a user from the server
  * Method:
- *      - POST
+ *      - DELETE
  * Params:
  *      - uid: The user id
  * Returns:
  *      - JSON user object before deletion
  */
-var deleteUser = "/user/remove/:uid";
+var deleteUser = "/user/:uid"; //DELETE
 /**
  * registerUser
  *
@@ -87,12 +87,12 @@ var deleteUser = "/user/remove/:uid";
  * Returns:
  *      - JSON user object after creation
  */
-var registerUser = "/user/register";
+var registerUser = "/register"; //POST
 /**
  * loginUser
  *
  * URL:
- * 		- %server%/api/user/login
+ * 		- %server%/api/login
  * Descript:
  *      - Logs user into the site
  * Method:
@@ -103,7 +103,22 @@ var registerUser = "/user/register";
  * Returns:
  *      - JSON user
  */
-var loginUser = "/user/login";
+var loginUser = "/login";
+/**
+ * loginUser
+ *
+ * URL:
+ * 		- %server%/api/logout
+ * Descript:
+ *      - Logs the user out of the site
+ * Method:
+ *      - GET
+ * Params:
+ *      - NONE
+ * Returns:
+ *      - JSON user
+ */
+var logoutUser = "/logout";
 /**
  * loadMessages
  *
@@ -119,7 +134,7 @@ var loginUser = "/user/login";
  * Returns:
  *      - JSON array containing messages
  */
-var loadMessages = "/messages/load";
+var loadMessages = "/messages/load"; //GET
 /**
  * addFriend
  *
@@ -135,7 +150,7 @@ var loadMessages = "/messages/load";
  * Returns:
  *      - Mongo result
  */
-var addFriend = "/friends/add";
+var addFriend = "/friend"; //POST
 /**
  * delFriend
  *
@@ -144,7 +159,7 @@ var addFriend = "/friends/add";
  * Descript:
  *      - Delete a friend
  * Method:
- *      - POST
+ *      - DELETE
  * Params:
  *      - uid: The user id to delete the friend from
  * 		- fid: The friend id to delete the friendship from
@@ -152,7 +167,7 @@ var addFriend = "/friends/add";
  *      - Mongo result
  */
 
-var delFriend = "/friends/remove";
+var delFriend = "/friend"; //DELETE
 /**
  * addFriendReq
  *
@@ -168,7 +183,23 @@ var delFriend = "/friends/remove";
  * Returns:
  *      - JSON friend request object
  */
-var addFriendReq = "/friends/add/request";
+var addFriendReq = "/friend/request"; //POST
+/**
+ * removeFriendRequest
+ *
+ * URL:
+ * 		- %server%/api/friends/remove/request
+ * Descript:
+ *      - Remove a friend request
+ * Method:
+ *      - DELETE
+ * Params:
+ *      uid: The user id
+ *      fid: The friend id
+ * Returns:
+ *      - JSON mongo result
+ */
+var removeFriendRequest = "/friend/request"; //DELETE
 /**
  * acceptFriendReq
  *
@@ -184,7 +215,7 @@ var addFriendReq = "/friends/add/request";
  * Returns:
  *      - JSON friend request object after deletion
  */
-var acceptFriendReq = "/friends/request/accept";
+var acceptFriendReq = "/friend/request/accept"; //POST
 /**
  * delFriendReq
  *
@@ -200,39 +231,7 @@ var acceptFriendReq = "/friends/request/accept";
  * Returns:
  *      - JSON friend request object after deletion
  */
-var denyFriendReq = "/friends/request/deny";
-/**
- * sendFriendRequest
- *
- * URL:
- * 		- %server%/api/user/friend/request/add
- * Descript:
- *      - Add a friend request
- * Method:
- *      - POST
- * Params:
- *      uid: The user id
- *      fid: The friend id
- * Returns:
- *      - JSON mongo result
- */
-var sendFriendRequest = "/friends/request/add";
-/**
- * removeFriendRequest
- *
- * URL:
- * 		- %server%/api/friends/remove/request
- * Descript:
- *      - Remove a friend request
- * Method:
- *      - POST
- * Params:
- *      uid: The user id
- *      fid: The friend id
- * Returns:
- *      - JSON mongo result
- */
-var removeFriendRequest = "/friends/request/remove";
+var denyFriendReq = "/friend/request/deny"; //POST
 /**
  * suggestFriends
  *
@@ -248,7 +247,7 @@ var removeFriendRequest = "/friends/request/remove";
  * Returns:
  *      - JSON user object array
  */
-var suggestFriends = "/friends/suggest/:uid";
+var suggestFriends = "/friend/suggest/:uid"; //GET
 /**
  * findFriendsById
  *
@@ -263,7 +262,7 @@ var suggestFriends = "/friends/suggest/:uid";
  * Returns:
  *      - JSON array containing user objects
  */
-var findFriendsById = "/friends/:uid";
+var findFriendsById = "/friends/:uid"; //GET
 /**
  * findFriendSent
  *
@@ -278,7 +277,7 @@ var findFriendsById = "/friends/:uid";
  * Returns:
  *      - JSON array containing friend request objects
  */
-var findFriendSent = "/friends/sent/:uid";
+var findFriendSent = "/friend/sent/:uid"; //GET
 /**
  * findFriendReceived
  *
@@ -293,7 +292,7 @@ var findFriendSent = "/friends/sent/:uid";
  * Returns:
  *      - JSON array containing friend request objects
  */
-var findFriendReceived = "/friends/received/:fid";
+var findFriendReceived = "/friend/received/:fid"; //GET
 /**
  * createCourse
  *
@@ -318,7 +317,7 @@ var findFriendReceived = "/friends/received/:fid";
  * Returns:
  *      - JSON mongo result
  */
-var createCourse = "/course/create";
+var createCourse = "/course"; //POST
 /**
  * updateCourse
  *
@@ -327,7 +326,7 @@ var createCourse = "/course/create";
  * Descript:
  *      - Update a course
  * Method:
- *      - POST
+ *      - PATCH
  * Params:
  *		_id: The course unique object id
  *		label: Shorthand name, ex. "COMP 4770"
@@ -344,7 +343,7 @@ var createCourse = "/course/create";
  * Returns:
  *      - JSON mongo result
  */
-var updateCourse = "/course/update";
+var updateCourse = "/course"; //PATCH
 /**
  * removeCourse
  *
@@ -353,13 +352,13 @@ var updateCourse = "/course/update";
  * Descript:
  *      - Remove a course
  * Method:
- *      - POST
+ *      - DELETE
  * Params:
  *		_id: The course unique object id
  * Returns:
  *      - JSON mongo result
  */
-var deleteCourse = "/course/delete";
+var deleteCourse = "/course"; //DELETE
 /**
  * addCourseToUser
  *
@@ -368,13 +367,13 @@ var deleteCourse = "/course/delete";
  * Descript:
  *      - Add a course to a user
  * Method:
- *      - POST
+ *      - PUT
  * Params:
  *		_id: The course unique object id
  * Returns:
  *      - JSON mongo result
  */
-var addCourseToUser = "/course/user/add";
+var addCourseToUser = "/course/user"; //PUT
 /**
  * delCourseFromUser
  *
@@ -383,13 +382,13 @@ var addCourseToUser = "/course/user/add";
  * Descript:
  *      - Delete a course from a user
  * Method:
- *      - POST
+ *      - DELETE
  * Params:
  *		_id: The course unique object id
  * Returns:
  *      - JSON mongo result
  */
-var delCourseFromUser = "/course/user/del";
+var delCourseFromUser = "/course/user"; //DELETE
 /**
  * addCourseToGroup
  *
@@ -398,14 +397,14 @@ var delCourseFromUser = "/course/user/del";
  * Descript:
  *      - Add a course to a Group
  * Method:
- *      - POST
+ *      - PUT
  * Params:
  *		_id: The groups unique object id
  		cid: The course unique object id
  * Returns:
  *      - JSON mongo result
  */
-var addCourseToGroup = "/course/group/add";
+var addCourseToGroup = "/course/group"; //PUT
 /**
  * delCourseFromGroup
  *
@@ -414,13 +413,13 @@ var addCourseToGroup = "/course/group/add";
  * Descript:
  *      - Delete a course from a Group
  * Method:
- *      - POST
+ *      - DELETE
  * Params:
  *		_id: The course unique object id
  * Returns:
  *      - JSON mongo result
  */
-var delCourseFromGroup = "/course/group/del";
+var delCourseFromGroup = "/course/group"; //DELETE
 /**
  * findCourseById
  *
@@ -435,7 +434,7 @@ var delCourseFromGroup = "/course/group/del";
  * Returns:
  *      - JSON course object
  */
-var findCourseById = "/course/find/:id";
+var findCourseById = "/course/:id"; //GET
 /**
  * findCourse
  *
@@ -461,7 +460,7 @@ var findCourseById = "/course/find/:id";
  * Returns:
  *      - JSON course object array
  */
-var findCourse = "/course/find";
+var findCourse = "/course/"; //GET
 /**
  * addLost
  *
@@ -479,7 +478,7 @@ var findCourse = "/course/find";
  * Returns:
  *      - JSON mongo result
  */
-var addLost = "/lost/add";
+var addLost = "/lostfound"; //POST
 /**
  * updateLost
  *
@@ -488,7 +487,7 @@ var addLost = "/lost/add";
  * Descript:
  *      - Update a Lost
  * Method:
- *      - POST
+ *      - PATCH
  * Params:
  *		_id: The lost unique object id
  *		imagePath: The path to an image if supplied
@@ -498,7 +497,7 @@ var addLost = "/lost/add";
  * Returns:
  *      - JSON mongo result
  */
-var updateLost = "/lost/update";
+var updateLost = "/lostfound"; //PATCH
 /**
  * removeLost
  *
@@ -507,13 +506,13 @@ var updateLost = "/lost/update";
  * Descript:
  *      - Remove a Lost
  * Method:
- *      - POST
+ *      - DELETE
  * Params:
  *		_id: The Lost unique object id
  * Returns:
  *      - JSON mongo result
  */
-var removeLost = "/lost/remove";
+var removeLost = "/lostfound"; //DELETE
 /**
  * findLostById
  *
@@ -528,7 +527,7 @@ var removeLost = "/lost/remove";
  * Returns:
  *      - JSON lost object
  */
-var findLostById = "/lost/find/:uid";
+var findLostFoundById = "/lostfound/:uid"; //GET
 /**
  * findLost
  *
@@ -547,7 +546,7 @@ var findLostById = "/lost/find/:uid";
  * Returns:
  *      - JSON lost object array
  */
-var findLost = "/lost/find";
+var findLostFound = "/lostfound"; //GET
 /**
  * addTimelinePost
  *
@@ -565,7 +564,7 @@ var findLost = "/lost/find";
  * Returns:
  *      - JSON mongo result
  */
-var addTimelinePost = "/post/add/timeline";
+var addTimelinePost = "/post/timeline"; //POST
 /**
  * addGroupPost
  *
@@ -581,7 +580,7 @@ var addTimelinePost = "/post/add/timeline";
  * 		- dataType: Text, picture, etc
  * 		- data: Actual data
  */
-var addGroupPost = "/post/add/group";
+var addGroupPost = "/post/group"; //POST
 /**
  * delPost
  *
@@ -590,13 +589,13 @@ var addGroupPost = "/post/add/group";
  * Descript:
  *      - Delete a post
  * Method:
- *      - POST
+ *      - DELETE
  * Params:
  *      - pid: The post id
  * Returns:
  *      - JSON mongo result
  */
-var delPost = "/post/remove";
+var delPost = "/post"; //DELETE
 /**
  * updatePost
  *
@@ -605,13 +604,13 @@ var delPost = "/post/remove";
  * Descript:
  *      - Update a post
  * Method:
- *      - POST
+ *      - PATCH
  * Params:
  * 		- data: Actual data
  * Returns:
  *      - JSON mongo result
  */
-var updatePost = "/post/update";
+var updatePost = "/post"; //PATCH
 /**
  * findPostByPid
  *
@@ -626,7 +625,7 @@ var updatePost = "/post/update";
  * Returns:
  *      - JSON mongo result
  */
-var findPostByPid = "/post/:pid";
+var findPostByPid = "/post/:pid"; //GET
 /**
  * findPostByUid
  *
@@ -641,7 +640,7 @@ var findPostByPid = "/post/:pid";
  * Returns:
  *      - JSON mongo result
  */
-var findPostByUid = "/post/user/:uid";
+var findPostByUid = "/posts/:uid"; //GET
 /**
  * addComment
  *
@@ -658,7 +657,7 @@ var findPostByUid = "/post/user/:uid";
  * Returns:
  *      - JSON mongo result
  */
-var addComment = "/comment/add";
+var addComment = "/comment"; //POST
 /**
  * updateComment
  *
@@ -667,14 +666,14 @@ var addComment = "/comment/add";
  * Descript:
  *      - Update a comment
  * Method:
- *      - POST
+ *      - PATCH
  * Params:
  *      data: The comment data/text
  *      commentid: The comment id
  * Returns:
  *      - JSON mongo result
  */
-var updateComment = "/comment/update";
+var updateComment = "/comment"; //PATCH
 /**
  * removeComment
  *
@@ -683,14 +682,14 @@ var updateComment = "/comment/update";
  * Descript:
  *      - Remove a comment
  * Method:
- *      - POST
+ *      - DELETE
  * Params:
  *      pid: The post id to which the comment belongs to
  *      commentid: The comment id
  * Returns:
  *      - JSON mongo result
  */
-var removeComment = "/comment/remove";
+var removeComment = "/comment"; //DELETE
 /**
  * findCommentById
  *
@@ -705,7 +704,7 @@ var removeComment = "/comment/remove";
  * Returns:
  *      - JSON array containing comment objects
  */
-var findCommentById = "/comment/find/:uid";
+var findCommentById = "/comment/:uid"; //GET
 /**
  * createGroup
  *
@@ -721,7 +720,7 @@ var findCommentById = "/comment/find/:uid";
  * Returns:
  *      - JSON group object after creation
  */
-var createGroup = "/groups/create";
+var createGroup = "/group"; //POST
 /**
  * delGroup
  *
@@ -730,13 +729,13 @@ var createGroup = "/groups/create";
  * Descript:
  *      - Delete a group
  * Method:
- *      - POST
+ *      - DELETE
  * Params:
  *      - gid: The group id to be deleted
  * Returns:
  *      - JSON group object after deletion
  */
-var delGroup = "/groups/remove/:gid";
+var delGroup = "/group/:gid"; //DELETE
 /**
  * updateGroup
  *
@@ -745,7 +744,7 @@ var delGroup = "/groups/remove/:gid";
  * Descript:
  *      - Update a group
  * Method:
- *      - POST
+ *      - PATCH
  * Params:
  *      - gid: The group id to be updated
  * 		- name: The group name
@@ -753,7 +752,7 @@ var delGroup = "/groups/remove/:gid";
  * Returns:
  *      - JSON group object after update
  */
-var updateGroup = "/groups/update";
+var updateGroup = "/group"; //PATCH
 /**
  * findGroups
  *
@@ -772,22 +771,7 @@ var updateGroup = "/groups/update";
  * Returns:
  *      - JSON array containing group objects
  */
-var findGroups = "/groups";
-/**
- * findGroupsUsers
- *
- * URL:
- * 		- %server%/api/group/users/:gid
- * Descript:
- *      - Gets all users in a group
- * Method:
- *      - GET
- * Params:
- *      - gid: The group id to get users from
- * Returns:
- *      - JSON array containing user objects
- */
-var findGroupUsers = "/groups/users/:gid";
+var findGroups = "/group"; //GET
 /**
  * findGroupById
  *
@@ -802,7 +786,22 @@ var findGroupUsers = "/groups/users/:gid";
  * Returns:
  *      - JSON group object
  */
-var findGroupById = "/groups/info/:gid";
+var findGroupById = "/group/:gid"; //GET
+/**
+ * findGroupsUsers
+ *
+ * URL:
+ * 		- %server%/api/group/users/:gid
+ * Descript:
+ *      - Gets all users in a group
+ * Method:
+ *      - GET
+ * Params:
+ *      - gid: The group id to get users from
+ * Returns:
+ *      - JSON array containing user objects
+ */
+var findGroupUsers = "/groups/users/:gid"; //GET
 /**
  * findGroupSent
  *
@@ -817,7 +816,7 @@ var findGroupById = "/groups/info/:gid";
  * Returns:
  *      - JSON array containing group request objects
  */
-var findGroupSent = "/groups/sent/:uid";
+var findGroupSent = "/groups/sent/:uid"; //GET
 /**
  * findGroupReceived
  *
@@ -832,7 +831,7 @@ var findGroupSent = "/groups/sent/:uid";
  * Returns:
  *      - JSON array containing group request objects
  */
-var findGroupReceived = "/groups/received/:gid";
+var findGroupReceived = "/groups/received/:gid"; //GET
 /**
  * findUserGroups
  *
@@ -847,7 +846,7 @@ var findGroupReceived = "/groups/received/:gid";
  * Returns:
  *      - JSON array containing group ids
  */
-var findGroupsByUID = "/groups/find/:uid";
+var findGroupsByUID = "/groups/user/:uid"; //GET
 /**
  * findGroupRequests
  *
@@ -862,7 +861,7 @@ var findGroupsByUID = "/groups/find/:uid";
  * Returns:
  *      - JSON array containing group requests
  */
-var findGroupRequests = "/groups/find/requests/:gid";
+var findGroupRequests = "/groups/requests/:gid"; //GET
 /**
  * addGroupUser
  *
@@ -878,7 +877,7 @@ var findGroupRequests = "/groups/find/requests/:gid";
  * Returns:
  *      - JSON group users object after creation
  */
-var addGroupUser = "/groups/add/user";
+var addGroupUser = "/groups/user"; //POST
 /**
  * delGroupUser
  *
@@ -887,14 +886,14 @@ var addGroupUser = "/groups/add/user";
  * Descript:
  *      - Delete a user from a group
  * Method:
- *      - POST
+ *      - DELETE
  * Params:
  *      - gid: The group id
  * 		- uid: The user id to be deleted
  * Returns:
  *      - JSON group users object after deletion
  */
-var delGroupUser = "/groups/remove/user";
+var delGroupUser = "/groups/user"; //DELETE
 /**
  * findGroupsAdmins
  *
@@ -909,7 +908,7 @@ var delGroupUser = "/groups/remove/user";
  * Returns:
  *      - JSON array containing user objects
  */
-var findGroupAdmins = "/group/admins/:gid";
+var findGroupAdmins = "/groups/admin/:gid"; //GET
 /**
  * addGroupAdmin
  *
@@ -927,7 +926,7 @@ var findGroupAdmins = "/group/admins/:gid";
  * Returns:
  *      - JSON mongo result
  */
-var addGroupAdmin = "/groups/admins/add";
+var addGroupAdmin = "/groups/admins"; //POST
 /**
  * removeGroupAdmin
  *
@@ -936,13 +935,13 @@ var addGroupAdmin = "/groups/admins/add";
  * Descript:
  *      - Remove an admin
  * Method:
- *      - POST
+ *      - DELETE
  * Params:
  *		_id: The admin unique object id
  * Returns:
  *      - JSON mongo result
  */
-var removeGroupAdmin = "/groups/admins/remove";
+var removeGroupAdmin = "/groups/admins"; //DELETE
 /**
  * acceptGroupReq
  *
@@ -958,7 +957,7 @@ var removeGroupAdmin = "/groups/admins/remove";
  * Returns:
  *      - JSON group request object
  */
-var acceptGroupReq = "/groups/request/accept";
+var acceptGroupReq = "/groups/request/accept"; //POST
 /**
  * denyGroupReq
  *
@@ -974,7 +973,7 @@ var acceptGroupReq = "/groups/request/accept";
  * Returns:
  *      - JSON friend request object after deletion
  */
-var denyGroupReq = "/groups/request/deny";
+var denyGroupReq = "/groups/request/deny"; //POST
 /**
  * sendGroupRequest
  *
@@ -990,7 +989,7 @@ var denyGroupReq = "/groups/request/deny";
  * Returns:
  *      - JSON mongo result
  */
-var sendGroupRequest = "/groups/request/add";
+var sendGroupRequest = "/groups/request"; //POST
 /**
  * removeGroupRequest
  *
@@ -999,14 +998,14 @@ var sendGroupRequest = "/groups/request/add";
  * Descript:
  *      - Remove a group request
  * Method:
- *      - POST
+ *      - DELETE
  * Params:
  *      uid: The user id
  *      groupName: The group name to remove teh request from
  * Returns:
  *      - JSON mongo result
  */
-var removeGroupRequest = "/groups/request/remove";
+var removeGroupRequest = "/groups/request"; //DELETE
 
 
 //==========================================================================================
@@ -1025,7 +1024,7 @@ router.get(findUser, UserID, function (req, res, next) {
 /**
  * ??
  */
-router.post(updateUser, UserID, function (req, res, next) {
+router.patch(updateUser, UserID, function (req, res, next) {
 	DB.Users.update(req, res, function (result) {
 		res.json(result);
 	});
@@ -1033,7 +1032,7 @@ router.post(updateUser, UserID, function (req, res, next) {
 
 //POST remove the user
 
-router.post(deleteUser, UserID, function (req, res, next) {
+router.delete(deleteUser, UserID, function (req, res, next) {
 	DB.Users.remove(req, res, function (result) {
 		res.json(result);
 	});
@@ -1056,7 +1055,11 @@ router.post(loginUser, UserID, function (req, res, next) {
 		res.json(result);
 	});
 });
-
+router.get('/logout', function (req, res, next) {
+	DB.Users.logout(req, res, function (result) {
+		res.redirect('../');
+	});
+});
 //GET list of friends from userId
 router.get(findFriendsById, UserID, function (req, res, next) {
 	DB.Friends.find(req, res, function (result) {
@@ -1098,7 +1101,7 @@ router.post(denyFriendReq, UserID, function (req, res, next) {
 	});
 });
 
-router.post(delFriend, UserID, function (req, res, next) {
+router.delete(delFriend, UserID, function (req, res, next) {
 	DB.Friends.remove(req, res, function (result) {
 		res.json(result);
 	});
@@ -1112,7 +1115,7 @@ router.post(createGroup, UserID, function (req, res, next) {
 });
 
 //Remove a group
-router.post(delGroup, UserID, function (req, res, next) {
+router.delete(delGroup, UserID, function (req, res, next) {
 	DB.Groups.remove(req, res, function (result) {
 		res.json(result);
 	});
@@ -1126,7 +1129,7 @@ router.get(findGroups, UserID, function (req, res, next) {
 });
 
 //Update a group
-router.post(updateGroup, UserID, function (req, res, next) {
+router.patch(updateGroup, UserID, function (req, res, next) {
 	DB.Groups.update(req, res, function (result) {
 		res.json(result);
 	});
@@ -1140,7 +1143,7 @@ router.post(addGroupUser, UserID, function (req, res, next) {
 });
 
 //Remove member from group
-router.post(delGroupUser, UserID, function (req, res, next) {
+router.delete(delGroupUser, UserID, function (req, res, next) {
 	DB.GroupMembers.remove(req, res, function (result) {
 		res.json(result);
 	});
@@ -1177,14 +1180,14 @@ router.post(addGroupPost, UserID, function (req, res, next) {
 });
 
 //Remove post
-router.post(delPost, UserID, function (req, res, next) {
+router.delete(delPost, UserID, function (req, res, next) {
 	DB.Posts.remove(req, res, function (result) {
 		res.json(result);
 	});
 });
 
 //Update post
-router.post(updatePost, UserID, function (req, res, next) {
+router.patch(updatePost, UserID, function (req, res, next) {
 	DB.Posts.update(req, res, function (result) {
 		res.json(result);
 	});
@@ -1225,49 +1228,49 @@ router.post(createCourse, UserID, function (req, res, next) {
 	});
 });
 
-router.post(deleteCourse, UserID, function (req, res, next) {
+router.delete(deleteCourse, UserID, function (req, res, next) {
 	DB.Courses.delete(req, res, function (result) {
 		res.json(result);
 	});
 });
 
-router.post(updateCourse, UserID, function (req, res, next) {
+router.patch(updateCourse, UserID, function (req, res, next) {
 	DB.Courses.update(req, res, function (result) {
 		res.json(result);
 	});
 });
 
-router.post(addCourseToUser, UserID, function (req, res, next) {
+router.put(addCourseToUser, UserID, function (req, res, next) {
 	DB.Courses.addToUser(req, res, function (result) {
 		res.json(result);
 	});
 });
 
-router.post(delCourseFromUser, UserID, function (req, res, next) {
+router.delete(delCourseFromUser, UserID, function (req, res, next) {
 	DB.Courses.removeFromUser(req, res, function (result) {
 		res.json(result);
 	});
 });
 
-router.post(addCourseToGroup, UserID, function (req, res, next) {
+router.put(addCourseToGroup, UserID, function (req, res, next) {
 	DB.Courses.addToGroup(req, res, function (result) {
 		res.json(result);
 	});
 });
 
-router.post(delCourseFromGroup, UserID, function (req, res, next) {
+router.delete(delCourseFromGroup, UserID, function (req, res, next) {
 	DB.Courses.removeFromGroup(req, res, function (result) {
 		res.json(result);
 	});
 });
 
-router.get(findLostById, UserID, function (req, res, next) {
+router.get(findLostFoundById, UserID, function (req, res, next) {
 	DB.LostFound.findById(req, res, function (result) {
 		res.json(result);
 	});
 });
 
-router.get(findLost, UserID, function (req, res, next) {
+router.get(findLostFound, UserID, function (req, res, next) {
 	DB.LostFound.find(req, res, function (result) {
 		res.json(result);
 	});
@@ -1279,13 +1282,13 @@ router.post(addLost, UserID, function (req, res, next) {
 	});
 });
 
-router.post(removeLost, UserID, function (req, res, next) {
+router.delete(removeLost, UserID, function (req, res, next) {
 	DB.LostFound.remove(req, res, function (result) {
 		res.json(result);
 	});
 });
 
-router.post(updateLost, UserID, function (req, res, next) {
+router.patch(updateLost, UserID, function (req, res, next) {
 	DB.LostFound.update(req, res, function (result) {
 		res.json(result);
 	});
@@ -1303,7 +1306,7 @@ router.post(addGroupAdmin, UserID, function (req, res, next) {
 	});
 });
 
-router.post(removeGroupAdmin, UserID, function (req, res, next) {
+router.delete(removeGroupAdmin, UserID, function (req, res, next) {
 	DB.GroupAdmins.remove(req, res, function (result) {
 		res.json(result);
 	});
@@ -1321,13 +1324,13 @@ router.post(addComment, UserID, function (req, res, next) {
 	});
 });
 
-router.post(removeComment, UserID, function (req, res, next) {
+router.delete(removeComment, UserID, function (req, res, next) {
 	DB.Comments.removeById(req, res, function (result) {
 		res.json(result);
 	});
 });
 
-router.post(updateComment, UserID, function (req, res, next) {
+router.patch(updateComment, UserID, function (req, res, next) {
 	DB.Comments.update(req, res, function (result) {
 		res.json(result);
 	});
@@ -1353,7 +1356,7 @@ router.post(sendGroupRequest, UserID, function (req, res, next) {
 	});
 });
 
-router.post(removeGroupRequest, UserID, function (req, res, next) {
+router.delete(removeGroupRequest, UserID, function (req, res, next) {
 	DB.Groups.removeRequest(req, res, function (result) {
 		res.json(result);
 	});
@@ -1384,7 +1387,7 @@ router.post(addFriend, UserID, function (req, res, next) {
 	});
 });
 
-router.post(removeFriendRequest, UserID, function (req, res, next) {
+router.delete(removeFriendRequest, UserID, function (req, res, next) {
 	DB.Friends.removeRequest(req, res, function (result) {
 		res.json(result);
 	});
