@@ -324,5 +324,35 @@ body, html {
 	background-color: #dddddd;
 }
 
+.popup {
+	background-color: #efefef;
+	border: solid 1px #cccccc;
+
+	position: absolute;
+	display: none;
+	z-index: 100;
+}
+
+.popField {
+	position: relative;
+	width: 300px;
+	/*width: 198px;*/
+	border-radius: 4px;
+	top: 60px;
+}
+
+.popField:hover {
+	background-color: #f1f1f1;
+}
+
+.popup button {
+	background-color: #fcfcfc;
+	border-radius: 5px;
+	cursor: pointer;
+	text-align: center;
+	width: 150px;
+	padding: 5px;
+	margin-top: 5px;
+}
 
 /*End*/

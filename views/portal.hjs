@@ -56,6 +56,32 @@
 	</div>
 
 	<div class="container">
+
+	<div class="popup" id="popGroup">
+			Create a new group:
+			<input class="popField" type="text" name="gName" placeholder="Group Name"><br>
+			<div id="fpButton">
+				<button class="popButton" id="gCreate"> CREATE </button> 
+				<button class="popButton" id="gClose"> CLOSE </button> 
+			</div>
+	</div>
+
+	<div class="popup" id="popCourse">
+			Create a new course:
+			<input class="popField" type="text" name="cName" placeholder="Course Name">
+			<input class="popField" type="text" name="cLabel" placeholder="Course Label"><br>
+			<select id="semester">
+				<option value="Fall">Fall</option>
+				<option value="Fall">Winter</option>
+				<option value="Fall">Spring</option>
+				<option value="Fall">Summer MI</option>
+			</select>
+			<div id="fpButton">
+				<button class="popButton" id="cCreate"> CREATE </button> 
+				<button class="popButton" id="cClose"> CLOSE </button> 
+			</div>
+	</div>
+
 	<div class="sidebars" id="section-left">
 		<div class="userInfo" id="userPic">
 			<a href="profile/"><img src="/img/SEAHAWK_SIL.jpg" alt="GOTO Profile"></a>	

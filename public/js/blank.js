@@ -1,4 +1,28 @@
 
+/******************
+ * Get uid for future use
+ * 
+ * @params: uid
+ * 
+ * Gets session user id from server and stores it.
+ ******************/
+
+//Define uid variable
+var uid;
+
+//Get variable and store it.
+$.get('/api/session')
+.done(function(response) {
+	if(response.user===undefined) {
+		console.log("ERROR: Session not found.");
+	}
+	else {
+		uid = response.user._id;
+	}
+})
+.fail(function(response) {
+	console.log('ERROR: Request failed.');
+});
 
 $(document).ready(function () {
 
@@ -31,14 +55,45 @@ $(document).ready(function () {
 	 * Create functionaity for groups and courses
 	 ***************************/
 
-	 //Create a new group
+	 //Display create group popup
 	$('#createGroup').click(function () {
-		//TODO: Create group
+		$('#popGroup').show();
 	});
 
-	//Add a new course
+	//Display create course popup
 	$('#createCourse').click(function() {
-		//TODO: Create Course. Or should just bring you to something to select existing courses?
+		$('#popGroup').show();
+	});
+
+	//Close create group popup
+	$('#gClose').click(function() {
+		$('#popGroup').hide();
+	});
+
+	//Close create course popup
+	$('#cClose').click(function() {
+		$('#popCourse').hide();
+	});
+
+	//Create new group
+	$('#gCreate').click(function() {
+		$.post('/api/group', {
+			name: $('#popGroup input[name="gName"]').val(),
+			uid: a
+		})
+	});
+
+	//Create new course
+	$('#gCreate').click(function() {
+		$.post('/api/group', {
+			name: $('#popGroup input[name="cgName"]').val(),
+			uid: a
+		}, function() {
+
+		})
+		.done()
+		.fail()
+		
 	});
 
 	/**************************
@@ -49,33 +104,33 @@ $(document).ready(function () {
 	 * Loads left sidebar element
 	 ***************************/
 
-//Load user profile image
-$('#userPic a img').attr('src', '/content/image/profile/session');
+	//Load user profile image
+	$('#userPic a img').attr('src', '/content/image/profile/session');
 
-//Load user groups
-$.get('/groups/find/session', function(response) {
-	$.each( response, function(i,v) {
+	//Load user groups
+	$.get('/api/groups/user/session', function(response) {
+		$.each( response, function(i,v) {
 
-		$('#groupList').prepend('<li><a href="#"> GROUP NAME </a></li>');
-
-
-		//TODO: Add html to add groups to sidebar
-
-	});
-});
+			$('#groupList').prepend('<li><a href="#"> GROUP NAME </a></li>');
 
 
-//Load user courses
-$.get('/course/find/session', function(response) {
-	$.each( response, function(i,v) {
+			//TODO: Add html to add groups to sidebar
 
-		$('#courseList').prepend('<li><a href="#"> CLASS NAME </a></li>');
-
-		//TODO: Add html to add classes to sidebar
-
+		});
 	});
 
-});
+
+	//Load user courses
+	$.get('/api/course/session', function(response) {
+		$.each( response, function(i,v) {
+
+			$('#courseList').prepend('<li><a href="#"> CLASS NAME </a></li>');
+
+			//TODO: Add html to add classes to sidebar
+
+		});
+
+	});
 
 //TODO: Any other elements of left sidebar?
 
