@@ -23,22 +23,42 @@ $(document).ready(function () {
 
 	//Other NavBar buttons handled in page.
 
+	/**************************
+	 * Left sidebar create
+	 * 
+	 * @params: null
+	 * 
+	 * Create functionaity for groups and courses
+	 ***************************/
 
+	 //Create a new group
+	$('#createGroup').click(function () {
+		//TODO: Create group
+	});
 
-/*******
- * Load left sidebar elements. 
- * 
- *@params: uid
- * 
- * 
- *******/
+	//Add a new course
+	$('#createCourse').click(function() {
+		//TODO: Create Course. Or should just bring you to something to select existing courses?
+	});
+
+	/**************************
+	 * Left siderbar loader
+	 * 
+	 * @params: null
+	 * 
+	 * Loads left sidebar element
+	 ***************************/
 
 //Load user profile image
 $('#userPic a img').attr('src', '/content/image/profile/session');
 
 //Load user groups
-$.get('api/user/groups/session', function(response) {
+$.get('/groups/find/session', function(response) {
 	$.each( response, function(i,v) {
+
+		$('#groupList').prepend('<li><a href="#"> GROUP NAME </a></li>');
+
+
 		//TODO: Add html to add groups to sidebar
 
 	});
@@ -46,8 +66,11 @@ $.get('api/user/groups/session', function(response) {
 
 
 //Load user courses
-$.get('api/user/course/session', function(response) {
+$.get('/course/find/session', function(response) {
 	$.each( response, function(i,v) {
+
+		$('#courseList').prepend('<li><a href="#"> CLASS NAME </a></li>');
+
 		//TODO: Add html to add classes to sidebar
 
 	});
