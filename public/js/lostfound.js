@@ -119,4 +119,40 @@ $(document).ready(function() {
 
 
 	});
+
+	$("#submitLost").click(function () {
+		//Send the object to API
+		//This def doesn't work yet :)
+		console.log("in the submitLost function")
+		var jqxhr = $.post("/api/lostfound", 
+			{
+				latitude: $('#lostContent input[name="lat"]').val(),
+				longitude: $('#lostContent input[name="long"]').val(),
+				locate: $('#lostContent input[name="locate"]').val(),
+				name: $('#lostContent input[name="name"]').val(),
+				phone: $('#lostContent input[name="phone"]').val(),
+				email: $('#lostContent input[name="email"]').val()
+			},
+			function () 
+			{
+				console.log("post");
+			}
+		)
+		.done(function (result) {
+			console.log(result.status);
+				if (result.status === 'fail') {
+				//If ajax request returns false: Display text alert. Clear all fields.
+					$('#textAlert').css({
+						color: 'red'
+					});
+					$('#textAlert').html('Uh oh. Bad thing happened');
+					$('#textAlert').show();
+				} 
+				else 
+				{
+					//Upload the pic
+				}
+				$("#lostContent")[0].reset();
+		});
+	});	
 });
