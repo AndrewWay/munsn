@@ -203,6 +203,46 @@ module.exports = function (DBGroups, collectionGroups, collectionGroupMembers, c
 		}
 	};
 
+    DBGroups.updateMember = function(req, res, callback) {
+        var updates = {
+            uid: req.body.uid,
+            admin: req.body.admin ? req.body.admin : false
+        };
+        collectionGroupMembers.update({_id: new ObjectID(req.body.gid)}, {$set: updates}, {upsert: true}, function(err, results) {
+            if (err) {
+                console.error("[DBGroups] updateMember", err.message);
+                callback({
+                    session: req.session,
+                    status: 'fail'
+                });
+            }
+            else {
+                callback({
+                    session: req.session,
+                    status: 'ok'
+                });
+            }
+        });
+    };
+
+    DBGroups.removeMember = function(req, res, callback) {
+        collectionGroupMembers.findAndModify({_id: new ObjectID(req.body.gid)}, [['_id', 'ascending']], {$pull: {"members.user": req.body.uid}}, {upsert: true, new: true}, function(err, results) {
+            if (err) {
+                console.error("[DBGroups] updateMember", err.message);
+                callback({
+                    session: req.session,
+                    status: 'fail'
+                });
+            }
+            else {
+                callback({
+                    session: req.session,
+                    status: 'ok'
+                });
+            }
+        });
+    };
+    
 	//GROUP REQUESTS
 	//======================================================================================================
 
