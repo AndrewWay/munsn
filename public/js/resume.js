@@ -13,7 +13,7 @@ $(document).ready(function () {
 
   // If absolute URL from the remote server is provided, configure the CORS
   // header on that server.
-  var url = '/temps/EMNOTESTEST.pdf';
+  var url = '/content/resume/user/test';
 
   // The workerSrc property shall be specified.
   PDFJS.workerSrc = '//mozilla.github.io/pdf.js/build/pdf.worker.js';
