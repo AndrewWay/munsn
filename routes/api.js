@@ -709,7 +709,7 @@ var findCommentById = "/comment/:uid"; //GET
  * createGroup
  *
  * URL:
- * 		- %server%/api/group/create
+ * 		- %server%/api/group
  * Descript:
  *      - Create a group
  * Method:
@@ -978,7 +978,7 @@ var denyGroupReq = "/groups/request/deny"; //POST
  * sendGroupRequest
  *
  * URL:
- * 		- %server%/api/user/group/request/add
+ * 		- %server%/api/user/group/request
  * Descript:
  *      - Add a group request
  * Method:
