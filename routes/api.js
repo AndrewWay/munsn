@@ -908,6 +908,23 @@ var addGroupUser = "/groups/user"; //POST
  *      - JSON group users object after deletion
  */
 var delGroupUser = "/groups/user"; //DELETE
+//TODO: To fix this api comment DEVIN
+/**
+ * updateGroupUser
+ *
+ * URL:
+ * 		- %server%/api/groups/user
+ * Descript:
+ *      - Updates a user in a group
+ * Method:
+ *      - PATCH
+ * Params:
+ *      - gid: The group id
+ * 		- uid: The user id to be deleted
+ * Returns:
+ *      - JSON group users object after deletion
+ */
+var updateGroupUser = "/groups/user"; //PATCH
 /**
  * findGroupsAdmins
  *
