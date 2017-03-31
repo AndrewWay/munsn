@@ -1164,11 +1164,6 @@ router.get(findGroupUsers, UserID, function (req, res, next) {
 });
 
 router.post(addTimelinePost, UserID, function (req, res, next) {
-	//Set type before pass to db
-	req.body.origin = {
-		type: 'timeline',
-		id: req.body.origin
-	};
 	DB.Posts.add(req, res, UserID, function (result) {
 		res.json(result);
 	});

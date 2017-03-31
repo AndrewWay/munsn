@@ -199,42 +199,23 @@ mongoClient.connect(dbURL, function (err, DB) {
 	DB.createCollection('posts', {
 		validator: {
 			$and: [{
-				//Foreign key for userid
-				authorid: {
+				uid: {
 					$type: 'string'
 				}
-			}, {
-				/*
-				private: Only the user can view the post
-				public: Everyone can view the post
-				friends: Only friends can view the post
-				list: Only a list of friends can view,
-
-				For list, update to the array list(userId)
-				*/
+			},
+			{
+				timelineType: {
+					$type: 'string'
+				}
+			},
+			{
+				timeline: {
+					$type: 'string'
+				}
+			},
+			{
 				visibility: {
 					$type: 'string'
-				}
-			}, {
-				//User or group
-				origin: {
-					$type: 'string'
-				}
-			}, {
-				created: {
-					$type: 'date'
-				}
-			}, {
-				modified: {
-					$type: 'date'
-				}
-			}, {
-				dataType: {
-					$type: 'string'
-				}
-			}, {
-				data: {
-					$type: 'object'
 				}
 			}]
 		},

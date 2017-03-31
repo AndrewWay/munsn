@@ -4,13 +4,56 @@ module.exports = function (DBPosts, collectionPosts) {
 	//Add a post
 	DBPosts.add = function (req, res, callback) {
 		var date = new Date();
-        var post = {
-            uid: req.body.uid,
-            visibility: req.body.visibility,
-            history: [{
-                text: req.body.text
-            }],
-        };
+		if (req.body.uid) {
+			var post = {
+				uid: undefined,
+				//Either userids for users, or object ids for groups
+				timelineType: undefined,
+				//If timelineType is user, then the target timeline is the targets user id
+				timeline: undefined,
+				visibility: undefined,
+			};
+			// Loop through body, if field is not found, then set null
+			Object.keys(post).forEach(k => {
+				if (req.body[k] === undefined) {
+					delete post[k];
+				} else {
+					post[k] = req.body[k];
+				}
+			});
+
+			//Push the postObject to post.history array
+			var postObject = req.body.postObject;
+			postObject.date = date;
+			post.history = [postObject];
+
+			//Push allowed users to post.allowedUsers array if the visibility is specific
+			if (post.visibility === 'specific') {
+				post.allowedUsers = req.body.allowedUsers;
+			}
+
+			collectionPosts.insert(post, function(err, result) {
+				if (err) {
+					console.error("[DBPosts] Add", err.message);
+					callback({
+						session: req.session,
+						status: 'fail'
+					});
+				} else {
+					callback({
+						session: req.session,
+						status: 'ok'
+					});
+				}
+			});
+
+		} else {
+			console.warn("[DBPosts] Add", "'Missing Fields'");
+			callback({
+				session: req.session,
+				status: "fail"
+			});
+		}
 	};
 
 	//Remove a post by id
