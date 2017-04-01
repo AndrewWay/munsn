@@ -36,6 +36,8 @@ module.exports = function (DBCourses, collectionCourses, collectionUserCourses, 
 	//Find a course by unique course id
 	DBCourses.findByUserID = function (req, res, callback) {
 		console.log("[DBCourses] FindByUserID", "'" + req.UserID + "'");
+
+
 		if (req.UserID) {
 			collectionUserCourses.findOne({
 				_id: req.UserID
@@ -66,8 +68,28 @@ module.exports = function (DBCourses, collectionCourses, collectionUserCourses, 
 
 	//Find courses matching query
 	DBCourses.find = function (req, res, callback) {
-		console.log("[DBCourses] Find", "'" + JSON.stringify(req.body) + "'");
-		collectionCourses.find(req.body).toArray(function (err, result) {
+		var query = {
+			label: undefined,
+			name: undefined,
+			description: undefined,
+			semester: undefined,
+			department: undefined,
+			location: undefined,
+			year: undefined,
+			cid: undefined,
+			days: undefined,
+			timeStart: undefined,
+			timeEnd: undefined
+		};
+		Object.keys(query).forEach(k => {
+			if (!req.body[k]) {
+				delete query[k];
+			} else {
+				query[k] = req.body[k];
+			}
+		});
+		console.log("[DBCourses] Find", "'" + JSON.stringify(query) + "'");
+		collectionCourses.find(query).toArray(function (err, result) {
 			if (err) {
 				console.error("[DBCourses]", err.message);
 				callback({
