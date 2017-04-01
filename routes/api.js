@@ -624,12 +624,27 @@ var delPost = "/post"; //DELETE
  * Returns:
  *      - JSON mongo result
  */
-var updatePost = "/post"; //PATCH
+var updatePostVisibility = "/post"; //PATCH
 /**
- * findPostByPid
+ * updatePostHistory
  *
  * URL:
- * 		- %server%/api/post/:pid
+ * 		- %server%/api/post/history
+ * Descript:
+ *      - Update a post
+ * Method:
+ *      - PATCH
+ * Params:
+ * 		- data: Actual data
+ * Returns:
+ *      - JSON mongo result
+ */
+var updatePostHistory = "/post/history"; //PATCH
+/**
+ * find
+ *
+ * URL:
+ * 		- %server%/api/post
  * Descript:
  *      - Get a singular post by PostID
  * Method:
@@ -639,7 +654,7 @@ var updatePost = "/post"; //PATCH
  * Returns:
  *      - JSON mongo result
  */
-var findPostByPid = "/post/:pid"; //GET
+var find = "/post"; //GET
 /**
  * findPostByUid
  *
@@ -654,7 +669,7 @@ var findPostByPid = "/post/:pid"; //GET
  * Returns:
  *      - JSON mongo result
  */
-var findPostByUid = "/posts/:uid"; //GET
+var findPostByUid = "/post/:uid"; //GET
 /**
  * addComment
  *
@@ -1184,8 +1199,13 @@ router.delete(delPost, UserID, function (req, res, next) {
 		res.json(result);
 	});
 });
-router.patch(updatePost, UserID, function (req, res, next) {
-	DB.Posts.update(req, res, function (result) {
+router.patch(updatePostVisibility, UserID, function (req, res, next) {
+	DB.Posts.updateVisibility(req, res, function (result) {
+		res.json(result);
+	});
+});
+router.patch(updatePostHistory, UserID, function (req, res, next) {
+	DB.Posts.updateHistory(req, res, function (result) {
 		res.json(result);
 	});
 });
@@ -1194,8 +1214,8 @@ router.get(findPostByUid, UserID, function (req, res, next) {
 		res.json(result);
 	});
 });
-router.get(findPostByPid, UserID, function (req, res, next) {
-	DB.Posts.findByPostId(req, res, function (result) {
+router.get(find, UserID, function (req, res, next) {
+	DB.Posts.find(req, res, function (result) {
 		res.json(result);
 	});
 });
