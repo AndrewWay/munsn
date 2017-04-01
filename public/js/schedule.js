@@ -55,8 +55,47 @@ $(document).ready(function () {
 	 * RRule stuff
 	 **********************/
 
-	 var days, 
+	 var days, freq;
 
-	days = [RRule.MO, RRule.TU, RRule.WE, RRule.TH, RRule.FR, RRule.SA, RRule.SU];
+	 days = [RRule.MO, RRule.TU, RRule.WE, RRule.TH, RRule.FR, RRule.SA, RRule.SU];
+	 freq = [null, RRule.DAILY, RRule.WEEKLY, RRule.MONTHLY];
+
+	 
+
+	 $("#addEvent").click(function(){
+		var rule;
+		var dayList = [];
+
+		console.log($('input[name=freq]:checked').val());
+		console.log(freq[$('input[name=freq]:checked').val()]);
+
+		$('input[name="byweekday"]:checkbox:checked').each(function(k,v){
+			dayList.push(days[$(this).val()]);
+		});
+
+		console.log((new Date($('#startTime').val()).toISOString()));
+
+	 	rule = new RRule({
+			freq: freq[$('input[name=freq]:checked').val()],
+  			byweekday: dayList
+	 	});
+
+		var evnt = {
+			'start' : {
+				'dateTime': (new Date($('#startTime').val())).toISOString(),
+				'timeZone':'America/St_Johns'
+			},
+			'end':{
+				'dateTime': (new Date($('#endTime').val())).toISOString(),
+				'timeZone':'America/St_Johns'
+			},
+			'recurrence':['RRULE:'+rule.toString()],
+			'summary':$('#summary').val(),
+			'description':$('#description').val()
+			};
+		$.post("/content/calendar/events/session",evnt,function(result) {
+			console.log(result)
+		});
+	});
 
 });

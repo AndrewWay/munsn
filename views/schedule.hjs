@@ -110,7 +110,7 @@
 			<div id="newEventInfo">
 				<input type="text" name="summary" class="summary"/>
 				<div class="textDesc">
-					<textarea class="text" placeholder="Description..."></textarea>
+					<textarea class="text" id="description" placeholder="Description..."></textarea>
 				</div>
 				<input id="startTime" type="text" />
 				<input id="endTime" type="text" />
@@ -122,17 +122,17 @@
                 	<label><input name="freq" type="radio" value="3" />Monthly</label>
 				</div>
 
-				<div class='rrule' id='weekly'>
-					<label><input type="checkbox" name="byweekday" value="0">Monday</label>
-                	<label><input type="checkbox" name="byweekday" value="1">Tuesday</label>
-                	<label><input type="checkbox" name="byweekday" value="2">Wednesday</label>
-                	<label><input type="checkbox" name="byweekday" value="3">Thursday</label>
-                	<label><input type="checkbox" name="byweekday" value="4">Friday</label>
-                	<label><input type="checkbox" name="byweekday" value="5">Saturday</label>
-                	<label><input type="checkbox" name="byweekday" value="6">Sunday</label>
+				<div class='rrule' id='weekdays'>
+					<label><input type="checkbox" name="byweekday" value="0">Mon</label>
+                	<label><input type="checkbox" name="byweekday" value="1">Tue</label>
+                	<label><input type="checkbox" name="byweekday" value="2">Wed</label>
+                	<label><input type="checkbox" name="byweekday" value="3">Thu</label>
+                	<label><input type="checkbox" name="byweekday" value="4">Fri</label>
+                	<label><input type="checkbox" name="byweekday" value="5">Sat</label>
+                	<label><input type="checkbox" name="byweekday" value="6">Sun</label>
 				</div>
 
-				<div class='rrule' id='monthly'>
+				<div class='rrule' id='months'>
 					<label><input name="bymonth" type="checkbox" value="1"/> Jan</label>
                 	<label><input name="bymonth" type="checkbox" value="2"/> Feb</label>
                 	<label><input name="bymonth" type="checkbox" value="3"/> Mar</label>
@@ -148,7 +148,7 @@
 				</div>
 			</div>
 			<div id="newEventButton">
-				<button id="courseEvent"> ADD EVENT </button>
+				<button id="addEvent"> ADD EVENT </button>
 			</div>
 		</div>
 		<div class="content-2" id="upcomingContent">
