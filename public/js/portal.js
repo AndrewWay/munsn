@@ -46,11 +46,13 @@ $(document).ready(function () {
 	 $.get('/api/friend/suggest/'+uid, {
 		uid: uid,
 		limit: 10
-	 }, function() {
-
+	 }, function(response) {
+		//TODO: Store the response in some variable
 	 })
 	 //TODO: Add done and fail callbacks
-	 .done(function(response) {})
+	 .done(function(response) {
+		 console.log(response);
+	 })
 	 .fail(function(response) {});
 
 	//When Previous button is clicked move backwards through list of suggested friends.

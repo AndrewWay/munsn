@@ -105,8 +105,6 @@
 				<h5> OTHER LIST </h5>
 				<ul id="otherList">
 					<li><a href="/lostfound"> Lost & Found </a></li>
-					<li><a href="#"> </a></li>
-					<li><a href="#"> TEST3 </a></li>
 				</ul>
 			</div>
 		

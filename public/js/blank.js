@@ -134,15 +134,23 @@ $(document).ready(function () {
 	$('#userPic a img').attr('src', '/content/image/profile/session');
 
 	//Load user groups
+	//TODO: done, fail, callbacks
 	$.get('/api/groups/user/session', function(response) {
-		console.log(response.data);
+
+		console.log(response);
 
 		$.each( response.data , function(i,v) {
+			$.get('/api/group/info/'+v._id, {
+				gid: v._id
+			}, function(response) {
 
+			console.log(response)	
 			$('#groupList').prepend('<li><a href="GROUP ID HERE"> GROUP NAME </a></li>');
 
-
-			//TODO: Add html to add groups to sidebar
+			})
+		
+			//Each stops on false: Load maximum of 5 groups to sidebar.
+			return i<5;
 
 		});
 	});
