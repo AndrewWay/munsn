@@ -116,7 +116,7 @@ $(document).ready(function () {
 			name: $('#coursePop input[name="cName"]').val(),
 			label: $('#coursePop input[name="cLabel"]').val(),
 			location: $('#coursePop input[name="cLabel"]').val(),
-			semester: $('#coursePop #semester"]').val(),
+			semester: $('#coursePop #semester').val(),
 			year: $('#coursePop input[name="cYear"]').val()						
 		})
 		.done( function(response) {
