@@ -57,16 +57,16 @@
 
 	<div class="container">
 
-	<div class="popup" id="popGroup">
+	<div class="popup" id="groupPop">
 			Create a new group:
 			<input class="popField" type="text" name="gName" placeholder="Group Name"><br>
-			<div id="fpButton">
+			<div id="gButton">
 				<button class="popButton" id="gCreate"> CREATE </button> 
 				<button class="popButton" id="gClose"> CLOSE </button> 
 			</div>
 	</div>
 
-	<div class="popup" id="popCourse">
+	<div class="popup" id="coursePop">
 			Create a new course:
 			<input class="popField" type="text" name="cName" placeholder="Course Name">
 			<input class="popField" type="text" name="cLabel" placeholder="Course Label"><br>

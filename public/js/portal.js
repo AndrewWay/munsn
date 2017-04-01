@@ -58,6 +58,7 @@ $(document).ready(function () {
 	
 	});
 	
+	//TODO: Move this to blank.js so it can be accessed on any page.
 	/*************************
 	* Chat popout
 	*

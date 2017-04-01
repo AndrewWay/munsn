@@ -328,7 +328,7 @@ body, html {
 	background-color: #efefef;
 	border: solid 1px #cccccc;
 
-	position: absolute;
+	position: fixed;
 	display: none;
 	z-index: 100;
 }
@@ -353,6 +353,35 @@ body, html {
 	width: 150px;
 	padding: 5px;
 	margin-top: 5px;
+}
+
+#groupPop {
+	top: calc(50% - 100px);
+	left: calc(50% - 200px);
+	margin: auto;
+	height: 200px;
+	width: 400px;
+
+	text-align: center;
+}
+
+@media all and (max-width: 1000px) {
+    #groupPop{
+		left: 300px;
+    }
+}
+
+
+
+#groupPop * {
+	display: block;
+	margin: auto;
+}
+
+#groupPop #gButton {
+	position: relative;
+	margin-top: 10px;
+	bottom: -50px;
 }
 
 /*End*/

@@ -48,45 +48,70 @@ $(document).ready(function () {
 	//Other NavBar buttons handled in page.
 
 	/**************************
-	 * Left sidebar create
+	 * Left sidebar create buttons
 	 * 
 	 * @params: null
 	 * 
 	 * Create functionaity for groups and courses
 	 ***************************/
 
-	 //Display create group popup
+	 //Display create group popup.
 	$('#createGroup').on('click',function () {
-		$('#popGroup').show();
+		//Disable screen scrowing when open.
+		$('html, body').css({
+    		overflow: 'hidden'
+		});
+
+		$('#groupPop').show();
 	});
 
 	//Display create course popup
 	$('#createCourse').on('click',function() {
-		$('#popGroup').show();
+		//Disable screen scrolling when open.
+		$('html, body').css({
+    		overflow: 'hidden'
+		});
+
+		$('#coursePop').show();
 	});
 
 	//Close create group popup
 	$('#gClose').click(function() {
-		$('#popGroup').hide();
+		//Allow screen scrolling when closed.
+		$('html, body').css({
+    		overflow: 'auto'
+		});
+
+		$('#groupPop').hide();
 	});
 
 	//Close create course popup
 	$('#cClose').click(function() {
-		$('#popCourse').hide();
+		//Allow screen scrolling when closed.
+		$('html, body').css({
+    		overflow: 'auto'
+		});
+
+		$('#coursePop').hide();
 	});
+
 
 	//Create new group
 	$('#gCreate').click(function() {
 		$.post('/api/group', {
-			name: $('#popGroup input[name="gName"]').val(),
+			name: $('#groupPop input[name="gName"]').val(),
 			uid: uid
 		})
+		.done(function (result) {
+					console.log(result);
+		})
+		.fail()
 	});
 
 	//Create new course
-	$('#gCreate').click(function() {
+	$('#cCreate').click(function() {
 		$.post('/api/course/', {
-			name: $('#popGroup input[name="cgName"]').val(),
+			name: $('#groupPop input[name="cgName"]').val(),
 			cid: uid
 		}, function() {
 
@@ -104,14 +129,17 @@ $(document).ready(function () {
 	 * Loads left sidebar element
 	 ***************************/
 
-	//Load user profile image
+	//Load user profile image.
+	//This could be done directly in page, but will cause an error if no session! 
 	$('#userPic a img').attr('src', '/content/image/profile/session');
 
 	//Load user groups
 	$.get('/api/groups/user/session', function(response) {
-		$.each( response, function(i,v) {
+		console.log(response.data);
 
-			$('#groupList').prepend('<li><a href="#"> GROUP NAME </a></li>');
+		$.each( response.data , function(i,v) {
+
+			$('#groupList').prepend('<li><a href="GROUP ID HERE"> GROUP NAME </a></li>');
 
 
 			//TODO: Add html to add groups to sidebar
