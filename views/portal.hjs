@@ -67,17 +67,20 @@
 	</div>
 
 	<div class="popup" id="coursePop">
-			Create a new course:
+			Add a new course:
 			<input class="popField" type="text" name="cName" placeholder="Course Name">
 			<input class="popField" type="text" name="cLabel" placeholder="Course Label"><br>
+			<input class="popField" type="text" name="cRoom" placeholder="Course Room"><br>
 			<select id="semester">
 				<option value="Fall">Fall</option>
-				<option value="Fall">Winter</option>
-				<option value="Fall">Spring</option>
-				<option value="Fall">Summer MI</option>
+				<option value="Winter">Winter</option>
+				<option value="Spring">Spring</option>
+				<option value="Summer MI">Summer MI</option>
 			</select>
-			<div id="fpButton">
-				<button class="popButton" id="cCreate"> CREATE </button> 
+			<input class="popField" type="text" name="cYear" placeholder="Year"><br>
+
+			<div id="cButton">
+				<button class="popButton" id="cAdd"> ADD </button> 
 				<button class="popButton" id="cClose"> CLOSE </button> 
 			</div>
 	</div>

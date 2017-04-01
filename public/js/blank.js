@@ -103,21 +103,28 @@ $(document).ready(function () {
 			uid: uid
 		})
 		.done(function (result) {
-					console.log(result);
+			//Maybe add some functionality?
 		})
-		.fail()
+		.fail(function (result) {
+			//TODO: Alert user when failed.
+		})
 	});
 
-	//Create new course
-	$('#cCreate').click(function() {
-		$.post('/api/course/', {
+	//Add new course
+	$('#cAdd').click(function() {
+		$.post('/api/course/find', {
 			name: $('#coursePop input[name="cName"]').val(),
-			cid: uid
-		}, function() {
+			label: $('#coursePop input[name="cLabel"]').val(),
+			location: $('#coursePop input[name="cLabel"]').val(),
+			semester: $('#coursePop #semester"]').val(),
+			year: $('#coursePop input[name="cYear"]').val()						
+		})
+		.done( function(response) {
 
 		})
-		.done()
-		.fail()
+		.fail( function(response) {
+
+		})
 		
 	});
 
@@ -137,20 +144,11 @@ $(document).ready(function () {
 	//TODO: done, fail, callbacks
 	$.get('/api/groups/user/session', function(response) {
 
-		console.log(response);
-
 		$.each( response.data , function(i,v) {
-			$.get('/api/group/info/'+v._id, {
-				gid: v._id
-			}, function(response) {
-
-			console.log(response)	
-			$('#groupList').prepend('<li><a href="GROUP ID HERE"> GROUP NAME </a></li>');
-
-			})
+			$('#groupList').prepend('<li><a href="/group"> '+v.name+' </a></li>');
 		
 			//Each stops on false: Load maximum of 5 groups to sidebar.
-			return i<5;
+			return i<4;
 
 		});
 	});
@@ -158,11 +156,13 @@ $(document).ready(function () {
 
 	//Load user courses
 	$.get('/api/course/session', function(response) {
+
 		$.each( response, function(i,v) {
 
-			$('#courseList').prepend('<li><a href="#"> CLASS NAME </a></li>');
-
-			//TODO: Add html to add classes to sidebar
+			$('#courseList').prepend('<li><a href="/group"> '+v.name+' </a></li>');
+		
+			//Each stops on false: Load maximum of 5 courses to sidebar.
+			return i<4;
 
 		});
 
@@ -176,11 +176,11 @@ $(document).ready(function () {
 
 
 /****
- *Sidebar scrolling. Horizontally scroll, vertically fixed
+ *Sidebar and navbar scrolling. Horizontally scroll, vertically fixed
  * 
  *@params: null 
  * 
- * Function on window scroll that keeps sidebars fixed vertically but allows them to be hidden horizontally.
+ * Function on window scroll that keeps sidebars and navbar fixed vertically but allows them to be hidden horizontally.
  ****/
 
 $(window).scroll(function () {
@@ -190,7 +190,14 @@ $(window).scroll(function () {
 
 			'top': $(this).scrollTop() + 50 //Use it later
 
-
 		});
+
+		$(".navbar").css({
+
+			'top' : $(this).scrollTop()
+
+		})
 	}
+
+
 });
