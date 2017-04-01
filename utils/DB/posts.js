@@ -1,16 +1,69 @@
 var console = require('../consoleLogger');
 var ObjectID = require('mongodb').ObjectID;
 module.exports = function (DBPosts, collectionPosts) {
+
+	//POST DATA
+	//=====================================================================================================================================
+
 	//Add a post
 	DBPosts.add = function (req, res, callback) {
 		var date = new Date();
-        var post = {
-            uid: req.body.uid,
-            visibility: req.body.visibility,
-            history: [{
-                text: req.body.text
-            }],
-        };
+		if (req.body.uid) {
+			/**
+			 * Keys in req.body.fields have the following data if exists
+			 *
+			 * Image: true/false
+			 * Text: string
+			 * location: object {x: decimal, y: decimal}
+			 * poll: object {options...}
+			 */
+			var post = {
+				uid: undefined, //The User who made this post
+				type: undefined, //The type of post this is
+				targetid: undefined, //The target of this post, Group, Timeline, undefined for lostfound
+				visibility: undefined, //public, friends, private
+				whitelist: undefined, //Override visibility, as a whitelist
+				comments: []
+			};
+			// Loop through body, if field is not found, then set null
+			Object.keys(post).forEach(k => {
+				if (req.body[k] === undefined) {
+					delete post[k];
+				} else {
+					post[k] = req.body[k];
+				}
+			});
+
+			//Push the postObject to post.history array
+			post.history = [Object.assign({
+				date: date
+			}, req.body.fields)];
+			//Push allowed users to post.allowedUsers array if the visibility is specific
+
+			console.log("[DBPosts] Add->'" + post.type + "'", "'" + JSON.stringify(post) + "'");
+			collectionPosts.insert(post, function (err, result) {
+				if (err) {
+					console.error("[DBPosts] Add->'" + post.type + "'", err.message);
+					callback({
+						session: req.session,
+						status: 'fail'
+					});
+				} else {
+					callback({
+						session: req.session,
+						data: post,
+						status: 'ok'
+					});
+				}
+			});
+
+		} else {
+			console.warn("[DBPosts] Add", "'Missing Fields'");
+			callback({
+				session: req.session,
+				status: "fail"
+			});
+		}
 	};
 
 	//Remove a post by id
@@ -38,7 +91,7 @@ module.exports = function (DBPosts, collectionPosts) {
 	DBPosts.findByUserId = function (req, res, callback) {
 		console.log("[DBPosts] FindByUID", "'" + req.UserID + "'");
 		collectionPosts.find({
-			authorid: req.UserID
+			uid: req.UserID
 		}).toArray(function (err, result) {
 			if (err) {
 				console.error("[DBPosts] FindByUID", err.message);
@@ -57,13 +110,15 @@ module.exports = function (DBPosts, collectionPosts) {
 	};
 
 	//Get posts per post id
-	DBPosts.findByPostId = function (req, res, callback) {
-		console.log("[DBPosts] FindByPID", "'" + req.params.pid + "'");
-		collectionPosts.find({
-			_id: new ObjectID(req.params.pid)
-		}).toArray(function (err, result) {
+	DBPosts.find = function (req, res, callback) {
+		console.log("[DBPosts] Find", "'" + JSON.stringify(req.body) + "'");
+		var query = req.body;
+		if (query.pid) {
+			query.pid = new ObjectID(query.pid);
+		}
+		collectionPosts.find(query).toArray(function (err, result) {
 			if (err) {
-				console.error("[DBPosts] FindByPID", err.message);
+				console.error("[DBPosts] Find", err.message);
 				callback({
 					session: req.session,
 					status: 'fail'
@@ -78,24 +133,58 @@ module.exports = function (DBPosts, collectionPosts) {
 		});
 	};
 
-	//Update post
-	DBPosts.update = function (req, res, callback) {
-		var date = new Date();
+	//Update post visibility
+	DBPosts.updateVisibility = function (req, res, callback) {
 		var updates = {
-			data: req.body.data,
-			modified: date,
-			visibility: req.body.visibility
+			visibility: undefined
 		};
+		Object.keys(updates).forEach(k => {
+			if (req.body[k] === undefined) {
+				delete updates[k];
+			} else {
+				updates[k] = req.body[k];
+			}
+		});
+		updates.whitelist = req.body.whitelist;
 		console.log("[DBPosts] Update", "'" + req.body.pid + "'->'" + JSON.stringify(updates) + "'");
-		collectionPosts.update({
-			_id: new ObjectID(req.body.pid)
-		}, {
-			$set: updates
-		}, {
-			upsert: true
-		}, function (err, result) {
+		collectionPosts.update({_id: new ObjectID(req.body.pid)}, {$set: {visibility: updates.visibility}, $addToSet: {whitelist: {$each: updates.whitelist}}}, {upsert: true}, function (err, result) {
 			if (err) {
 				console.error("[DBPosts] Update", err.message);
+				callback({
+					session: req.session,
+					status: 'fail'
+				});
+			} else {
+				callback({
+					session: req.session,
+					status: 'ok'
+				});
+			}
+		});
+	};
+
+	//POST HISTORY
+	//=====================================================================================================================================
+
+	DBPosts.updateHistory = function(req, res, callback) {
+		var updates = {
+			image: undefined,
+			text: undefined,
+			location: undefined,
+			poll: undefined
+		};
+		Object.keys(updates).forEach(k => {
+			if (req.body[k] === undefined) {
+				delete updates[k];
+			} else {
+				updates[k] = req.body[k];
+			}
+		});
+		console.log("[DBPosts] UpdateHistory", "'" + req.body.pid + "'->'" + JSON.stringify(updates) + "'");
+		updates.date = new Date();
+		collectionPosts.update({_id: new ObjectID(req.body.pid)}, {$push: {history: updates}}, {upsert: true}, function(err, results) {
+			if (err) {
+				console.error("[DBPosts] UpdateHistory", err.message);
 				callback({
 					session: req.session,
 					status: 'fail'

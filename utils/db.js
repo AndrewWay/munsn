@@ -199,47 +199,31 @@ mongoClient.connect(dbURL, function (err, DB) {
 	DB.createCollection('posts', {
 		validator: {
 			$and: [{
-				//Foreign key for userid
-				authorid: {
-					$type: 'string'
+					uid: {
+						$type: 'string'
+					}
+				},
+				{
+					type: {
+						$type: 'string'
+					}
+				},
+				{
+					targetid: {
+						$type: 'string'
+					}
+				},
+				{
+					visibility: {
+						$type: 'string'
+					}
+				}, {
+					"history.0": {
+						$exists: true
+					}
 				}
-			}, {
-				/*
-				private: Only the user can view the post
-				public: Everyone can view the post
-				friends: Only friends can view the post
-				list: Only a list of friends can view,
-
-				For list, update to the array list(userId)
-				*/
-				visibility: {
-					$type: 'string'
-				}
-			}, {
-				//User or group
-				origin: {
-					$type: 'string'
-				}
-			}, {
-				created: {
-					$type: 'date'
-				}
-			}, {
-				modified: {
-					$type: 'date'
-				}
-			}, {
-				dataType: {
-					$type: 'string'
-				}
-			}, {
-				data: {
-					$type: 'object'
-				}
-			}]
-		},
-		validationLevel: 'strict',
-		validationAction: 'error'
+			]
+		}
 	});
 
 	/**
@@ -317,11 +301,11 @@ mongoClient.connect(dbURL, function (err, DB) {
 						$type: 'string'
 					}
 				},
-                {
-                    gCal: {
-                        $type: 'object'
-                    }
-                }
+				{
+					gCal: {
+						$type: 'object'
+					}
+				}
 			]
 		}
 	});
