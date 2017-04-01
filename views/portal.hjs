@@ -34,7 +34,7 @@
 
 		<div class="buttons">
 			<a href="#"><img id="not" src="/img/notification-red.png"></a>
-			<a href="/logout"><img id="log" src="/img/logout.png"></a>
+			<a href="/api/logout"><img id="log" src="/img/logout.png"></a>
 			<a href="/settings"><img id="cog" src="/img/settings.png"></a>
 		</div>
 	</div>
@@ -56,6 +56,35 @@
 	</div>
 
 	<div class="container">
+
+	<div class="popup" id="groupPop">
+			Create a new group:
+			<input class="popField" type="text" name="gName" placeholder="Group Name"><br>
+			<div id="gButton">
+				<button class="popButton" id="gCreate"> CREATE </button> 
+				<button class="popButton" id="gClose"> CLOSE </button> 
+			</div>
+	</div>
+
+	<div class="popup" id="coursePop">
+			Add a new course:
+			<input class="popField" type="text" name="cName" placeholder="Course Name">
+			<input class="popField" type="text" name="cLabel" placeholder="Course Label"><br>
+			<input class="popField" type="text" name="cRoom" placeholder="Course Room"><br>
+			<select id="semester">
+				<option value="Fall">Fall</option>
+				<option value="Winter">Winter</option>
+				<option value="Spring">Spring</option>
+				<option value="Summer MI">Summer MI</option>
+			</select>
+			<input class="popField" type="text" name="cYear" placeholder="Year"><br>
+
+			<div id="cButton">
+				<button class="popButton" id="cAdd"> ADD </button> 
+				<button class="popButton" id="cClose"> CLOSE </button> 
+			</div>
+	</div>
+
 	<div class="sidebars" id="section-left">
 		<div class="userInfo" id="userPic">
 			<a href="profile/"><img src="/img/SEAHAWK_SIL.jpg" alt="GOTO Profile"></a>	
@@ -64,14 +93,14 @@
 			<div class="userLists" id="group">
 				<h5> GROUP LIST </h5>
 				<ul id="groupList">
-					<li><a id="createGroup" href="#"> Create New Group </a></li>
+					<li><a id="createGroup" href="javascript:void(0)"> Create New Group </a></li>
 				</ul>
 			</div>
 		
 			<div class="userLists" id="course">
 				<h5> COURSE LIST </h5>
 				<ul id="courseList">
-					<li><a id="createCourse" href="#"> Add New Class </a></li>
+					<li><a id="createCourse" href="javascript:void(0)"> Add New Class </a></li>
 				</ul>
 			</div>
 			
@@ -79,8 +108,6 @@
 				<h5> OTHER LIST </h5>
 				<ul id="otherList">
 					<li><a href="/lostfound"> Lost & Found </a></li>
-					<li><a href="#"> </a></li>
-					<li><a href="#"> TEST3 </a></li>
 				</ul>
 			</div>
 		
