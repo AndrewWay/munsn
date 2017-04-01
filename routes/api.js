@@ -786,7 +786,7 @@ var updateGroup = "/group"; //PATCH
  * findGroups
  *
  * URL:
- * 		- %server%/api/user/groups/
+ * 		- %server%/api/group
  * Descript:
  *      - Search groups by query
  * Method:
@@ -816,7 +816,6 @@ var findGroups = "/group"; //GET
  *      - JSON group object
  */
 var findGroupById = "/group/:gid"; //GET
-
 /**
  * findGroupSent
  *
@@ -909,7 +908,6 @@ var addGroupUser = "/groups/user"; //POST
  *      - JSON group users object after deletion
  */
 var delGroupUser = "/groups/user"; //DELETE
-
 /**
  * updateGroupUser
  *

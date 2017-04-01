@@ -28,7 +28,7 @@ module.exports = function (DBGroups, collectionGroups, collectionGroupMembers, c
 						}]
 					}, function (err, result) {
 						if (err) {
-							console.error("[DBGroups] AddMember", err.message);
+							console.error("[DBGroups] Add->Members", err.message);
 							callback({
 								session: req.session,
 								status: 'fail'
@@ -61,19 +61,37 @@ module.exports = function (DBGroups, collectionGroups, collectionGroupMembers, c
 				fields: {
 					_id: 1
 				}
-			}).toArray(function (err, results) {
-				console.log(JSON.stringify(results));
-				if (err) {
-					console.error("[DBGroups] FindByUserID", err.message);
+			}).toArray(function (fErr, fResult) {
+				if (fErr) {
+					console.error("[DBGroups] FindByUserID", fErr.message);
 					callback({
 						session: req.session,
 						status: 'fail'
 					});
 				} else {
-					callback({
-						session: req.session,
-						status: 'ok',
-						data: results
+					console.log("[DBGroups] FindByUserID->fResult", "'" + JSON.stringify(fResult) + "'->'" + userId + "'");
+					var groups = [];
+					fResult.forEach(g => {
+						groups.push(g._id);
+					});
+					collectionGroups.find({
+						_id: {
+							$in: groups
+						}
+					}).toArray(function (gErr, gResult) {
+						if (gErr) {
+							console.error("[DBGroups] FindByUserID->gResult", gErr.message);
+							callback({
+								session: req.session,
+								status: 'fail'
+							});
+						} else {
+							callback({
+								session: req.session,
+								status: 'ok',
+								data: gResult
+							});
+						}
 					});
 				}
 			});
@@ -203,61 +221,80 @@ module.exports = function (DBGroups, collectionGroups, collectionGroupMembers, c
 		}
 	};
 
-    DBGroups.updateMember = function(req, res, callback) {
-        collectionGroupMembers.update({_id: new ObjectID(req.body.gid), "members.user": req.body.uid}, {$set: {"members.$.admin": req.body.admin}}, function(err, results) {
-            if (err) {
-                console.error("[DBGroups] updateMember", err.message);
-                callback({
-                    session: req.session,
-                    status: 'fail'
-                });
-            }
-            else {
-                callback({
-                    session: req.session,
-                    status: 'ok'
-                });
-            }
-        });
-    };
+	DBGroups.updateMember = function (req, res, callback) {
+		collectionGroupMembers.update({
+			_id: new ObjectID(req.body.gid),
+			"members.user": req.body.uid
+		}, {
+			$set: {
+				"members.$.admin": req.body.admin
+			}
+		}, function (err, results) {
+			if (err) {
+				console.error("[DBGroups] updateMember", err.message);
+				callback({
+					session: req.session,
+					status: 'fail'
+				});
+			} else {
+				callback({
+					session: req.session,
+					status: 'ok'
+				});
+			}
+		});
+	};
 
-    DBGroups.removeMember = function(req, res, callback) {
-        collectionGroupMembers.findAndModify({_id: new ObjectID(req.body.gid)}, [['_id', 'ascending']], {$pull: {members: {user: req.body.uid}}}, {upsert: true, new: true}, function(err, results) {
-            if (err) {
-                console.error("[DBGroups] updateMember", err.message);
-                callback({
-                    session: req.session,
-                    status: 'fail'
-                });
-            }
-            else {
-                callback({
-                    session: req.session,
-                    status: 'ok'
-                });
-            }
-        });
-    };
+	DBGroups.removeMember = function (req, res, callback) {
+		collectionGroupMembers.findAndModify({
+			_id: new ObjectID(req.body.gid)
+		}, [
+			['_id', 'ascending']
+		], {
+			$pull: {
+				members: {
+					user: req.body.uid
+				}
+			}
+		}, {
+			upsert: true,
+			new: true
+		}, function (err, results) {
+			if (err) {
+				console.error("[DBGroups] updateMember", err.message);
+				callback({
+					session: req.session,
+					status: 'fail'
+				});
+			} else {
+				callback({
+					session: req.session,
+					status: 'ok'
+				});
+			}
+		});
+	};
 
-    DBGroups.findMembers = function(req, res, callback) {
-    collectionGroupMembers.find({_id: new ObjectID(req.params.gid)}).toArray(function(err, results) {
-        if (err) {
-            console.error("[DBGroups] updateMember", err.message);
-            callback({
-                session: req.session,
-                status: 'fail'
-            });
-        }
-        else {
-            callback({
-                session: req.session,
-                status: 'ok',
-                data: results
-            });
-        }
-    });
-};
-    
+	DBGroups.findMembers = function (req, res, callback) {
+		collectionGroupMembers.find({
+			_id: new ObjectID(req.params.gid)
+		}).toArray(function (err, results) {
+			if (err) {
+				console.error("[DBGroups] updateMember", err.message);
+				callback({
+					session: req.session,
+					status: 'fail'
+				});
+			} else {
+				callback({
+					session: req.session,
+					status: 'ok',
+					data: results
+				});
+			}
+		});
+	};
+
 	//GROUP REQUESTS
 	//======================================================================================================
 
@@ -359,7 +396,18 @@ module.exports = function (DBGroups, collectionGroups, collectionGroupMembers, c
 	DBGroups.removeRequest = function (req, res, callback) {
 		console.log("[DBGroups] RemoveRequest", "'" + (req.body.uid ? req.body.uid : "*") + "'->'" + (req.body.gid ? req.body.gid : "*") + "'");
 		if (req.body.uid && req.body.gid) {
-			collectionGroupRequests.findAndModify({_id: new ObjectID(req.body.gid)}, [['_id', 'ascending']], {$pull: {requests: req.body.uid}}, {new: true, upsert: true}, function (err, result) {
+			collectionGroupRequests.findAndModify({
+				_id: new ObjectID(req.body.gid)
+			}, [
+				['_id', 'ascending']
+			], {
+				$pull: {
+					requests: req.body.uid
+				}
+			}, {
+				new: true,
+				upsert: true
+			}, function (err, result) {
 				if (err) {
 					console.error("[DBGroups] RemoveRequest", err.message);
 					callback({
