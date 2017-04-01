@@ -8,14 +8,15 @@
 
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
 	<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.4/build/jquery.datetimepicker.full.min.js"></script>
+	
 
-	<script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.js"></script>
-	<script src="http://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.2.0/fullcalendar.min.js"></script>
-	<link href="http://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.2.0/fullcalendar.min.css" rel="stylesheet"/>
-	<link href="http://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.2.0/fullcalendar.print.css" media="print" rel="stylesheet"/>
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.4/build/jquery.datetimepicker.min.css" rel="stylesheet"/>
 
 	<script src="/js/blank.js"></script>
 	<script src="/js/schedule.js"></script>
+	<script src="/js/rrule.js"></script>
+	<script src="/js/nlp.js"></script>
 
 </head>
 <body>
@@ -68,7 +69,7 @@
 			<div class="userLists" id="groupList">
 				<h5> GROUP LIST </h5>
 				<ul id="groupList">
-					<li><a href="/group"> GOTO Group] </a></li>
+					<li><a href="/group"> GOTO Group </a></li>
 					<li><a href="#"> TEST2 </a></li>
 					<li><a href="#"> TEST3 </a></li>
 				</ul>
@@ -99,9 +100,63 @@
 	<div class="timeline"><div id="calendar"></div></div>
 
 	<div class="sidebars" id="section-right">
-		<div id= "content-1">
+		<div class="content-1">
+			<div id="choiceButtons">
+				<button id="addChoice"> ADD </button>
+				<button id="upcomingChoice"> UPCOMING </button>
+			</div>
 		</div>
-		<div id ="content-2">
+		<div class="content-2" id="addContent">
+			<div id="newEventInfo">
+				<input type="text" name="summary" class="summary"/>
+				<div class="textDesc">
+					<textarea class="text" id="description" placeholder="Description..."></textarea>
+				</div>
+				<input id="startTime" type="text" />
+				<input id="endTime" type="text" />
+
+				<div class='rrule' id='freq'>
+					<label><input name="freq" type="radio" value="0" checked />Once</label>
+                	<label><input name="freq" type="radio" value="1" />Daily</label>
+                	<label><input name="freq" type="radio" value="2" />Weekly</label>
+                	<label><input name="freq" type="radio" value="3" />Monthly</label>
+				</div>
+
+				<div class='rrule' id='weekdays'>
+					<label><input type="checkbox" name="byweekday" value="0">Mon</label>
+                	<label><input type="checkbox" name="byweekday" value="1">Tue</label>
+                	<label><input type="checkbox" name="byweekday" value="2">Wed</label>
+                	<label><input type="checkbox" name="byweekday" value="3">Thu</label>
+                	<label><input type="checkbox" name="byweekday" value="4">Fri</label>
+                	<label><input type="checkbox" name="byweekday" value="5">Sat</label>
+                	<label><input type="checkbox" name="byweekday" value="6">Sun</label>
+				</div>
+
+				<div class='rrule' id='months'>
+					<label><input name="bymonth" type="checkbox" value="1"/> Jan</label>
+                	<label><input name="bymonth" type="checkbox" value="2"/> Feb</label>
+                	<label><input name="bymonth" type="checkbox" value="3"/> Mar</label>
+                	<label><input name="bymonth" type="checkbox" value="4"/> Apr</label>
+                	<label><input name="bymonth" type="checkbox" value="5"/> May</label>
+                	<label><input name="bymonth" type="checkbox" value="6"/> Jun</label>
+                	<label><input name="bymonth" type="checkbox" value="7"/> Jul</label>
+                	<label><input name="bymonth" type="checkbox" value="8"/> Aug</label>
+                	<label><input name="bymonth" type="checkbox" value="9"/> Sep</label>
+                	<label><input name="bymonth" type="checkbox" value="10"/> Oct</label>
+                	<label><input name="bymonth" type="checkbox" value="11"/> Nov</label>
+                	<label><input name="bymonth" type="checkbox" value="12"/> Dec</label>
+				</div>
+			</div>
+			<div id="newEventButton">
+				<button id="addEvent"> ADD EVENT </button>
+			</div>
+		</div>
+		<div class="content-2" id="upcomingContent">
+			<div id="upcomingEvents">
+				<ul class="userLists" id="eventsList">
+
+				</ul>
+			</div>
 		</div>
 	</div>
 
