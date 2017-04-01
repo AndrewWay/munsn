@@ -12,15 +12,17 @@ body, html {
 
 .navbar {
 	background-color: #333;
-	position: fixed;
+	position: absolute;
 	top:0;
 	width:100%;
 	height: 3.1em;
 	min-width: 1000px;
 	display: inline-block;
 	z-index: 1;
+	box-sizing: content-box;
 
 }
+
 
 .menu{
 	float:left;
@@ -78,7 +80,7 @@ body, html {
 	border-bottom-right-radius: 9px;
 	border-style: none;
 	height:1.75em;
-	position:fixed;
+	position:absolute;
 	top:.95em;
 }
 
@@ -324,5 +326,89 @@ body, html {
 	background-color: #dddddd;
 }
 
+.popup {
+	background-color: #efefef;
+	border: solid 1px #cccccc;
+
+	position: fixed;
+	display: none;
+	z-index: 100;
+}
+
+.popField {
+	position: relative;
+	width: 300px;
+	/*width: 198px;*/
+	border-radius: 4px;
+	top: 60px;
+}
+
+.popField:hover {
+	background-color: #f1f1f1;
+}
+
+.popup button {
+	background-color: #fcfcfc;
+	border-radius: 5px;
+	cursor: pointer;
+	text-align: center;
+	width: 150px;
+	padding: 5px;
+	margin-top: 5px;
+}
+
+#groupPop {
+	top: calc(50% - 100px);
+	left: calc(50% - 200px);
+	margin: auto;
+	height: 200px;
+	width: 400px;
+
+	text-align: center;
+}
+
+@media all and (max-width: 1000px) {
+    #groupPop{
+		left: 300px;
+    }
+}
+
+#groupPop * {
+	display: block;
+	margin: auto;
+}
+
+#groupPop #gButton {
+	position: relative;
+	margin-top: 10px;
+	bottom: -50px;
+}
+
+#coursePop {
+	top: calc(50% - 100px);
+	left: calc(50% - 200px);
+	margin: auto;
+	height: 200px;
+	width: 400px;
+
+	text-align: center;
+}
+
+@media all and (max-width: 1000px) {
+    #coursePop{
+		left: 300px;
+    }
+}
+
+#coursePop * {
+	position: static;
+	display: inline-block;
+	margin: auto;
+}
+
+#coursePop #cButton {
+	position: relative;
+	margin-top: 10px;
+}
 
 /*End*/
