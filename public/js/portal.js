@@ -34,16 +34,25 @@ $(document).ready(function () {
 
 	});
 	
-	/************************
-	* Suggested friend buttons
-	*
-	*@params: null
-	*
-	* Behaviour of suggested friend box when a button is clicked.
-	*
-	*COMMENTS: Should be moved to something outside here so there is no repeated code.
-	************************/
+	//TODO: Move to it's own file to be called by all pages which need it.
+	/*************************
+	 * Suggested friends sidebar
+	 * 
+	 * @params: null
+	 * 
+	 * Functionality to grab and navigate suggested friends list.
+	 *************************/
 	
+	 $.get('/api/friend/suggest/'+uid, {
+		uid: uid,
+		limit: 10
+	 }, function() {
+
+	 })
+	 //TODO: Add done and fail callbacks
+	 .done(function(response) {})
+	 .fail(function(response) {});
+
 	//When Previous button is clicked move backwards through list of suggested friends.
 	$('#suggPrev').click(function() {
 		//TODO -- Implementation when integration is done
@@ -58,6 +67,9 @@ $(document).ready(function () {
 	
 	});
 	
+	
+
+
 	//TODO: Move this to blank.js so it can be accessed on any page.
 	/*************************
 	* Chat popout

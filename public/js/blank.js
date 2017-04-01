@@ -111,7 +111,7 @@ $(document).ready(function () {
 	//Create new course
 	$('#cCreate').click(function() {
 		$.post('/api/course/', {
-			name: $('#groupPop input[name="cgName"]').val(),
+			name: $('#coursePop input[name="cName"]').val(),
 			cid: uid
 		}, function() {
 
