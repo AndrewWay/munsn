@@ -144,7 +144,7 @@ module.exports = function (DBGroups, collectionGroups, collectionGroupMembers, c
 		};
 		console.log("[DBGroups] Update", "'" + JSON.stringify(updates) + "'->'" + req.body._id + "'");
 		Object.keys(updates).forEach(k => {
-			if (req.body[k] === undefined) {
+			if (!req.body[k]) {
 				delete updates[k];
 			} else {
 				updates[k] = req.body[k];

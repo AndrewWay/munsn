@@ -674,7 +674,7 @@ var findPostByUid = "/post/:uid"; //GET
  * addComment
  *
  * URL:
- * 		- %server%/api/comment/add
+ * 		- %server%/api/comment
  * Descript:
  *      - Add a comment
  * Method:
@@ -707,7 +707,7 @@ var updateComment = "/comment"; //PATCH
  * removeComment
  *
  * URL:
- * 		- %server%/api/comment/remove
+ * 		- %server%/api/comment
  * Descript:
  *      - Remove a comment
  * Method:
@@ -1313,12 +1313,12 @@ router.get(findCommentById, UserID, function (req, res, next) {
 	});
 });
 router.post(addComment, UserID, function (req, res, next) {
-	DB.Comments.add(req, res, function (result) {
+	DB.Posts.addComment(req, res, function (result) {
 		res.json(result);
 	});
 });
 router.delete(removeComment, UserID, function (req, res, next) {
-	DB.Comments.removeById(req, res, function (result) {
+	DB.Posts.removeComment(req, res, function (result) {
 		res.json(result);
 	});
 });

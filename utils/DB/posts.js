@@ -197,4 +197,76 @@ module.exports = function (DBPosts, collectionPosts) {
 			}
 		});
 	};
+
+	//COMMENTS
+	//=====================================================================================================================================
+
+	DBPosts.addComment = function(req, res, callback) {
+		var date = new Date();
+		var comment = {
+			uid: undefined,
+		};
+		Object.keys(comment).forEach(k => {
+			if (req.body[k] === undefined) {
+				delete comment[k];
+			} else {
+				comment[k] = req.body[k];
+			}
+		});
+			
+		var commentData = {
+				text: undefined,
+				image: undefined,
+		};
+
+		Object.keys(commentData).forEach(k => {
+			if (req.body.commentData[k] !== undefined) {
+				commentData[k] = req.body.commentData[k];
+			} 
+		});
+
+		console.log(JSON.stringify(req.body));
+		comment.history = [commentData];
+		comment.history[0].date = date;
+		comment._id = new ObjectID();
+		collectionPosts.update({_id: new ObjectID(req.body.pid)}, {$push: {comments: comment}}, {upsert: true}, function(err, results) {
+			if (err) {
+				console.error("[DBPosts] AddComment", err.message);
+				callback({
+					session: req.session,
+					status: 'fail'
+				});
+			} else {
+				callback({
+					session: req.session,
+					status: 'ok'
+				});
+			}
+		});
+	};
+
+	DBPosts.removeComment = function(req, res, callback) {
+		if (req.body.cid && req.body.pid) {
+			collectionPosts.update({_id: new ObjectID(req.body.pid)}, {$pull: {comments: {_id: new ObjectID(req.body.cid)}}}, function(err, result) {
+				if (err) {
+					console.error("[DBPosts] RemoveComment", err.message);
+					callback({
+						session: req.session,
+						status: 'fail'
+					});
+				} else {
+					callback({
+						session: req.session,
+						status: 'ok'
+					});
+				}
+			});
+		} else {
+			console.warn("[DBPosts] RemoveComment", "'Missing Fields'");
+			callback({
+				session: req.session,
+				status: "fail"
+			});
+		}
+	};
 };
