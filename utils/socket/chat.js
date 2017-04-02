@@ -51,17 +51,19 @@ nsChat.on('connection', function (socket) {
     socket.on('pm', function (user, msg) {
         //Uid is reciever
         //Sid is sender
-        DB.Socket.findUid(user, function (userErr, uidResult) {
-            if (userErr || !uidResult) {
+        DB.Socket.findUid(user, function (userErr, recieverResult) {
+            //Get the recievers socket id
+            if (userErr || !recieverResult) {
                 nsChat.to(socket.id).emit('chat message', "User " + user + " does not exist");
             }
             else {
                 console.log("[Message]", "'" + msg + "'->'" + user + "'");
-                console.log("[Socket] FindUid->Result", JSON.stringify(uidResult));
-                DB.Socket.findSid(socket.id, function (sidError, sidResult) {
-                    nsChat.to(uidResult.socketid).emit('chat message', "[PM: " + sidResult._id + "] " + msg);
-                    nsChat.to(sidResult.socketid).emit('chat message', "[PM: " + sidResult._id + "] " + msg);
-                    DB.Socket.saveMessage(sidResult._id, uidResult._id, {user: uidResult, message: msg}, function(err, saveResult) {
+                console.log("[Socket] FindUid->Result", JSON.stringify(recieverResult));
+                //Get the senders user id
+                DB.Socket.findSid(socket.id, function (sidError, senderResult) {
+                    nsChat.to(recieverResult.socketid).emit('chat message', "[PM: " + senderResult._id + "] " + msg);
+                    nsChat.to(senderResult.socketid).emit('chat message', "[PM: " + senderResult._id + "] " + msg);
+                    DB.Socket.saveMessage(senderResult._id, recieverResult._id, {user: senderResult._id, message: msg}, function(err, saveResult) {
                         //TODO: Write stuff here
                     });
                 });
