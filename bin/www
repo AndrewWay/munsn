@@ -40,7 +40,7 @@ switch (process.env.NODE_ENV) {
       });
     });
     process.env.HOSTNAME = 'sc-6.cs.mun.ca';
-    process.env.ADDRESS = process.env.HOSTNAME + ':' + process.env.PORT;
+    process.env.ADDRESS = process.env.HOSTNAME; //Don't need the port for MUN's server
     break;
   default:
     http.get({
