@@ -16,7 +16,7 @@ var sharedsession = require("express-socket.io-session");
 var port = normalizePort(process.env.PORT || '3336');
 process.env.PORT = port;
 app.set('port', port);
-switch (process.env.NODE_ENV) {
+switch (process.argv[2]) {
   case 'dev':
     http.get({
       'host': 'api.ipify.org',
