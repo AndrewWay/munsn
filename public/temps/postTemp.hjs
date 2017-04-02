@@ -6,12 +6,12 @@
 						<img src='/content/image/profile/session'+{{uid}}>
 					</div> 
 					<div class="postName">
-						<a href="{{ POST_LINK }}"> {{ POST_NAME }} </a> <br>
-						<span>{{ POST_TIME }}</span>
+						<a href="/profile/#"+{{uid}}> {{uid}} </a> <br>
+						<span>{{date}}</span>
 					</div>
 				</div>
 				<div class="postCont">
-					<p> {{ POST_TEXT }}</p><img src="../img/postImg.png">
+					<p> {{text}}</p><img src="/content/posts/{{_id}}/{{_id}}">
 				</div>
 				
 				<div class="postComm">

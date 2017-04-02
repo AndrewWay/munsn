@@ -193,11 +193,7 @@ $(document).ready(function () {
 
 			var postInfo=$.extend({}, v,v.history.slice(-1).pop());
 			
-			var postData=v.history.slice(-1).pop();
 
-			console.log(postInfo);
-	
-			$('#posts').append(postData.date+" "+postData.text+"<br>");
 
 			data.list.push(postInfo);
 			console.log(data);
@@ -213,7 +209,7 @@ $(document).ready(function () {
 		 $.get("/temps/postTemp.hjs", function(post) {
 				var template = Hogan.compile("{{#list}}" + post +"{{/list}}");
 				var output = template.render(data);
-				$('#posts').html(output);
+				$('#posts').prepend(output);
 		});
 	 })
 	 .fail(

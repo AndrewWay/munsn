@@ -87,7 +87,7 @@
 
 	<div class="sidebars" id="section-left">
 		<div class="userInfo" id="userPic">
-			<a href="profile/"><img src="/img/SEAHAWK_SIL.jpg" alt="GOTO Profile"></a>	
+			<a href="/profile"><img src="/img/SEAHAWK_SIL.jpg" alt="GOTO Profile"></a>	
 		</div>
 		<div class="userInfo" id="lists">
 			<div class="userLists" id="group">
