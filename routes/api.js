@@ -344,16 +344,14 @@ var createCourse = "/course"; //POST
  * Params:
  *		_id: The course unique object id
  *		label: Shorthand name, ex. "COMP 4770"
+ *		description: Description of the course
  *		name: Full name, ex. "Team Project"
- *		description: Description
  *		semester: Semester, ex. "winter"
- *		department: Department that the course belongs to, ex. "cs"
  *		location: Room number, ex. "EN 1051"
+ *		department: Department that the course belongs to, ex. "cs"
  *		year: Current year the course is offered
  *		cid: Creator id
- *		days: Array of strings of days the course is every week, ex. days["monday", "wednesday", "friday"]
- *		timeStart: (date)The course start date, ex. "Jan. 1"
- *		timeEnd: (date) The course end date, ex. "Apr. 12"
+ *		event: The calendar event object that relates to the google api
  * Returns:
  *      - JSON mongo result
  */
@@ -1227,7 +1225,7 @@ router.get(findCourse, UserID, function (req, res, next) {
 	});
 });
 router.post(createCourse, UserID, function (req, res, next) {
-	DB.Courses.createCourse(req, res, function (result) {
+	DB.Courses.add(req, res, function (result) {
 		res.json(result);
 	});
 });

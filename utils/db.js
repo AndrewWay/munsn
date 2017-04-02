@@ -261,16 +261,6 @@ mongoClient.connect(dbURL, function (err, DB) {
 					}
 				},
 				{
-					timeStart: {
-						$type: 'date'
-					}
-				},
-				{
-					timeEnd: {
-						$type: 'date'
-					}
-				},
-				{
 					description: {
 						$type: 'string'
 					}
@@ -291,6 +281,11 @@ mongoClient.connect(dbURL, function (err, DB) {
 					}
 				},
 				{
+					department: {
+						$type: 'string'
+					}
+				},
+				{
 					year: {
 						$type: 'string'
 					}
@@ -302,12 +297,14 @@ mongoClient.connect(dbURL, function (err, DB) {
 					}
 				},
 				{
-					gCal: {
+					event: {
 						$type: 'object'
 					}
 				}
 			]
-		}
+		},
+		validationLevel: 'strict',
+		validationAction: 'error'
 	});
 
 	DB.createCollection('lostfound', {
