@@ -148,7 +148,7 @@ var logoutUser = "/logout";
  * Returns:
  *      - JSON array containing messages
  */
-var loadMessages = "/messages/load"; //GET
+var loadMessages = "/messages"; //GET
 /**
  * addFriend
  *

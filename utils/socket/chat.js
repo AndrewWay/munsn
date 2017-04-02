@@ -61,7 +61,7 @@ nsChat.on('connection', function (socket) {
                 DB.Socket.findSid(socket.id, function (sidError, sidResult) {
                     nsChat.to(uidResult.socketid).emit('chat message', "[PM: " + sidResult._id + "] " + msg);
                     nsChat.to(sidResult.socketid).emit('chat message', "[PM: " + sidResult._id + "] " + msg);
-                    DB.Socket.saveMessage(sidResult._id, uidResult._id, msg, function(err, saveResult) {
+                    DB.Socket.saveMessage(sidResult._id, uidResult._id, {user: uidResult, message: msg}, function(err, saveResult) {
                         //TODO: Write stuff here
                     });
                 });
