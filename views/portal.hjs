@@ -122,6 +122,10 @@
 	
 		<!-- RANDOM POSTS FOR TESTING -->
 	
+		<div class="posts" id="posts">
+			
+		</div>
+
 		<div class="postTemp">
 				<div class="postInfo">
 					<div class="postPic">
