@@ -9,10 +9,10 @@ $(document).ready(function () {
 	******************/
 	
 	//Expand textarea and div on focus
-	$("#postBox #text").focus(function () {
+	$("#postBox *").focus(function () {
 
 		$("#postBox").animate({
-			height: "110px"
+			height: "140px"
 		}, 200);
 		$("#postBox #text").animate({
 			height: "110px"
@@ -21,16 +21,21 @@ $(document).ready(function () {
 
 	});
 
-	//Shrink textarea and div when focus is lost
-	$("#postBox #text").focusout(function () {
+	//Shrink textarea and div when focus is lost and there is no text inside.
+	$("#postBox *").focusout(function () {
 
-		$("#postBox").animate({
-			height: "30px"
-		}, 200);
-		$("#postBox #text").animate({
-			height: "30px"
-		}, 200);
-
+		//Use a timeout to wait for focus to transfer to other children elements
+		window.setTimeout( function() {
+			//If there is no text in textarea, and a non child element of postBox was clicked: shrink.
+			if(!$.trim($("#postBox #text").val()) && $('#postBox *:focus').length == 0 ){
+				$("#postBox").animate({
+					height: "30px"
+				}, 200);
+				$("#postBox #text").animate({
+					height: "30px"
+				}, 200);
+			}
+		}, 50);
 
 	});
 	
@@ -98,6 +103,21 @@ $(document).ready(function () {
 	 * Functions for loading relevant posts into the page
 	 ********************/
 
-	 
+	 $.get('/api/post/', {
+		 visibility: 'public'
+	 })
+	 .done( function(response) {
+		 $.each( response, function( i, v) {
+			
+			$('#posts').append("TEST TEXT <br>");
+
+			//Stop at 5 posts.
+			return i<4;
+
+		 });
+	 })
+	 .fail(
+		 //TODO: Function on failures.
+	 );
 
 });
