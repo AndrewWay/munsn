@@ -159,7 +159,7 @@ $(document).ready(function () {
 
 		$.each( response, function(i,v) {
 
-			$('#courseList').prepend('<li><a href="/group"> '+v.name+' </a></li>');
+			$('#courseList').prepend('<li><a href="/group#'+v._id+'"> '+v.name+' </a></li>');
 		
 			//Each stops on false: Load maximum of 5 courses to sidebar.
 			return i<4;
