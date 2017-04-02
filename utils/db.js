@@ -4,7 +4,7 @@ var path = require('path');
 var EMS = require('./ems');
 var utils = require('./utils');
 
-var dbURL = 'mongodb://localhost:27017/munsn';
+var dbURL = 'mongodb://localhost:27272/munsn';
 /**
  * Max time a user has to authenticate
  */
