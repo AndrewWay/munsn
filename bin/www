@@ -15,12 +15,13 @@ http.get({
 }, function (resp) {
   resp.on('data', function (ip) {
     process.env.IP = ip;
+
   });
 });
 /**
  * Get port from environment and store in Express.
  */
-
+process.env.PORT = 3336;
 var port = normalizePort(process.env.PORT || '3336');
 app.set('port', port);
 

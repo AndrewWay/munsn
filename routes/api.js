@@ -296,7 +296,7 @@ var findFriendSent = "/friend/sent/:uid"; //GET
  * findFriendReceived
  *
  * URL:
- * 		- %server%/api/user/friends/received/:fid
+ * 		- %server%/api/friend/received/:fid
  * Descript:
  *      - Gets the friend requests recieved from a user
  * Method:
@@ -311,7 +311,7 @@ var findFriendReceived = "/friend/received/:fid"; //GET
  * createCourse
  *
  * URL:
- * 		- %server%/api/course/create
+ * 		- %server%/api/course
  * Descript:
  *      - Create a course
  * Method:
@@ -336,7 +336,7 @@ var createCourse = "/course"; //POST
  * updateCourse
  *
  * URL:
- * 		- %server%/api/course/update
+ * 		- %server%/api/course
  * Descript:
  *      - Update a course
  * Method:
@@ -362,7 +362,7 @@ var updateCourse = "/course"; //PATCH
  * removeCourse
  *
  * URL:
- * 		- %server%/api/course/delete
+ * 		- %server%/api/course
  * Descript:
  *      - Remove a course
  * Method:
@@ -377,7 +377,7 @@ var deleteCourse = "/course"; //DELETE
  * addCourseToUser
  *
  * URL:
- * 		- %server%/api/course/user/add
+ * 		- %server%/api/course/user
  * Descript:
  *      - Add a course to a user
  * Method:
@@ -392,7 +392,7 @@ var addCourseToUser = "/course/user"; //PUT
  * delCourseFromUser
  *
  * URL:
- * 		- %server%/api/course/user/del
+ * 		- %server%/api/course/user
  * Descript:
  *      - Delete a course from a user
  * Method:
@@ -407,7 +407,7 @@ var delCourseFromUser = "/course/user"; //DELETE
  * addCourseToGroup
  *
  * URL:
- * 		- %server%/api/course/group/add
+ * 		- %server%/api/course/group
  * Descript:
  *      - Add a course to a Group
  * Method:
@@ -423,7 +423,7 @@ var addCourseToGroup = "/course/group"; //PUT
  * delCourseFromGroup
  *
  * URL:
- * 		- %server%/api/course/group/del
+ * 		- %server%/api/course/group
  * Descript:
  *      - Delete a course from a Group
  * Method:
@@ -453,7 +453,7 @@ var findCoursesByUID = "/course/:uid"; //GET
  * findCourse
  *
  * URL:
- * 		- %server%/api/course/find
+ * 		- %server%/api/course
  * Descript:
  *      - Get a course based on query
  * Method:
@@ -479,7 +479,7 @@ var findCourse = "/course"; //GET
  * addLostFound
  *
  * URL:
- * 		- %server%/api/lost/add
+ * 		- %server%/api/lostfound
  * Descript:
  *      - Add a Lost
  * Method:
@@ -497,7 +497,7 @@ var addLostFound = "/lostfound"; //POST
  * updateLostFound
  *
  * URL:
- * 		- %server%/api/lost/update
+ * 		- %server%/api/lostfound
  * Descript:
  *      - Update a Lost
  * Method:
@@ -516,7 +516,7 @@ var updateLostFound = "/lostfound"; //PATCH
  * removeLostFound
  *
  * URL:
- * 		- %server%/api/lost/remove
+ * 		- %server%/api/lost
  * Descript:
  *      - Remove a Lost
  * Method:
@@ -531,7 +531,7 @@ var removeLostFound = "/lostfound"; //DELETE
  * findLostById
  *
  * URL:
- * 		- %server%/api/lost/find/:uid
+ * 		- %server%/api/lostfound/:uid
  * Descript:
  *      - Get a course by id
  * Method:
@@ -546,7 +546,7 @@ var findLostFoundById = "/lostfound/:uid"; //GET
  * findLost
  *
  * URL:
- * 		- %server%/api/lost/find
+ * 		- %server%/api/lostfound
  * Descript:
  *      - Get a lost based on query
  * Method:
@@ -565,7 +565,7 @@ var findLostFound = "/lostfound"; //GET
  * addTimelinePost
  *
  * URL:
- * 		- %server%/api/post/add/timeline
+ * 		- %server%/api/post/timeline
  * Descript:
  *      - Add a user timeline post
  * Method:
@@ -583,7 +583,7 @@ var addTimelinePost = "/post/timeline"; //POST
  * addGroupPost
  *
  * URL:
- * 		- %server%/api/post/add/group
+ * 		- %server%/api/post/group
  * Descript:
  *      - Add a group post
  * Method:
@@ -599,7 +599,7 @@ var addGroupPost = "/post/group"; //POST
  * delPost
  *
  * URL:
- * 		- %server%/api/post/remove/
+ * 		- %server%/api/post
  * Descript:
  *      - Delete a post
  * Method:
@@ -614,7 +614,7 @@ var delPost = "/post"; //DELETE
  * updatePost
  *
  * URL:
- * 		- %server%/api/post/update
+ * 		- %server%/api/post
  * Descript:
  *      - Update a post
  * Method:
@@ -659,7 +659,7 @@ var find = "/post"; //GET
  * findPostByUid
  *
  * URL:
- * 		- %server%/api/post/user/:uid
+ * 		- %server%/api/post/:uid
  * Descript:
  *      - Get ALL posts by UserID
  * Method:
@@ -691,7 +691,7 @@ var addComment = "/comment"; //POST
  * updateComment
  *
  * URL:
- * 		- %server%/api/comment/update
+ * 		- %server%/api/comment
  * Descript:
  *      - Update a comment
  * Method:
@@ -723,7 +723,7 @@ var removeComment = "/comment"; //DELETE
  * findCommentById
  *
  * URL:
- * 		- %server%/api/comment/find/:uid
+ * 		- %server%/api/comment/:uid
  * Descript:
  *      - Get comments by user id
  * Method:
@@ -754,7 +754,7 @@ var createGroup = "/group"; //POST
  * delGroup
  *
  * URL:
- * 		- %server%/api/group/remove/:gid
+ * 		- %server%/api/group/:gid
  * Descript:
  *      - Delete a group
  * Method:
@@ -769,7 +769,7 @@ var delGroup = "/group/:gid"; //DELETE
  * updateGroup
  *
  * URL:
- * 		- %server%/api/group/update
+ * 		- %server%/api/group
  * Descript:
  *      - Update a group
  * Method:
@@ -805,7 +805,7 @@ var findGroups = "/group"; //GET
  * findGroupById
  *
  * URL:
- * 		- %server%/api/group/info/:gid
+ * 		- %server%/api/group/:gid
  * Descript:
  *      - Gets group from a group id
  * Method:
@@ -820,7 +820,7 @@ var findGroupById = "/group/:gid"; //GET
  * findGroupSent
  *
  * URL:
- * 		- %server%/api/user/group/sent/:uid
+ * 		- %server%/api/groups/sent/:uid
  * Descript:
  *      - Gets the group requests sent from a user
  * Method:
@@ -835,7 +835,7 @@ var findGroupSent = "/groups/sent/:uid"; //GET
  * findGroupReceived
  *
  * URL:
- * 		- %server%/api/user/group/received/:gid
+ * 		- %server%/api/groups/received/:gid
  * Descript:
  *      - Gets the group requests recieved for a group
  * Method:
@@ -850,7 +850,7 @@ var findGroupReceived = "/groups/received/:gid"; //GET
  * findUserGroups
  *
  * URL:
- * 		- %server%/api/groups/find/:uid
+ * 		- %server%/api/groups/user/:uid
  * Descript:
  *      - Get groups that the user is in
  * Method:
@@ -865,7 +865,7 @@ var findGroupsByUID = "/groups/user/:uid"; //GET
  * findGroupRequests
  *
  * URL:
- * 		- %server%/api/groups/find/requests/:gid
+ * 		- %server%/api/groups/requests/:gid
  * Descript:
  *      - Get group requests for a group
  * Method:
@@ -880,7 +880,7 @@ var findGroupRequests = "/groups/requests/:gid"; //GET
  * addGroupUser
  *
  * URL:
- * 		- %server%/api/group/add/user
+ * 		- %server%/api/groups/user
  * Descript:
  *      - Add a user to a group
  * Method:
@@ -896,7 +896,7 @@ var addGroupUser = "/groups/user"; //POST
  * delGroupUser
  *
  * URL:
- * 		- %server%/api/group/remove/user
+ * 		- %server%/api/groups/user
  * Descript:
  *      - Delete a user from a group
  * Method:
@@ -929,7 +929,7 @@ var updateGroupUser = "/groups/user"; //PATCH
  * findGroupsAdmins
  *
  * URL:
- * 		- %server%/api/group/admins/:gid
+ * 		- %server%/api/groups/admins/:gid
  * Descript:
  *      - Gets all admins in a group
  * Method:
@@ -939,12 +939,12 @@ var updateGroupUser = "/groups/user"; //PATCH
  * Returns:
  *      - JSON array containing user objects
  */
-var findGroupAdmins = "/groups/admin/:gid"; //GET
+var findGroupAdmins = "/groups/admins/:gid"; //GET
 /**
  * addGroupAdmin
  *
  * URL:
- * 		- %server%/api/group/add/admin
+ * 		- %server%/api/groups/admins
  * Descript:
  *      - Add an admin
  * Method:
@@ -962,7 +962,7 @@ var addGroupAdmin = "/groups/admins"; //POST
  * removeGroupAdmin
  *
  * URL:
- * 		- %server%/api/group/remove/admin
+ * 		- %server%/api/groups/admins
  * Descript:
  *      - Remove an admin
  * Method:
@@ -977,7 +977,7 @@ var removeGroupAdmin = "/groups/admins"; //DELETE
  * acceptGroupReq
  *
  * URL:
- * 		- %server%/api/groups/accept/request
+ * 		- %server%/api/groups/request/accept
  * Descript:
  *      - Accept a group request
  * Method:
@@ -993,7 +993,7 @@ var acceptGroupReq = "/groups/request/accept"; //POST
  * denyGroupReq
  *
  * URL:
- * 		- %server%/api/groups/deny/request
+ * 		- %server%/api/groups/request/deny
  * Descript:
  *      - Delete a group request
  * Method:
@@ -1009,7 +1009,7 @@ var denyGroupReq = "/groups/request/deny"; //POST
  * sendGroupRequest
  *
  * URL:
- * 		- %server%/api/user/group/request
+ * 		- %server%/api/groups/request
  * Descript:
  *      - Add a group request
  * Method:
@@ -1025,7 +1025,7 @@ var sendGroupRequest = "/groups/request"; //POST
  * removeGroupRequest
  *
  * URL:
- * 		- %server%/api/user/group/request/remove
+ * 		- %server%/api/groups/request
  * Descript:
  *      - Remove a group request
  * Method:
@@ -1037,7 +1037,6 @@ var sendGroupRequest = "/groups/request"; //POST
  *      - JSON mongo result
  */
 var removeGroupRequest = "/groups/request"; //DELETE
-
 /**
  * findGroupUsers
  *
@@ -1152,13 +1151,11 @@ router.patch(updateGroup, UserID, function (req, res, next) {
 		res.json(result);
 	});
 });
-
 router.patch(updateGroupUser, UserID, function (req, res, next) {
 	DB.Groups.updateMember(req, res, function (result) {
 		res.json(result);
 	});
 });
-
 router.post(addGroupUser, UserID, function (req, res, next) {
 	DB.Groups.add(req, res, function (result) {
 		res.json(result);
@@ -1169,19 +1166,16 @@ router.delete(delGroupUser, UserID, function (req, res, next) {
 		res.json(result);
 	});
 });
-
 router.get(findGroupUsers, UserID, function (req, res, next) {
 	DB.Groups.findMembers(req, res, function (result) {
 		res.json(result);
 	});
 });
-
 router.post(addTimelinePost, UserID, function (req, res, next) {
 	DB.Posts.add(req, res, function (result) {
 		res.json(result);
 	});
 });
-
 router.post(addGroupPost, UserID, function (req, res, next) {
 	//Set type before pass to db
 	req.body.origin = {
