@@ -1,3 +1,6 @@
+var postBoxMax = 140;
+var imgBool = false;
+
 $(document).ready(function () {
 	
 	/******************
@@ -12,7 +15,7 @@ $(document).ready(function () {
 	$("#postBox *").focus(function () {
 
 		$("#postBox").animate({
-			height: "140px"
+			height: postBoxMax+"px"
 		}, 200);
 		$("#postBox #text").animate({
 			height: "110px"
@@ -27,7 +30,7 @@ $(document).ready(function () {
 		//Use a timeout to wait for focus to transfer to other children elements
 		window.setTimeout( function() {
 			//If there is no text in textarea, and a non child element of postBox was clicked: shrink.
-			if(!$.trim($("#postBox #text").val()) && $('#postBox *:focus').length == 0 ){
+			if(!$.trim($("#postBox *").val()) && $('#postBox *:focus').length == 0 ){
 				$("#postBox").animate({
 					height: "30px"
 				}, 200);
@@ -37,6 +40,81 @@ $(document).ready(function () {
 			}
 		}, 50);
 
+	});
+
+	/****************************
+	 * Making post
+	 * 
+	 * @params: null
+	 * 
+	 * Making posts to portal timeline. Posts stored to user timeline.
+	 ****************************/
+
+	//Button Functionality
+
+	//Adding a picture to a post
+	$('#photoPost').click( function() {
+		$('#newPostImg').click();
+	});
+
+	//Update the input file field.
+	$("#newPostImg").change(function () {
+		postBoxMax=postBoxMax+60;
+		imgBool = true;
+
+		$("#imgDisp").attr("src", window.URL.createObjectURL(this.files[0]));
+
+		$("#imgDisp").css({ display: 'block' });
+
+		$("#postBox").animate({
+			height: postBoxMax+"px"
+		}, 200);
+	});
+
+	//Adding a poll to a post
+	$('#pollPost').click( function() {
+		//TODO: Add api call for posts. Probably build div to create it.
+	});
+
+	//Clearing a post
+	$('#clearPost').click( function() {
+		//TODO: Add warning: Check if sure.
+		postBoxMax=140;
+		imgBool = false;
+
+		$('#postBox *').val('');
+		
+		$("#imgDisp").attr("src", "#");
+		$("#imgDisp").css({ display: 'none' });
+
+		$("#postBox").animate({
+			height: postBoxMax+"px"
+		}, 200);
+	});
+
+	//Submit the post through api call
+	$('#postSubmit').click( function() {
+
+		//Send API call
+		$.post("/api/post/timeline", {
+			uid: uid,
+			type: "timeline",
+			targetid: uid,
+			visibility: $('#vis').val(),
+			fields: {
+				image: imgBool,
+				text: $('#postBox #text').val(),
+				location: null,
+				poll: null
+			}
+		})
+		.done(function(response) {
+			console.log(response);
+		})
+		.fail();
+
+		//Clear the fields
+		$("#clearPost").click()
 	});
 	
 	//TODO: Move to it's own file to be called by all pages which need it.
