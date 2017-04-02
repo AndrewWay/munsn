@@ -157,7 +157,7 @@ $(document).ready(function () {
 	//Load user courses
 	$.get('/api/course/session', function(response) {
 
-		$.each( response, function(i,v) {
+		$.each( response.data, function(i,v) {
 
 			$('#courseList').prepend('<li><a href="/group#'+v._id+'"> '+v.name+' </a></li>');
 		

@@ -1,9 +1,9 @@
 <!-- Basic Post Structure -->
 
-<div class="postTemp">
+<div class="postTemp" id={{_id}}>
 				<div class="postInfo">
 					<div class="postPic">
-						<img src="../img/SEAHAWK_SIL.jpg">
+						<img src='/content/image/profile/session'+{{uid}}>
 					</div> 
 					<div class="postName">
 						<a href="{{ POST_LINK }}"> {{ POST_NAME }} </a> <br>

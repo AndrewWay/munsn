@@ -104,8 +104,8 @@ $(document).ready(function () {
 			fields: {
 				image: imgBool,
 				text: $('#postBox #text').val(),
-				location: null,
-				poll: null
+				location: undefined,
+				poll: undefined
 			}
 		})
 		.done(function(response) {
@@ -185,14 +185,36 @@ $(document).ready(function () {
 		 visibility: 'public'
 	 })
 	 .done( function(response) {
-		 $.each( response, function( i, v) {
-			
-			$('#posts').append("TEST TEXT <br>");
+		 var data={ "list":[]};
 
-			//Stop at 5 posts.
+		 $.each( response.data, function( i, v) {
+
+
+
+			var postInfo=$.extend({}, v,v.history.slice(-1).pop());
+			
+			var postData=v.history.slice(-1).pop();
+
+			console.log(postInfo);
+	
+			$('#posts').append(postData.date+" "+postData.text+"<br>");
+
+			data.list.push(postInfo);
+			console.log(data);
+			//Stop at 5 posts. Arbitrary
 			return i<4;
 
+			
+
 		 });
+
+		
+
+		 $.get("/temps/postTemp.hjs", function(post) {
+				var template = Hogan.compile("{{#list}}" + post +"{{/list}}");
+				var output = template.render(data);
+				$('#posts').html(output);
+		});
 	 })
 	 .fail(
 		 //TODO: Function on failures.
