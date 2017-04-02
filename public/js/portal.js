@@ -43,10 +43,7 @@ $(document).ready(function () {
 	 * Functionality to grab and navigate suggested friends list.
 	 *************************/
 	
-	 $.get('/api/friend/suggest/'+uid, {
-		uid: uid,
-		limit: 10
-	 }, function(response) {
+	 $.get('/api/friend/suggest/'+uid, function(response) {
 		//TODO: Store the response in some variable
 	 })
 	 //TODO: Add done and fail callbacks
@@ -90,4 +87,17 @@ $(document).ready(function () {
 		$('#chatButton').show();
 		$('#chat').animate({height: "0px"},200);
 	});
+
+
+	//TODO: Potentially move to it's own file to be accessed by every page that needs it.
+	/*******************
+	 * Load posts
+	 * 
+	 * @params: null
+	 * 
+	 * Functions for loading relevant posts into the page
+	 ********************/
+
+	 
+
 });
