@@ -2,21 +2,26 @@ var console = require('../consoleLogger');
 var ObjectID = require('mongodb').ObjectID;
 module.exports = function (DBCourses, collectionCourses, collectionUserCourses, collectionGroupCourses) {
 	//Add a course
-	DBCourses.createCourse = function (req, res, callback) {
+	DBCourses.add = function (req, res, callback) {
 		var course = {
-			label: req.body.label,
-			name: req.body.name,
-			description: req.body.description,
-			semester: req.body.semester,
-			department: req.body.department,
-			location: req.body.location,
-			year: req.body.year,
-			cid: req.body.cid,
-			days: req.body.days,
-			timeStart: new Date(req.body.timeStart),
-			timeEnd: new Date(req.body.timeEnd)
+			label: undefined,
+			description: undefined,
+			name: undefined,
+			semester: undefined,
+			location: undefined,
+			department: undefined,
+			year: undefined,
+			cid: undefined,
+			event: undefined
 		};
-		console.log("[DBCourses] CreateCourse", "'" + course.label + "'");
+		Object.keys(course).forEach(k => {
+			if (!req.body[k]) {
+				delete course[k];
+			} else {
+				course[k] = req.body[k];
+			}
+		});
+		console.log("[DBCourses] CreateCourse", "'" + JSON.stringify(course) + "'");
 		collectionCourses.insert(course, function (err, result) {
 			if (err) {
 				console.error("[DBCourses] CreateCourse", err.message);
@@ -36,8 +41,6 @@ module.exports = function (DBCourses, collectionCourses, collectionUserCourses, 
 	//Find a course by unique course id
 	DBCourses.findByUserID = function (req, res, callback) {
 		console.log("[DBCourses] FindByUserID", "'" + req.UserID + "'");
-
-
 		if (req.UserID) {
 			collectionUserCourses.findOne({
 				_id: req.UserID
@@ -70,16 +73,14 @@ module.exports = function (DBCourses, collectionCourses, collectionUserCourses, 
 	DBCourses.find = function (req, res, callback) {
 		var query = {
 			label: undefined,
-			name: undefined,
 			description: undefined,
+			name: undefined,
 			semester: undefined,
-			department: undefined,
 			location: undefined,
+			department: undefined,
 			year: undefined,
 			cid: undefined,
-			days: undefined,
-			timeStart: undefined,
-			timeEnd: undefined
+			event: undefined
 		};
 		Object.keys(query).forEach(k => {
 			if (!req.body[k]) {
@@ -111,20 +112,18 @@ module.exports = function (DBCourses, collectionCourses, collectionUserCourses, 
 		console.log("[DBCourses] Update", "'" + JSON.stringify(req.body) + "'->'" + req.params.uid + "'");
 		if (req.body._id) {
 			var updates = {
-				label: req.body.label,
-				name: req.body.name,
-				description: req.body.description,
-				semester: req.body.semester,
-				department: req.body.department,
-				location: req.body.location,
-				year: req.body.year,
-				cid: req.body.cid,
-				days: req.body.days,
-				timeStart: req.body.timeStart,
-				timeEnd: req.body.timeEnd
+				label: undefined,
+				description: undefined,
+				name: undefined,
+				semester: undefined,
+				location: undefined,
+				department: undefined,
+				year: undefined,
+				cid: undefined,
+				event: undefined
 			};
 			Object.keys(updates).forEach(k => {
-				if (req.body[k] === undefined) {
+				if (!req.body[k]) {
 					delete updates[k];
 				} else {
 					updates[k] = req.body[k];
@@ -192,7 +191,7 @@ module.exports = function (DBCourses, collectionCourses, collectionUserCourses, 
 	};
 
 	DBCourses.addToUser = function (req, res, callback) {
-		console.log("[DBCourses] AddToUser", "'" + req.body.uid + "'-> " + req.body.cid);
+		console.log("[DBCourses] AddToUser", "'" + req.body.uid + "'->'" + req.body.cid + "'");
 		if (req.body.uid && req.body.cid) {
 			collectionUserCourses.update({
 				_id: req.body.uid
@@ -226,7 +225,7 @@ module.exports = function (DBCourses, collectionCourses, collectionUserCourses, 
 	};
 
 	DBCourses.removeFromUser = function (req, res, callback) {
-		console.log("[DBCourses] RemoveFromUser", "'" + req.body.uid + "'-> " + req.body.cid);
+		console.log("[DBCourses] RemoveFromUser", "'" + req.body.uid + "'->'" + req.body.cid + "'");
 		if (req.body.uid && req.body.cid) {
 			collectionUserCourses.update({
 				_id: req.body.uid
@@ -258,7 +257,7 @@ module.exports = function (DBCourses, collectionCourses, collectionUserCourses, 
 	};
 
 	DBCourses.addToGroup = function (req, res, callback) {
-		console.log("[DBCourses] AddToGroup", "'" + req.body._id + "'-> " + req.body.cid);
+		console.log("[DBCourses] AddToGroup", "'" + req.body._id + "'->'" + req.body.cid + "'");
 		if (req.body._id && req.body.cid) {
 			collectionGroupCourses.update({
 				_id: req.body._id
@@ -292,7 +291,7 @@ module.exports = function (DBCourses, collectionCourses, collectionUserCourses, 
 	};
 
 	DBCourses.removeFromGroup = function (req, res, callback) {
-		console.log("[DBCourses] removeFromGroup", "'" + req.body._id + "'-> " + req.body.cid);
+		console.log("[DBCourses] removeFromGroup", "'" + req.body._id + "'->'" + req.body.cid + "'");
 		if (req.body._id && req.body.cid) {
 			collectionGroupCourses.update({
 				_id: req.body._id
