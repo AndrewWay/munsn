@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www --NODE_ENV prod",
-    "test": "node ./bin/www --NODE_ENV dev"
+    "start": "node ./bin/www prod",
+    "test": "node ./bin/www dev"
   },
   "dependencies": {
     "body-parser": "~1.15.2",
