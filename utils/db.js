@@ -221,6 +221,10 @@ mongoClient.connect(dbURL, function (err, DB) {
 					"history.0": {
 						$exists: true
 					}
+				}, {
+					fields: {
+						$type: 'object'
+					}
 				}
 			]
 		}

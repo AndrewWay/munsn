@@ -22,12 +22,11 @@ module.exports = function (DBPosts, collectionPosts) {
 				type: undefined, //The type of post this is
 				targetid: undefined, //The target of this post, Group, Timeline, undefined for lostfound
 				visibility: undefined, //public, friends, private
-				whitelist: undefined, //Override visibility, as a whitelist
-				comments: []
+				whitelist: undefined //Override visibility, as a whitelist
 			};
 			// Loop through body, if field is not found, then set null
 			Object.keys(post).forEach(k => {
-				if (req.body[k] === undefined) {
+				if (req.body[k] == undefined) {
 					delete post[k];
 				} else {
 					post[k] = req.body[k];
@@ -139,7 +138,7 @@ module.exports = function (DBPosts, collectionPosts) {
 			visibility: undefined
 		};
 		Object.keys(updates).forEach(k => {
-			if (req.body[k] === undefined) {
+			if (req.body[k] == undefined) {
 				delete updates[k];
 			} else {
 				updates[k] = req.body[k];
@@ -147,7 +146,20 @@ module.exports = function (DBPosts, collectionPosts) {
 		});
 		updates.whitelist = req.body.whitelist;
 		console.log("[DBPosts] Update", "'" + req.body.pid + "'->'" + JSON.stringify(updates) + "'");
-		collectionPosts.update({_id: new ObjectID(req.body.pid)}, {$set: {visibility: updates.visibility}, $addToSet: {whitelist: {$each: updates.whitelist}}}, {upsert: true}, function (err, result) {
+		collectionPosts.update({
+			_id: new ObjectID(req.body.pid)
+		}, {
+			$set: {
+				visibility: updates.visibility
+			},
+			$addToSet: {
+				whitelist: {
+					$each: updates.whitelist
+				}
+			}
+		}, {
+			upsert: true
+		}, function (err, result) {
 			if (err) {
 				console.error("[DBPosts] Update", err.message);
 				callback({
@@ -166,7 +178,7 @@ module.exports = function (DBPosts, collectionPosts) {
 	//POST HISTORY
 	//=====================================================================================================================================
 
-	DBPosts.updateHistory = function(req, res, callback) {
+	DBPosts.updateHistory = function (req, res, callback) {
 		var updates = {
 			image: undefined,
 			text: undefined,
@@ -174,7 +186,7 @@ module.exports = function (DBPosts, collectionPosts) {
 			poll: undefined
 		};
 		Object.keys(updates).forEach(k => {
-			if (req.body[k] === undefined) {
+			if (req.body[k] == undefined) {
 				delete updates[k];
 			} else {
 				updates[k] = req.body[k];
@@ -182,7 +194,15 @@ module.exports = function (DBPosts, collectionPosts) {
 		});
 		console.log("[DBPosts] UpdateHistory", "'" + req.body.pid + "'->'" + JSON.stringify(updates) + "'");
 		updates.date = new Date();
-		collectionPosts.update({_id: new ObjectID(req.body.pid)}, {$push: {history: updates}}, {upsert: true}, function(err, results) {
+		collectionPosts.update({
+			_id: new ObjectID(req.body.pid)
+		}, {
+			$push: {
+				history: updates
+			}
+		}, {
+			upsert: true
+		}, function (err, results) {
 			if (err) {
 				console.error("[DBPosts] UpdateHistory", err.message);
 				callback({
@@ -201,35 +221,42 @@ module.exports = function (DBPosts, collectionPosts) {
 	//COMMENTS
 	//=====================================================================================================================================
 
-	DBPosts.addComment = function(req, res, callback) {
+	DBPosts.addComment = function (req, res, callback) {
 		var date = new Date();
 		var comment = {
 			uid: undefined,
 		};
 		Object.keys(comment).forEach(k => {
-			if (req.body[k] === undefined) {
+			if (req.body[k] == undefined) {
 				delete comment[k];
 			} else {
 				comment[k] = req.body[k];
 			}
 		});
-			
+
 		var commentData = {
-				text: undefined,
-				image: undefined,
+			text: undefined,
+			image: undefined,
 		};
 
 		Object.keys(commentData).forEach(k => {
-			if (req.body.commentData[k] !== undefined) {
+			if (req.body.commentData[k] != undefined) {
 				commentData[k] = req.body.commentData[k];
-			} 
+			}
 		});
-
-		console.log(JSON.stringify(req.body));
+		console.log("[DBPosts] addComment", "'" + JSON.stringify(req.body) + "'");
 		comment.history = [commentData];
 		comment.history[0].date = date;
 		comment._id = new ObjectID();
-		collectionPosts.update({_id: new ObjectID(req.body.pid)}, {$push: {comments: comment}}, {upsert: true}, function(err, results) {
+		collectionPosts.update({
+			_id: new ObjectID(req.body.pid)
+		}, {
+			$push: {
+				comments: comment
+			}
+		}, {
+			upsert: true
+		}, function (err, results) {
 			if (err) {
 				console.error("[DBPosts] AddComment", err.message);
 				callback({
@@ -245,9 +272,17 @@ module.exports = function (DBPosts, collectionPosts) {
 		});
 	};
 
-	DBPosts.removeComment = function(req, res, callback) {
+	DBPosts.removeComment = function (req, res, callback) {
 		if (req.body.cid && req.body.pid) {
-			collectionPosts.update({_id: new ObjectID(req.body.pid)}, {$pull: {comments: {_id: new ObjectID(req.body.cid)}}}, function(err, result) {
+			collectionPosts.update({
+				_id: new ObjectID(req.body.pid)
+			}, {
+				$pull: {
+					comments: {
+						_id: new ObjectID(req.body.cid)
+					}
+				}
+			}, function (err, result) {
 				if (err) {
 					console.error("[DBPosts] RemoveComment", err.message);
 					callback({
