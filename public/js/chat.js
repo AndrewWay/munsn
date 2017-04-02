@@ -6,10 +6,10 @@ $(function () {
         console.log("init chat");
         currentRoom = result;
         //TODO: GET THIS WORKING
-        $.get('/api/messages/load', {uid1: 'dfcm15', uid2: 'bro'}, function(data) {
-            for (var i = 0; i < data.length; i++) {
-                $('#messages').append($('<li>').text(data[i]));
-                console.log("LOADING MESSAGES: " + i + ": " + data[i]);
+        $.get('/api/messages', {uid1: 'dfcm15', uid2: 'bro'}, function(data) {
+            for (var i = 0; i < data.data.length; i++) {
+                $('#messages').append($('<li>').text(data.data[i]));
+                console.log("LOADING MESSAGES: " + i + ": " + data.data[i]);
             }
         });
 	});
