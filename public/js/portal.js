@@ -62,6 +62,8 @@ $(document).ready(function () {
 		postBoxMax=postBoxMax+60;
 		imgBool = true;
 
+		console.log(imgBool);
+
 		$("#imgDisp").attr("src", window.URL.createObjectURL(this.files[0]));
 
 		$("#imgDisp").css({ display: 'block' });
@@ -94,7 +96,7 @@ $(document).ready(function () {
 
 	//Submit the post through api call
 	$('#postSubmit').click( function() {
-
+		console.log(imgBool);
 		//Send API call
 		$.post("/api/post/timeline", {
 			uid: uid,
@@ -109,12 +111,39 @@ $(document).ready(function () {
 			}
 		})
 		.done(function(response) {
-			console.log(response);
+			var pid = response.data._id;
+
+
+			//If image is supplied. Store that image.
+			//TODO: Figure out why done et al aren't firing. Reload timeline with new post!
+			if(imgBool) {
+				var picForm = new FormData();
+				picForm.append("image", $("#newPostImg")[0].files[0]);
+
+				$.ajax({
+						url: '/content/posts/'+pid+'/'+pid,
+						type: 'post',
+						data: picForm,
+						cache: false,
+						contentType: false,
+						processData: false
+
+				}).done(function(response){
+					console.log("image uploaded");
+					
+				}).fail()
+				.always(function() {
+					//Clear the fields
+					$("#clearPost").click();
+				})
+			} else {
+				//Clear the fields
+				$("#clearPost").click()
+			}
 		})
 		.fail();
 
-		//Clear the fields
-		$("#clearPost").click()
+		
 	});
 	
 	//TODO: Move to it's own file to be called by all pages which need it.
@@ -202,7 +231,7 @@ $(document).ready(function () {
 		 $.get("/temps/postTemp.hjs", function(post) {
 				var template = Hogan.compile("{{#list}}" + post +"{{/list}}");
 				var output = template.render(data);
-				$('#posts').prepend(output);
+				$('#posts').append(output);
 		});
 	 })
 	 .fail(
