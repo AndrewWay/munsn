@@ -6,12 +6,14 @@ $(function () {
         console.log("init chat");
         currentRoom = result;
         //TODO: GET THIS WORKING
+        /*
         $.get('/api/messages', {uid1: 'dfcm15', uid2: 'bro'}, function(data) {
             console.log(JSON.stringify(data));
             for (var i = 0; i < data.data[0].messages.length; i++) {
                 $('#messages').append($('<li>').text("[PM: " + data.data[0].messages[i].user + "] " + data.data[0].messages[i].message));
                 console.log("LOADING MESSAGES: " + i + ": " + data.data[0].messages[i].message);
             }
+        */
         $('#m').val('');         
         });
 	});
@@ -60,7 +62,7 @@ $(function () {
             $.get('/api/messages', {uid1: 'dfcm15', uid2: user}, function(data) {
                 console.log(JSON.stringify(data));
                 for (var i = 0; i < data.data[0].messages.length; i++) {
-                    $('#messages').append($('<li>').text(data.data[0].messages[i].message));
+                    $('#messages').append($('<li>').text("[PM: " + data.data[0].messages[i].user + "] " + data.data[0].messages[i].message));
                     console.log("LOADING MESSAGES: " + i + ": " + data.data[0].messages[i].message);
                 }
             $('#m').val('');         
