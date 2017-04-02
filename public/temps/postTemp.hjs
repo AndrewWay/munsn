@@ -3,10 +3,10 @@
 <div class="postTemp" id={{_id}}>
 				<div class="postInfo">
 					<div class="postPic">
-						<img src='/content/image/profile/session'+{{uid}}>
+						<img src='/content/image/profile/{{uid}}'>
 					</div> 
 					<div class="postName">
-						<a href="/profile/#"+{{uid}}> {{uid}} </a> <br>
+						<a href="/profile/#{{uid}}"> {{uid}} </a> <br>
 						<span>{{date}}</span>
 					</div>
 				</div>
