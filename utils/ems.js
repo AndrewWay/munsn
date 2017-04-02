@@ -49,7 +49,7 @@ var sendAuthEmail = function (auth, callback) {
 		from: emsSender.name + '<' + emsSender.address + '>',
 		text: "Welcome to MUNSON! In order to continue using the site as a registered user," +
 			" please confirm your registration by clicking the link: " +
-			"http://" + process.env.IP + ":" + process.env.PORT + "/auth?key=" + auth.key +
+			"http://" + process.env.ADDRESS + "/auth?key=" + auth.key +
 			"\nWe are glad you can join us! Once registered you can fully access the website!"
 	};
 	sendEmail(email, callback);
@@ -66,7 +66,7 @@ var resendAuthEmail = function (auth, callback) {
 		subject: 'MUNSON - Confirmation Email',
 		to: auth.userid + '@mun.ca',
 		from: emsSender.name + '<' + emsSender.address + '>',
-		text: "Looks like your old confirmation email expired. Here's a new one: http://" + process.env.IP + ":" + process.env.PORT + "/auth?key=" + auth.key
+		text: "Looks like your old confirmation email expired. Here's a new one: http://" + process.env.ADDRESS + "/auth?key=" + auth.key
 	};
 	sendEmail(email, callback);
 };
