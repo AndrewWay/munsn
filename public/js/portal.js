@@ -181,6 +181,8 @@ $(document).ready(function () {
 	 * Functions for loading relevant posts into the page
 	 ********************/
 
+	 //Get and display a number of posts.
+	 //TODO: Get and display posts based on their type (poll, photo, text)
 	 $.get('/api/post/', {
 		 visibility: 'public'
 	 })
@@ -189,22 +191,13 @@ $(document).ready(function () {
 
 		 $.each( response.data, function( i, v) {
 
-
-
 			var postInfo=$.extend({}, v,v.history.slice(-1).pop());
-			
-
 
 			data.list.push(postInfo);
 			console.log(data);
 			//Stop at 5 posts. Arbitrary
 			return i<4;
-
-			
-
 		 });
-
-		
 
 		 $.get("/temps/postTemp.hjs", function(post) {
 				var template = Hogan.compile("{{#list}}" + post +"{{/list}}");
