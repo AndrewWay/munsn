@@ -26,6 +26,7 @@ switch (process.env.NODE_ENV) {
       resp.on('data', function (ip) {
         process.env.HOSTNAME = process.env.IP = ip;
         process.env.ADDRESS = process.env.HOSTNAME + ':' + process.env.PORT;
+        console.log("Server Address:", process.env.ADDRESS);
       });
     });
     break;
@@ -41,6 +42,7 @@ switch (process.env.NODE_ENV) {
     });
     process.env.HOSTNAME = 'sc-6.cs.mun.ca';
     process.env.ADDRESS = process.env.HOSTNAME; //Don't need the port for MUN's server
+    console.log("Server Address:", process.env.ADDRESS);
     break;
   default:
     http.get({
@@ -51,6 +53,7 @@ switch (process.env.NODE_ENV) {
       resp.on('data', function (ip) {
         process.env.HOSTNAME = process.env.IP = ip;
         process.env.ADDRESS = process.env.HOSTNAME + ':' + process.env.PORT;
+        console.log("Server Address:", process.env.ADDRESS);
       });
     });
     break;
