@@ -216,46 +216,18 @@ $(document).ready(function () {
 	 })
 	 .done( function(response) {
 		 var data={ "list":[]};
-         var cbControl = [];
-         var MAX_SEARCH_TRIES = 5;
-         var MAX_SEARCH_TIME = 1000 * 2;
+
 		 $.each( response.data, function( i, v) {
-            cbControl[i] = false;
-            console.log("I " + i);
+
 			var postInfo=$.extend({}, v,v.history.slice(-1).pop());
             postInfo.date = new Date(postInfo.date).toLocaleString();
-
-			console.log(data);
-
-            $.get('/api/user/' + v.uid).done(function(res) {
-                postInfo.fname = res.data.fname;
-                postInfo.lname = res.data.lname;
-                cbControl[i] = true;
-            });
-
-            var count = 1;
-            var userLoop = setInterval(function() {
-                if (cbControl[i]) {
-                    clearInterval(userLoop);
-                }
-                else {
-                    if (count < MAX_SEARCH_TRIES) {
-                        count++;
-                    }
-                    else {
-                        clearInterval(userLoop);
-                    }
-                }
-            });
-
 			data.list.push(postInfo);
-
+			console.log(data);
 			//Stop at 5 posts. Arbitrary
 			return i<4;
 		 });
 
 		 $.get("/temps/postTemp.hjs", function(post) {
-                data.list.reverse();
 				var template = Hogan.compile("{{#list}}" + post +"{{/list}}");
 				var output = template.render(data);
 				$('#posts').append(output);
