@@ -1,6 +1,6 @@
 $(function () {
     var currentRoom;
-    var socket = io("/chat");
+    var socket = io("http://134.153.49.142:3336/chat");
     //Init chat
     socket.emit('initChat', null, function(result) {
         console.log("init chat");
