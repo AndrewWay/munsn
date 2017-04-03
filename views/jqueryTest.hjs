@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-<script src="http://twitter.github.com/hogan.js/builds/3.0.1/hogan-3.0.1.js"></script>
+<script src="/scripts/jquery.min.js"></script>
+<script src="/scripts/hogan-3.0.1.js"></script>
 <script src="/js/jqueryTest.js"></script>
 <script>
 	$(document).ready(

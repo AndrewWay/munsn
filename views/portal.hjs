@@ -6,11 +6,11 @@
 	<link href="/stylesheets/blank.css" rel="stylesheet"/>
 	<link href="/stylesheets/post.css" rel="stylesheet"/>
 	<link href="/stylesheets/portal.css" rel="stylesheet"/>
-	
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-	<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
-	<script src="/js/socket.js"></script>
-	<script src="http://twitter.github.com/hogan.js/builds/3.0.1/hogan-3.0.1.js"></script>	
+
+	<script src="/scripts/jquery.min.js"></script>
+	<script src="/scripts/jquery-ui.js"></script>
+	<script src="/scripts/socket.js"></script>
+	<script src="/scripts/hogan-3.0.1.js"></script>
 	<script src="/js/blank.js"></script>
 	<script src="/js/portal.js"></script>
 </head>
@@ -25,10 +25,10 @@
             <li><a href="#">Friends</a></li>
         </ul>
         </div>
-            
+
         <div class="search">
 	        <form>
-			  	<input type="search" name="sitesearch" placeholder="Search MunSN"><button class="searchbtn">Search</button>			  	
+			  	<input type="search" name="sitesearch" placeholder="Search MunSN"><button class="searchbtn">Search</button>
 			</form>
 		</div>
 
@@ -39,7 +39,7 @@
 		</div>
 	</div>
 	</nav>
-	
+
 	<div id="not-center">
 		<a href="#"><div id="note">
 			{{NOT_INFO}}
@@ -61,8 +61,8 @@
 			Create a new group:
 			<input class="popField" type="text" name="gName" placeholder="Group Name"><br>
 			<div id="gButton">
-				<button class="popButton" id="gCreate"> CREATE </button> 
-				<button class="popButton" id="gClose"> CLOSE </button> 
+				<button class="popButton" id="gCreate"> CREATE </button>
+				<button class="popButton" id="gClose"> CLOSE </button>
 			</div>
 	</div>
 
@@ -80,14 +80,14 @@
 			<input class="popField" type="text" name="cYear" placeholder="Year"><br>
 
 			<div id="cButton">
-				<button class="popButton" id="cAdd"> ADD </button> 
-				<button class="popButton" id="cClose"> CLOSE </button> 
+				<button class="popButton" id="cAdd"> ADD </button>
+				<button class="popButton" id="cClose"> CLOSE </button>
 			</div>
 	</div>
 
 	<div class="sidebars" id="section-left">
 		<div class="userInfo" id="userPic">
-			<a href="/profile"><img src="/img/SEAHAWK_SIL.jpg" alt="GOTO Profile"></a>	
+			<a href="/profile"><img src="/img/SEAHAWK_SIL.jpg" alt="GOTO Profile"></a>
 		</div>
 		<div class="userInfo" id="lists">
 			<div class="userLists" id="group">
@@ -96,14 +96,14 @@
 					<li><a id="createGroup" href="javascript:void(0)"> Create New Group </a></li>
 				</ul>
 			</div>
-		
+
 			<div class="userLists" id="course">
 				<h5> COURSE LIST </h5>
 				<ul id="courseList">
 					<li><a id="createCourse" href="javascript:void(0)"> Add New Class </a></li>
 				</ul>
 			</div>
-			
+
 			<div class="userLists" id="other">
 				<h5> OTHER LIST </h5>
 				<ul id="otherList">
@@ -111,7 +111,7 @@
 					<li><a href="/schedule"> Schedule </a></li>
 				</ul>
 			</div>
-		
+
 		</div>
 	</div>
 	<div class="timeline">
@@ -136,15 +136,15 @@
 
 					<input type="file" id="newPostImg" style="display: none;" accept="image/*" />
 				</div>
-			
-			</div>	
-	
+
+			</div>
+
 		<!-- Will be filled with posts from server  -->
-	
+
 		<div class="posts" id="posts">
-			
+
 		</div>
-	
+
 	</div>
 	<div class="sidebars" id="section-right">
 		<div class= "content-1">
@@ -154,14 +154,14 @@
 					<a id="suggLink" href="#"><img src="/img/SEAHAWK_SIL.jpg">
 					<div id="suggName"> {{SUGG_NAME}} </div> </a>
 					<div id="suggButt"><button id="suggPrev" value="PREV"><span> PREV </span></button><button id="suggNext" value="NEXT"><span> NEXT </span></button></div>
-				
+
 				</div>
 			</div>
 		</div>
 		<div class="content-2">
 		</div>
 	</div>
-	
+
 	<div id="chat"> <div id="chatTop"> CHAT </div><iframe src="/chat" id="chatBox" name="chat"></iframe> </div>
 	<button id="chatButton"> CHAT </button>
 	</div>
