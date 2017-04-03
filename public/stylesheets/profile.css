@@ -26,10 +26,14 @@
 	
 	margin-left: 10px;
 	margin-top: 10px;
+
+	display: inline-block;
+	overflow: hidden;
 	
 	border: 2px outset;
 	border-color:  #aaaaaa #7f1734 #7f1734 #aaaaaa;
 }
+
 
 #infoPic img {
 	width: 100px;
@@ -71,12 +75,20 @@
 #postBox {
 	position: relative;
 	top: -55px;
+
 	width: 96%;
 	
 	display: inline-block;
 	
-	margin-left: 3.5%;
-	margin-top: 20px;
+	height:30px;
+	margin-top: 1px;
+	
+	background-color: #eeeeee;
+	padding: 2%;
+	
+	border: 2px solid #cccccc;
+
+	overflow: hidden;
 	
 }
 
@@ -92,10 +104,30 @@
 
 }
 
-#postBox #button {
+#postBox #postSubmit {
 	position: relative;
 	top: -15px;
 	width: 10%;
 	height: 30px;
 	padding:0;
+}
+
+#chatButton {
+	position: fixed;
+	bottom: 5px;
+	right: 0;
+	z-index: 3;
+	width: 100px;
+}
+
+#imageDisp {
+	display: block;
+	margin: auto;
+	box-sizing: content-box;
+}
+
+#imgDisp {
+	height: 50px;
+	width: 50px;
+	margin: auto;
 }
