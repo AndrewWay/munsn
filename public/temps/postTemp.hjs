@@ -4,18 +4,18 @@
 				<div class="postInfo">
 					<div class="postPic">
 						<img src='/content/image/profile/{{uid}}'>
-					</div> 
+					</div>
 					<div class="postName">
-						<a href="/profile/#{{uid}}"> {{fname}} {{lname}}</a> <br>
+						<a href="/profile/#{{uid}}">{{fname}} {{lname}}</a> <br>
 						<span>{{date}}</span>
 					</div>
 				</div>
 				<div class="postCont">
 					<p> {{text}}</p><img src="/content/posts/{{_id}}/{{_id}}">
 				</div>
-				
+
 				<div class="postComm">
-					
+
 				</div>
 
 				<div class="commField">

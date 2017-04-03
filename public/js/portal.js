@@ -233,7 +233,6 @@ $(document).ready(function () {
 				postInfo.date = new Date(postInfo.date).toLocaleString();
 
 				console.log(data);
-
 				$.ajax({
 					type: 'GET',
 					url: '/api/user/' + v.uid,
