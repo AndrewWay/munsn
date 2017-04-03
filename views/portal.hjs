@@ -30,7 +30,13 @@
 	        <form id="search">
 			  	<input type="search" id="searchbar" placeholder="Search MunSN"><button id="searchbtn" class="searchbtn">Search</button>
 			</form>
+
+			<div class="searchRes" style="display: none;">
+			
+			</div>
 		</div>
+
+		
 
 		<div class="buttons">
 			<a href="javascript:void(0)"><img id="not" src="/img/notification-red.png"></a>

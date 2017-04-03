@@ -25,6 +25,25 @@ $.get('/api/session')
 
 $(document).ready(function () {
 
+	/******************
+	 * Search
+	 * 
+	 * @params: null
+	 * 
+	 * Functionality for the search bar 
+	 *******************/
+
+	$('#searchbtn').click(function () {
+		console.log($('#searchbar').val());
+
+		$.get('/api/search/', {
+			query: $('#searchbar').val()
+		}, function (results) {
+			alert(results);
+			console.log("SEARCH:" + results);
+		});
+	});
+
 	/*****
 	 * NavBar Button functions
 	 *
