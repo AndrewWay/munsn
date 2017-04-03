@@ -1,5 +1,9 @@
 var id = window.location.hash.substring(1);
 
+window.onhashchange= function() {
+	window.location.reload();
+}
+
 var postBoxMax = 140;
 var imgBool = false;
 
