@@ -12,7 +12,6 @@ $(document).ready(function () {
 		});
 	});
 
-
 	/******************
 	 * Post box expansion.
 	 *
