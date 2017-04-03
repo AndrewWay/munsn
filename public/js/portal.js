@@ -3,13 +3,13 @@ var imgBool = false;
 
 $(document).ready(function () {
 
-    $('#searchbtn').click(function() {
-        $.get('/api/search', {query: $('#searchbar').val()}, function(results) {
-            alert(results);
+	$('#search').submit(function() {
+		$.get('/api/search', {query: $('#searchbar').val()}, function(results) {
+            //alert(JSON.stringify(results.data));
             console.log("SEARCH:" + results);
         });
-    });
-
+		return false;
+	});
 
 	/******************
 	 * Post box expansion.
