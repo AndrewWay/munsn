@@ -1053,6 +1053,24 @@ var sendGroupRequest = "/groups/request"; //POST
  *      - JSON mongo result
  */
 var removeGroupRequest = "/groups/request"; //DELETE
+/**
+ * search
+ *
+ * URL:
+ * 		- %server%/api/search
+ * Description:
+ *      - Search through users, groups, and courses
+ * Method:
+ *      - DELETE
+ * Params:
+ *      - query:
+ *          - In users: Searchs first/last names
+ *          - In groups: Searchs group names
+ *          - In courses: Searchs labels and names
+ * Returns:
+ *      - JSON mongo result
+ */
+var search = "/search"; //GET
 
 //==========================================================================================
 router.get(session, function (req, res, next) {
@@ -1376,7 +1394,11 @@ router.delete(removeGroupRequest, UserID, function (req, res, next) {
 		res.json(result);
 	});
 });
-
+router.get(search, UserID, function (req, res, next) {
+	DB.Search.search(req, res, function (result) {
+		res.json(result);
+	});
+});
 
 
 module.exports = router;
