@@ -1,6 +1,6 @@
 $(function () {
     var currentRoom;
-    var socket = io("http://sc-6.cs.mun.ca");
+    var socket = io("/chat");
     //Init chat
     socket.emit('initChat', null, function(result) {
         console.log("init chat");
