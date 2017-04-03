@@ -3,12 +3,14 @@ var imgBool = false;
 
 $(document).ready(function () {
 
-    $('#searchbtn').click(function() {
-        $.get('/api/search', {query: $('#searchbar').val()}, function(results) {
-            alert(results);
-            console.log("SEARCH:" + results);
-        });
-    });
+	$('#searchbtn').click(function () {
+		$.get('/api/search', {
+			query: $('#searchbar').val()
+		}, function (results) {
+			alert(results);
+			console.log("SEARCH:" + results);
+		});
+	});
 
 
 	/******************

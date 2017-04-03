@@ -1399,8 +1399,8 @@ router.delete(removeGroupRequest, UserID, function (req, res, next) {
 	});
 });
 router.get(search, UserID, function (req, res, next) {
-	DB.Search.search(req, res, function (result) {
 		res.json(result);
+	DB.Search.search(req, res, function (result) {
 	});
 });
 
