@@ -13,9 +13,9 @@ $(function () {
                 $('#messages').append($('<li>').text("[PM: " + data.data[0].messages[i].user + "] " + data.data[0].messages[i].message));
                 console.log("LOADING MESSAGES: " + i + ": " + data.data[0].messages[i].message);
             }
-        */
         $('#m').val('');         
-        });
+    });
+    */
 	});
     //Fired when enter is pressed
     $('form').submit(function () {
