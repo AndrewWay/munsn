@@ -95,22 +95,7 @@
 	<div class="timeline">
 
 		<div id="infoContainer">
-			<div class="info" id="infoPic"><img src="/img/SEAHAWK_SIL.jpg"></div>
-			<div class="info" id="infoText">
-				<div class="info" id="name"> {{INFO_NAME}} </div>
-				<div class="info" id="dob"> {{INFO_DOB}} </div>
-				<div class="info" id="gender"> {{INFO_GENDER}} </div>
-				<div class="info" id="major"> {{INFO_MAJOR}} </div>
-				<div class="info" id="edit"> <button>Edit Profile</button> </div>
-			</div>
-			<div class="info" id="infoButton">
-				<button>Add Friend</button>
-				<button>Send Message</button>
-				<button>Friends</button>
-				<button>Groups</button>
-				<button>Classes</button>
-				<button id="resume">Resume</button>
-			</div>
+			
 				
 		</div>
 		<div class="info" id="postBox">

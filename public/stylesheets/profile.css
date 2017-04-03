@@ -26,10 +26,14 @@
 	
 	margin-left: 10px;
 	margin-top: 10px;
+
+	display: inline-block;
+	overflow: hidden;
 	
 	border: 2px outset;
 	border-color:  #aaaaaa #7f1734 #7f1734 #aaaaaa;
 }
+
 
 #infoPic img {
 	width: 100px;
