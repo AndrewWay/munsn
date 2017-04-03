@@ -18,6 +18,7 @@ $.get('/api/session')
 	}
 	else {
 		uid = response.user._id;
+		$('#userPic a').attr('href', '/profile#'+uid);
 	}
 })
 .fail(function(response) {
