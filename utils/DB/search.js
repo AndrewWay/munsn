@@ -14,35 +14,35 @@ module.exports = function (DBSearch, collectionUsers, collectionGroups, collecti
             //Search through users
             collectionUsers.find({$or: [{fname: {$regex: query}}, {lname: {$regex: query}}]}).toArray(function(err, resultsUsers) {
                 if (err) {
-                    console.error("[DBSearch] Search:Users -> " + req.body.query, err.message);
+                    console.error("[DBSearch] Search:Users -> " + req.query.query, err.message);
                 }
                 else {
                     searchResults.users = resultsUsers;
                     cbUsers = true;
-                    console.log("[DBSearch] Search:Users -> " + req.body.query, resultsUsers[0] ? "Found Results": "No results");
+                    console.log("[DBSearch] Search:Users -> " + req.query.query, resultsUsers[0] ? "Found Results": "No results");
                 }
             });
             //Search through groups
             collectionGroups.find({name: {$regex: query}}).toArray(function(err, resultsGroups) {
                 if (err) {
-                    console.error("[DBSearch] Search:Groups -> " + req.body.query, err.message);
+                    console.error("[DBSearch] Search:Groups -> " + req.query.query, err.message);
                     
                 } 
                 else {
                     searchResults.groups = resultsGroups;
                     cbGroups = true;
-                    console.log("[DBSearch] Search:Groups -> " + req.body.query, resultsGroups[0] ? "Found Results": "No results");
+                    console.log("[DBSearch] Search:Groups -> " + req.query.query, resultsGroups[0] ? "Found Results": "No results");
                 }
             });
             //Search through courses
             collectionCourses.find({$or: [{label: {$regex: query}}, {name: {$regex: query}}]}).toArray(function(err, resultsCourses) {
                 if (err) {
-                    console.error("[DBSearch] Search:Courses -> " + req.body.query, err.message);
+                    console.error("[DBSearch] Search:Courses -> " + req.query.query, err.message);
                 }
                 else {
                     searchResults.courses = resultsCourses;
                     cbCourses = true;
-                    console.log("[DBSearch] Search:Courses -> " + req.body.query, resultsCourses[0] ? "Found Results": "No results");
+                    console.log("[DBSearch] Search:Courses -> " + req.query.query, resultsCourses[0] ? "Found Results": "No results");
                 }
             });
 

@@ -11,24 +11,24 @@ module.exports = function (DBGroups, collectionGroups, collectionGroupMembers, c
 		};
 		console.log("[DBGroups] Add", "'" + row.creatorid + "'->'" + row.name + "'");
 		if (row.name && row.ownerid) {
-			collectionGroups.insert(row, function (err, result) {
-				if (err) {
-					console.error("[DBGroups] Add", err.message);
+			collectionGroups.insert(row, function (grpErr, grpResult) {
+				if (grpErr) {
+					console.error("[DBGroups] Add", grpErr.message);
 					callback({
 						session: req.session,
 						status: 'fail'
 					});
 				} else {
-					var id = result.ops[0]._id;
+					var group = grpResult.ops[0];
 					collectionGroupMembers.insert({
-						_id: id,
+						_id: group._id,
 						members: [{
 							user: row.creatorid,
 							admin: true
 						}]
-					}, function (err, result) {
-						if (err) {
-							console.error("[DBGroups] Add->Members", err.message);
+					}, function (mError, mResult) {
+						if (mError) {
+							console.error("[DBGroups] Add->Members", mError.message);
 							callback({
 								session: req.session,
 								status: 'fail'
@@ -36,6 +36,7 @@ module.exports = function (DBGroups, collectionGroups, collectionGroupMembers, c
 						} else {
 							callback({
 								session: req.session,
+								data: group,
 								status: 'ok'
 							});
 						}
@@ -55,7 +56,7 @@ module.exports = function (DBGroups, collectionGroups, collectionGroupMembers, c
 		console.log("[DBGroups] FindByGroupID", "'" + req.params.gid + "'");
 		if (req.params.gid) {
 			collectionGroups.findOne({
-				_id: req.params.gid
+				_id: new ObjectID(req.params.gid)
 			}, function (err, result) {
 				if (err) {
 					console.log("[DBGroups] FindByGroupID", err.message);

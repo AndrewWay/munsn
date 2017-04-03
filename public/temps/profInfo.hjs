@@ -15,11 +15,8 @@
 			</div>
 
 			<script type="text/javascript">
-
-
 			//When button is clicked go to resume page.
 			$('#infoButton #resume').click(function () {
 				window.location.href = "/resume#"+id;
 			});
-
 			</script>

@@ -103,6 +103,8 @@ $(document).ready(function () {
 			})
 			.done(function (result) {
 				//Maybe add some functionality?
+				$('#groupList').prepend('<li><a href="/group#' + result.data._id + '"> ' + result.data.name + ' </a></li>');
+				$('#coursePop').hide();
 			})
 			.fail(function (result) {
 				//TODO: Alert user when failed.
