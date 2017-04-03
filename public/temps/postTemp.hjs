@@ -6,7 +6,7 @@
 						<img src='/content/image/profile/{{uid}}'>
 					</div> 
 					<div class="postName">
-						<a href="/profile/#{{uid}}"> {{fname}} {{lname}}</a> <br>
+						<a href="/profile/#{{uid}}"> {{uid}} </a> <br>
 						<span>{{date}}</span>
 					</div>
 				</div>

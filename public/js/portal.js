@@ -220,7 +220,7 @@ $(document).ready(function () {
 		 $.each( response.data, function( i, v) {
 
 			var postInfo=$.extend({}, v,v.history.slice(-1).pop());
-
+            postInfo.date = new Date(postInfo.date).toLocaleString();
 			data.list.push(postInfo);
 			console.log(data);
 			//Stop at 5 posts. Arbitrary
@@ -228,6 +228,7 @@ $(document).ready(function () {
 		 });
 
 		 $.get("/temps/postTemp.hjs", function(post) {
+             console.log(data);
 				var template = Hogan.compile("{{#list}}" + post +"{{/list}}");
 				var output = template.render(data);
 				$('#posts').append(output);
