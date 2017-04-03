@@ -9,7 +9,7 @@
 	
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
 	<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
-	<script src="/socket.io/socket.io.js"></script>
+	<script src="/js/socket.js"></script>
 	<script src="http://twitter.github.com/hogan.js/builds/3.0.1/hogan-3.0.1.js"></script>	
 	<script src="/js/blank.js"></script>
 	<script src="/js/portal.js"></script>
