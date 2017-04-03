@@ -121,11 +121,10 @@ $(document).ready(function() {
 	});
 
 	$("#submitLost").click(function () {
-		//Send the object to API
-		//This def doesn't work yet :)
-		console.log("in the submitLost function")
+		//Read in information from lost and found div
 		var jqxhr = $.post("/api/lostfound", 
 			{
+				description: $('#lostContent input[name="desc"]').val(),
 				latitude: $('#lostContent input[name="lat"]').val(),
 				longitude: $('#lostContent input[name="long"]').val(),
 				locate: $('#lostContent input[name="locate"]').val(),
@@ -141,18 +140,34 @@ $(document).ready(function() {
 		.done(function (result) {
 			console.log(result.status);
 				if (result.status === 'fail') {
-				//If ajax request returns false: Display text alert. Clear all fields.
-					$('#textAlert').css({
-						color: 'red'
-					});
-					$('#textAlert').html('Uh oh. Bad thing happened');
-					$('#textAlert').show();
+				//If ajax request returns false: display error in console
+					console.log("Oh no. Something bad happened");
 				} 
 				else 
 				{
-					//Upload the pic
+					var picForm = new FormData();
+					picForm.append("image", $("#lostImg")[0].files[0]);
+					//Send multipart/formdata with the image
+					$.ajax({
+						url: '/content/image/profile/' + result.data._id, //Get :lostfoundid from the return.
+						type: 'post',
+						data: picForm,
+						cache: false,
+						contentType: false,
+						processData: false,
+					}).done(function (data) {
+						console.log("img uploaded");
+						//Display text alert to check email
+						$('#textAlert').css({
+							color: 'black'
+						});
+						$('#textAlert').html('Account created. Check email for confirmation.');
+						$('#textAlert').show();
+					}).fail(function (data) {
+						console.log("img not uploaded");
+					})
 				}
-				$("#lostContent")[0].reset();
+			$("#lostContent")[0].reset();
 		});
 	});	
 });
