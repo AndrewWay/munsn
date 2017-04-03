@@ -1,6 +1,6 @@
-<div class="info" id="infoPic"><img src="/img/SEAHAWK_SIL.jpg"></div>
+<div class="info" id="infoPic"><img src="/content/image/group/{{_id}}"></div>
 			<div class="info" id="infoText">
-				<div class="info" id="name"> {{INFO_NAME}} </div>
+				<div class="info" id="name"> Name: {{name}} </div>
 				<div class="info" id="edit"> <input type="button" value="Edit Group"> </div>
 			</div>
 			<div class="info" id="infoButton">

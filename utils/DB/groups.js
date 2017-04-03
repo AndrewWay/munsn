@@ -55,7 +55,7 @@ module.exports = function (DBGroups, collectionGroups, collectionGroupMembers, c
 		console.log("[DBGroups] FindByGroupID", "'" + req.params.gid + "'");
 		if (req.params.gid) {
 			collectionGroups.findOne({
-				_id: req.params.gid
+				_id: new ObjectID(req.params.gid)
 			}, function (err, result) {
 				if (err) {
 					console.log("[DBGroups] FindByGroupID", err.message);

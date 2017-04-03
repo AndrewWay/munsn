@@ -11,12 +11,12 @@ switch (process.argv[2]) {
       'path': '/'
     }, function (resp) {
       resp.on('data', function (ip) {
-        port = process.env.PORT = normalizePort(3000);
         process.env.HOSTNAME = process.env.IP = ip;
         process.env.ADDRESS = process.env.HOSTNAME + ':' + process.env.PORT;
         console.log("Server Address:", process.env.ADDRESS);
       });
     });
+    port = process.env.PORT = normalizePort(3000);
     break;
   case 'prod':
     http.get({
