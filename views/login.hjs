@@ -4,22 +4,22 @@
 	<title> {{ title }} </title>
 	<link rel="stylesheet" type="text/css" href="/stylesheets/login.css">
 	<link rel="stylesheet" type="text/css" href="/stylesheets/post.css">
-	
+
 	<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
 	<meta content="utf-8" http-equiv="encoding">
-	
 
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-	<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
-	<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />  
+
+	<script src="/scripts/jquery.min.js"></script>
+	<script src="/scripts/jquery-ui.js"></script>
+	<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
 	<script src="/js/login.js"></script>
 </head>
 
 <body onload="document.loginForm.reset(); document.regForm.reset();">
 	<div id="sideBar">
-			
+
 	</div>
-		
+
 
 	<div id="wrapper">
 	<div id="obscure">
@@ -30,8 +30,8 @@
 				Please enter email to recover your password:
 				<input class="popField" type="text" name="user" placeholder="Enter Email"><br>
 				<div id="fpButton">
-					<button id="fpSubmit"> Submit </button> 
-					<button class="popClose" id="fpClose"> Close </button> 
+					<button id="fpSubmit"> Submit </button>
+					<button class="popClose" id="fpClose"> Close </button>
 				</div>
 			</div>
 
@@ -47,12 +47,12 @@
 				<form id="loginFields" name="loginForm" method="post" action="/">
 					<input class="logField" type="text" name="user" placeholder="Username"><br>
 					<input class="logField" type="password" name="pass" placeholder="Password"><br>
-					<input class="logButton" id="logSubmit" type="button" value="Login"> 
+					<input class="logButton" id="logSubmit" type="button" value="Login">
 					<input class="logButton" id="regBtn" type="button" value="Register"><br>
 					<input class="logButton" id="forPass" type="button" value="Forgot Password"><br>
-					
+
 					<img src="/img/MUNLOGO.gif" alt="Provehito in Altum" title="Provehito in Altum">
-					
+
 					<a href="/login" id="guestIn"> Sign in as Guest </a>
 				</form>
 				<form id="regFields" name="regForm" method="post" action="/api/user/register">
@@ -64,31 +64,31 @@
 					<input class="regField" type="password" name="pass" placeholder="Password"><br>
 					<input class="regField" type="password" name="passConf" placeholder="Confirm Password"><br>
 					<input type="text" class="regField" id="datePick" placeholder="Date of Birth"><br>
-					<div class="regText">GENDER:</div> 
+					<div class="regText">GENDER:</div>
 					<input type="radio" name="gender" value="male" checked> Male
 					<input type="radio" name="gender" value="female"> Female
 					<input type="radio" name="gender" value="other"> Other<br>
-					
+
 					<div class="spacerDiv"></div>
-					
+
 					<div class="regText"><img id="picDisp" src="/img/SEAHAWK_SIL.jpg"></div>
 					<div id="profilePic"><input id="picUp" type="file" name="pic" accept="image/*"></div><br>
-					
+
 					<div class="spacerDiv"></div>
-					
+
 					<div id="tosText"><input type="checkbox" name="checkTOS">I HAVE READ AND AGREE TO THE TERMS OF SERVICE</div><br>
-					
+
 					<input class="regButton" id="tosButton" type="button" value="Terms of Service"><br>
 					<input class="regButton" id="regSubmit" type="button" value="Register"><br>
 					<input class="regButton" id="closeReg" type="button" value="Back">
 				</form>
 			</div>
-		
+
 		</div>
-	
+
 		<div id="rightPanel">
-			
-			
+
+
 			<!-- HOWTO: Render? Might need to be done server side, but this loop works -->
 			<script type="text/javascript">
 				 $.get("/temps/postTemp.hjs", function(post) {
@@ -97,10 +97,10 @@
 					}
 				});
 
-				
+
 			</script>
-			
-			
+
+
 		</div>
 	</div>
 </body>
