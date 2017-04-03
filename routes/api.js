@@ -9,7 +9,7 @@ var UserID = require("../middleware/functions").UserID;
  *
  * URL:
  * 		- %server%/api/session
- * Descript:
+ * Description:
  *      - Gets the current session for this instance
  * Method:
  *      - GET
@@ -20,11 +20,58 @@ var UserID = require("../middleware/functions").UserID;
  */
 var session = "/session";
 /**
+ * loginUser
+ *
+ * URL:
+ * 		- %server%/api/login
+ * Description:
+ *      - Logs user into the site
+ * Method:
+ *      - POST
+ * Params:
+ *      - uid: User's id
+ *      - pass: User's password
+ * Returns:
+ *      - JSON user
+ */
+var loginUser = "/login";
+/**
+ * loginUser
+ *
+ * URL:
+ * 		- %server%/api/logout
+ * Description:
+ *      - Logs the user out of the site
+ * Method:
+ *      - GET
+ * Params:
+ *      - NONE
+ * Returns:
+ *      - JSON user
+ */
+var logoutUser = "/logout";
+/**
+ * loadMessages
+ *
+ * URL:
+ * 		- %server%/api/messages/load/
+ * Description:
+ *      - Get messages from a conversation
+ * Method:
+ *      - GET
+ * Params:
+ *      - uid1: The first user id
+ * 		- uid2: The second user id
+ * Returns:
+ *      - JSON array containing messages
+ */
+var loadMessages = "/messages"; //GET
+/**
  * findUserByUID
  *
  * URL:
  * 		- %server%/api/user/:uid
- * Descript:
+ * Description:
  *      - Gets the user object from the database if they exist
  * Method:
  *      - GET
@@ -39,7 +86,7 @@ var findUserByUID = "/user/:uid"; //GET
  *
  * URL:
  * 		- %server%/api/user
- * Descript:
+ * Description:
  *      - Gets the user object with a query
  * Method:
  *      - GET
@@ -54,7 +101,7 @@ var findUser = "/user"; //GET
  *
  * URL:
  * 		- %server%/api/user/:uid
- * Descript:
+ * Description:
  *      - Updates an user's fields
  * Method:
  *      - PATCH
@@ -71,7 +118,7 @@ var updateUser = "/user/:uid"; //PATCH
  *
  * URL:
  * 		- %server%/api/user/:uid
- * Descript:
+ * Description:
  *      - Deletes a user from the server
  * Method:
  *      - DELETE
@@ -86,7 +133,7 @@ var deleteUser = "/user/:uid"; //DELETE
  *
  * URL:
  * 		- %server%/api/register
- * Descript:
+ * Description:
  *      - Registers a user
  * Method:
  *      - POST
@@ -103,58 +150,11 @@ var deleteUser = "/user/:uid"; //DELETE
  */
 var registerUser = "/register"; //POST
 /**
- * loginUser
- *
- * URL:
- * 		- %server%/api/login
- * Descript:
- *      - Logs user into the site
- * Method:
- *      - POST
- * Params:
- *      - uid: User's id
- *      - pass: User's password
- * Returns:
- *      - JSON user
- */
-var loginUser = "/login";
-/**
- * loginUser
- *
- * URL:
- * 		- %server%/api/logout
- * Descript:
- *      - Logs the user out of the site
- * Method:
- *      - GET
- * Params:
- *      - NONE
- * Returns:
- *      - JSON user
- */
-var logoutUser = "/logout";
-/**
- * loadMessages
- *
- * URL:
- * 		- %server%/api/messages/load/
- * Descript:
- *      - Get messages from a conversation
- * Method:
- *      - GET
- * Params:
- *      - uid1: The first user id
- * 		- uid2: The second user id
- * Returns:
- *      - JSON array containing messages
- */
-var loadMessages = "/messages"; //GET
-/**
  * addFriend
  *
  * URL:
  * 		- %server%/api/friend
- * Descript:
+ * Description:
  *      - Add a friend
  * Method:
  *      - POST
@@ -170,7 +170,7 @@ var addFriend = "/friend"; //POST
  *
  * URL:
  * 		- %server%/api/friend
- * Descript:
+ * Description:
  *      - Delete a friend
  * Method:
  *      - DELETE
@@ -187,7 +187,7 @@ var delFriend = "/friend"; //DELETE
  *
  * URL:
  * 		- %server%/api/friend/request
- * Descript:
+ * Description:
  *      - Send a friend request from one user to another
  * Method:
  *      - POST
@@ -203,7 +203,7 @@ var addFriendReq = "/friend/request"; //POST
  *
  * URL:
  * 		- %server%/api/friend/request
- * Descript:
+ * Description:
  *      - Remove a friend request
  * Method:
  *      - DELETE
@@ -219,7 +219,7 @@ var removeFriendRequest = "/friend/request"; //DELETE
  *
  * URL:
  * 		- %server%/api/friend/request/accept
- * Descript:
+ * Description:
  *      - Accept a friend request
  * Method:
  *      - POST
@@ -235,7 +235,7 @@ var acceptFriendReq = "/friend/request/accept"; //POST
  *
  * URL:
  * 		- %server%/api/friend/request/deny
- * Descript:
+ * Description:
  *      - Delete a friend request from one user to another
  * Method:
  *      - POST
@@ -251,7 +251,7 @@ var denyFriendReq = "/friend/request/deny"; //POST
  *
  * URL:
  * 		- %server%/api/friend/suggest/:uid
- * Descript:
+ * Description:
  *      - Get a list of suggested friends
  * Method:
  *      - GET
@@ -267,7 +267,7 @@ var suggestFriends = "/friend/suggest/:uid"; //GET
  *
  * URL:
  * 		- %server%/api/friends/:uid
- * Descript:
+ * Description:
  *      - Gets the friends for a given uid
  * Method:
  *      - GET
@@ -282,7 +282,7 @@ var findFriendsById = "/friends/:uid"; //GET
  *
  * URL:
  * 		- %server%/api/friend/sent/:uid
- * Descript:
+ * Description:
  *      - Gets the friend requests sent from a user
  * Method:
  *      - GET
@@ -297,7 +297,7 @@ var findFriendSent = "/friend/sent/:uid"; //GET
  *
  * URL:
  * 		- %server%/api/friend/received/:fid
- * Descript:
+ * Description:
  *      - Gets the friend requests recieved from a user
  * Method:
  *      - GET
@@ -312,14 +312,14 @@ var findFriendReceived = "/friend/received/:fid"; //GET
  *
  * URL:
  * 		- %server%/api/course
- * Descript:
+ * Description:
  *      - Create a course
  * Method:
  *      - POST
  * Params:
  *		label: Shorthand name, ex. "COMP 4770"
  *		name: Full name, ex. "Team Project"
- *		description: Description
+ *		Descriptionion: Descriptionion
  *		semester: Semester, ex. "winter"
  *		department: Department that the course belongs to, ex. "cs"
  *		location: Room number, ex. "EN 1051"
@@ -337,23 +337,21 @@ var createCourse = "/course"; //POST
  *
  * URL:
  * 		- %server%/api/course
- * Descript:
+ * Description:
  *      - Update a course
  * Method:
  *      - PATCH
  * Params:
  *		_id: The course unique object id
  *		label: Shorthand name, ex. "COMP 4770"
+ *		Descriptionion: Descriptionion of the course
  *		name: Full name, ex. "Team Project"
- *		description: Description
  *		semester: Semester, ex. "winter"
- *		department: Department that the course belongs to, ex. "cs"
  *		location: Room number, ex. "EN 1051"
+ *		department: Department that the course belongs to, ex. "cs"
  *		year: Current year the course is offered
  *		cid: Creator id
- *		days: Array of strings of days the course is every week, ex. days["monday", "wednesday", "friday"]
- *		timeStart: (date)The course start date, ex. "Jan. 1"
- *		timeEnd: (date) The course end date, ex. "Apr. 12"
+ *		event: The calendar event object that relates to the google api
  * Returns:
  *      - JSON mongo result
  */
@@ -363,7 +361,7 @@ var updateCourse = "/course"; //PATCH
  *
  * URL:
  * 		- %server%/api/course
- * Descript:
+ * Description:
  *      - Remove a course
  * Method:
  *      - DELETE
@@ -378,7 +376,7 @@ var deleteCourse = "/course"; //DELETE
  *
  * URL:
  * 		- %server%/api/course/user
- * Descript:
+ * Description:
  *      - Add a course to a user
  * Method:
  *      - PUT
@@ -393,7 +391,7 @@ var addCourseToUser = "/course/user"; //PUT
  *
  * URL:
  * 		- %server%/api/course/user
- * Descript:
+ * Description:
  *      - Delete a course from a user
  * Method:
  *      - DELETE
@@ -408,7 +406,7 @@ var delCourseFromUser = "/course/user"; //DELETE
  *
  * URL:
  * 		- %server%/api/course/group
- * Descript:
+ * Description:
  *      - Add a course to a Group
  * Method:
  *      - PUT
@@ -424,7 +422,7 @@ var addCourseToGroup = "/course/group"; //PUT
  *
  * URL:
  * 		- %server%/api/course/group
- * Descript:
+ * Description:
  *      - Delete a course from a Group
  * Method:
  *      - DELETE
@@ -439,7 +437,7 @@ var delCourseFromGroup = "/course/group"; //DELETE
  *
  * URL:
  * 		- %server%/api/course/:uid
- * Descript:
+ * Description:
  *      - Get courses by UseriD
  * Method:
  *      - GET
@@ -454,7 +452,7 @@ var findCoursesByUID = "/course/:uid"; //GET
  *
  * URL:
  * 		- %server%/api/course
- * Descript:
+ * Description:
  *      - Get a course based on query
  * Method:
  *      - GET
@@ -462,7 +460,7 @@ var findCoursesByUID = "/course/:uid"; //GET
  *		_id: The course unique object id
  *		label: Shorthand name, ex. "COMP 4770"
  *		name: Full name, ex. "Team Project"
- *		description: Description
+ *		Descriptionion: Descriptionion
  *		semester: Semester, ex. "winter"
  *		department: Department that the course belongs to, ex. "cs"
  *		location: Room number, ex. "EN 1051"
@@ -480,13 +478,13 @@ var findCourse = "/course"; //GET
  *
  * URL:
  * 		- %server%/api/lostfound
- * Descript:
+ * Description:
  *      - Add a Lost
  * Method:
  *      - POST
  * Params:
  *		imagePath: The path to an image if supplied
- *		description: Description
+ *		Descriptionion: Descriptionion
  *		long: Longitude
  *		lat: Latitude
  * Returns:
@@ -498,14 +496,14 @@ var addLostFound = "/lostfound"; //POST
  *
  * URL:
  * 		- %server%/api/lostfound
- * Descript:
+ * Description:
  *      - Update a Lost
  * Method:
  *      - PATCH
  * Params:
  *		_id: The lost unique object id
  *		imagePath: The path to an image if supplied
- *		description: Description
+ *		Descriptionion: Descriptionion
  *		long: Longitude
  *		lat: Latitude
  * Returns:
@@ -517,7 +515,7 @@ var updateLostFound = "/lostfound"; //PATCH
  *
  * URL:
  * 		- %server%/api/lost
- * Descript:
+ * Description:
  *      - Remove a Lost
  * Method:
  *      - DELETE
@@ -532,7 +530,7 @@ var removeLostFound = "/lostfound"; //DELETE
  *
  * URL:
  * 		- %server%/api/lostfound/:uid
- * Descript:
+ * Description:
  *      - Get a course by id
  * Method:
  *      - GET
@@ -547,14 +545,14 @@ var findLostFoundById = "/lostfound/:uid"; //GET
  *
  * URL:
  * 		- %server%/api/lostfound
- * Descript:
+ * Description:
  *      - Get a lost based on query
  * Method:
  *      - GET
  * Params:
  *		_id: The lost unique object id
  *		imagePath: The path to an image if supplied
- *		description: Description
+ *		Descriptionion: Descriptionion
  *		long: Longitude
  *		lat: Latitude
  * Returns:
@@ -566,17 +564,17 @@ var findLostFound = "/lostfound"; //GET
  *
  * URL:
  * 		- %server%/api/post/timeline
- * Descript:
+ * Description:
  *      - Add a user timeline post
  * Method:
  *      - POST
  * Params:
- *      - authorid: The authors id
- * 		- origin: The userid of the timeline
- * 		- dataType: Text, picture, etc
- * 		- data: Actual data
- * Returns:
- *      - JSON mongo result
+ *      - uid: The authors id
+ * 		- targetid: The groupid
+ * 		- type: Should be 'timeline'
+ *		- visibility: Can be 'public', 'friends', 'private'
+ *		- whitelist: Who can absolutely see this post in all cases of visibility
+ * 		- fields: The data that is stored in this post
  */
 var addTimelinePost = "/post/timeline"; //POST
 /**
@@ -584,15 +582,17 @@ var addTimelinePost = "/post/timeline"; //POST
  *
  * URL:
  * 		- %server%/api/post/group
- * Descript:
+ * Description:
  *      - Add a group post
  * Method:
  *      - POST
  * Params:
- *      - authorid: The authors id
- * 		- origin: The groupid
- * 		- dataType: Text, picture, etc
- * 		- data: Actual data
+ *      - uid: The authors id
+ * 		- targetid: The groupid
+ * 		- type: Should be 'group'
+ *		- visibility: Can be 'public', 'friends', 'private'
+ *		- whitelist: Who can absolutely see this post in all cases of visibility
+ * 		- fields: The data that is stored in this post
  */
 var addGroupPost = "/post/group"; //POST
 /**
@@ -600,7 +600,7 @@ var addGroupPost = "/post/group"; //POST
  *
  * URL:
  * 		- %server%/api/post
- * Descript:
+ * Description:
  *      - Delete a post
  * Method:
  *      - DELETE
@@ -609,13 +609,13 @@ var addGroupPost = "/post/group"; //POST
  * Returns:
  *      - JSON mongo result
  */
-var delPost = "/post"; //DELETE
+var deletePost = "/post"; //DELETE
 /**
  * updatePost
  *
  * URL:
  * 		- %server%/api/post
- * Descript:
+ * Description:
  *      - Update a post
  * Method:
  *      - PATCH
@@ -630,7 +630,7 @@ var updatePostVisibility = "/post"; //PATCH
  *
  * URL:
  * 		- %server%/api/post/history
- * Descript:
+ * Description:
  *      - Update a post
  * Method:
  *      - PATCH
@@ -641,11 +641,11 @@ var updatePostVisibility = "/post"; //PATCH
  */
 var updatePostHistory = "/post/history"; //PATCH
 /**
- * find
+ * findPost
  *
  * URL:
  * 		- %server%/api/post
- * Descript:
+ * Description:
  *      - Get a singular post by PostID
  * Method:
  *      - GET
@@ -654,13 +654,13 @@ var updatePostHistory = "/post/history"; //PATCH
  * Returns:
  *      - JSON mongo result
  */
-var find = "/post"; //GET
+var findPost = "/post"; //GET
 /**
  * findPostByUid
  *
  * URL:
  * 		- %server%/api/post/:uid
- * Descript:
+ * Description:
  *      - Get ALL posts by UserID
  * Method:
  *      - GET
@@ -669,13 +669,13 @@ var find = "/post"; //GET
  * Returns:
  *      - JSON mongo result
  */
-var findPostByUid = "/post/:uid"; //GET
+var findPostByUID = "/post/:uid"; //GET
 /**
  * addComment
  *
  * URL:
  * 		- %server%/api/comment
- * Descript:
+ * Description:
  *      - Add a comment
  * Method:
  *      - POST
@@ -692,7 +692,7 @@ var addComment = "/comment"; //POST
  *
  * URL:
  * 		- %server%/api/comment
- * Descript:
+ * Description:
  *      - Update a comment
  * Method:
  *      - PATCH
@@ -708,7 +708,7 @@ var updateComment = "/comment"; //PATCH
  *
  * URL:
  * 		- %server%/api/comment
- * Descript:
+ * Description:
  *      - Remove a comment
  * Method:
  *      - DELETE
@@ -724,7 +724,7 @@ var removeComment = "/comment"; //DELETE
  *
  * URL:
  * 		- %server%/api/comment/:uid
- * Descript:
+ * Description:
  *      - Get comments by user id
  * Method:
  *      - GET
@@ -733,13 +733,13 @@ var removeComment = "/comment"; //DELETE
  * Returns:
  *      - JSON array containing comment objects
  */
-var findCommentById = "/comment/:uid"; //GET
+var findCommentByUID = "/comment/:uid"; //GET
 /**
  * createGroup
  *
  * URL:
  * 		- %server%/api/group
- * Descript:
+ * Description:
  *      - Create a group
  * Method:
  *      - POST
@@ -755,7 +755,7 @@ var createGroup = "/group"; //POST
  *
  * URL:
  * 		- %server%/api/group/:gid
- * Descript:
+ * Description:
  *      - Delete a group
  * Method:
  *      - DELETE
@@ -770,14 +770,14 @@ var delGroup = "/group/:gid"; //DELETE
  *
  * URL:
  * 		- %server%/api/group
- * Descript:
+ * Description:
  *      - Update a group
  * Method:
  *      - PATCH
  * Params:
  *      - gid: The group id to be updated
  * 		- name: The group name
- * 		- descrip: The group description
+ * 		- descrip: The group Descriptionion
  * Returns:
  *      - JSON group object after update
  */
@@ -787,7 +787,7 @@ var updateGroup = "/group"; //PATCH
  *
  * URL:
  * 		- %server%/api/group
- * Descript:
+ * Description:
  *      - Search groups by query
  * Method:
  *      - GET
@@ -806,7 +806,7 @@ var findGroups = "/group"; //GET
  *
  * URL:
  * 		- %server%/api/group/:gid
- * Descript:
+ * Description:
  *      - Gets group from a group id
  * Method:
  *      - GET
@@ -821,7 +821,7 @@ var findGroupById = "/group/:gid"; //GET
  *
  * URL:
  * 		- %server%/api/groups/sent/:uid
- * Descript:
+ * Description:
  *      - Gets the group requests sent from a user
  * Method:
  *      - GET
@@ -836,7 +836,7 @@ var findGroupSent = "/groups/sent/:uid"; //GET
  *
  * URL:
  * 		- %server%/api/groups/received/:gid
- * Descript:
+ * Description:
  *      - Gets the group requests recieved for a group
  * Method:
  *      - GET
@@ -851,7 +851,7 @@ var findGroupReceived = "/groups/received/:gid"; //GET
  *
  * URL:
  * 		- %server%/api/groups/user/:uid
- * Descript:
+ * Description:
  *      - Get groups that the user is in
  * Method:
  *      - GET
@@ -866,7 +866,7 @@ var findGroupsByUID = "/groups/user/:uid"; //GET
  *
  * URL:
  * 		- %server%/api/groups/requests/:gid
- * Descript:
+ * Description:
  *      - Get group requests for a group
  * Method:
  *      - GET
@@ -881,7 +881,7 @@ var findGroupRequests = "/groups/requests/:gid"; //GET
  *
  * URL:
  * 		- %server%/api/groups/user
- * Descript:
+ * Description:
  *      - Add a user to a group
  * Method:
  *      - POST
@@ -897,7 +897,7 @@ var addGroupUser = "/groups/user"; //POST
  *
  * URL:
  * 		- %server%/api/groups/user
- * Descript:
+ * Description:
  *      - Delete a user from a group
  * Method:
  *      - DELETE
@@ -913,7 +913,7 @@ var delGroupUser = "/groups/user"; //DELETE
  *
  * URL:
  * 		- %server%/api/groups/user
- * Descript:
+ * Description:
  *      - Updates a user in a group
  * Method:
  *      - PATCH
@@ -926,11 +926,27 @@ var delGroupUser = "/groups/user"; //DELETE
  */
 var updateGroupUser = "/groups/user"; //PATCH
 /**
+ * findGroupMembers
+ *
+ * URL:
+ * 		- %server%/api/groups/members/:gid
+ * Description:
+ *      - Remove a group request
+ * Method:
+ *      - GET
+ * Params:
+ *      uid: The user id
+ *      groupName: The group name to remove teh request from
+ * Returns:
+ *      - JSON mongo result
+ */
+var findGroupMembers = "/groups/members/:gid"; //GET
+/**
  * findGroupsAdmins
  *
  * URL:
  * 		- %server%/api/groups/admins/:gid
- * Descript:
+ * Description:
  *      - Gets all admins in a group
  * Method:
  *      - GET
@@ -945,13 +961,13 @@ var findGroupAdmins = "/groups/admins/:gid"; //GET
  *
  * URL:
  * 		- %server%/api/groups/admins
- * Descript:
+ * Description:
  *      - Add an admin
  * Method:
  *      - POST
  * Params:
  *		imagePath: The path to an image if supplied
- *		description: Description
+ *		Descriptionion: Descriptionion
  *		long: Longitude
  *		lat: Latitude
  * Returns:
@@ -963,7 +979,7 @@ var addGroupAdmin = "/groups/admins"; //POST
  *
  * URL:
  * 		- %server%/api/groups/admins
- * Descript:
+ * Description:
  *      - Remove an admin
  * Method:
  *      - DELETE
@@ -978,7 +994,7 @@ var removeGroupAdmin = "/groups/admins"; //DELETE
  *
  * URL:
  * 		- %server%/api/groups/request/accept
- * Descript:
+ * Description:
  *      - Accept a group request
  * Method:
  *      - POST
@@ -994,7 +1010,7 @@ var acceptGroupReq = "/groups/request/accept"; //POST
  *
  * URL:
  * 		- %server%/api/groups/request/deny
- * Descript:
+ * Description:
  *      - Delete a group request
  * Method:
  *      - POST
@@ -1010,7 +1026,7 @@ var denyGroupReq = "/groups/request/deny"; //POST
  *
  * URL:
  * 		- %server%/api/groups/request
- * Descript:
+ * Description:
  *      - Add a group request
  * Method:
  *      - POST
@@ -1026,7 +1042,7 @@ var sendGroupRequest = "/groups/request"; //POST
  *
  * URL:
  * 		- %server%/api/groups/request
- * Descript:
+ * Description:
  *      - Remove a group request
  * Method:
  *      - DELETE
@@ -1037,27 +1053,25 @@ var sendGroupRequest = "/groups/request"; //POST
  *      - JSON mongo result
  */
 var removeGroupRequest = "/groups/request"; //DELETE
-/**
- * findGroupUsers
- *
- * URL:
- * 		- %server%/api/groups/members/:gid
- * Descript:
- *      - Remove a group request
- * Method:
- *      - GET
- * Params:
- *      uid: The user id
- *      groupName: The group name to remove teh request from
- * Returns:
- *      - JSON mongo result
- */
-var findGroupUsers = "/groups/members/:gid"; //GET
-
 
 //==========================================================================================
 router.get(session, function (req, res, next) {
 	res.json(req.session);
+});
+router.post(loginUser, UserID, function (req, res, next) {
+	DB.Users.login(req, res, function (result) {
+		res.json(result);
+	});
+});
+router.get(logoutUser, function (req, res, next) {
+	DB.Users.logout(req, res, function (result) {
+		res.redirect('../');
+	});
+});
+router.get(loadMessages, UserID, function (req, res, next) {
+	DB.Socket.loadMessages(req, res, function (result) {
+		res.json(result);
+	});
 });
 router.get(findUserByUID, UserID, function (req, res, next) {
 	DB.Users.findById(req, res, function (result) {
@@ -1085,34 +1099,23 @@ router.post(registerUser, UserID, function (req, res, next) {
 		res.json(result);
 	});
 });
-router.post(loginUser, UserID, function (req, res, next) {
-	DB.Users.login(req, res, function (result) {
+router.post(addFriend, UserID, function (req, res, next) {
+	DB.Friends.add(req, res, function (result) {
 		res.json(result);
 	});
 });
-router.get(logoutUser, function (req, res, next) {
-	DB.Users.logout(req, res, function (result) {
-		res.redirect('../');
-	});
-});
-router.get(findFriendsById, UserID, function (req, res, next) {
-	DB.Friends.find(req, res, function (result) {
+router.delete(delFriend, UserID, function (req, res, next) {
+	DB.Friends.remove(req, res, function (result) {
 		res.json(result);
 	});
-
 });
 router.post(addFriendReq, UserID, function (req, res, next) {
 	DB.Friends.addRequest(req, res, function (result) {
 		res.json(result);
 	});
 });
-router.get(findFriendSent, UserID, function (req, res, next) {
-	DB.Friends.findRequests(req, res, function (result) {
-		res.json(result);
-	});
-});
-router.get(findFriendReceived, UserID, function (req, res, next) {
-	DB.Friends.findRequests(req, res, function (result) {
+router.delete(removeFriendRequest, UserID, function (req, res, next) {
+	DB.Friends.removeRequest(req, res, function (result) {
 		res.json(result);
 	});
 });
@@ -1126,118 +1129,39 @@ router.post(denyFriendReq, UserID, function (req, res, next) {
 		res.json(result);
 	});
 });
-router.delete(delFriend, UserID, function (req, res, next) {
-	DB.Friends.remove(req, res, function (result) {
-		res.json(result);
-	});
-});
-router.post(createGroup, UserID, function (req, res, next) {
-	DB.Groups.add(req, res, function (result) {
-		res.json(result);
-	});
-});
-router.delete(delGroup, UserID, function (req, res, next) {
-	DB.Groups.remove(req, res, function (result) {
-		res.json(result);
-	});
-});
-router.get(findGroups, UserID, function (req, res, next) {
-	DB.Groups.find(req, res, function (result) {
-		res.json(result);
-	});
-});
-router.patch(updateGroup, UserID, function (req, res, next) {
-	DB.Groups.update(req, res, function (result) {
-		res.json(result);
-	});
-});
-router.patch(updateGroupUser, UserID, function (req, res, next) {
-	DB.Groups.updateMember(req, res, function (result) {
-		res.json(result);
-	});
-});
-router.post(addGroupUser, UserID, function (req, res, next) {
-	DB.Groups.add(req, res, function (result) {
-		res.json(result);
-	});
-});
-router.delete(delGroupUser, UserID, function (req, res, next) {
-	DB.Groups.removeMember(req, res, function (result) {
-		res.json(result);
-	});
-});
-router.get(findGroupUsers, UserID, function (req, res, next) {
-	DB.Groups.findMembers(req, res, function (result) {
-		res.json(result);
-	});
-});
-router.post(addTimelinePost, UserID, function (req, res, next) {
-	DB.Posts.add(req, res, function (result) {
-		res.json(result);
-	});
-});
-router.post(addGroupPost, UserID, function (req, res, next) {
-	//Set type before pass to db
-	req.body.origin = {
-		type: 'group',
-		id: req.body.origin
-	};
-	DB.Posts.add(req, res, UserID, function (result) {
-		res.json(result);
-	});
-});
-router.delete(delPost, UserID, function (req, res, next) {
-	DB.Posts.remove(req, res, function (result) {
-		res.json(result);
-	});
-});
-router.patch(updatePostVisibility, UserID, function (req, res, next) {
-	DB.Posts.updateVisibility(req, res, function (result) {
-		res.json(result);
-	});
-});
-router.patch(updatePostHistory, UserID, function (req, res, next) {
-	DB.Posts.updateHistory(req, res, function (result) {
-		res.json(result);
-	});
-});
-router.get(findPostByUid, UserID, function (req, res, next) {
-	DB.Posts.findByUserId(req, res, function (result) {
-		res.json(result);
-	});
-});
-router.get(find, UserID, function (req, res, next) {
-	DB.Posts.find(req, res, function (result) {
-		res.json(result);
-	});
-});
 router.get(suggestFriends, UserID, function (req, res, next) {
 	DB.Friends.suggest(req, res, function (result) {
 		res.json(result);
 	});
 });
-router.get(findCoursesByUID, UserID, function (req, res, next) {
-	DB.Courses.findByUserID(req, res, function (result) {
+router.get(findFriendsById, UserID, function (req, res, next) {
+	DB.Friends.find(req, res, function (result) {
+		res.json(result);
+	});
+
+});
+router.get(findFriendSent, UserID, function (req, res, next) {
+	DB.Friends.findRequests(req, res, function (result) {
 		res.json(result);
 	});
 });
-router.get(findCourse, UserID, function (req, res, next) {
-	DB.Courses.find(req, res, function (result) {
+router.get(findFriendReceived, UserID, function (req, res, next) {
+	DB.Friends.findRequests(req, res, function (result) {
 		res.json(result);
 	});
 });
 router.post(createCourse, UserID, function (req, res, next) {
-	DB.Courses.createCourse(req, res, function (result) {
-		res.json(result);
-	});
-});
-router.delete(deleteCourse, UserID, function (req, res, next) {
-	DB.Courses.delete(req, res, function (result) {
+	DB.Courses.add(req, res, function (result) {
 		res.json(result);
 	});
 });
 router.patch(updateCourse, UserID, function (req, res, next) {
 	DB.Courses.update(req, res, function (result) {
+		res.json(result);
+	});
+});
+router.delete(deleteCourse, UserID, function (req, res, next) {
+	DB.Courses.delete(req, res, function (result) {
 		res.json(result);
 	});
 });
@@ -1261,6 +1185,31 @@ router.delete(delCourseFromGroup, UserID, function (req, res, next) {
 		res.json(result);
 	});
 });
+router.get(findCoursesByUID, UserID, function (req, res, next) {
+	DB.Courses.findByUserID(req, res, function (result) {
+		res.json(result);
+	});
+});
+router.get(findCourse, UserID, function (req, res, next) {
+	DB.Courses.find(req, res, function (result) {
+		res.json(result);
+	});
+});
+router.post(addLostFound, UserID, function (req, res, next) {
+	DB.LostFound.add(req, res, function (result) {
+		res.json(result);
+	});
+});
+router.patch(updateLostFound, UserID, function (req, res, next) {
+	DB.LostFound.update(req, res, function (result) {
+		res.json(result);
+	});
+});
+router.delete(removeLostFound, UserID, function (req, res, next) {
+	DB.LostFound.remove(req, res, function (result) {
+		res.json(result);
+	});
+});
 router.get(findLostFoundById, UserID, function (req, res, next) {
 	DB.LostFound.findById(req, res, function (result) {
 		res.json(result);
@@ -1271,18 +1220,124 @@ router.get(findLostFound, UserID, function (req, res, next) {
 		res.json(result);
 	});
 });
-router.post(addLostFound, UserID, function (req, res, next) {
-	DB.LostFound.add(req, res, function (result) {
+router.post(addTimelinePost, UserID, function (req, res, next) {
+	DB.Posts.add(req, res, function (result) {
 		res.json(result);
 	});
 });
-router.delete(removeLostFound, UserID, function (req, res, next) {
-	DB.LostFound.remove(req, res, function (result) {
+router.post(addGroupPost, UserID, function (req, res, next) {
+	//Set type before pass to db
+	req.body.origin = {
+		type: 'group',
+		id: req.body.origin
+	};
+	DB.Posts.add(req, res, UserID, function (result) {
 		res.json(result);
 	});
 });
-router.patch(updateLostFound, UserID, function (req, res, next) {
-	DB.LostFound.update(req, res, function (result) {
+router.delete(deletePost, UserID, function (req, res, next) {
+	DB.Posts.remove(req, res, function (result) {
+		res.json(result);
+	});
+});
+router.patch(updatePostVisibility, UserID, function (req, res, next) {
+	DB.Posts.updateVisibility(req, res, function (result) {
+		res.json(result);
+	});
+});
+router.patch(updatePostHistory, UserID, function (req, res, next) {
+	DB.Posts.updateHistory(req, res, function (result) {
+		res.json(result);
+	});
+});
+router.get(findPost, UserID, function (req, res, next) {
+	DB.Posts.find(req, res, function (result) {
+		res.json(result);
+	});
+});
+router.get(findPostByUID, UserID, function (req, res, next) {
+	DB.Posts.findByUserId(req, res, function (result) {
+		res.json(result);
+	});
+});
+router.post(addComment, UserID, function (req, res, next) {
+	DB.Posts.addComment(req, res, function (result) {
+		res.json(result);
+	});
+});
+router.patch(updateComment, UserID, function (req, res, next) {
+	DB.Comments.update(req, res, function (result) {
+		res.json(result);
+	});
+});
+router.delete(removeComment, UserID, function (req, res, next) {
+	DB.Posts.removeComment(req, res, function (result) {
+		res.json(result);
+	});
+});
+router.get(findCommentByUID, UserID, function (req, res, next) {
+	DB.Comments.findByPostId(req, res, function (result) {
+		res.json(result);
+	});
+});
+router.post(createGroup, UserID, function (req, res, next) {
+	DB.Groups.add(req, res, function (result) {
+		res.json(result);
+	});
+});
+router.delete(delGroup, UserID, function (req, res, next) {
+	DB.Groups.remove(req, res, function (result) {
+		res.json(result);
+	});
+});
+router.patch(updateGroup, UserID, function (req, res, next) {
+	DB.Groups.update(req, res, function (result) {
+		res.json(result);
+	});
+});
+router.get(findGroups, UserID, function (req, res, next) {
+	DB.Groups.find(req, res, function (result) {
+		res.json(result);
+	});
+});
+//NOTE: MISSING findGroupById at this position
+router.get(findGroupSent, UserID, function (req, res, next) {
+	DB.Groups.findRequests(req, res, function (result) {
+		res.json(result);
+	});
+});
+router.get(findGroupReceived, UserID, function (req, res, next) {
+	DB.Groups.findRequest(req, res, function (result) {
+		res.json(result);
+	});
+});
+router.get(findGroupsByUID, UserID, function (req, res, next) {
+	DB.Groups.findByUserID(req, res, function (result) {
+		res.json(result);
+	});
+});
+router.get(findGroupRequests, UserID, function (req, res, next) {
+	DB.Groups.findRequests(req, res, function (result) {
+		res.json(result);
+	});
+});
+router.post(addGroupUser, UserID, function (req, res, next) {
+	DB.Groups.add(req, res, function (result) {
+		res.json(result);
+	});
+});
+router.delete(delGroupUser, UserID, function (req, res, next) {
+	DB.Groups.removeMember(req, res, function (result) {
+		res.json(result);
+	});
+});
+router.patch(updateGroupUser, UserID, function (req, res, next) {
+	DB.Groups.updateMember(req, res, function (result) {
+		res.json(result);
+	});
+});
+router.get(findGroupMembers, UserID, function (req, res, next) {
+	DB.Groups.findMembers(req, res, function (result) {
 		res.json(result);
 	});
 });
@@ -1301,33 +1356,13 @@ router.delete(removeGroupAdmin, UserID, function (req, res, next) {
 		res.json(result);
 	});
 });
-router.get(findCommentById, UserID, function (req, res, next) {
-	DB.Comments.findByPostId(req, res, function (result) {
+router.post(acceptGroupReq, UserID, function (req, res, next) {
+	DB.Groups.acceptGroupReq(req, res, function (result) {
 		res.json(result);
 	});
 });
-router.post(addComment, UserID, function (req, res, next) {
-	DB.Posts.addComment(req, res, function (result) {
-		res.json(result);
-	});
-});
-router.delete(removeComment, UserID, function (req, res, next) {
-	DB.Posts.removeComment(req, res, function (result) {
-		res.json(result);
-	});
-});
-router.patch(updateComment, UserID, function (req, res, next) {
-	DB.Comments.update(req, res, function (result) {
-		res.json(result);
-	});
-});
-router.get(findGroupSent, UserID, function (req, res, next) {
-	DB.Groups.findRequests(req, res, function (result) {
-		res.json(result);
-	});
-});
-router.get(findGroupReceived, UserID, function (req, res, next) {
-	DB.Groups.findRequest(req, res, function (result) {
+router.post(denyGroupReq, UserID, function (req, res, next) {
+	DB.Groups.denyGroupReq(req, res, function (result) {
 		res.json(result);
 	});
 });
@@ -1341,40 +1376,7 @@ router.delete(removeGroupRequest, UserID, function (req, res, next) {
 		res.json(result);
 	});
 });
-router.post(acceptGroupReq, UserID, function (req, res, next) {
-	DB.Groups.acceptGroupReq(req, res, function (result) {
-		res.json(result);
-	});
-});
-router.post(denyGroupReq, UserID, function (req, res, next) {
-	DB.Groups.denyGroupReq(req, res, function (result) {
-		res.json(result);
-	});
-});
-router.get(findGroupRequests, UserID, function (req, res, next) {
-	DB.Groups.findRequests(req, res, function (result) {
-		res.json(result);
-	});
-});
-router.post(addFriend, UserID, function (req, res, next) {
-	DB.Friends.add(req, res, function (result) {
-		res.json(result);
-	});
-});
-router.delete(removeFriendRequest, UserID, function (req, res, next) {
-	DB.Friends.removeRequest(req, res, function (result) {
-		res.json(result);
-	});
-});
-router.get(loadMessages, UserID, function (req, res, next) {
-	DB.Socket.loadMessages(req, res, function (result) {
-		res.json(result);
-	});
-});
-router.get(findGroupsByUID, UserID, function (req, res, next) {
-	DB.Groups.findByUserID(req, res, function (result) {
-		res.json(result);
-	});
-});
+
+
 
 module.exports = router;

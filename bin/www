@@ -8,23 +8,56 @@ var app = require('../app');
 var debug = require('debug')('app:server');
 var http = require('http');
 var sharedsession = require("express-socket.io-session");
-http.get({
-  'host': 'api.ipify.org',
-  'port': 80,
-  'path': '/'
-}, function (resp) {
-  resp.on('data', function (ip) {
-    process.env.IP = ip;
 
-  });
-});
+
 /**
  * Get port from environment and store in Express.
  */
-process.env.PORT = 3336;
 var port = normalizePort(process.env.PORT || '3336');
+process.env.PORT = port;
 app.set('port', port);
-
+switch (process.argv[2]) {
+  case 'dev':
+    http.get({
+      'host': 'api.ipify.org',
+      'port': 80,
+      'path': '/'
+    }, function (resp) {
+      resp.on('data', function (ip) {
+        process.env.HOSTNAME = process.env.IP = ip;
+        process.env.ADDRESS = process.env.HOSTNAME + ':' + process.env.PORT;
+        console.log("Server Address:", process.env.ADDRESS);
+      });
+    });
+    break;
+  case 'prod':
+    http.get({
+      'host': 'api.ipify.org',
+      'port': 80,
+      'path': '/'
+    }, function (resp) {
+      resp.on('data', function (ip) {
+        process.env.IP = ip;
+      });
+    });
+    process.env.HOSTNAME = 'sc-6.cs.mun.ca';
+    process.env.ADDRESS = process.env.HOSTNAME; //Don't need the port for MUN's server
+    console.log("Server Address:", process.env.ADDRESS);
+    break;
+  default:
+    http.get({
+      'host': 'api.ipify.org',
+      'port': 80,
+      'path': '/'
+    }, function (resp) {
+      resp.on('data', function (ip) {
+        process.env.HOSTNAME = process.env.IP = ip;
+        process.env.ADDRESS = process.env.HOSTNAME + ':' + process.env.PORT;
+        console.log("Server Address:", process.env.ADDRESS);
+      });
+    });
+    break;
+}
 /**
  * Create HTTP server.
  */

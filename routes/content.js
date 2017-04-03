@@ -94,12 +94,12 @@ router.post('/image/post/:pid', function(req, res, next) {
  *
  */
 router.delete('/resume/user/:uid', UserID, function (req, res, next) {
-	utils.remove('resume', path.join(__dirname, '../content/resumes/user/' + req.params.uid), function (result) {
+	utils.remove('resume', path.join(__dirname, '../content/resumes/user/' + req.UserID), function (result) {
 		res.json(result);
 	});
 });
 router.delete('/image/profile/:uid', UserID, function (req, res, next) {
-	utils.remove('profile', path.join(__dirname, '../content/images/user/' + req.params.uid), function (result) {
+	utils.remove('profile', path.join(__dirname, '../content/images/user/' + req.UserID), function (result) {
 		res.json(result);
 	});
 });

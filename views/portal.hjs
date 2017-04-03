@@ -9,8 +9,8 @@
 	
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
 	<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
-    <script src="https://code.jquery.com/jquery-3.2.0.min.js"></script>
-	<script src="/socket.io/socket.io.js"></script>	
+	<script src="/socket.io/socket.io.js"></script>
+	<script src="http://twitter.github.com/hogan.js/builds/3.0.1/hogan-3.0.1.js"></script>	
 	<script src="/js/blank.js"></script>
 	<script src="/js/portal.js"></script>
 </head>
@@ -33,7 +33,7 @@
 		</div>
 
 		<div class="buttons">
-			<a href="#"><img id="not" src="/img/notification-red.png"></a>
+			<a href="javascript:void(0)"><img id="not" src="/img/notification-red.png"></a>
 			<a href="/api/logout"><img id="log" src="/img/logout.png"></a>
 			<a href="/settings"><img id="cog" src="/img/settings.png"></a>
 		</div>
@@ -87,7 +87,7 @@
 
 	<div class="sidebars" id="section-left">
 		<div class="userInfo" id="userPic">
-			<a href="profile/"><img src="/img/SEAHAWK_SIL.jpg" alt="GOTO Profile"></a>	
+			<a href="/profile"><img src="/img/SEAHAWK_SIL.jpg" alt="GOTO Profile"></a>	
 		</div>
 		<div class="userInfo" id="lists">
 			<div class="userLists" id="group">
@@ -116,83 +116,36 @@
 	</div>
 	<div class="timeline">
 			<div class="info" id="postBox">
-				<textarea id="text" placeholder="Make a post!"></textarea><input type="button" id="button" value="Submit">
+				<textarea id="text" placeholder="Make a post!"></textarea><button id="postSubmit">Submit</button>
+
+				<div id="imageDisp">
+					<img id="imgDisp" src="#" style="display: none;">
+				</div>
+
+				<div class="info" id="option">
+					<button class="postOption" id="photoPost">Upload Photo</button>
+					<button class="postOption" id="pollPost">Add Poll</button>
+					<button class="postOption" id="clearPost">Clear Post</button>
+					<select id="vis">
+						<option value="" disabled selected>Visibility</option>
+						<option value="public">Public</option>
+						<option value="friends">Friends Only</option>
+						<option value="private">Private</option>
+						<option value="list">List</option>
+					</select>
+
+					<input type="file" id="newPostImg" style="display: none;" accept="image/*" />
+				</div>
 			
 			</div>	
 	
-		<!-- RANDOM POSTS FOR TESTING -->
+		<!-- Will be filled with posts from server  -->
 	
-		<div class="postTemp">
-				<div class="postInfo">
-					<div class="postPic">
-						<img src="/img/SEAHAWK_SIL.jpg">
-					</div> 
-					<div class="postName">
-						<a href="{{ POST_LINK }}"> {{ POST_NAME }} </a> <br>
-						<span>{{ POST_TIME }}</span>
-					</div>
-				</div>
-				<div class="postCont">
-					<p> {{ POST_TEXT }}</p><img src="/img/postImg.png">
-				</div>
-				
-				<div class="postComm">
-					<div class="commTemp">
-						<div class="commInfo">
-							<div class="commPic">
-								<img src="/img/SEAHAWK_SIL.jpg">
-							</div>
-							<div class="commName">
-								<a href="{{ COMM_LINK }}"> {{ COMM_NAME }} </a> <br>
-								<span>{{ COMM_TIME }}</span>
-							</div>
-						</div>
-						<div class="commCont">
-							<p> {{ COMM_TEXT }} </p>
-						</div>
-					</div>
-					<div class="commField">
-						<!--Text field for comments to be posted, followed by a submit button -->
-					</div>
-				</div>
+		<div class="posts" id="posts">
+			
 		</div>
-		
-		<div class="postTemp">
-				<div class="postInfo">
-					<div class="postPic">
-						<img src="/img/SEAHAWK_SIL.jpg">
-					</div> 
-					<div class="postName">
-						<a href="{{ POST_LINK }}"> {{ POST_NAME }} </a> <br>
-						<span>{{ POST_TIME }}</span>
-					</div>
-				</div>
-				<div class="postCont">
-					<p> {{ POST_TEXT }}</p><img src="/img/postImg.png">
-				</div>
-				
-				<div class="postComm">
-					<div class="commTemp">
-						<div class="commInfo">
-							<div class="commPic">
-								<img src="/img/SEAHAWK_SIL.jpg">
-							</div>
-							<div class="commName">
-								<a href="{{ COMM_LINK }}"> {{ COMM_NAME }} </a> <br>
-								<span>{{ COMM_TIME }}</span>
-							</div>
-						</div>
-						<div class="commCont">
-							<p> {{ COMM_TEXT }} </p>
-						</div>
-					</div>
-					<div class="commField">
-						<!--Text field for comments to be posted, followed by a submit button -->
-					</div>
-				</div>
-		</div>
+	
 	</div>
-	
 	<div class="sidebars" id="section-right">
 		<div class= "content-1">
 			<h5> Suggested Friends </h5>

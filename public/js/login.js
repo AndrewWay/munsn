@@ -138,6 +138,8 @@ $(document).ready(function () {
 						$('#textAlert').css({
 							color: 'red'
 						});
+
+						//TODO: Add other alerts.
 						$('#textAlert').html('Account not created: User already exists.');
 						$('#textAlert').show();
 

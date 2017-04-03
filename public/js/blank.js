@@ -145,7 +145,7 @@ $(document).ready(function () {
 	$.get('/api/groups/user/session', function(response) {
 
 		$.each( response.data , function(i,v) {
-			$('#groupList').prepend('<li><a href="/group"> '+v.name+' </a></li>');
+			$('#groupList').prepend('<li><a href="/group#'+v._id+'"> '+v.name+' </a></li>');
 		
 			//Each stops on false: Load maximum of 5 groups to sidebar.
 			return i<4;
@@ -157,9 +157,9 @@ $(document).ready(function () {
 	//Load user courses
 	$.get('/api/course/session', function(response) {
 
-		$.each( response, function(i,v) {
+		$.each( response.data, function(i,v) {
 
-			$('#courseList').prepend('<li><a href="/group"> '+v.name+' </a></li>');
+			$('#courseList').prepend('<li><a href="/group#'+v._id+'"> '+v.name+' </a></li>');
 		
 			//Each stops on false: Load maximum of 5 courses to sidebar.
 			return i<4;

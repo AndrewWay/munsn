@@ -12,6 +12,8 @@
 	padding: 2%;
 	
 	border: 2px solid #cccccc;
+
+	overflow: hidden;
 	
 }
 
@@ -27,7 +29,7 @@
 
 }
 
-#postBox #button {
+#postBox #postSubmit {
 	position: relative;
 	top: -15px;
 	width: 10%;
@@ -41,6 +43,18 @@
 	right: 0;
 	z-index: 3;
 	width: 100px;
+}
+
+#imageDisp {
+	display: block;
+	margin: auto;
+	box-sizing: content-box;
+}
+
+#imgDisp {
+	height: 50px;
+	width: 50px;
+	margin: auto;
 }
 
 #chat {
