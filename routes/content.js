@@ -12,7 +12,7 @@ var UserID = require('../middleware/functions').UserID;
 router.get('/image/profile/:uid', UserID, function (req, res, next) {
 	var file = utils.findFiles('profile', path.join(__dirname, '../content/images/user/' + req.UserID)).next().value;
 	utils.download(req, res, file, function (result) {
-		res.json(result);
+		//res.json(result);
 	});
 });
 /**
@@ -22,7 +22,7 @@ router.get('/image/profile/:uid', UserID, function (req, res, next) {
 router.get('/image/group/:gid', UserID, function (req, res, next) {
 	var file = utils.findFiles('group', path.join(__dirname, '../content/images/group/' + req.params.gid)).next().value;
 	utils.download(req, res, file, function (result) {
-		res.json(result);
+		//res.json(result);
 	});
 });
 /**
@@ -32,7 +32,7 @@ router.get('/image/group/:gid', UserID, function (req, res, next) {
 router.get('/resume/user/:uid', UserID, function (req, res, next) {
 	var file = utils.findFiles('resume', path.join(__dirname, '../content/resumes/user/' + req.UserID)).next().value;
 	utils.download(req, res, file, function (result) {
-		res.json(result);
+		//res.json(result);
 	});
 });
 /**
@@ -42,7 +42,7 @@ router.get('/resume/user/:uid', UserID, function (req, res, next) {
 router.get('/posts/:pid/:id', UserID, function (req, res, next) {
 	var file = utils.findFiles(req.params.id, path.join(__dirname, '../content/posts/' + req.params.pid)).next().value;
 	utils.download(req, res, file, function (result) {
-		res.json(result);
+		//res.json(result);
 	});
 });
 
