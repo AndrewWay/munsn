@@ -141,10 +141,16 @@ function upload(req, dest, name, callback) {
 				fstream = fs.createWriteStream(path.join(dir, name));
 				fstream.on("close", function () {
 					console.log("[Content] Upload", "'" + filename + "'->'" + name + "'");
+					callback({
+						status: 'fail'
+					});
 				});
 				fstream.on('error', function (err) {
 					console.error("[Content] Upload", err);
 					req.unpipe(req.busboy);
+					callback({
+						status: 'fail'
+					});
 				});
 				switch (fext.toLowerCase()) {
 					case ".jpg":
