@@ -1,0 +1,11 @@
+<div class="info" id="infoPic"><img src="/img/SEAHAWK_SIL.jpg"></div>
+			<div class="info" id="infoText">
+				<div class="info" id="name"> {{INFO_NAME}} </div>
+				<div class="info" id="edit"> <input type="button" value="Edit Group"> </div>
+			</div>
+			<div class="info" id="infoButton">
+				<input type="button" value="Ask to Join">
+				<input type="button" value="Send Message">
+				<input type="button" value="Members">
+				<input type="button" value="Events">
+			</div>

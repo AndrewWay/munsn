@@ -64,6 +64,8 @@ $(document).ready(function () {
 		postBoxMax=postBoxMax+60;
 		imgBool = true;
 
+		console.log(imgBool);
+
 		$("#imgDisp").attr("src", window.URL.createObjectURL(this.files[0]));
 
 		$("#imgDisp").css({ display: 'block' });
@@ -165,6 +167,7 @@ $(document).ready(function () {
 			var postInfo=$.extend({}, v,v.history.slice(-1).pop());
 
 			data.list.push(postInfo);
+			console.log(data);
 			//Stop at 5 posts. Arbitrary
 			return i<4;
 		 });
@@ -179,7 +182,18 @@ $(document).ready(function () {
 		 //TODO: Function on failures.
 	 );	
 
-	
+	/***********************
+	 * Resume button
+	 *
+	 *@params: null
+	 *
+	 * Button linking to resume page.
+	 ************************/
+
+	//When button is clicked go to resume page.
+	$('#infoButton #resume').click(function () {
+		window.location.href = "/resume/"+id;
+	});
 
 	/************************
 	 * Suggested friend buttons
@@ -207,20 +221,23 @@ $(document).ready(function () {
 
 	//TODO: Potentially move to it's own file to be accessed by every page that needs it.
 	/*******************
-	 * Load profile info
+	 * Load group info
 	 * 
 	 * @params: null
 	 * 
-	 * Functions for loading relevant profile info
+	 * Functions for loading relevant group info
 	 ********************/
 
-	 //Get and display a number of posts.
-	 //TODO: Get and display posts based on their type (poll, photo, text)
-	 $.get('/api/user/'+id)
+	 //Get and display group info
+	 //TODO: Add findGroupById in API. It's missing for some reason.
+     console.log(id);
+
+	 $.get('/api/group/'+id)
 	 .done( function(response) {
+		 	console.log(response);
 		 
 
-		 $.get("/temps/profInfo.hjs", function(info) {
+		 $.get("/temps/groupInfo.hjs", function(info) {
 				var template = Hogan.compile(info);
 				var output = template.render(response.data);
 				$('#infoContainer').append(output);

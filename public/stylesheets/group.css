@@ -68,14 +68,21 @@
 }
 
 #postBox {
-	position: relative;
-	top: -55px;
 	width: 96%;
 	
 	display: inline-block;
 	
-	margin-left: 3.5%;
-	margin-top: 20px;
+	height:30px;
+	margin-top: 1px;
+	margin-right: 3px;
+	margin-left: 3px;
+	
+	background-color: #eeeeee;
+	padding: 2%;
+	
+	border: 2px solid #cccccc;
+
+	overflow: hidden;
 	
 }
 
@@ -91,10 +98,66 @@
 
 }
 
-#postBox #button {
+#postBox #postSubmit {
 	position: relative;
 	top: -15px;
 	width: 10%;
 	height: 30px;
 	padding:0;
+}
+
+#imageDisp {
+	display: block;
+	margin: auto;
+	box-sizing: content-box;
+}
+
+#imgDisp {
+	height: 50px;
+	width: 50px;
+	margin: auto;
+}
+
+#chatButton {
+	position: fixed;
+	bottom: 5px;
+	right: 0;
+	z-index: 3;
+	width: 100px;
+}
+
+#chat {
+	position: fixed;
+	bottom: 0;
+	right: 0;
+	
+	height: 0;
+	width: 300px;
+	z-index: 3;
+	
+	overflow: hidden;
+	
+	background: white;
+	
+	border: 1px solid #000000;
+	
+}
+
+#chatBox {
+	position: relative;
+	height: 90%;
+	width: 100%;
+	top:10%;
+}
+
+#chatTop {
+	position: relative;
+	height:10%;
+	background-color: #aaaaaa;
+	text-align: center;
+	vertical-align: center;
+}
+
+#chatTop:hover {
+	background-color: #cccccc;
 }
