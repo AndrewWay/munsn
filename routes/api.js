@@ -1318,7 +1318,11 @@ router.get(findGroups, UserID, function (req, res, next) {
 		res.json(result);
 	});
 });
-//NOTE: MISSING findGroupById at this position
+router.get(findGroupById, UserID, function (req, res, next) {
+	DB.Groups.findByGroupID(req, res, function (result) {
+		res.json(result);
+	});
+});
 router.get(findGroupSent, UserID, function (req, res, next) {
 	DB.Groups.findRequests(req, res, function (result) {
 		res.json(result);

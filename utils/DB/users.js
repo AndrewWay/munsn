@@ -64,7 +64,7 @@ module.exports = function (DBUsers, DBAuth, collectionUsers) {
 				_id: req.UserID
 			}, function (err, result) {
 				if (err) {
-					console.log("[DBUsers]", err.message);
+					console.log("[DBUsers] FindById", err.message);
 					callback({
 						session: req.session,
 						status: 'fail'
@@ -92,7 +92,7 @@ module.exports = function (DBUsers, DBAuth, collectionUsers) {
 		console.log("[DBUsers] Find", "'" + JSON.stringify(req.body) + "'");
 		collectionUsers.find(req.body).toArray(function (err, result) {
 			if (err) {
-				console.error("[DBUsers]", err.message);
+				console.error("[DBUsers] Find", err.message);
 				callback({
 					session: req.session,
 					status: 'fail'
