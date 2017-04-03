@@ -1,3 +1,3 @@
 mkdir data
-mongod --port 27272 --nojournal --storageEngine="mmapv1" --dbpath=".\data"
+mongod --port 27017 --nojournal --smallfiles  --dbpath="./data" -storageEngine="mmapv1"
 PAUSE

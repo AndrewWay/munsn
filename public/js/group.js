@@ -1,16 +1,18 @@
+var id = window.location.hash.substring(1);
+
 var postBoxMax = 140;
 var imgBool = false;
 
 $(document).ready(function () {
 
-	/******************
-	* Post box expansion.
-	*
-	*@params: null
-	*
-	* Functions for expanding and shrinking the post textarea depending on focus.
-	******************/
-	
+	/**********************
+	 * Postbox resizing
+	 *
+	 *@params: null
+	 *
+	 * Functions for resizing post box.
+	 ***********************/
+
 	//Expand textarea and div on focus
 	$("#postBox *").focus(function () {
 
@@ -100,7 +102,7 @@ $(document).ready(function () {
 		$.post("/api/post/timeline", {
 			uid: uid,
 			type: "timeline",
-			targetid: uid,
+			targetid: id,
 			visibility: $('#vis').val(),
 			fields: {
 				image: imgBool,
@@ -141,64 +143,7 @@ $(document).ready(function () {
 			}
 		})
 		.fail();
-
-		
 	});
-	
-	//TODO: Move to it's own file to be called by all pages which need it.
-	/*************************
-	 * Suggested friends sidebar
-	 * 
-	 * @params: null
-	 * 
-	 * Functionality to grab and navigate suggested friends list.
-	 *************************/
-	
-	 $.get('/api/friend/suggest/'+uid, function(response) {
-		//TODO: Store the response in some variable
-	 })
-	 //TODO: Add done and fail callbacks
-	 .done(function(response) {
-		 console.log(response);
-	 })
-	 .fail(function(response) {});
-
-	//When Previous button is clicked move backwards through list of suggested friends.
-	$('#suggPrev').click(function() {
-		//TODO -- Implementation when integration is done
-		
-	
-	});
-	
-	//When Next button is clicked move forwards through list of suggested friends.
-	$('#suggNext').click(function() {
-		//TODO -- Implementation when integration is done
-		
-	
-	});
-	
-	
-
-
-	//TODO: Move this to blank.js so it can be accessed on any page.
-	/*************************
-	* Chat popout
-	*
-	*@params: null
-	*
-	* Opens a chat box
-	*************************/
-	
-	$('#chatButton').click(function() {
-		$('#chatButton').hide();
-		$('#chat').animate({height: "300px"},200);
-	});
-	
-	$('#chatTop').click(function(){
-		$('#chatButton').show();
-		$('#chat').animate({height: "0px"},200);
-	});
-
 
 	//TODO: Potentially move to it's own file to be accessed by every page that needs it.
 	/*******************
@@ -211,7 +156,7 @@ $(document).ready(function () {
 
 	 //Get and display a number of posts.
 	 //TODO: Get and display posts based on their type (poll, photo, text)
-	 $.get('/api/post/', {
+	 $.get('/api/post/'+id, {
 		 visibility: 'public'
 	 })
 	 .done( function(response) {
@@ -235,6 +180,70 @@ $(document).ready(function () {
 	 })
 	 .fail(
 		 //TODO: Function on failures.
-	 );
+	 );	
 
+	/***********************
+	 * Resume button
+	 *
+	 *@params: null
+	 *
+	 * Button linking to resume page.
+	 ************************/
+
+	//When button is clicked go to resume page.
+	$('#infoButton #resume').click(function () {
+		window.location.href = "/resume/"+id;
+	});
+
+	/************************
+	 * Suggested friend buttons
+	 *
+	 *@params: null
+	 *
+	 * Behaviour of suggested friend box when a button is clicked.
+	 *
+	 *COMMENTS: Should be moved to something outside here so there is no repeated code.
+	 ************************/
+
+	//When Previous button is clicked move backwards through list of suggested friends.
+	$('#suggPrev').click(function () {
+		//TODO -- Implementation when integration is done
+
+
+	});
+
+	//When Next button is clicked move forwards through list of suggested friends.
+	$('#suggNext').click(function () {
+		//TODO -- Implementation when integration is done
+
+
+	});
+
+	//TODO: Potentially move to it's own file to be accessed by every page that needs it.
+	/*******************
+	 * Load group info
+	 * 
+	 * @params: null
+	 * 
+	 * Functions for loading relevant group info
+	 ********************/
+
+	 //Get and display group info
+	 //TODO: Add findGroupById in API. It's missing for some reason.
+     console.log(id);
+
+	 $.get('/api/group/'+id)
+	 .done( function(response) {
+		 	console.log(response);
+		 
+
+		 $.get("/temps/groupInfo.hjs", function(info) {
+				var template = Hogan.compile(info);
+				var output = template.render(response.data);
+				$('#infoContainer').append(output);
+		 });
+	 })
+	 .fail(
+		 //TODO: Function on failures.
+	 );
 });

@@ -1,21 +1,9 @@
 #!/usr/bin/env node
 
-/**
- * Module dependencies.
- */
-
-var app = require('../app');
-var debug = require('debug')('app:server');
 var http = require('http');
-var sharedsession = require("express-socket.io-session");
 
-
-/**
- * Get port from environment and store in Express.
- */
 var port = normalizePort(process.env.PORT || '3336');
 process.env.PORT = port;
-app.set('port', port);
 switch (process.argv[2]) {
   case 'dev':
     http.get({
@@ -41,6 +29,7 @@ switch (process.argv[2]) {
       });
     });
     process.env.HOSTNAME = 'sc-6.cs.mun.ca';
+    process.env.MONGO_URL = 'mongodb://localhost:27272/munsn';
     process.env.ADDRESS = process.env.HOSTNAME; //Don't need the port for MUN's server
     console.log("Server Address:", process.env.ADDRESS);
     break;
@@ -58,6 +47,20 @@ switch (process.argv[2]) {
     });
     break;
 }
+/**
+ * Module dependencies.
+ */
+
+var app = require('../app');
+var debug = require('debug')('app:server');
+var sharedsession = require("express-socket.io-session");
+
+
+/**
+ * Get port from environment and store in Express.
+ */
+app.set('port', port);
+
 /**
  * Create HTTP server.
  */

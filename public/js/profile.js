@@ -64,8 +64,6 @@ $(document).ready(function () {
 		postBoxMax=postBoxMax+60;
 		imgBool = true;
 
-		console.log(imgBool);
-
 		$("#imgDisp").attr("src", window.URL.createObjectURL(this.files[0]));
 
 		$("#imgDisp").css({ display: 'block' });
@@ -167,7 +165,6 @@ $(document).ready(function () {
 			var postInfo=$.extend({}, v,v.history.slice(-1).pop());
 
 			data.list.push(postInfo);
-			console.log(data);
 			//Stop at 5 posts. Arbitrary
 			return i<4;
 		 });
@@ -182,18 +179,7 @@ $(document).ready(function () {
 		 //TODO: Function on failures.
 	 );	
 
-	/***********************
-	 * Resume button
-	 *
-	 *@params: null
-	 *
-	 * Button linking to resume page.
-	 ************************/
-
-	//When button is clicked go to resume page.
-	$('#infoButton #resume').click(function () {
-		window.location.href = "/resume/"+id;
-	});
+	
 
 	/************************
 	 * Suggested friend buttons
@@ -232,7 +218,6 @@ $(document).ready(function () {
 	 //TODO: Get and display posts based on their type (poll, photo, text)
 	 $.get('/api/user/'+id)
 	 .done( function(response) {
-		 	console.log(response.data);
 		 
 
 		 $.get("/temps/profInfo.hjs", function(info) {

@@ -4,7 +4,7 @@ var path = require('path');
 var EMS = require('./ems');
 var utils = require('./utils');
 
-var dbURL = 'mongodb://localhost:27272/munsn';
+var dbURL = process.env.MONGO_URL || 'mongodb://localhost:27017/munsn';
 /**
  * Max time a user has to authenticate
  */
@@ -415,7 +415,7 @@ mongoClient.connect(dbURL, function (err, DB) {
 	require('./DB/lostfound')(DBLostFound, collectionLostFound);
 	require('./DB/calendar')(DBCalendar, collectionCalendar);
 	require('./DB/socket')(DBSocket, collectionSocket, collectionMessages);
-    require('./DB/search')(DBSearch, collectionUsers, collectionGroups, collectionCourses);
+	require('./DB/search')(DBSearch, collectionUsers, collectionGroups, collectionCourses);
 });
 
 
@@ -432,7 +432,7 @@ module.exports = {
 	Courses: DBCourses,
 	LostFound: DBLostFound,
 	Socket: DBSocket,
-    Search: DBSearch,
+	Search: DBSearch,
 	DB_URL: dbURL,
 	MAX_VALIDATE_MINUTES: MAX_VALIDATE_MINUTES
 };
