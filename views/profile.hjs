@@ -96,7 +96,7 @@
 
 		<div id="infoContainer">
 			
-				
+			
 		</div>
 		<div class="info" id="postBox">
 				<textarea id="text" placeholder="Make a post!"></textarea><button id="postSubmit">Submit</button>
