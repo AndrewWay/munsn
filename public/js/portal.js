@@ -5,7 +5,7 @@ $(document).ready(function () {
 
 	$('#search').submit(function() {
 		$.get('/api/search', {query: $('#searchbar').val()}, function(results) {
-            //alert(JSON.stringify(results.data));
+            alert(JSON.stringify(results.data));
             console.log("SEARCH:" + results);
         });
 		return false;
