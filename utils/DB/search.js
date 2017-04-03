@@ -6,8 +6,8 @@ var MAX_SEARCH_TRIES = 5;
 module.exports = function (DBSearch, collectionUsers, collectionGroups, collectionCourses) {
     
     DBSearch.search = function(req, res, callback) {
-        if (req.body.query) {
-            var query = req.body.query;
+        if (req.query.query) {
+            var query = req.query.query;
             var searchResults = {};
             // Declare loop control variables
             var cbUsers = false, cbGroups = false, cbCourses = false, masterBreak = false;

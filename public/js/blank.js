@@ -24,8 +24,8 @@ $.get('/api/session')
 	console.log('ERROR: Request failed.');
 });
 
-$(document).ready(function () {
-
+$(document).ready(function () {     
+    
 	/*****
 	* NavBar Button functions
 	*
