@@ -40,6 +40,7 @@ var DBCourses = {};
 var DBLostFound = {};
 var DBCalendar = {};
 var DBSocket = {};
+var DBSearch = {};
 //TODO: Devin, TESTING
 //Connect to the database
 mongoClient.connect(dbURL, function (err, DB) {
@@ -413,6 +414,7 @@ mongoClient.connect(dbURL, function (err, DB) {
 	require('./DB/lostfound')(DBLostFound, collectionLostFound);
 	require('./DB/calendar')(DBCalendar, collectionCalendar);
 	require('./DB/socket')(DBSocket, collectionSocket, collectionMessages);
+    require('./DB/search')(DBSearch, collectionUsers, collectionGroups, collectionCourses);
 });
 
 
@@ -429,6 +431,7 @@ module.exports = {
 	Courses: DBCourses,
 	LostFound: DBLostFound,
 	Socket: DBSocket,
+    Search: DBSearch,
 	DB_URL: dbURL,
 	MAX_VALIDATE_MINUTES: MAX_VALIDATE_MINUTES
 };
