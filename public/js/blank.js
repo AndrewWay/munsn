@@ -33,15 +33,22 @@ $(document).ready(function () {
 	 * Functionality for the search bar 
 	 *******************/
 
+	 //When search button is clicked: Search for values and display results
 	$('#searchbtn').click(function () {
-		console.log($('#searchbar').val());
 
-		$.get('/api/search/', {
-			query: $('#searchbar').val()
-		}, function (results) {
-			alert(results);
-			console.log("SEARCH:" + results);
-		});
+		if(!($.trim($('#searchbar').val())==='')) {
+
+			$.get('/api/search/',{
+				query: $('#searchbar').val()
+			})
+			.done(function(response) {
+				console.log(response);
+			})
+			.fail(function(response) {
+				console.log(response);
+			})
+
+		}
 	});
 
 	/*****
