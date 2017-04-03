@@ -92,6 +92,20 @@ $(document).ready(function () {
 		}
 	});
 
+	$(".search *").focusout(function () {
+
+		//Use a timeout to wait for focus to transfer to other children elements
+		window.setTimeout(function () {
+			//If there is no text in textarea, and a non child element of postBox was clicked: shrink.
+			if ($('.search *:focus').length == 0) {
+				$('#searchbar').val('');
+				$('#searchRes').hide();
+				$('#searchRes').html('');
+			}
+		}, 50);
+
+	});
+
 	/*****
 	 * NavBar Button functions
 	 *

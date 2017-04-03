@@ -178,7 +178,8 @@
 				<input type="file" id="lostImg" style="display: none;" accept="image/*" />
 			</div>
 			<div class="textDesc">
-				<textarea class="text" placeholder="Description..."></textarea>
+				<!-- <textarea class="text" placeholder="Description..."></textarea>-->
+				<input type="text" name="desc" id="desc" placeholder="Description..."/>
 			</div>
 			<div class="lostClass" id="lostLocation">
 				<button class="mapToggle"> Map </button> <br>
