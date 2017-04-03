@@ -28,7 +28,7 @@ switch (process.argv[2]) {
         process.env.IP = ip;
       });
     });
-    port = process.env.PORT = normalizePort(3000);
+    port = process.env.PORT = normalizePort(3336);
     process.env.HOSTNAME = 'sc-6.cs.mun.ca';
     process.env.MONGO_URL = 'mongodb://localhost:27272/munsn';
     process.env.ADDRESS = process.env.HOSTNAME; //Don't need the port for MUN's server
