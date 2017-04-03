@@ -1,0 +1,1 @@
+<div class="searchItem"> <a href="/{{title}}#{{_id}}">{{name}}{{fname}} {{lname}}</a> </div>

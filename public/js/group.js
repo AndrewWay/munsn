@@ -99,7 +99,7 @@ $(document).ready(function () {
 	//Submit the post through api call
 	$('#postSubmit').click( function() {
 		//Send API call
-		$.post("/api/post/timeline", {
+		$.post("/api/post/group", {
 			uid: uid,
 			type: "timeline",
 			targetid: id,
@@ -156,8 +156,9 @@ $(document).ready(function () {
 
 	 //Get and display a number of posts.
 	 //TODO: Get and display posts based on their type (poll, photo, text)
-	 $.get('/api/post/'+id, {
-		 visibility: 'public'
+	 $.get('/api/post/', {
+		 visibility: 'public',
+		 targetid: id
 	 })
 	 .done( function(response) {
 		 var data={ "list":[]};
