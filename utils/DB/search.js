@@ -19,7 +19,7 @@ module.exports = function (DBSearch, collectionUsers, collectionGroups, collecti
                 else {
                     searchResults.users = resultsUsers;
                     cbUsers = true;
-                    console.log("[DBSearch] Search -> Courses", "Found Results");
+                    console.log("[DBSearch] Search -> Users", "Found Results");
                 }
             });
             //Search through groups
@@ -31,7 +31,7 @@ module.exports = function (DBSearch, collectionUsers, collectionGroups, collecti
                 else {
                     searchResults.groups = resultsGroups;
                     cbGroups = true;
-                    console.log("[DBSearch] Search -> Courses", "Found Results");
+                    console.log("[DBSearch] Search -> Groups", "Found Results");
                 }
             });
             //Search through courses
@@ -49,7 +49,7 @@ module.exports = function (DBSearch, collectionUsers, collectionGroups, collecti
             //Start search loop after MAX_SEARCH_TIME seconds
             var searchLoopCount = 1;
             var searchLoop = setInterval(function() {
-                console.log("[DBSearch] Search Loop", "Started search iteration " + searchLoopCount);
+                console.log("[DBSearch] Search Loop", "Started search iteration " + searchLoopCount + " out of " + MAX_SEARCH_TRIES);
                 //If all searches are finish, then break loop, send back data
                 if (cbUsers && cbGroups && cbCourses) {
                     console.log("[DBSearch] Search Loop", "All collections searched!");
