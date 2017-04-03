@@ -1,6 +1,45 @@
 //TODO -- This javascript may need to be in page to allow for the changing of url.
 
+var id = window.location.hash.substring(1);
+
 $(document).ready(function () {
+
+  // If absolute URL from the remote server is provided, configure the CORS
+  // header on that server.
+  var url = '/content/resume/user/'+id;
+
+  /*************************
+   * Upload Button
+   * 
+   * @params: null
+   * 
+   * Functions for upload buttons
+   *************************/
+
+  $('#selectButton').click(function() {
+
+		$('#resumeIn').click();
+
+  });
+
+  $('#uploadButton').click(function() {
+
+    var resForm = new FormData();
+		resForm.append("file", $("#resumeIn")[0].files[0]);
+
+    $.ajax({
+					url: url, //Get :uid from the return.
+					type: 'post',
+					data: resForm,
+					cache: false,
+					contentType: false,
+					processData: false,
+		})
+    .done()
+    .fail()
+
+
+  });
 
   /*************************
    * Functions for PDF viewer
@@ -11,9 +50,9 @@ $(document).ready(function () {
    **************************/
 
 
-  // If absolute URL from the remote server is provided, configure the CORS
-  // header on that server.
-  var url = '/content/resume/user/test';
+  
+
+  console.log(url)
 
   // The workerSrc property shall be specified.
   PDFJS.workerSrc = '//mozilla.github.io/pdf.js/build/pdf.worker.js';

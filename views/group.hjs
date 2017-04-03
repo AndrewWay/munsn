@@ -34,7 +34,7 @@
 		</div>
 
 		<div class="buttons">
-			<a href="#"><img id="not" src="/img/notification-red.png"></a>
+			<a href="javascript:void(0)"><img id="not" src="/img/notification-red.png"></a>
 			<a href="/api/logout"><img id="log" src="/img/logout.png"></a>
 			<a href="/settings"><img id="cog" src="/img/settings.png"></a>
 		</div>
@@ -59,33 +59,28 @@
 	<div class="container">
 	<div class="sidebars" id="section-left">
 		<div class="userInfo" id="userPic">
-			<a href="/profile"><img src="/img/SEAHAWK_SIL.jpg"></a>
+			<a href="/profile"><img src="/img/SEAHAWK_SIL.jpg" alt="GOTO Profile"></a>
 		</div>
 		<div class="userInfo" id="lists">
-			<div class="userLists" id="groupList">
+			<div class="userLists" id="group">
 				<h5> GROUP LIST </h5>
 				<ul id="groupList">
-					<li><a href="/group"> GOTO Group] </a></li>
-					<li><a href="#"> TEST2 </a></li>
-					<li><a href="#"> TEST3 </a></li>
+					<li><a id="createGroup" href="javascript:void(0)"> Create New Group </a></li>
 				</ul>
 			</div>
 
-			<div class="userLists" id="classList">
-				<h5> CLASS LIST </h5>
-				<ul id="classList">
-					<li><a href="/group"> Classes are special groups </a></li>
-					<li><a href="#"> TEST2 </a></li>
-					<li><a href="#"> TEST3 </a></li>
+			<div class="userLists" id="course">
+				<h5> COURSE LIST </h5>
+				<ul id="courseList">
+					<li><a id="createCourse" href="javascript:void(0)"> Add New Class </a></li>
 				</ul>
 			</div>
 
-			<div class="userLists" id="etc">
+			<div class="userLists" id="other">
 				<h5> OTHER LIST </h5>
 				<ul id="otherList">
 					<li><a href="/lostfound"> Lost & Found </a></li>
-					<li><a href="#"> TEST2 </a></li>
-					<li><a href="#"> TEST3 </a></li>
+					<li><a href="/schedule"> Schedule </a></li>
 				</ul>
 			</div>
 
