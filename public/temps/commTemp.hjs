@@ -1,0 +1,14 @@
+<div class="commTemp">
+	<div class="commInfo">
+		<div class="commPic">
+			<img src="../img/SEAHAWK_SIL.jpg">
+		</div>
+		<div class="commName">
+			<a href="{{ COMM_LINK }}"> {{ COMM_NAME }} </a> <br>
+			<span>{{ COMM_TIME }}</span>
+		</div>
+	</div>
+	<div class="commCont">
+			<p> {{ COMM_TEXT }} </p>
+	</div>
+</div>

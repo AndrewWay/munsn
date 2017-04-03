@@ -1,0 +1,15 @@
+<div class="info" id="infoPic"><img src='/content/image/profile/{{_id}}'></div>
+			<div class="info" id="infoText">
+				<div class="info" id="name"> {{fname}} {{lname}} </div>
+				<div class="info" id="dob"> {{dob}} </div>
+				<div class="info" id="gender"> {{gender}} </div>
+				<div class="info" id="major"> {{INFO_MAJOR}} </div>
+			</div>
+			<div class="info" id="infoButton">
+				<button>Add Friend</button>
+				<button>Send Message</button>
+				<button>Friends</button>
+				<button>Groups</button>
+				<button>Classes</button>
+				<button id="resume">Resume</button>
+			</div>

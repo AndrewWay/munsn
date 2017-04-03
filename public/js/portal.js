@@ -96,7 +96,6 @@ $(document).ready(function () {
 
 	//Submit the post through api call
 	$('#postSubmit').click( function() {
-		console.log(imgBool);
 		//Send API call
 		$.post("/api/post/timeline", {
 			uid: uid,
