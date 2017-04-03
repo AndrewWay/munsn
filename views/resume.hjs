@@ -109,7 +109,9 @@
 	<div class="sidebars" id="section-right">
 		<div class= "content-1">
 			<div id="uploadResume">
-				<button id="uploadButton"> UPLOAD RESUME </button>
+				<button id="selectButton"> SELECT </button>
+				<button id="uploadButton"> UPLOAD </button>
+				<input type="file" id="resumeIn" style="display: none;"  />
 			</div>
 		</div>
 		<div class="content-2">
