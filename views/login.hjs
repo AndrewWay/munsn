@@ -89,18 +89,6 @@
 		<div id="rightPanel">
 
 
-			<!-- HOWTO: Render? Might need to be done server side, but this loop works -->
-			<script type="text/javascript">
-				 $.get("/temps/postTemp.hjs", function(post) {
-					for (i=0; i<5; i++) {
-						$("#rightPanel").append(post);
-					}
-				});
-
-
-			</script>
-
-
 		</div>
 	</div>
 </body>

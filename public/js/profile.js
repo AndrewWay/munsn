@@ -1,4 +1,5 @@
 var id = window.location.hash.substring(1);
+window.location.hash = '';
 
 var postBoxMax = 140;
 var imgBool = false;
