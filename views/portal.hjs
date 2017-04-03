@@ -27,11 +27,9 @@
         </div>
 
         <div class="search">
-	        <form id="search">
 			  	<input type="search" id="searchbar" placeholder="Search MunSN"><button id="searchbtn" class="searchbtn">Search</button>
-			</form>
 
-			<div class="searchRes" style="display: none;">
+			<div class="search" id="searchRes" style="display: none;">
 			
 			</div>
 		</div>

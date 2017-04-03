@@ -411,4 +411,51 @@ body, html {
 	margin-top: 10px;
 }
 
+#searchRes{
+	position: relative;
+
+	background: white;
+
+	border: 2px solid black;
+
+	height: 500px;
+	width: 95%;	
+
+	margin: auto;
+	text-align: center;
+
+	overflow: scroll;
+}
+
+#searchRes h5 {
+
+}
+
+#searchRes .searchItem {
+	border-top: 1px solid #000000;
+	border-bottom: 1px solid #000000;
+}
+
+#searchRes .searchItem:hover {
+	background-color: #f1f1f1;
+}
+
+.searchItem a {
+	position: relative;
+	display: block;
+	
+	max-width: 100%;
+	min-width: 100%;
+	margin-left: 0;
+	
+	font-family: Tahoma;
+	text-decoration: none;
+	font-size: 0.9em;
+	font-weight: bold;
+	color: #000000;
+	
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+}
 /*End*/
