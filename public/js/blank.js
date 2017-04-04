@@ -27,17 +27,17 @@ $(document).ready(function () {
 
 	/******************
 	 * Search
-	 * 
+	 *
 	 * @params: null
-	 * 
-	 * Functionality for the search bar 
+	 *
+	 * Functionality for the search bar
 	 *******************/
 
-	 //When search button is clicked: Search for values and display results
+	//When search button is clicked: Search for values and display results
 	$('#searchbtn').click(function () {
 
 		//If search field is not only whitespace, send search call.
-		if(!($.trim($('#searchbar').val())==='')) {
+		if (!($.trim($('#searchbar').val()) === '')) {
 
 			//Empty the previous search
 			$('#searchRes').html('');
@@ -47,47 +47,53 @@ $(document).ready(function () {
 			$('#searchRes').show();
 
 			//API call for search
-			$.get('/api/search/',{
-				query: $('#searchbar').val()
-			})
-			.done(function(response) {
+			$.get('/api/search/', {
+					search: $('#searchbar').val()
+				})
+				.done(function (response) {
 
-				//Titles list for Hogan templating purposes.
-				var titles = { "groups" : "group", "users" : "profile", "course" : "group" }
+					//Titles list for Hogan templating purposes.
+					var titles = {
+						"groups": "group",
+						"users": "profile",
+						"course": "group"
+					}
 
-				//Remove loading gif. TODO: Check if this is better placed somewhere else.
-				$('#searchRes').html('');
+					//Remove loading gif. TODO: Check if this is better placed somewhere else.
+					$('#searchRes').html('');
 
-				//Place all results in div.
-				//Place elements separated by header elements.
-				$.each(response.data, function (i, v) {
+					//Place all results in div.
+					//Place elements separated by header elements.
+					$.each(response.data, function (i, v) {
 
-					//Setup variable to hold data for templates
-					var data = {
-						"list": []
-					};
+						//Setup variable to hold data for templates
+						var data = {
+							"list": []
+						};
 
-					//Each element of a specific type gets added to list.
-					$.each(v, function(j,u) {
-						u=$.extend({}, u, {"title" : titles[i] });
-						data.list.push(u);
+						//Each element of a specific type gets added to list.
+						$.each(v, function (j, u) {
+							u = $.extend({}, u, {
+								"title": titles[i]
+							});
+							data.list.push(u);
+						})
+
+						//TODO: Add an image and make all the search options pretty af.
+						$.get("/temps/searchTemp.hjs", function (result) {
+							$('#searchRes').append("<h3>" + i + "</h3>");
+							var template = Hogan.compile("{{#list}}" + result + "{{/list}}");
+							var output = template.render(data);
+							$('#searchRes').append(output);
+						});
+
 					})
 
-					//TODO: Add an image and make all the search options pretty af.
-					$.get("/temps/searchTemp.hjs", function (result) {
-						$('#searchRes').append("<h3>" + i + "</h3>");
-						var template = Hogan.compile("{{#list}}" + result + "{{/list}}");
-						var output = template.render(data);
-						$('#searchRes').append(output);
-					});
 
 				})
-
-
-			})
-			.fail(function(response) {
-				console.log(response);
-			})
+				.fail(function (response) {
+					console.log(response);
+				})
 
 		}
 	});

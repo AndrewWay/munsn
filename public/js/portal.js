@@ -2,7 +2,6 @@ var postBoxMax = 140;
 var imgBool = false;
 
 $(document).ready(function () {
-
 	/******************
 	 * Post box expansion.
 	 *
