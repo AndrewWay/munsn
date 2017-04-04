@@ -1,3 +1,6 @@
+var suggOutput;
+var suggIter=0;
+
 /******************
  * Get uid for future use
  *

@@ -1,6 +1,5 @@
 
-var suggOutput;
-var suggIter=0;
+
 var postBoxMax = 140;
 var imgBool = false;
 
@@ -167,34 +166,38 @@ $(document).ready(function () {
 			visibility: 'public'
 		})
 		.done(function (response) {
-			var data = {
+			var postData = {
 				"list": []
 			};
+
+			var postProm = [];
 
 			$.each(response.data, function (i, v) {
 
 				var postInfo = $.extend({}, v, v.history.slice(-1).pop());
 				postInfo.date = new Date(postInfo.date).toLocaleString();
 
-				console.log(data);
-				$.ajax({
+				postProm.push($.ajax({
 					type: 'GET',
 					url: '/api/user/' + v.uid
 				}).done(function (res) {
 					postInfo.fname = res.data.fname;
 					postInfo.lname = res.data.lname;
-				});
+				}))
 				postInfo.image = postInfo.image ? 'visibility:visible' : 'visibility:hidden';
-				data.list.push(postInfo);
+				postData.list.push(postInfo);
 
 				//Stop at 5 posts. Arbitrary
 				return i < 4;
 			});
 
-			$.get("/temps/postTemp.hjs", function (post) {
-				var template = Hogan.compile("{{#list}}" + post + "{{/list}}");
-				var output = template.render(data);
-				$('#posts').append(output);
+			//Wait untila ll data is loaded for the posts.
+			$.when.apply($,postProm).then(function() {
+				$.get("/temps/postTemp.hjs", function (post) {
+					var template = Hogan.compile("{{#list}}" + post + "{{/list}}");
+					var output = template.render(postData);
+					$('#posts').append(output);
+				});
 			});
 		})
 		.fail(

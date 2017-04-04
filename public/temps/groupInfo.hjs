@@ -6,8 +6,23 @@
 				<div class="info" id="edit"> <input type="button" value="Edit Group"> </div>
 			</div>
 			<div class="info" id="infoButton">
-				<input type="button" value="Ask to Join">
-				<input type="button" value="Send Message">
-				<input type="button" value="Members">
-				<input type="button" value="Events">
+				<button id="grJoin"> Ask to Join </button>
+				<button id="grMembers"> Members </button>
+				<button id="grEvents"> Events </button>
 			</div>
+
+			<script type="text/javascript">
+
+			$('#infoButton #grJoin').click(function() {
+				$.post('/api/groups/request', {
+					uid: uid,
+					groupName: {{name}}
+				})
+				.done( function(response) {
+					console.log(response);
+				})
+				.fail( function(response) {
+					console.log(response);
+				});
+
+			</script>
