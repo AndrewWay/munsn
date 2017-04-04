@@ -195,13 +195,9 @@ $(document).ready(function () {
 				return i < 20;
 			});
 
-			$.get("/temps/postTemp.hjs", function (post) {
-                data.list.reverse();
-				var template = Hogan.compile("{{#list}}" + post + "{{/list}}");
-				var output = template.render(data);
-				$('#posts').append(output);
 			//Wait untila ll data is loaded for the posts.
 			$.when.apply($,postProm).then(function() {
+				postData.list.reverse();
 				$.get("/temps/postTemp.hjs", function (post) {
 					var template = Hogan.compile("{{#list}}" + post + "{{/list}}");
 					var output = template.render(postData);
@@ -212,6 +208,4 @@ $(document).ready(function () {
 		.fail(
 			//TODO: Function on failures.
 		);
-
-    });
 });
