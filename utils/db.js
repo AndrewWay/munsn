@@ -180,7 +180,7 @@ mongoClient.connect(dbURL, function (err, DB) {
 			$and: [{
 				//Group _id
 				_id: {
-					$type: 'objectid'
+					$type: 'objectId'
 				}
 			}]
 		}
@@ -191,7 +191,7 @@ mongoClient.connect(dbURL, function (err, DB) {
 			$and: [{
 				//Group _id
 				_id: {
-					$type: 'objectid'
+					$type: 'objectId'
 				}
 			}]
 		}
