@@ -61,6 +61,7 @@ var sharedsession = require("express-socket.io-session");
 /**
  * Get port from environment and store in Express.
  */
+console.log(port);
 app.set('port', port);
 
 /**
