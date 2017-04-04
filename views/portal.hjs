@@ -49,24 +49,25 @@
 			<a href="javascript:void(0)"><img id="not" src="/img/notification-red.png"></a>
 			<a href="/api/logout"><img id="log" src="/img/logout.png"></a>
 			<a href="/settings"><img id="cog" src="/img/settings.png"></a>
+
+			<div id="not-center">
+				<a href="#"><div id="note">
+					{{NOT_INFO}}
+				</div></a>
+				<a href="#"><div id="note">
+					{{NOT_INFO}}
+				</div></a>
+				<a href="#"><div id="note">
+					{{NOT_INFO}}
+				</div></a>
+				<a href="#"><div id="note">
+					{{NOT_INFO}}
+				</div></a>
+			</div>
 		</div>
+		
 	</div>
 	</nav>
-
-	<div id="not-center">
-		<a href="#"><div id="note">
-			{{NOT_INFO}}
-		</div></a>
-		<a href="#"><div id="note">
-			{{NOT_INFO}}
-		</div></a>
-		<a href="#"><div id="note">
-			{{NOT_INFO}}
-		</div></a>
-		<a href="#"><div id="note">
-			{{NOT_INFO}}
-		</div></a>
-	</div>
 
 	<div class="container">
 
@@ -82,7 +83,8 @@
 	<div class="popup" id="coursePop">
 			Add a new course:
 			<input class="popField" type="text" name="cName" placeholder="Course Name">
-			<input class="popField" type="text" name="cLabel" placeholder="Course Label"><br>
+			<input class="popField" type="text" name="cDepartment" placeholder="Department" maxlength="4" style="width: 35%;">
+			<input class="popField" type="text" name="cNumber" placeholder="Course Number" maxlength="4" style="width: 35%;"><br>
 			<input class="popField" type="text" name="cRoom" placeholder="Course Room"><br>
 			<select id="semester">
 				<option value="Fall">Fall</option>
@@ -90,7 +92,7 @@
 				<option value="Spring">Spring</option>
 				<option value="Summer MI">Summer MI</option>
 			</select>
-			<input class="popField" type="text" name="cYear" placeholder="Year"><br>
+			<input class="popField" type="text" name="cYear" placeholder="Year" style="width: 40%;"><br>
 
 			<div id="cButton">
 				<button class="popButton" id="cAdd"> ADD </button>
