@@ -183,9 +183,12 @@ $(document).ready(function () {
 			overflow: 'auto'
 		});
 
+		//Empty all inputs
+		$('#coursePop *').val('');
+		$('#coursePop *').attr('checked',false)
+
 		$('#coursePop').hide();
 	});
-
 
 	//Create new group
 	$('#gCreate').click(function () {
@@ -203,9 +206,15 @@ $(document).ready(function () {
 			})
 	});
 
+	//Details for the course.
+	//days = [RRule.MO, RRule.TU, RRule.WE, RRule.TH, RRule.FR, RRule.SA, RRule.SU];
+	days = ["Monday", "Tueday", "Wednesday", "Thursday", "Friday"];
+	semStart = { "Winter" : "Jan. 1", "Spring" : "May. 1", "Summer MI" : "May 1", "Fall" : "Sept. 1"}
+	semEnd = { "Winter" : "Apr. 30", "Spring" : "Aug. 31", "Summer MI" : "June 30", "Fall" : "Dec. 31"}
+
 	//Add new course
 	$('#cAdd').click(function () {
-		$.post('/api/course/find', {
+		$.get('/api/course/', {
 				name: $('#coursePop input[name="cName"]').val(),
 				label: $('#coursePop input[name="cLabel"]').val(),
 				location: $('#coursePop input[name="cLabel"]').val(),
@@ -213,11 +222,54 @@ $(document).ready(function () {
 				year: $('#coursePop input[name="cYear"]').val()
 			})
 			.done(function (response) {
+				//If it exists: Add user to course. Else: Create course.
+				if(!(response.data.length==0)) {
+					//TODO: Add user to course.
 
+					//Empty all inputs
+					$('#coursePop *').val('');
+					$('#coursePop *').attr('checked',false)
+
+					$('#coursePop').hide();
+				} else {
+					var cDays = [];
+
+					$('.cDays:checked').each(function(i,v){
+						cDays.push(days[this.value]);
+					});
+
+					//If course doesn't already exist, create it.
+					$.post('/api/course/',{
+						label: $('input[name="cDepartment"]').val() + " " + $('input[name="cNumber"]').val(),
+ 						name: $('input[name="cName"]').val(),
+ 						Description: "TODO: Add descriptions",
+ 						semester: $('#semester').val(),
+ 						department: $('input[name="cDepartment"]').val(),
+ 						location: $('input[name="cRoom"]').val(),
+ 						year: $('input[name="cYear"]').val(),
+ 						cid: uid,
+ 						days: cDays,
+ 						timeStart: semStart[$('#semester').val()],
+ 						timeEnd: semEnd[$('#semester').val()]
+					})
+					.done(function(response) {
+						console.log(response);
+
+						//Empty all inputs
+						$('#coursePop *').val('');
+						$('#coursePop *').attr('checked',false)
+						$('#coursePop').hide();
+					})
+					.fail(function(response) {
+						console.log(response);
+					})
+				}
 			})
 			.fail(function (response) {
-
+				console.log(response)
 			})
+
+
 
 	});
 
@@ -260,6 +312,27 @@ $(document).ready(function () {
 			});
 		}
 	});
+
+	/***********************
+	 * Timepicker for course add
+	 * 
+	 * @params: null
+	 * 
+	 * Creates timepicker for course times
+	 ************************/
+
+	//initialize end time
+	$('#endTime').datetimepicker({
+ 		 datepicker: false,
+ 		 format: 'H:i'
+	 });
+
+	 //Intialize start time
+	 $('#startTime').datetimepicker({
+		 datepicker: false,
+		 format: 'H:i'
+	 });
+
 
 	//TODO: Any other elements of left sidebar?
 
