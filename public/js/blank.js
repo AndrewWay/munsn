@@ -420,9 +420,11 @@ $(document).ready(function () {
 		//Use a timeout to wait for focus to transfer to other children elements
 		window.setTimeout(function () {
 			//If there is no text in textarea, and a non child element of friendPan was clicked: clear.
-			if ($('#friendPan *:focus').length == 0) {
+			if ($('.menu *:focus').length == 0) {
 				$('#friendPan').hide();
 				$('#friendPan').html('');
+				$('#groupPan').hide();
+				$('#groupPan').html('');
 			}
 		}, 50);
 
