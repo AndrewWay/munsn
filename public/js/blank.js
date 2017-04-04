@@ -92,11 +92,12 @@ $(document).ready(function () {
 		}
 	});
 
+	//If search is no longer the focus: close
 	$(".search *").focusout(function () {
 
 		//Use a timeout to wait for focus to transfer to other children elements
 		window.setTimeout(function () {
-			//If there is no text in textarea, and a non child element of postBox was clicked: shrink.
+			//If there is no text in textarea, and a non child element of search was clicked: clear.
 			if ($('.search *:focus').length == 0) {
 				$('#searchbar').val('');
 				$('#searchRes').hide();
@@ -252,9 +253,111 @@ $(document).ready(function () {
 
 	//TODO: Any other elements of left sidebar?
 
+	/********************
+	 * Menu functions
+	 * 
+	 * @params: null
+	 * 
+	 * Functions for the upper left menu buttons.
+	 ********************/
+
+	 //Friend button functionality when clicked.
+	$('#friendButton').click(function() {
+		//Make sure div is empty
+		$('#friendPan').html('');
+
+		//Add loading gif and then show.
+		$('#friendPan').html('<img src="/img/ring-alt.gif">');
+		$('#friendPan').show();
+
+		//API call to get friend requests
+		$.get('/api/friend/received/'+uid, {
+			uid: uid
+		})
+		.done(function(response) {
+
+			//Remove loading gif. TODO: Check if this is better placed somewhere else.
+			$('#friendPan').html('');
+			
+			//Setup variable to hold data for templates
+			var data = {
+				"list": []
+			};
+
+			$.each(response.data, function(i, v) {
+				data.list.push(v);
+			});
+
+			//If no friend requests exist, skip rendering.
+			if(!(data.list.length==0)) {
+				$.get("/temps/frireqTemp.hjs", function (result) {
+					$('#friendPan').append("<h3> Friend Requests </h3>");
+					var template = Hogan.compile("{{#list}}" + result + "{{/list}}");
+					var output = template.render(data);
+					$('#friendPan').append(output);
+				});
+			}
+
+			//API call to get user friends
+			$.get('/api/friends/'+uid)
+			.done(function(response){
+
+				//Setup variable to hold data for templates
+				var data = {
+					"list": []
+				};
+
+				$.each(response.data, function(i, v) {
+					v=$.extend({}, v, {"title" : "profile" });
+					data.list.push(v);
+				});
+
+				//Display friend title
+				$('#friendPan').append("<h3> Friends </h3>");
+
+				//If no friends exist, display sad face
+				if(!(data.list.length==0)) {
+					$.get("/temps/searchTemp.hjs", function (result) {
+						var template = Hogan.compile("{{#list}}" + result + "{{/list}}");
+						var output = template.render(data);
+						$('#friendPan').append(output);
+					});
+				} else {
+					$('#friendPan').append("<h5> No friends to show =( </h5>");
+				}
+			})
+			.fail()
+		})
+		.fail()
+	});
+
+	//If somewhere outside of the panel is clicked: Close the panel.
+	//TODO: why isn't this working?
+	$("#friendPan *").focusout(function () {
+
+		//Use a timeout to wait for focus to transfer to other children elements
+		window.setTimeout(function () {
+			//If there is no text in textarea, and a non child element of friendPan was clicked: clear.
+			if ($('#friendPan *:focus').length == 0) {
+				$('#friendPan').hide();
+				$('#friendPan').html('');
+			}
+		}, 50);
+
+	});
+
+
+	//Group button functionality when clicked.
+	$('#groupButton').on('click', function() {
+				//Make sure div is empty
+		$('#groupPan').html('');
+
+		//Add loading gif and then show.
+		$('#groupPan').html('<img src="/img/ring-alt.gif">');
+		$('#groupPan').show();
+	});
+
 });
-
-
 
 
 /****

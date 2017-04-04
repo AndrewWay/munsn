@@ -235,8 +235,7 @@ $(document).ready(function () {
 				console.log(data);
 				$.ajax({
 					type: 'GET',
-					url: '/api/user/' + v.uid,
-					async: false
+					url: '/api/user/' + v.uid
 				}).done(function (res) {
 					postInfo.fname = res.data.fname;
 					postInfo.lname = res.data.lname;
