@@ -1,5 +1,9 @@
 var id = window.location.hash.substring(1);
 
+window.onhashchange= function() {
+	window.location.reload();
+}
+
 var postBoxMax = 140;
 var imgBool = false;
 
@@ -99,7 +103,7 @@ $(document).ready(function () {
 	//Submit the post through api call
 	$('#postSubmit').click( function() {
 		//Send API call
-		$.post("/api/post/timeline", {
+		$.post("/api/post/group", {
 			uid: uid,
 			type: "timeline",
 			targetid: id,
@@ -156,8 +160,9 @@ $(document).ready(function () {
 
 	 //Get and display a number of posts.
 	 //TODO: Get and display posts based on their type (poll, photo, text)
-	 $.get('/api/post/'+id, {
-		 visibility: 'public'
+	 $.get('/api/post/', {
+		 visibility: 'public',
+		 targetid: id
 	 })
 	 .done( function(response) {
 		 var data={ "list":[]};

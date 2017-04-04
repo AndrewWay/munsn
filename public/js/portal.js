@@ -2,16 +2,6 @@ var postBoxMax = 140;
 var imgBool = false;
 
 $(document).ready(function () {
-
-	$('#searchbtn').click(function () {
-		$.get('/api/search', {
-			search: $('#searchbar').val()
-		}, function (results) {
-			alert(results);
-			console.log("SEARCH:" + results);
-		});
-	});
-
 	/******************
 	 * Post box expansion.
 	 *
