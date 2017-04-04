@@ -184,7 +184,9 @@ $(document).ready(function () {
 					postInfo.fname = res.data.fname;
 					postInfo.lname = res.data.lname;
 				}))
-				postInfo.image = postInfo.image ? 'visibility:visible' : 'visibility:hidden';
+
+				postInfo.image = ((postInfo.image=="true") ? 'visibility:visible' : 'visibility:hidden');
+
 				postData.list.push(postInfo);
 
 				//Stop at 5 posts. Arbitrary
