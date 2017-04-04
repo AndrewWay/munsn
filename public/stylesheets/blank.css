@@ -420,13 +420,13 @@ body, html {
 
 	border: 2px solid black;
 
-	height: 500px;
 	width: 95%;	
 
 	margin: auto;
 	text-align: center;
 
-	overflow: scroll;
+	overflow-y: scroll;
+	overflow-x: hidden;
 }
 
 #searchRes h3{
