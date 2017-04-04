@@ -5,7 +5,6 @@ var http = require('http');
 var port = "";
 switch (process.argv[2]) {
   case 'dev':
-    port = process.env.PORT = normalizePort(3000);
     http.get({
       'host': 'api.ipify.org',
       'port': 80,
@@ -17,9 +16,9 @@ switch (process.argv[2]) {
         console.log("Server Address:", process.env.ADDRESS);
       });
     });
+    port = process.env.PORT = normalizePort(3000);
     break;
   case 'prod':
-    port = process.env.PORT = normalizePort(3336);
     http.get({
       'host': 'api.ipify.org',
       'port': 80,
@@ -29,19 +28,20 @@ switch (process.argv[2]) {
         process.env.IP = ip;
       });
     });
+    port = process.env.PORT = normalizePort(3336);
     process.env.HOSTNAME = 'sc-6.cs.mun.ca';
     process.env.MONGO_URL = 'mongodb://localhost:27272/munsn';
     process.env.ADDRESS = process.env.HOSTNAME; //Don't need the port for MUN's server
     console.log("Server Address:", process.env.ADDRESS);
     break;
   default:
-    port = process.env.PORT = normalizePort(3000);
     http.get({
       'host': 'api.ipify.org',
       'port': 80,
       'path': '/'
     }, function (resp) {
       resp.on('data', function (ip) {
+        port = process.env.PORT = normalizePort(3000);
         process.env.HOSTNAME = process.env.IP = ip;
         process.env.ADDRESS = process.env.HOSTNAME + ':' + process.env.PORT;
         console.log("Server Address:", process.env.ADDRESS);
@@ -61,7 +61,6 @@ var sharedsession = require("express-socket.io-session");
 /**
  * Get port from environment and store in Express.
  */
-
 app.set('port', port);
 
 /**
