@@ -8,9 +8,10 @@
 
 //Define uid variable
 var uid;
+var uidProm = [];
 
 //Get variable and store it.
-$.get('/api/session')
+uidProm.push($.get('/api/session')
 	.done(function (response) {
 		if (response.user === undefined) {
 			console.log("ERROR: Session not found.");
@@ -21,7 +22,7 @@ $.get('/api/session')
 	})
 	.fail(function (response) {
 		console.log('ERROR: Request failed.');
-	});
+	}));
 
 $(document).ready(function () {
 

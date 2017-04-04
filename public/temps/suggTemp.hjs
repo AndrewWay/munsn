@@ -1,0 +1,3 @@
+<a id="suggLink" href="/profile#{{_id}}"><img src="/content/image/profile/{{_id}}">
+<div id="suggName"> {{fname}} {{lname}} </div> </a>
+<!-- Split Here -->
