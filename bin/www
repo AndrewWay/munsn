@@ -46,6 +46,7 @@ switch (process.argv[2]) {
         process.env.ADDRESS = process.env.HOSTNAME + ':' + process.env.PORT;
         console.log("Server Address:", process.env.ADDRESS);
       });
+      console.log(port);
     });
     break;
 }
@@ -61,7 +62,7 @@ var sharedsession = require("express-socket.io-session");
 /**
  * Get port from environment and store in Express.
  */
-console.log(port);
+
 app.set('port', port);
 
 /**
