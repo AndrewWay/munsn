@@ -8,9 +8,10 @@
 
 //Define uid variable
 var uid;
+var uidProm = [];
 
 //Get variable and store it.
-$.get('/api/session')
+uidProm.push($.get('/api/session')
 	.done(function (response) {
 		if (response.user === undefined) {
 			console.log("ERROR: Session not found.");
@@ -21,7 +22,7 @@ $.get('/api/session')
 	})
 	.fail(function (response) {
 		console.log('ERROR: Request failed.');
-	});
+	}));
 
 $(document).ready(function () {
 
@@ -269,6 +270,8 @@ $(document).ready(function () {
 
 	 //Friend button functionality when clicked.
 	$('#friendButton').click(function() {
+		$('#groupPan').hide();
+
 		//Make sure div is empty
 		$('#friendPan').html('');
 
@@ -357,10 +360,59 @@ $(document).ready(function () {
 		.fail()
 	});
 
-	//If somewhere outside of the panel is clicked: Close the panel.
-	//TODO: why isn't this working?
-	$("#friendPan *").focusout(function () {
+	//Group button functionality when clicked.
+	$('#groupButton').on('click', function() {
+		//Hide other panels
+		$('#friendPan').hide();
 
+		//Make sure div is empty
+		$('#groupPan').html('');
+
+		//Add loading gif and then show.
+		$('#groupPan').html('<img src="/img/ring-alt.gif">');
+		$('#groupPan').show();
+
+		$.get('/api/groups/user/'+uid)
+		.done(function(response){
+			//Remove loading gif. TODO: Check if this is better placed somewhere else.
+			$('#groupPan').html('');
+
+			//Setup variable to hold data for templates
+				var data = {
+					"list": []
+				};
+
+				//Display friend title
+				$('#groupPan').append("<h3> Groups </h3>");
+
+				if(!(typeof response.data[0] == 'undefined')) {
+					$.each(response.data, function(j, u) {
+
+						//Push gets to array so next function waits.
+						var x=$.extend({},u,{"title" : "group"})
+						data.list.push(x);
+						
+					})	
+
+					//If no friends exist, display sad face
+					if(!(data.list.length==0)) {
+						$.get("/temps/searchTemp.hjs", function (result) {
+							var template = Hogan.compile("{{#list}}" + result + "{{/list}}");
+							var output = template.render(data);
+							$('#groupPan').append(output);
+						});
+					} 
+					
+				} else {
+					//Display no friends
+					$('#friendPan').append("<h5> No groups to display =( </h5>");
+				}
+		})
+		.fail()
+	});
+
+	//If somewhere outside of the panel is clicked: Close the panel.
+	$(".menu *").focusout(function () {
 		//Use a timeout to wait for focus to transfer to other children elements
 		window.setTimeout(function () {
 			//If there is no text in textarea, and a non child element of friendPan was clicked: clear.
@@ -373,15 +425,7 @@ $(document).ready(function () {
 	});
 
 
-	//Group button functionality when clicked.
-	$('#groupButton').on('click', function() {
-				//Make sure div is empty
-		$('#groupPan').html('');
-
-		//Add loading gif and then show.
-		$('#groupPan').html('<img src="/img/ring-alt.gif">');
-		$('#groupPan').show();
-	});
+	
 
 });
 

@@ -1,3 +1,6 @@
+
+var suggOutput;
+var suggIter=0;
 var postBoxMax = 140;
 var imgBool = false;
 
@@ -157,25 +160,71 @@ $(document).ready(function () {
 	 * Functionality to grab and navigate suggested friends list.
 	 *************************/
 
-	$.get('/api/friend/suggest/' + uid, function (response) {
-			//TODO: Store the response in some variable
-		})
+	 //Wait until uid is ready
+	$.when.apply($, uidProm).then(function(){
+		$.get('/api/friend/suggest/'+uid)
 		//TODO: Add done and fail callbacks
 		.done(function (response) {
-			console.log(response);
+
+			//Setup variable to hold data for templates
+			var data = {
+				"list": []
+			};
+			
+			//Make array to hold promises.
+			var suggProm = [];
+
+			$.each(response.data, function(i,v) {
+				//Push gets to array so next function waits.
+				suggProm.push($.get('/api/user/'+v)
+				.done(function(response){
+					var x=$.extend({},response.data,{"title" : "profile"})
+					data.list.push(x);
+				})
+				.fail());
+			});
+
+			$.when.apply($, suggProm).then(function(){	
+				if(!(data.list.length==0)) {
+					$.get("/temps/suggTemp.hjs", function (result) {
+						var template = Hogan.compile("{{#list}}" + result + "{{/list}}");
+						suggOutput = template.render(data);
+						suggOutput = suggOutput.split('<!-- Split Here -->').slice(0,-1);
+						$('#section-right .content-1 #suggList').append(suggOutput[suggIter]);
+					});
+				} 
+			});
 		})
 		.fail(function (response) {});
+	})
 
 	//When Previous button is clicked move backwards through list of suggested friends.
 	$('#suggPrev').click(function () {
-		//TODO -- Implementation when integration is done
+		//If suggIter is 0: Move to last element. Else: subtract 1;
+		if(suggIter > 0){
+			suggIter= suggIter-1;
+		} else {
+			suggIter = suggOutput.length-1;
+		}
 
+		//Render new suggested friend
+		$('#section-right .content-1 #suggList').html('');
+		$('#section-right .content-1 #suggList').append(suggOutput[suggIter]);
 
 	});
 
 	//When Next button is clicked move forwards through list of suggested friends.
 	$('#suggNext').click(function () {
-		//TODO -- Implementation when integration is done
+		//If suggIter is max: Move to first element. Else: add 1
+		if(suggIter < suggOutput.length-1){
+			suggIter= suggIter+1;
+		} else {
+			suggIter = 0;
+		}
+
+		//Render new suggested friend
+		$('#section-right .content-1 #suggList').html('');
+		$('#section-right .content-1 #suggList').append(suggOutput[suggIter]);
 
 
 	});
