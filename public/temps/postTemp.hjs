@@ -11,7 +11,7 @@
 					</div>
 				</div>
 				<div class="postCont">
-					<p> {{text}}</p><img src="/content/posts/{{_id}}/{{_id}}">
+					<p> {{text}}</p><img src="/content/posts/{{_id}}/{{_id}}" style={{image}}>
 				</div>
 
 				<div class="postComm">

@@ -234,12 +234,13 @@ $(document).ready(function () {
 				console.log(data);
 				$.ajax({
 					type: 'GET',
-					url: '/api/user/' + v.uid
+					url: '/api/user/' + v.uid,
+					async: false
 				}).done(function (res) {
 					postInfo.fname = res.data.fname;
 					postInfo.lname = res.data.lname;
 				});
-
+				postInfo.image = postInfo.image ? 'visibility:visible' : 'visibility:hidden';
 				data.list.push(postInfo);
 
 				//Stop at 5 posts. Arbitrary

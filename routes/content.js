@@ -10,7 +10,7 @@ var UserID = require('../middleware/functions').UserID;
  * GET -> '/content/image/profile/:uid'
  */
 router.get('/image/profile/:uid', UserID, function (req, res, next) {
-	var file = utils.findFiles('profile', path.join(__dirname, '../content/images/user/' + req.UserID)).next().value;
+	var file = utils.findFiles('profile', path.join(__dirname, '../content/images/user/' + req.UserID)).next().value || utils.findFiles('SEAHAWK_SIL', path.join(__dirname, '../public/img')).next().value;
 	utils.download(req, res, file, function (result) {
 		//res.json(result);
 	});
@@ -20,7 +20,7 @@ router.get('/image/profile/:uid', UserID, function (req, res, next) {
  * GET -> '/content/image/group/:gid'
  */
 router.get('/image/group/:gid', UserID, function (req, res, next) {
-	var file = utils.findFiles('group', path.join(__dirname, '../content/images/group/' + req.params.gid)).next().value;
+	var file = utils.findFiles('group', path.join(__dirname, '../content/images/group/' + req.params.gid)).next().value || utils.findFiles('SEAHAWK_SIL', path.join(__dirname, '../public/img')).next().value;
 	utils.download(req, res, file, function (result) {
 		//res.json(result);
 	});
