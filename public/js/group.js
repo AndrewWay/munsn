@@ -241,20 +241,16 @@ $(document).ready(function () {
 
 	//Get and display group info
 	//TODO: Add findGroupById in API. It's missing for some reason.
-	console.log(id);
-
 	$.get('/api/group/' + id)
-		.done(function (response) {
-			console.log(response);
-
-
-			$.get("/temps/groupInfo.hjs", function (info) {
-				var template = Hogan.compile(info);
-				var output = template.render(response.data);
-				$('#infoContainer').append(output);
-			});
-		})
-		.fail(
-			//TODO: Function on failures.
-		);
+	.done(function (response) {
+		
+		$.get("/temps/groupInfo.hjs", function (info) {
+			var template = Hogan.compile(info);
+			var output = template.render(response.data);
+			$('#infoContainer').append(output);
+		});
+	})
+	.fail(
+		//TODO: Function on failures.
+	);
 });
