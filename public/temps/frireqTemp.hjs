@@ -1,0 +1,37 @@
+<div class="friReq" id="{{_id}}"> 
+    <a href="/{{title}}#{{userid}}">{{userid}}</a>
+    <a id="acceptReq" href="javascript:void(0)" name="{{userid}}"> <img src="/img/checkmark_Green.png"> </a>
+    <a id="denyReq" href="javascript:void(0)" name="{{userid}}"> <img src="/img/xmark_Red.png"> </a>
+</div>
+
+<script type="text/javascript">
+
+    $('#acceptReq').click(function(){
+
+        $.post('/api/friend/request/accept', {
+				fid: uid,
+                uid: $(this).attr('name')
+		})
+        .done(function(response){
+            console.log(response);
+        })
+        .fail(function(response){
+            console.log(resposne);
+        })
+
+    })
+
+    $('#denyReq').click(function(){
+       $.post('/api/friend/request/deny', {
+				fid: uid,
+                uid: $(this).attr('name')
+		})
+        .done(function(response){
+            console.log(response);
+        })
+        .fail(function(response){
+            console.log(resposne);
+        })
+    })
+
+</script>
