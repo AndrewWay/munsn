@@ -375,14 +375,13 @@ $(document).ready(function () {
 		$('#groupPan').html('<img src="/img/ring-alt.gif">');
 		$('#groupPan').show();
 
+		$.get('/api/groups/user/'+uid)
+		.done(function(response){
+			//Remove loading gif. TODO: Check if this is better placed somewhere else.
+			$('#groupPan').html('');
 
-			$.get('/api/groups/user/'+uid)
-			.done(function(response){
-				//Remove loading gif. TODO: Check if this is better placed somewhere else.
-				$('#groupPan').html('');
-
-				//Setup variable to hold data for templates
-					var data = {
+			//Setup variable to hold data for templates
+				var data = {
 					"list": []
 				};
 
@@ -407,10 +406,10 @@ $(document).ready(function () {
 						});
 					} 
 					
-			} else {
-				//Display no groups
-				$('#groupPan').append("<h5> No groups to display =( </h5>");
-			}
+				} else {
+					//Display no friends
+					$('#friendPan').append("<h5> No groups to display =( </h5>");
+				}
 		})
 		.fail()
 	});
