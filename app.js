@@ -4,8 +4,8 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var session = require('express-session');
-var MongoStore = require('connect-mongo')(session);
+var express_session = require('express-session');
+var MongoStore = require('connect-mongo')(express_session);
 var mongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
 var db = require('./utils/db');
@@ -30,7 +30,7 @@ var app = express();
 //Busboy used for file uploading to the server
 app.use(busboy());
 
-var sess = session({
+var session = express_session({
 	secret: 'faeb4453e5d14fe6f6d04637f78077c76c73d1b4',
 	proxy: true,
 	resave: true,
@@ -47,7 +47,7 @@ var sess = session({
 		stringify: false
 	})
 });
-app.use(sess);
+app.use(session);
 // view engine setup
 
 app.set('views', path.join(__dirname, 'views'));
@@ -105,5 +105,5 @@ app.use(function (err, req, res, next) {
 	res.render('error');
 });
 
-app.session = sess;
+app.session = session;
 module.exports = app;

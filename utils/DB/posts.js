@@ -37,6 +37,7 @@ module.exports = function (DBPosts, collectionPosts) {
 			post.history = [Object.assign({
 				date: date
 			}, req.body.fields)];
+			post.visibility = post.visibility || 'public';
 			//Push allowed users to post.allowedUsers array if the visibility is specific
 
 			console.log("[DBPosts] Add->'" + post.type + "'", "'" + JSON.stringify(post) + "'");
@@ -110,10 +111,10 @@ module.exports = function (DBPosts, collectionPosts) {
 
 	//Get posts per post id
 	DBPosts.find = function (req, res, callback) {
-		console.log("[DBPosts] Find", "'" + JSON.stringify(req.body) + "'");
-		var query = req.body;
+		console.log("[DBPosts] Find", "'" + JSON.stringify(req.query) + "'");
+		var query = req.query;
 		if (query.pid) {
-			query.pid = new ObjectID(query.pid);
+			query._id = new ObjectID(query.pid);
 		}
 		collectionPosts.find(query).toArray(function (err, result) {
 			if (err) {
@@ -138,14 +139,14 @@ module.exports = function (DBPosts, collectionPosts) {
 			visibility: undefined
 		};
 		Object.keys(updates).forEach(k => {
-			if (req.body[k] == undefined) {
+			if (req.body[k] === undefined) {
 				delete updates[k];
 			} else {
 				updates[k] = req.body[k];
 			}
 		});
 		updates.whitelist = req.body.whitelist;
-		console.log("[DBPosts] Update", "'" + req.body.pid + "'->'" + JSON.stringify(updates) + "'");
+		console.log("[DBPosts] Update->Visibility", "'" + req.body.pid + "'->'" + JSON.stringify(updates) + "'");
 		collectionPosts.update({
 			_id: new ObjectID(req.body.pid)
 		}, {

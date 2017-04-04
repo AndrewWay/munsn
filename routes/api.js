@@ -91,7 +91,7 @@ var findUserByUID = "/user/:uid"; //GET
  * Method:
  *      - GET
  * Params:
- *      - uid: The user id to get
+ *      - query: Various parameters
  * Returns:
  *      - JSON user object
  */
@@ -651,6 +651,12 @@ var updatePostHistory = "/post/history"; //PATCH
  *      - GET
  * Params:
  *      - pid: The post id
+ *		- visibility: The visibility of a post
+ *		- targetid: The id that this post was made on
+ *		- uid: The user who made this post
+ *		- type: The type of post; (this is should be included when searching by targetid)
+ *		- whitelist: Probably doesn't work currently
+ *
  * Returns:
  *      - JSON mongo result
  */
@@ -1239,17 +1245,14 @@ router.get(findLostFound, UserID, function (req, res, next) {
 	});
 });
 router.post(addTimelinePost, UserID, function (req, res, next) {
+	req.body.type = req.body.type || 'timeline';
 	DB.Posts.add(req, res, function (result) {
 		res.json(result);
 	});
 });
 router.post(addGroupPost, UserID, function (req, res, next) {
-	//Set type before pass to db
-	req.body.origin = {
-		type: 'group',
-		id: req.body.origin
-	};
-	DB.Posts.add(req, res, UserID, function (result) {
+	req.body.type = req.body.type || 'group';
+	DB.Posts.add(req, res, function (result) {
 		res.json(result);
 	});
 });
