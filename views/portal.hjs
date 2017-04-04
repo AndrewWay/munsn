@@ -21,10 +21,19 @@
 		<div class="menu">
 		<ul>
             <li><a href="/">Home</a></li>
-            <li><a href="#">Groups</a></li>
-            <li><a href="#">Friends</a></li>
+            <li><a href="javascript:void(0)" id="groupButton">Groups</a></li>
+            <li><a href="javascript:void(0)" id="friendButton">Friends</a></li>
         </ul>
+		<div class="menuPan" id="friendPan" style="display: none;">
+
+		</div>
+
+		<div class="menuPan" id="groupPan" style="display: none;">
+
+		</div>
         </div>
+
+		
 
         <div class="search">
 			  	<input type="search" id="searchbar" placeholder="Search MunSN"><button id="searchbtn" class="searchbtn">Search</button>

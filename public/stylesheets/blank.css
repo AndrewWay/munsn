@@ -411,6 +411,8 @@ body, html {
 	margin-top: 10px;
 }
 
+/*Styling for search results*/
+
 #searchRes{
 	position: relative;
 
@@ -427,7 +429,7 @@ body, html {
 	overflow: scroll;
 }
 
-#searchRes h5 {
+#searchRes h3{
 
 }
 
@@ -458,4 +460,23 @@ body, html {
 	text-overflow: ellipsis;
 	overflow: hidden;
 }
+
+
+/*Styling for friend box*/
+
+.menuPan{
+	position: relative;
+	height: 500px;
+	width: 400px;
+
+	background:white;
+
+	margin: auto;
+	text-align: center;
+
+	overflow: scroll;
+
+	border: 2px solid black;
+}
+
 /*End*/
