@@ -91,7 +91,7 @@ var findUserByUID = "/user/:uid"; //GET
  * Method:
  *      - GET
  * Params:
- *      - uid: The user id to get
+ *      - query: Various parameters
  * Returns:
  *      - JSON user object
  */

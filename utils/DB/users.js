@@ -89,7 +89,7 @@ module.exports = function (DBUsers, DBAuth, collectionUsers) {
 
 	//Find users matching query
 	DBUsers.find = function (req, res, callback) {
-		console.log("[DBUsers] Find", "'" + JSON.stringify(req.body) + "'");
+		console.log("[DBUsers] Find", "'" + JSON.stringify(req.query) + "'");
 		collectionUsers.find(req.body).toArray(function (err, result) {
 			if (err) {
 				console.error("[DBUsers] Find", err.message);
