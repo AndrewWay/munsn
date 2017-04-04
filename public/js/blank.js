@@ -44,7 +44,7 @@ $(document).ready(function () {
 			$('#searchRes').html('');
 
 			//Add loading gif and then show.
-			$('#searchRes').html('<img src="/img/ring-alt.gif">');
+			$('#searchRes').html('<img src="/img/ring-alt.gif" width="50" height="auto">');
 			$('#searchRes').show();
 
 			//API call for search
@@ -55,8 +55,8 @@ $(document).ready(function () {
 
 					//Titles list for Hogan templating purposes.
 					var titles = {
+						"users": "profile",						
 						"groups": "group",
-						"users": "profile",
 						"course": "group"
 					}
 
