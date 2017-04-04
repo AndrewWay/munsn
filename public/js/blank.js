@@ -284,13 +284,16 @@ $(document).ready(function () {
 
 			//Remove loading gif. TODO: Check if this is better placed somewhere else.
 			$('#friendPan').html('');
-			
+
 			//Setup variable to hold data for templates
 			var data = {
 				"list": []
 			};
 
+			
+
 			$.each(response.data, function(i, v) {
+				v=$.extend({}, v, {"title" : "profile" });
 				data.list.push(v);
 			});
 
@@ -312,25 +315,42 @@ $(document).ready(function () {
 				var data = {
 					"list": []
 				};
-
-				$.each(response.data, function(i, v) {
-					v=$.extend({}, v, {"title" : "profile" });
-					data.list.push(v);
-				});
+				
+				//Make array to hold promises.
+				var promises = [];
 
 				//Display friend title
 				$('#friendPan').append("<h3> Friends </h3>");
 
-				//If no friends exist, display sad face
-				if(!(data.list.length==0)) {
-					$.get("/temps/searchTemp.hjs", function (result) {
-						var template = Hogan.compile("{{#list}}" + result + "{{/list}}");
-						var output = template.render(data);
-						$('#friendPan').append(output);
-					});
+				//For each friend in the friends array
+				if(!(typeof response.data[0] == 'undefined')) {
+					$.each(response.data[0].friends, function(j, u) {
+
+						//Push gets to array so next function waits.
+						promises.push($.get('/api/user/'+u)
+						.done(function(response){
+							var x=$.extend({},response.data,{"title" : "profile"})
+							data.list.push(x);
+						})
+						.fail());
+					})	
+
+					//Waits until all data is loaded then displays friend list.
+					$.when.apply($, promises).then(function(){	
+						//If no friends exist, display sad face
+						if(!(data.list.length==0)) {
+							$.get("/temps/searchTemp.hjs", function (result) {
+								var template = Hogan.compile("{{#list}}" + result + "{{/list}}");
+								var output = template.render(data);
+								$('#friendPan').append(output);
+							});
+					} 
+					})
 				} else {
-					$('#friendPan').append("<h5> No friends to show =( </h5>");
-				}
+					//Display no friends
+					$('#friendPan').append("<h5> No friends to display =( </h5>");
+				}	
+				
 			})
 			.fail()
 		})
