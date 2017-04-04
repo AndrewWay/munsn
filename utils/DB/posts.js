@@ -17,6 +17,7 @@ module.exports = function (DBPosts, collectionPosts) {
 			 * location: object {x: decimal, y: decimal}
 			 * poll: object {options...}
 			 */
+			req.body.fields.image = req.body.fields.image === "true";
 			var post = {
 				uid: undefined, //The User who made this post
 				type: undefined, //The type of post this is
