@@ -206,43 +206,6 @@ $(document).ready(function () {
 			//TODO: Function on failures.
 		);
 
-	/***********************
-	 * Resume button
-	 *
-	 *@params: null
-	 *
-	 * Button linking to resume page.
-	 ************************/
-
-	//When button is clicked go to resume page.
-	$('#infoButton #resume').click(function () {
-		window.location.href = "/resume/" + id;
-	});
-
-	/************************
-	 * Suggested friend buttons
-	 *
-	 *@params: null
-	 *
-	 * Behaviour of suggested friend box when a button is clicked.
-	 *
-	 *COMMENTS: Should be moved to something outside here so there is no repeated code.
-	 ************************/
-
-	//When Previous button is clicked move backwards through list of suggested friends.
-	$('#suggPrev').click(function () {
-		//TODO -- Implementation when integration is done
-
-
-	});
-
-	//When Next button is clicked move forwards through list of suggested friends.
-	$('#suggNext').click(function () {
-		//TODO -- Implementation when integration is done
-
-
-	});
-
 	//TODO: Potentially move to it's own file to be accessed by every page that needs it.
 	/*******************
 	 * Load group info
@@ -259,7 +222,8 @@ $(document).ready(function () {
 			console.log(response);
             response.data.created = new Date(response.data.created).toLocaleDateString();
 
-            $.get('/api/user/' + response.data.creatorid).done(function (res) {
+            $.get('/api/user/' + response.data.creatorid)
+			.done(function (res) {
                 response.data.fname = res.data.fname;
                 response.data.lname = res.data.lname;
                 			
@@ -273,15 +237,4 @@ $(document).ready(function () {
 		.fail(
 			//TODO: Function on failures.
 		)
-	.done(function (response) {
-		
-		$.get("/temps/groupInfo.hjs", function (info) {
-			var template = Hogan.compile(info);
-			var output = template.render(response.data);
-			$('#infoContainer').append(output);
-		});
-	})
-	.fail(
-		//TODO: Function on failures.
-	);
 });

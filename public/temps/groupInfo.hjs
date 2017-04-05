@@ -1,29 +1,14 @@
 <div class="info" id="infoPic"><img src="/content/image/group/{{_id}}"></div>
-			<div class="info" id="infoText">
-				<div class="info" id="name"> {{name}} </div>
-				<div class="info" id="created"> Date Created: {{created}} </div>
-				<div class="info" id="owner"> Created By: <a href="/profile#{{ownerid}}"> {{fname}} {{lname}}</a> </div>
-				<div class="info" id="edit"> <input type="button" value="Edit Group"> </div>
-			</div>
-			<div class="info" id="infoButton">
-				<input type="button" value="Ask to Join">
-				<input type="button" value="Send Message">
-				<input type="button" value="Members">
-				<input type="button" value="Events">
-			</div>
-<div class="info" id="infoPic">
-	<img src="/content/image/group/{{_id}}">
-</div>
-<div class="info" id="infoText">
+	<div class="info" id="infoText">
 	<div class="info" id="name"> {{name}} </div>
-	<div class="info" id="created"> {{created}} </div>
-	<div class="info" id="owner"> <a href="/profile#{{ownerid}}"> {{ownerid}} </a> </div>
+	<div class="info" id="created"> Date Created: {{created}} </div>
+	<div class="info" id="owner"> Created By: <a href="/profile#{{ownerid}}"> {{fname}} {{lname}}</a> </div>
 	<div class="info" id="edit"> <input type="button" value="Edit Group"> </div>
 </div>
 <div class="info" id="infoButton">
-	<button id="grJoin"> Ask to Join </button>
-	<button id="grMembers"> Members </button>
-	<button id="grEvents"> Events </button>
+	<input type="button" id="grJoin" value="Ask to Join">
+	<input type="button" id="grMembers" value="Members">
+	<input type="button" id="grEvents" value="Events">
 </div>
 
 			<script type="text/javascript">
