@@ -142,10 +142,10 @@ $(document).ready(function () {
 							$("#clearPost").click();
 						})
 				} else {
+                    location.reload();
 					//Clear the fields
 					$("#clearPost").click()
 				}
-                location.reload();
 			})
 			.fail();
 
