@@ -6,10 +6,9 @@
 	<div class="info" id="edit"> <input type="button" value="Edit Group"> </div>
 </div>
 <div class="info" id="infoButton">
-	<input type="button" value="Ask to Join">
-	<input type="button" value="Send Message">
-	<input type="button" value="Members">
-	<input type="button" value="Events">
+	<input type="button" id="grJoin" value="Ask to Join">
+	<input type="button" id="grMembers" value="Members">
+	<input type="button" id="grEvents" value="Events">
 </div>
 
 			<script type="text/javascript">

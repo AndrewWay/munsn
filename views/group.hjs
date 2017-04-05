@@ -184,15 +184,14 @@
 	</div>
 	<div class="sidebars" id="section-right">
 		<div class= "content-1">
-			<div class="userLists" id="groupList">
-				<ul id="resumeList">
-					<!-- TODO: Link to old uploads on server side if possible-->
-					<h5> {{GROUP_LIST}} Text Text </h5>
-					<li><a href="/group"> Links back here </a></li>
-					<li><a href="#"> TEST2 </a></li>
-					<li><a href="#"> TEST3 </a></li>
-				</ul>
+			<h5> Suggested Friends </h5>
+				<div id="suggFriend">
+					<div id="suggList">
+
+					</div>
+					<div id="suggButt"><button id="suggPrev" value="PREV"><span> PREV </span></button><button id="suggNext" value="NEXT"><span> NEXT </span></button></div>
 			</div>
+		</div>
 		<div class ="content-2">
 			<div class="userLists" id="groupList">
 				<ul id="resumeList">
