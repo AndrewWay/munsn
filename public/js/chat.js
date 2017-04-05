@@ -8,7 +8,7 @@ $(function () {
         currentRoom = result;
 	});
 
-    $('#sendMessage').click(function() {
+    window.parent.$('#sendMessage').click(function() {
         console.log("I PRESSED SHIT");
         window.parent.$('#chatButton').hide();
         window.parent.$('#chat').animate({
