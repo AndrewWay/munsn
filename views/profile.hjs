@@ -197,8 +197,8 @@
 		</div>
 	</div>
 	</div>
+	<button id="chatButton"> CHAT </button>
 	<div id="chat">
-		<button id="chatButton"> CHAT </button>
 		<div id="chatTop"> CHAT </div>
 		<iframe src="/chat" id="chatBox" name="chat"></iframe>
 	</div>
