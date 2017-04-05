@@ -1,1 +1,1 @@
-<div class="searchItem"> <a href="/{{title}}#{{_id}}">{{name}}{{fname}} {{lname}}</a> </div>
+<div class="searchItem"><img src="{{image}}" height="50px" width="50px"><a href="/{{title}}#{{_id}}">{{name}}{{fname}} {{lname}}</a> </div>
