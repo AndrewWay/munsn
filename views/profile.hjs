@@ -12,7 +12,7 @@
 	<script src="/scripts/jquery.min.js"></script>
 	<script src="/scripts/jquery-ui.js"></script>
 	<script src="/scripts/socket.io.js"></script>
-	<script src="/scripts/jquery-1.11.1"></script>
+	<script src="/scripts/jquery-1.11.1.js"></script>
 	<script src="/scripts/jquery.datetimepicker.full.min.js"></script>
 	<script src="/scripts/hogan-3.0.1.js"></script>
 	<script src="/js/rrule.js"></script>
