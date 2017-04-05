@@ -25,14 +25,8 @@ nsChat.on('connection', function (socket) {
                         status: 'fail'
                     });
                 } else {
-                    //Set random room
-                    var room = Math.floor((Math.random() * 10) + 1);
-                    //Print to console and chat room
-                    console.log("[CHAT][DEBUG?]", result);
-                    console.log("[CHAT][ROOM " + room + "][" + result.value._id + "]", "'Connected'->'{socketid:'" + result.value.socketid + "'}'");
-                    socket.join(room);
-                    nsChat.in(room).emit('chat message', "[ROOM " + room + "] " + result.value._id + " Connected!");
-                    callback(room);
+                    console.log("[" + result.value._id + "]", "'Connected'->'{socketid:'" + result.value.socketid + "'}'");
+                    callback(null);
                 }
             });
         }
@@ -61,9 +55,10 @@ nsChat.on('connection', function (socket) {
                 console.log("[Socket] FindUid->Result", JSON.stringify(recieverResult));
                 //Get the senders user id
                 DB.Socket.findSid(socket.id, function (sidError, senderResult) {
-                    nsChat.to(recieverResult.socketid).emit('chat message', "[" + senderResult._id + "] " + msg);
-                    nsChat.to(senderResult.socketid).emit('chat message', "[" + senderResult._id + "] " + msg);
-                    DB.Socket.saveMessage(senderResult._id, recieverResult._id, {user: senderResult._id, message: msg, date: new Date()}, function(err, saveResult) {
+                    var date = new Date();
+                    nsChat.to(recieverResult.socketid).emit('chat message', "[" + date.toLocaleString() + "][" + senderResult._id + "] " + msg);
+                    nsChat.to(senderResult.socketid).emit('chat message', "[" + date.toLocaleString() + "][" + senderResult._id + "] " + msg);
+                    DB.Socket.saveMessage(senderResult._id, recieverResult._id, {user: senderResult._id, message: msg, date: date}, function(err, saveResult) {
                         //TODO: Write stuff here
                     });
                 });
