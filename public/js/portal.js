@@ -1,5 +1,3 @@
-
-
 var postBoxMax = 140;
 var imgBool = false;
 
@@ -137,12 +135,12 @@ $(document).ready(function () {
 
 						}).fail()
 						.always(function () {
-                            location.reload();
+							location.reload();
 							//Clear the fields
 							$("#clearPost").click();
 						})
 				} else {
-                    location.reload();
+					location.reload();
 					//Clear the fields
 					$("#clearPost").click()
 				}
@@ -181,14 +179,13 @@ $(document).ready(function () {
 
 				postProm.push($.ajax({
 					type: 'GET',
-                    async: false,
 					url: '/api/user/' + v.uid
 				}).done(function (res) {
 					postInfo.fname = res.data.fname;
 					postInfo.lname = res.data.lname;
 				}))
 
-				postInfo.image = ((postInfo.image=="true") ? 'visibility:visible' : 'visibility:hidden');
+				postInfo.image = postInfo.image ? 'visibility:visible' : 'visibility:hidden';
 
 				postData.list.push(postInfo);
 
@@ -197,7 +194,7 @@ $(document).ready(function () {
 			});
 
 			//Wait untila ll data is loaded for the posts.
-			$.when.apply($,postProm).then(function() {
+			$.when.apply($, postProm).then(function () {
 				postData.list.reverse();
 				$.get("/temps/postTemp.hjs", function (post) {
 					var template = Hogan.compile("{{#list}}" + post + "{{/list}}");
