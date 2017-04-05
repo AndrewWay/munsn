@@ -153,8 +153,8 @@
 			
 			
 			<div class="info" id="infoButton">
-				<button id="addFriend">Add Friend</button>
-				<button id="sendMessage">Send Message</button>
+				<button id="addFriend" style="display: none;">Add Friend</button>
+				<button id="sendMessage" style="display: none;">Send Message</button>
 				<button id="prFriends">Friends</button>
 				<button id="prGroups">Groups</button>
 				<button id="prCourses">Courses</button>

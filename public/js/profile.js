@@ -256,6 +256,23 @@ $(document).ready(function () {
 		})
 	});
 
+	/*****************
+	 * Show buttons
+	 * 
+	 * @params: uid
+	 * 
+	 * Show appropriate buttons based on user id
+	 ******************/
+
+	//If uid and id don't match, show add friend and send message buttons
+
+	//Wait for uid to be grabbed first
+	$.when.apply($, uidProm).then(function() {
+		if(!(uid==id)){
+			$('#infoButton button').show();
+		}
+	});
+
 	/*******************
 	 * Load profile info
 	 *
