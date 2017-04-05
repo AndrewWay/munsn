@@ -34,13 +34,13 @@ $(document).ready(function () {
 	 **********************/
 
 	//Initialize end time picker
-	$('#endTime').datetimepicker({
+	$('#eTime').datetimepicker({
 		startDate: '0',
 		minTime: new Date()
 	});
 
 	//Intialize start time
-	$('#startTime').datetimepicker({
+	$('#sTime').datetimepicker({
 		startDate: '0',
 		minTime: new Date(),
 	});
