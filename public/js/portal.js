@@ -137,6 +137,7 @@ $(document).ready(function () {
 
 						}).fail()
 						.always(function () {
+                            location.reload();
 							//Clear the fields
 							$("#clearPost").click();
 						})
@@ -144,9 +145,9 @@ $(document).ready(function () {
 					//Clear the fields
 					$("#clearPost").click()
 				}
+                location.reload();
 			})
-			.fail()
-            .always(function() {location.reload()});
+			.fail();
 
 
 	});
