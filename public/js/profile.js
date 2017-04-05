@@ -183,6 +183,8 @@ $(document).ready(function () {
 			return i<20;
 		 });
 
+		console.log(data);
+
 		 $.get("/temps/postTemp.hjs", function(post) {
                 data.list.reverse();
 				var template = Hogan.compile("{{#list}}" + post +"{{/list}}");
@@ -203,7 +205,6 @@ $(document).ready(function () {
 	 * Functions for loading relevant profile info
 	 ********************/
 
-	 //Get and display a number of posts.
 	 //TODO: Get and display posts based on their type (poll, photo, text)
 	 $.get('/api/user/'+id)
 	 .done( function(response) {
