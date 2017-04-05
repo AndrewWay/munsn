@@ -480,6 +480,11 @@ body, html {
 	border: 2px solid black;
 }
 
+#friendPan img {
+	width: 20px;
+	height: 20px;
+}
+
 #friendPan :not(h3):not(h5):hover {
     	background-color: #7f1734;
 }
