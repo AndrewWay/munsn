@@ -112,7 +112,6 @@ module.exports = function (DBPosts, collectionPosts) {
 
 	//Get posts per post id
 	DBPosts.find = function (req, res, callback) {
-		console.log("[DBPosts] Find", "'" + JSON.stringify(req.query) + "'");
 		var query = req.query;
 		if (query.pid) {
 			query._id = new ObjectID(query.pid);
@@ -120,6 +119,7 @@ module.exports = function (DBPosts, collectionPosts) {
 		if (query.type === "group") {
 			query.targetid = new ObjectID(query.targetid);
 		}
+		console.log("[DBPosts] Find", "'" + JSON.stringify(query) + "'");
 		collectionPosts.find(query).toArray(function (err, result) {
 			if (err) {
 				console.error("[DBPosts] Find", err.message);
