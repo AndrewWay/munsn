@@ -195,7 +195,7 @@ $(document).ready(function () {
 				return i < 20;
 			});
 
-			//Wait untila ll data is loaded for the posts.
+			//Wait until all data is loaded for the posts.
 			$.when.apply($, postProm).then(function () {
 				postData.list.reverse();
 				$.get("/temps/postTemp.hjs", function (post) {
@@ -208,4 +208,7 @@ $(document).ready(function () {
 		.fail(
 			//TODO: Function on failures.
 		);
+
+	
+
 });
