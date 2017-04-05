@@ -1,3 +1,6 @@
+var suggOutput;
+var suggIter=0;
+
 /******************
  * Get uid for future use
  *
@@ -180,9 +183,12 @@ $(document).ready(function () {
 			overflow: 'auto'
 		});
 
+		//Empty all inputs
+		$('#coursePop *').val('');
+		$('#coursePop *').attr('checked',false)
+
 		$('#coursePop').hide();
 	});
-
 
 	//Create new group
 	$('#gCreate').click(function () {
@@ -200,9 +206,15 @@ $(document).ready(function () {
 			})
 	});
 
+	//Details for the course.
+	//days = [RRule.MO, RRule.TU, RRule.WE, RRule.TH, RRule.FR, RRule.SA, RRule.SU];
+	days = ["Monday", "Tueday", "Wednesday", "Thursday", "Friday"];
+	semStart = { "Winter" : "Jan. 1", "Spring" : "May. 1", "Summer MI" : "May 1", "Fall" : "Sept. 1"}
+	semEnd = { "Winter" : "Apr. 30", "Spring" : "Aug. 31", "Summer MI" : "June 30", "Fall" : "Dec. 31"}
+
 	//Add new course
 	$('#cAdd').click(function () {
-		$.post('/api/course/find', {
+		$.get('/api/course/', {
 				name: $('#coursePop input[name="cName"]').val(),
 				label: $('#coursePop input[name="cLabel"]').val(),
 				location: $('#coursePop input[name="cLabel"]').val(),
@@ -210,11 +222,54 @@ $(document).ready(function () {
 				year: $('#coursePop input[name="cYear"]').val()
 			})
 			.done(function (response) {
+				//If it exists: Add user to course. Else: Create course.
+				if(!(response.data.length==0)) {
+					//TODO: Add user to course.
 
+					//Empty all inputs
+					$('#coursePop *').val('');
+					$('#coursePop *').attr('checked',false)
+
+					$('#coursePop').hide();
+				} else {
+					var cDays = [];
+
+					$('.cDays:checked').each(function(i,v){
+						cDays.push(days[this.value]);
+					});
+
+					//If course doesn't already exist, create it.
+					$.post('/api/course/',{
+						label: $('input[name="cDepartment"]').val() + " " + $('input[name="cNumber"]').val(),
+ 						name: $('input[name="cName"]').val(),
+ 						Description: "TODO: Add descriptions",
+ 						semester: $('#semester').val(),
+ 						department: $('input[name="cDepartment"]').val(),
+ 						location: $('input[name="cRoom"]').val(),
+ 						year: $('input[name="cYear"]').val(),
+ 						cid: uid,
+ 						days: cDays,
+ 						timeStart: semStart[$('#semester').val()],
+ 						timeEnd: semEnd[$('#semester').val()]
+					})
+					.done(function(response) {
+						console.log(response);
+
+						//Empty all inputs
+						$('#coursePop *').val('');
+						$('#coursePop *').attr('checked',false)
+						$('#coursePop').hide();
+					})
+					.fail(function(response) {
+						console.log(response);
+					})
+				}
 			})
 			.fail(function (response) {
-
+				console.log(response)
 			})
+
+
 
 	});
 
@@ -257,6 +312,27 @@ $(document).ready(function () {
 			});
 		}
 	});
+
+	/***********************
+	 * Timepicker for course add
+	 * 
+	 * @params: null
+	 * 
+	 * Creates timepicker for course times
+	 ************************/
+
+	//initialize end time
+	$('#endTime').datetimepicker({
+ 		 datepicker: false,
+ 		 format: 'H:i'
+	 });
+
+	 //Intialize start time
+	 $('#startTime').datetimepicker({
+		 datepicker: false,
+		 format: 'H:i'
+	 });
+
 
 	//TODO: Any other elements of left sidebar?
 
@@ -372,13 +448,14 @@ $(document).ready(function () {
 		$('#groupPan').html('<img src="/img/ring-alt.gif">');
 		$('#groupPan').show();
 
-		$.get('/api/groups/user/'+uid)
-		.done(function(response){
-			//Remove loading gif. TODO: Check if this is better placed somewhere else.
-			$('#groupPan').html('');
 
-			//Setup variable to hold data for templates
-				var data = {
+			$.get('/api/groups/user/'+uid)
+			.done(function(response){
+				//Remove loading gif. TODO: Check if this is better placed somewhere else.
+				$('#groupPan').html('');
+
+				//Setup variable to hold data for templates
+					var data = {
 					"list": []
 				};
 
@@ -403,10 +480,10 @@ $(document).ready(function () {
 						});
 					} 
 					
-				} else {
-					//Display no friends
-					$('#friendPan').append("<h5> No groups to display =( </h5>");
-				}
+			} else {
+				//Display no groups
+				$('#groupPan').append("<h5> No groups to display =( </h5>");
+			}
 		})
 		.fail()
 	});
@@ -416,15 +493,119 @@ $(document).ready(function () {
 		//Use a timeout to wait for focus to transfer to other children elements
 		window.setTimeout(function () {
 			//If there is no text in textarea, and a non child element of friendPan was clicked: clear.
-			if ($('#friendPan *:focus').length == 0) {
+			if ($('.menu *:focus').length == 0) {
 				$('#friendPan').hide();
 				$('#friendPan').html('');
+				$('#groupPan').hide();
+				$('#groupPan').html('');
 			}
 		}, 50);
 
 	});
 
+	//TODO: Move to it's own file to be called by all pages which need it.
+	/*************************
+	 * Suggested friends sidebar
+	 *
+	 * @params: null
+	 *
+	 * Functionality to grab and navigate suggested friends list.
+	 *************************/
 
+	 //Wait until uid is ready
+	$.when.apply($, uidProm).then(function(){
+		$.get('/api/friend/suggest/'+uid)
+		//TODO: Add done and fail callbacks
+		.done(function (response) {
+
+			//Setup variable to hold data for templates
+			var data = {
+				"list": []
+			};
+			
+			//Make array to hold promises.
+			var suggProm = [];
+
+			$.each(response.data, function(i,v) {
+				//Push gets to array so next function waits.
+				suggProm.push($.get('/api/user/'+v)
+				.done(function(response){
+					var x=$.extend({},response.data,{"title" : "profile"})
+					data.list.push(x);
+				})
+				.fail());
+			});
+
+			$.when.apply($, suggProm).then(function(){	
+				if(!(data.list.length==0)) {
+					$.get("/temps/suggTemp.hjs", function (result) {
+						var template = Hogan.compile("{{#list}}" + result + "{{/list}}");
+						suggOutput = template.render(data);
+						suggOutput = suggOutput.split('<!-- Split Here -->').slice(0,-1);
+						$('#section-right .content-1 #suggList').append(suggOutput[suggIter]);
+					});
+				} 
+			});
+		})
+		.fail(function (response) {});
+	})
+
+	//When Previous button is clicked move backwards through list of suggested friends.
+	$('#suggPrev').click(function () {
+		//If suggIter is 0: Move to last element. Else: subtract 1;
+		if(suggIter > 0){
+			suggIter= suggIter-1;
+		} else {
+			suggIter = suggOutput.length-1;
+		}
+
+		//Render new suggested friend
+		$('#section-right .content-1 #suggList').html('');
+		$('#section-right .content-1 #suggList').append(suggOutput[suggIter]);
+
+	});
+
+	//When Next button is clicked move forwards through list of suggested friends.
+	$('#suggNext').click(function () {
+		//If suggIter is max: Move to first element. Else: add 1
+		if(suggIter < suggOutput.length-1){
+			suggIter= suggIter+1;
+		} else {
+			suggIter = 0;
+		}
+
+		//Render new suggested friend
+		$('#section-right .content-1 #suggList').html('');
+		$('#section-right .content-1 #suggList').append(suggOutput[suggIter]);
+
+
+	});
+
+
+
+
+	//TODO: Move this to blank.js so it can be accessed on any page.
+	/*************************
+	 * Chat popout
+	 *
+	 *@params: null
+	 *
+	 * Opens a chat box
+	 *************************/
+
+	$('#chatButton').click(function () {
+		$('#chatButton').hide();
+		$('#chat').animate({
+			height: "300px"
+		}, 200);
+	});
+
+	$('#chatTop').click(function () {
+		$('#chatButton').show();
+		$('#chat').animate({
+			height: "0px"
+		}, 200);
+	});
 	
 
 });

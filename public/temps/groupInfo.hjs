@@ -11,3 +11,33 @@
 				<input type="button" value="Members">
 				<input type="button" value="Events">
 			</div>
+<div class="info" id="infoPic">
+	<img src="/content/image/group/{{_id}}">
+</div>
+<div class="info" id="infoText">
+	<div class="info" id="name"> {{name}} </div>
+	<div class="info" id="created"> {{created}} </div>
+	<div class="info" id="owner"> <a href="/profile#{{ownerid}}"> {{ownerid}} </a> </div>
+	<div class="info" id="edit"> <input type="button" value="Edit Group"> </div>
+</div>
+<div class="info" id="infoButton">
+	<button id="grJoin"> Ask to Join </button>
+	<button id="grMembers"> Members </button>
+	<button id="grEvents"> Events </button>
+</div>
+
+			<script type="text/javascript">
+
+				$('#infoButton #grJoin').click(function() {
+					$.post('/api/groups/request', {
+						uid: uid,
+						gid: "{{_id}}"
+					})
+					.done( function(response) {
+						console.log(response);
+					})
+					.fail( function(response) {
+						console.log(response);
+					})
+				});
+			</script>

@@ -6,11 +6,15 @@
 	<link href="/stylesheets/blank.css" rel="stylesheet"/>
 	<link href="/stylesheets/post.css" rel="stylesheet"/>
 	<link href="/stylesheets/portal.css" rel="stylesheet"/>
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.4/build/jquery.datetimepicker.min.css" rel="stylesheet"/>
 
 	<script src="/scripts/jquery.min.js"></script>
 	<script src="/scripts/jquery-ui.js"></script>
 	<script src="/scripts/socket.io.js"></script>
+	<script src="/scripts/jquery.datetimepicker.full.min.js"></script>
 	<script src="/scripts/hogan-3.0.1.js"></script>
+	<script src="/js/rrule.js"></script>
+	<script src="/js/nlp.js"></script>
 	<script src="/js/blank.js"></script>
 	<script src="/js/portal.js"></script>
 </head>
@@ -49,24 +53,25 @@
 			<a href="javascript:void(0)"><img id="not" src="/img/notification-red.png"></a>
 			<a href="/api/logout"><img id="log" src="/img/logout.png"></a>
 			<a href="/settings"><img id="cog" src="/img/settings.png"></a>
+
+			<div id="not-center">
+				<a href="#"><div id="note">
+					{{NOT_INFO}}
+				</div></a>
+				<a href="#"><div id="note">
+					{{NOT_INFO}}
+				</div></a>
+				<a href="#"><div id="note">
+					{{NOT_INFO}}
+				</div></a>
+				<a href="#"><div id="note">
+					{{NOT_INFO}}
+				</div></a>
+			</div>
 		</div>
+		
 	</div>
 	</nav>
-
-	<div id="not-center">
-		<a href="#"><div id="note">
-			{{NOT_INFO}}
-		</div></a>
-		<a href="#"><div id="note">
-			{{NOT_INFO}}
-		</div></a>
-		<a href="#"><div id="note">
-			{{NOT_INFO}}
-		</div></a>
-		<a href="#"><div id="note">
-			{{NOT_INFO}}
-		</div></a>
-	</div>
 
 	<div class="container">
 
@@ -82,15 +87,28 @@
 	<div class="popup" id="coursePop">
 			Add a new course:
 			<input class="popField" type="text" name="cName" placeholder="Course Name">
-			<input class="popField" type="text" name="cLabel" placeholder="Course Label"><br>
+			<input class="popField" type="text" name="cDepartment" placeholder="Department" maxlength="4" style="width: 35%;">
+			<input class="popField" type="text" name="cNumber" placeholder="Course Number" maxlength="4" style="width: 35%;"><br>
 			<input class="popField" type="text" name="cRoom" placeholder="Course Room"><br>
 			<select id="semester">
+				<option value="" disabled selected>Semester</option>
 				<option value="Fall">Fall</option>
 				<option value="Winter">Winter</option>
 				<option value="Spring">Spring</option>
 				<option value="Summer MI">Summer MI</option>
 			</select>
-			<input class="popField" type="text" name="cYear" placeholder="Year"><br>
+			<input class="popField" type="text" name="cYear" placeholder="Year" style="width: 40%;"><br>
+			Days: <div class='rrule' id='weekdays'>
+					<label><input type="checkbox" class="cDays" name="byweekday" value="0">Mon</label>
+                	<label><input type="checkbox" class="cDays"  name="byweekday" value="1">Tue</label>
+                	<label><input type="checkbox" class="cDays"  name="byweekday" value="2">Wed</label>
+                	<label><input type="checkbox" class="cDays"  name="byweekday" value="3">Thu</label>
+                	<label><input type="checkbox" class="cDays"  name="byweekday" value="4">Fri</label>
+			</div>
+			<div id="times">
+			 	<input id="startTime" type="text" placeholder="Start Time"/>
+				<input id="endTime" type="text" placeholder="End Time"/>
+			</div>
 
 			<div id="cButton">
 				<button class="popButton" id="cAdd"> ADD </button>
