@@ -1,4 +1,4 @@
-<div class="commTemp">
+<div class="commTemp" id="{{_id}}">
 	<div class="commInfo">
 		<div class="commPic">
 			<img src="/content/image/profile/{{uid}}">
