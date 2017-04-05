@@ -16,7 +16,7 @@ $(function () {
                 height: "300px"
             }, 200);
             $.get('/api/session', function(sess) {
-                friendId = $(window.parent.location).attr('href').substring($(window.parent.location).attr('href').indexOf("/profile#") + "/profile#".length);
+                friendId = $(window.parent.location).attr('href').substring($(window.parent.location).attr('href').indexOf("/profile/#") + "/profile/#".length);
                 console.log("friend: " + friendId);
                 $.get('/api/messages', {uid1: sess.user._id, uid2: friendId}, function(data) {
                     console.log(JSON.stringify(data));
