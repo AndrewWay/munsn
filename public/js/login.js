@@ -122,7 +122,7 @@ $(document).ready(function () {
 						email: $('#regFields input[name="email"]').val(),
 						pass: $('#regFields input[name="pass"]').val(),
 						dob: new Date(dob[2], dob[0] - 1, dob[1]),
-						gender: $('#regFields input[name="gender"]').val(),
+						gender: $('#regFields input[name="gender"]:checked').val(),
 						address: $('#regFields input[name="addr"]').val()
 					},
 					function () {

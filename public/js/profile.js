@@ -268,8 +268,12 @@ $(document).ready(function () {
 
 	//Wait for uid to be grabbed first
 	$.when.apply($, uidProm).then(function() {
+		//If not your profile: show otherPr buttons. Else: show yourPr buttons.
 		if(!(uid==id)){
-			$('#infoButton button').show();
+			$('#infoButton .otherPr').show();
+		}
+		else {
+			$('#infoButton .yourPr').show();
 		}
 	});
 

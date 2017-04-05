@@ -153,8 +153,10 @@
 			
 			
 			<div class="info" id="infoButton">
-				<button id="addFriend" style="display: none;">Add Friend</button>
-				<button id="sendMessage" style="display: none;">Send Message</button>
+				<button class="otherPr" id="addFriend" style="display: none;">Add Friend</button>
+				<button class="otherPr" id="sendMessage" style="display: none;">Send Message</button>
+				<button class="yourPr" id="prEdit" style="display: none;">Edit Profile</button>
+				<button class="yourPr" id="prDelete" style="display: none;">Delete Profile</button>
 				<button id="prFriends">Friends</button>
 				<button id="prGroups">Groups</button>
 				<button id="prCourses">Courses</button>
