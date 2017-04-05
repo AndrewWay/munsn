@@ -20,14 +20,14 @@
 				<div class="postComm">
 				</div>
 			<div class="commBox">
-				<textarea id="commText" placeholder="Make a comment!"></textarea><button id="commSubmit">Submit</button>
-				<div id="commDisp">
-					<img id="commImgDisp" src="#" style="display: none;">
+				<textarea class="commText" placeholder="Make a comment!"></textarea><button class="commSubmit">Submit</button>
+				<div class="commDisp">
+					<img class="commImgDisp" src="#" style="display: none;">
 				</div>
 
 				<div class="commInfo" id="commOption">
-					<button class="commOption" id="photoComm">Upload Photo</button>
-					<button class="commOption" id="clearComm">Clear Comment</button>
+					<button class="photoComm">Upload Photo</button>
+					<button class="clearComm">Clear Comment</button>
 
 					<input type="file" id="newCommImg" style="display: none;" accept="image/*" />
 				</div>
