@@ -36,11 +36,11 @@ $(document).ready(function () {
               $("#resumeProgress").progressbar({
                 value: percentComplete
               });
-
               if (percentComplete === 100) {
-
+                window.setTimeout(function () {
+                  location.reload();
+                }, 1750);
               }
-
             }
           }, false);
           return xhr;
@@ -52,12 +52,8 @@ $(document).ready(function () {
         contentType: false,
         processData: false,
       })
-      .done(function () {
-        window.location.reload();
-      })
-      .fail(function () {
-        window.location.reload();
-      })
+      .done(function () {})
+      .fail(function () {})
 
 
   });
