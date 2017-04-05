@@ -117,9 +117,9 @@ module.exports = function (DBPosts, collectionPosts) {
 		if (query.pid) {
 			query._id = new ObjectID(query.pid);
 		}
-        if (query.type == "group") {
-            query.targetid = new ObjectID(query.targetid);
-        }
+		if (query.type === "group") {
+			query.targetid = new ObjectID(query.targetid);
+		}
 		collectionPosts.find(query).toArray(function (err, result) {
 			if (err) {
 				console.error("[DBPosts] Find", err.message);
