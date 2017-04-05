@@ -159,8 +159,9 @@ $(document).ready(function () {
 
 	 //Get and display a number of posts.
 	 //TODO: Get and display posts based on their type (poll, photo, text)
-	 $.get('/api/post/'+id, {
-		 visibility: 'public'
+	 $.get('/api/post', {
+		 visibility: 'public',
+		 target: id
 	 })
 	 .done( function(response) {
 		 var data={ "list":[]};
