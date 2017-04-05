@@ -275,7 +275,8 @@ body, html {
 }
 
 #suggList img {
-	width: 100px;
+	height: 50px;
+	width: auto;
 	display: block;
 	margin: auto;
 	
