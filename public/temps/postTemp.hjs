@@ -18,8 +18,9 @@
 
 				</div>
 
-				<div class="commBox">
-						<textarea id="commText" placeholder="Make a post!"></textarea><button id="postSubmit">Submit</button>
+			<div class="commBox">
+				<textarea id="commText" placeholder="Make a comment!"></textarea><button id="commSubmit">Submit</button>
+				
 
 				<div id="commDisp">
 					<img id="commImgDisp" src="#" style="display: none;">
@@ -27,144 +28,9 @@
 
 				<div class="commInfo" id="commOption">
 					<button class="commOption" id="photoComm">Upload Photo</button>
-					<button class="commOption" id="clearComm">Clear Post</button>
+					<button class="commOption" id="clearComm">Clear Comment</button>
 
 					<input type="file" id="newCommImg" style="display: none;" accept="image/*" />
 				</div>
+			</div>
 </div>
-
-<script type="text/javascript">
-/*********************
-	 * Comment box expansion
-	 * 
-	 * @params: null
-	 * 
-	 *  Functions for expanding and shrinking the comment textarea depending on focus.
-	 **********************/
-
-	//Expand textarea and div on focus
-	$("#commBox *").focus(function () {
-
-		$("#commBox").animate({
-			height: commBoxMax + "px"
-		}, 200);
-		$("#commBox #commText").animate({
-			height: "70px"
-		}, 200);
-
-
-	});
-
-	//Shrink textarea and div when focus is lost and there is no text inside.
-	$("#commBox *").focusout(function () {
-
-		//Use a timeout to wait for focus to transfer to other children elements
-		window.setTimeout(function () {
-			//If there is no text in textarea, and a non child element of commBox was clicked: shrink.
-			if (!$.trim($("#commBox *").val()) && $('#commBox *:focus').length == 0) {
-				$("#commBox").animate({
-					height: "30px"
-				}, 200);
-				$("#commBox #commText").animate({
-					height: "30px"
-				}, 200);
-			}
-		}, 50);
-
-	});
-
-	/*******************
-	 * Make comments
-	 * 
-	 * @params: null
-	 * 
-	 * Functions for making comments on a post
-	 ********************/
-
-	//Adding a picture to a post
-	$('#photoComm').click(function () {
-		$('#newCommImg').click();
-	});
-
-	//Update the input file field.
-	$("#newCommImg").change(function () {
-		commBoxMax = commBoxMax + 60;
-		commImgBool = true;
-
-		$("#commImgDisp").attr("src", window.URL.createObjectURL(this.files[0]));
-
-		$("#commImgDisp").css({
-			display: 'block'
-		});
-
-		$("#commBox").animate({
-			height: commBoxMax + "px"
-		}, 200);
-	});
-
-	//Clearing a post
-	$('#clearComm').click(function () {
-		//TODO: Add warning: Check if sure.
-		commBoxMax = 140;
-		commImgBool = false;
-
-		$('#commBox *').val('');
-
-		$("#commImgDisp").attr("src", "#");
-		$("#commImgDisp").css({
-			display: 'none'
-		});
-
-		$("#commBox").animate({
-			height: commBoxMax + "px"
-		}, 200);
-	});
-
-$('#commSubmit').click(function () {
-		//Send API call
-		$.post("/api/post/timeline", {
-				pid: "{{_id}}",
-				authorid: uid,
-				data: {
-					image: commImgBool,
-					text: $('#commBox #commText').val(),
-					uid: uid
-				}
-			})
-			.done(function (response) {
-				var cid = response.data._id;
-
-
-				//If image is supplied. Store that image.
-				if (commImgBool) {
-					var picForm = new FormData();
-					picForm.append("image", $("#newCommImg")[0].files[0]);
-
-					$.ajax({
-							url: '/content/posts/' + pid + '/' + cid,
-							type: 'post',
-							data: picForm,
-							cache: false,
-							contentType: false,
-							processData: false
-
-						}).done(function (response) {
-							console.log("image uploaded");
-
-						}).fail()
-						.always(function () {
-							location.reload();
-							//Clear the fields
-							$("#clearComm").click();
-						})
-				} else {
-					location.reload();
-					//Clear the fields
-					$("#clearComm").click()
-				}
-			})
-			.fail();
-
-
-
-</script>
