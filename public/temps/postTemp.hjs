@@ -1,6 +1,6 @@
 <!-- Basic Post Structure -->
 
-<div class="postTemp" id={{_id}}>
+<div class="postTemp" id="{{_id}}">
 				<div class="postInfo">
 					<div class="postPic">
 						<img src='/content/image/profile/{{uid}}'>
@@ -8,6 +8,10 @@
 					<div class="postName">
 						<a href="/profile#{{uid}}">{{fname}} {{lname}}</a> <br>
 						<span>{{date}}</span>
+					</div>
+					<div id="postOpt" style="display: none;">
+						<button class="postOpt" id="postEdit"> Edit </button>
+						<button class="postOpt" id="postDel"> Delete </button>
 					</div>
 				</div>
 				<div class="postCont">
@@ -29,3 +33,21 @@
 				</div>
 			</div>
 </div>
+
+<!--- Scripts for individual posts -->
+<script type="text/javascript">
+
+	/*********************
+	 * Edit and delete buttons
+	 * 
+	 * @params: uid
+	 * 
+	 * Show buttons if the post belongs to current user
+	 **********************/
+
+	 //If post belongs to user, display edit and delete buttons.
+	 if(uid=="{{uid}}") {
+	 	$('#{{_id}} #postOpt').show();
+	 }
+
+</script>

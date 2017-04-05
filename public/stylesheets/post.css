@@ -31,7 +31,7 @@
 .postInfo, .commInfo {
 	position: relative;
 	height: 50px;
-	width: 90%;
+	width: 95%;
 	margin: 5px;
 	display: inline-block;
 }
@@ -61,7 +61,7 @@
 	position: absolute;
 	left: 60px;
 	margin: 2px;
-	width: 200px;
+	width: 80%;
 	display: inline-block;
 }
 
@@ -159,5 +159,21 @@
 	width: 10%;
 	height: 30px;
 	padding:0;
+}
+
+#postOpt{
+	position: relative;
+
+	box-sizing: content-box;
+	display: inline-block;
+
+	top: 0;
+	float: right;
+}
+
+#postOpt button {
+	height: 20px;
+	width: 50px;
+	font-size: 0.5em;
 }
 

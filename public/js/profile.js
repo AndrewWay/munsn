@@ -211,7 +211,7 @@ $(document).ready(function () {
 				});
 				postInfo.image = postInfo.image ? 'visibility:visible' : 'visibility:hidden';
 				data.list.push(postInfo);
-				//Stop at 5 posts. Arbitrary
+				//Stop at 20 posts. Arbitrary
 				return i < 20;
 			});
 
