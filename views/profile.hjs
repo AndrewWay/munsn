@@ -186,12 +186,11 @@
 	<div class="sidebars" id="section-right">
 		<div class= "content-1">
 			<h5> Suggested Friends </h5>
-			<div id="suggFriend">
-				<div id="suggList">
-					<a id="suggLink" href="#"><img src="/img/SEAHAWK_SIL.jpg">
-					<div id="suggName"> {{SUGG_NAME}} </div> </a>
+				<div id="suggFriend">
+					<div id="suggList">
+
+					</div>
 					<div id="suggButt"><button id="suggPrev" value="PREV"><span> PREV </span></button><button id="suggNext" value="NEXT"><span> NEXT </span></button></div>
-				</div>
 			</div>
 		</div>
 		<div class ="content-2">
