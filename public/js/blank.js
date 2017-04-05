@@ -425,6 +425,7 @@ $(document).ready(function () {
 										var x = $.extend({}, response.data, {
 											"title": "profile"
 										})
+										x.image = u.gender ? "/content/image/profile/" + u._id : u.image;
 										data.list.push(x);
 									})
 									.fail());
@@ -485,7 +486,7 @@ $(document).ready(function () {
 						var x = $.extend({}, u, {
 							"title": "group"
 						})
-						u.image = u.creatorid && u.ownerid ? "/content/image/group/" + u._id : u.image;
+						x.image = u.creatorid && u.ownerid ? "/content/image/group/" + u._id : u.image;
 						data.list.push(x);
 					})
 
