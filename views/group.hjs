@@ -205,5 +205,8 @@
 		</div>
 	</div>
 	</div>
+    <div id="chat"> <div id="chatTop"> CHAT </div><iframe src="/chat" id="chatBox" name="chat"></iframe> </div>
+	<button id="chatButton"> CHAT </button>
+	</div>
 </body>
 </html>
