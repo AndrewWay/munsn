@@ -23,10 +23,12 @@
 
 #resumeProgress {
 	position: relative;
-	width: 99%;
+	width: 80%;
 	display: block;
 	left: 0px;
 	margin-top: 1em;
+	margin-left: auto;
+	margin-right: auto;
 }
 
 #canvasContainer div {
