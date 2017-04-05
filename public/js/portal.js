@@ -88,13 +88,13 @@ $(document).ready(function () {
 		postBoxMax = 140;
 		imgBool = false;
 
-		$('#postBox *').val('');
-
+		$("#postBox #text").val('');
+		$("#postProgress").empty();
 		$("#imgDisp").attr("src", "#");
 		$("#imgDisp").css({
 			display: 'none'
 		});
-
+		$('#vis').val('public');
 		$("#postBox").animate({
 			height: postBoxMax + "px"
 		}, 200);
@@ -124,8 +124,31 @@ $(document).ready(function () {
 				if (imgBool) {
 					var picForm = new FormData();
 					picForm.append("image", $("#newPostImg")[0].files[0]);
-
+					$("#postBox").animate({
+						height: (postBoxMax + 50) + "px"
+					}, 200);
 					$.ajax({
+							xhr: function () {
+								var xhr = new window.XMLHttpRequest();
+								xhr.upload.addEventListener("progress", function (evt) {
+									if (evt.lengthComputable) {
+										var percentComplete = evt.loaded / evt.total;
+										percentComplete = parseInt(percentComplete * 100);
+										$("#postProgress").progressbar({
+											value: percentComplete
+										});
+										if (percentComplete === 100) {
+											window.setTimeout(function () {
+												$("#clearPost").click();
+												window.setTimeout(function () {
+													location.reload();
+												}, 1000);
+											}, 1000);
+										}
+									}
+								}, false);
+								return xhr;
+							},
 							url: '/content/posts/' + pid + '/' + pid,
 							type: 'post',
 							data: picForm,
@@ -136,16 +159,15 @@ $(document).ready(function () {
 						}).done(function (response) {
 							console.log("image uploaded");
 
-						}).fail()
-						.always(function () {
-							location.reload();
-							//Clear the fields
+						}).fail(function (err) {
 							$("#clearPost").click();
+							$("#postBox *").focusout(); //<- I dont think this works
+						})
+						.always(function () {
+							//Maybe we don't want to reload the page if something fails?
 						})
 				} else {
-					location.reload();
-					//Clear the fields
-					$("#clearPost").click()
+					//Maybe do something else here instead
 				}
 			})
 			.fail();
@@ -209,6 +231,6 @@ $(document).ready(function () {
 			//TODO: Function on failures.
 		);
 
-	
+
 
 });

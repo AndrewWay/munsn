@@ -36,6 +36,7 @@ $(document).ready(function () {
 		//Use a timeout to wait for focus to transfer to other children elements
 		window.setTimeout(function () {
 			//If there is no text in textarea, and a non child element of postBox was clicked: shrink.
+			var x = $("#postBox *").val();
 			if (!$.trim($("#postBox *").val()) && $('#postBox *:focus').length == 0) {
 				$("#postBox").animate({
 					height: "30px"
@@ -90,13 +91,13 @@ $(document).ready(function () {
 		postBoxMax = 140;
 		imgBool = false;
 
-		$('#postBox *').val('');
-
+		$("#postBox #text").val('');
+		$("#postProgress").empty();
 		$("#imgDisp").attr("src", "#");
 		$("#imgDisp").css({
 			display: 'none'
 		});
-
+		$('#vis').val('public');
 		$("#postBox").animate({
 			height: postBoxMax + "px"
 		}, 200);
@@ -126,7 +127,9 @@ $(document).ready(function () {
 				if (imgBool) {
 					var picForm = new FormData();
 					picForm.append("image", $("#newPostImg")[0].files[0]);
-
+					$("#postBox").animate({
+						height: (postBoxMax + 50) + "px"
+					}, 200);
 					$.ajax({
 							xhr: function () {
 								var xhr = new window.XMLHttpRequest();
@@ -134,11 +137,16 @@ $(document).ready(function () {
 									if (evt.lengthComputable) {
 										var percentComplete = evt.loaded / evt.total;
 										percentComplete = parseInt(percentComplete * 100);
-										$("#resumeProgress").progressbar({
+										$("#postProgress").progressbar({
 											value: percentComplete
 										});
 										if (percentComplete === 100) {
-											location.reload();
+											window.setTimeout(function () {
+												$("#clearPost").click();
+												window.setTimeout(function () {
+													location.reload();
+												}, 1000);
+											}, 1000);
 										}
 									}
 								}, false);
@@ -154,14 +162,15 @@ $(document).ready(function () {
 						}).done(function (response) {
 							console.log("image uploaded");
 
-						}).fail()
-						.always(function () {
-							//Clear the fields
+						}).fail(function (err) {
 							$("#clearPost").click();
+							$("#postBox *").focusout(); //<- I dont think this works
+						})
+						.always(function () {
+							//Maybe we don't want to reload the page if something fails?
 						})
 				} else {
-					//Clear the fields
-					$("#clearPost").click()
+					//Maybe do something else here instead
 				}
 			})
 			.fail();

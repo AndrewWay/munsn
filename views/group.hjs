@@ -6,6 +6,7 @@
 	<link href="/stylesheets/blank.css" rel="stylesheet"/>
 	<link href="/stylesheets/post.css" rel="stylesheet"/>
 	<link href="/stylesheets/group.css" rel="stylesheet"/>
+	<link href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet" >
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.4/build/jquery.datetimepicker.min.css" rel="stylesheet"/>
 
 	<script src="/scripts/jquery.min.js"></script>
@@ -38,17 +39,17 @@
 		</div>
         </div>
 
-		
+
 
         <div class="search">
 			  	<input type="search" id="searchbar" placeholder="Search MunSN"><button id="searchbtn" class="searchbtn">Search</button>
 
 			<div class="search" id="searchRes" style="display: none;">
-			
+
 			</div>
 		</div>
 
-		
+
 
 		<div class="buttons">
 			<a href="javascript:void(0)"><img id="not" src="/img/notification-red.png"></a>
@@ -70,7 +71,7 @@
 				</div></a>
 			</div>
 		</div>
-		
+
 	</div>
 	</nav>
 
@@ -149,7 +150,7 @@
 	<div class="timeline">
 
 		<div id="infoContainer">
-			
+
 		</div>
 
 		<div class="info" id="postBox">
@@ -164,16 +165,15 @@
 					<button class="postOption" id="pollPost">Add Poll</button>
 					<button class="postOption" id="clearPost">Clear Post</button>
 					<select id="vis">
-						<option value="" disabled selected>Visibility</option>
 						<option value="public">Public</option>
 						<option value="friends">Friends Only</option>
 						<option value="private">Private</option>
 						<option value="list">List</option>
 					</select>
-
 					<input type="file" id="newPostImg" style="display: none;" accept="image/*" />
+					<div id="postProgress"></div>
 				</div>
-			
+
 			</div>
 
 		<!-- Will be filled with posts from server  -->

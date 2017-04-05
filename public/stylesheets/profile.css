@@ -1,16 +1,12 @@
-#infoContainer{
+#infoContainer {
 	background-color: #cccccc;
-	
 	position: static;
 	width: 98%;
 	height: 220px;
-	
 	display: block;
 	margin-left: auto;
 	margin-right: auto;
-	
 	border: 2px outset #fafafa;
-	
 }
 
 #infoContainer div {
@@ -20,36 +16,43 @@
 #infoPic {
 	width: 100px;
 	height: 100px;
-	
-	margin:0;
-	padding:0;
-	
+	margin: 0;
+	padding: 0;
 	margin-left: 10px;
 	margin-top: 10px;
-
 	display: inline-block;
 	overflow: hidden;
-	
 	border: 2px outset;
-	border-color:  #aaaaaa #7f1734 #7f1734 #aaaaaa;
+	border-color: #aaaaaa #7f1734 #7f1734 #aaaaaa;
 }
 
+.ui-progressbar .ui-progressbar-value {
+	margin: -1px;
+	height: 100%;
+	background-color: #0099dd;
+}
+
+#postProgress {
+	position: relative;
+	width: 99%;
+	display: block;
+	left: 0px;
+	margin-top: 1em;
+}
 
 #infoPic img {
 	width: 100px;
-
 }
+
 
 /*Maybe put these all into one div with the pictures and move everything inside that? Just in the container div?*/
 
 #infoText {
-	
 	position: relative;
 	margin: 0;
 	top: -5px;
 	width: calc(100% - 120px);
 	height: 100px;
-	
 }
 
 #infoText div {
@@ -60,7 +63,6 @@
 
 #infoText #edit {
 	margin-top: 10px;
-	
 	bottom: 0;
 }
 
@@ -75,33 +77,21 @@
 #postBox {
 	position: relative;
 	top: -55px;
-
 	width: 96%;
-	
 	display: inline-block;
-	
-	height:30px;
+	height: 30px;
 	margin-top: 1px;
-	
 	background-color: #eeeeee;
 	padding: 2%;
-	
 	border: 2px solid #cccccc;
-
 	overflow: hidden;
-	
 }
 
 #postBox #text {
 	width: 85%;
 	height: 30px;
-	
-	   
 	resize: none;
-    outline: none;
-	
-	
-
+	outline: none;
 }
 
 #postBox #postSubmit {
@@ -109,7 +99,7 @@
 	top: -15px;
 	width: 10%;
 	height: 30px;
-	padding:0;
+	padding: 0;
 }
 
 #chatButton {
@@ -136,29 +126,24 @@
 	position: fixed;
 	bottom: 0;
 	right: 0;
-	
 	height: 0;
 	width: 300px;
 	z-index: 3;
-	
 	overflow: hidden;
-	
 	background: white;
-	
 	border: 1px solid #000000;
-	
 }
 
 #chatBox {
 	position: relative;
 	height: 90%;
 	width: 100%;
-	top:10%;
+	top: 10%;
 }
 
 #chatTop {
 	position: relative;
-	height:10%;
+	height: 10%;
 	background-color: #aaaaaa;
 	text-align: center;
 	vertical-align: center;

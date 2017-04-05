@@ -92,13 +92,13 @@ $(document).ready(function () {
 		postBoxMax = 140;
 		imgBool = false;
 
-		$('#postBox *').val('');
-
+		$("#postBox #text").val('');
+		$("#postProgress").empty();
 		$("#imgDisp").attr("src", "#");
 		$("#imgDisp").css({
 			display: 'none'
 		});
-
+		$('#vis').val('public');
 		$("#postBox").animate({
 			height: postBoxMax + "px"
 		}, 200);
@@ -128,8 +128,31 @@ $(document).ready(function () {
 				if (imgBool) {
 					var picForm = new FormData();
 					picForm.append("image", $("#newPostImg")[0].files[0]);
-
+					$("#postBox").animate({
+						height: (postBoxMax + 50) + "px"
+					}, 200);
 					$.ajax({
+							xhr: function () {
+								var xhr = new window.XMLHttpRequest();
+								xhr.upload.addEventListener("progress", function (evt) {
+									if (evt.lengthComputable) {
+										var percentComplete = evt.loaded / evt.total;
+										percentComplete = parseInt(percentComplete * 100);
+										$("#postProgress").progressbar({
+											value: percentComplete
+										});
+										if (percentComplete === 100) {
+											window.setTimeout(function () {
+												$("#clearPost").click();
+												window.setTimeout(function () {
+													location.reload();
+												}, 1000);
+											}, 1000);
+										}
+									}
+								}, false);
+								return xhr;
+							},
 							url: '/content/posts/' + pid + '/' + pid,
 							type: 'post',
 							data: picForm,
@@ -140,19 +163,17 @@ $(document).ready(function () {
 						}).done(function (response) {
 							console.log("image uploaded");
 
-						}).fail()
-						.always(function () {
-							//Clear the fields
+						}).fail(function () {
 							$("#clearPost").click();
+							$("#postBox *").focusout(); //<- I dont think this works
 						})
+						.always()
 				} else {
-                    location.reload();
-					//Clear the fields
-					$("#clearPost").click()
+
 				}
 			})
 			.fail()
-            .always(function() {location.reload()});
+			.always(function () {});
 	});
 
 	//TODO: Potentially move to it's own file to be accessed by every page that needs it.
@@ -177,12 +198,12 @@ $(document).ready(function () {
 
 			$.each(response.data, function (i, v) {
 
-				var postInfo = $.extend({}, v, v.history.slice(-1).pop());				
-                postInfo.date = new Date(postInfo.date).toLocaleString();
+				var postInfo = $.extend({}, v, v.history.slice(-1).pop());
+				postInfo.date = new Date(postInfo.date).toLocaleString();
 
 				$.ajax({
 					type: 'GET',
-                    async: false,
+					async: false,
 					url: '/api/user/' + v.uid
 				}).done(function (res) {
 					postInfo.fname = res.data.fname;
@@ -196,7 +217,7 @@ $(document).ready(function () {
 			});
 
 			$.get("/temps/postTemp.hjs", function (post) {
-                data.list.reverse();
+				data.list.reverse();
 				var template = Hogan.compile("{{#list}}" + post + "{{/list}}");
 				var output = template.render(data);
 				$('#posts').append(output);
@@ -220,19 +241,19 @@ $(document).ready(function () {
 	$.get('/api/group/' + id)
 		.done(function (response) {
 			console.log(response);
-            response.data.created = new Date(response.data.created).toLocaleDateString();
+			response.data.created = new Date(response.data.created).toLocaleDateString();
 
-            $.get('/api/user/' + response.data.creatorid)
-			.done(function (res) {
-                response.data.fname = res.data.fname;
-                response.data.lname = res.data.lname;
-                			
-                $.get("/temps/groupInfo.hjs", function (info) {
-                    var template = Hogan.compile(info);
-                    var output = template.render(response.data);
-                    $('#infoContainer').append(output);
-			    });
-            });
+			$.get('/api/user/' + response.data.creatorid)
+				.done(function (res) {
+					response.data.fname = res.data.fname;
+					response.data.lname = res.data.lname;
+
+					$.get("/temps/groupInfo.hjs", function (info) {
+						var template = Hogan.compile(info);
+						var output = template.render(response.data);
+						$('#infoContainer').append(output);
+					});
+				});
 		})
 		.fail(
 			//TODO: Function on failures.
