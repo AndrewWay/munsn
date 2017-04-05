@@ -21,7 +21,7 @@ $(function () {
                 $.get('/api/messages', {uid1: sess.user._id, uid2: friendId}, function(data) {
                     console.log(JSON.stringify(data));
                     for (var i = 0; i < data.data[0].messages.length; i++) {
-                        $('#messages').append($('<li>').text("[PM: " + data.data[0].messages[i].user + "] " + data.data[0].messages[i].message));
+                        $('#messages').append($('<li>').text("[" + data.data[0].date.toLocaleString() + "][" + data.data[0].messages[i].user + "] " + data.data[0].messages[i].message));
                         console.log("LOADING MESSAGES: " + i + ": " + data.data[0].messages[i].message);
                     }
                 $('#m').val('');         
