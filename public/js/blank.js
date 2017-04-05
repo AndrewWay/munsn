@@ -485,8 +485,8 @@ $(document).ready(function () {
 						var x = $.extend({}, u, {
 							"title": "group"
 						})
+						u.image = u.creatorid && u.ownerid ? "/content/image/group/" + u._id : u.image;
 						data.list.push(x);
-
 					})
 
 					//If no friends exist, display sad face
