@@ -1,5 +1,5 @@
-$(window.parent).ready(function () {
-    $(window).ready(function () {
+$(window).ready(function () {
+    $(window.parent).ready(function () {
         var currentRoom;
         var friendId;
         var socket = io("/chat");
