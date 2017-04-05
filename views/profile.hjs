@@ -150,7 +150,16 @@
 	<div class="timeline">
 
 		<div id="infoContainer">
-
+			
+			
+			<div class="info" id="infoButton">
+				<button id="addFriend">Add Friend</button>
+				<button id="sendMessage">Send Message</button>
+				<button id="prFriends">Friends</button>
+				<button id="prGroups">Groups</button>
+				<button id="prCourses">Courses</button>
+				<button id="resume">Resume</button>
+			</div>
 
 		</div>
 		<div class="info" id="postBox">

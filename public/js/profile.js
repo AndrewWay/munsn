@@ -228,7 +228,34 @@ $(document).ready(function () {
 			//TODO: Function on failures.
 		);
 
-	//TODO: Potentially move to it's own file to be accessed by every page that needs it.
+	/************************
+	 * Profile button functionality
+	 * 
+	 * @params: null
+	 * 
+	 * Functionality for each of the profile infoBox buttons
+	 ************************/
+
+	//When resume button is clicked go to resume page.
+	$('#infoButton #resume').click(function () {
+		window.location.href = "/resume#"+id;
+	});
+
+	//When addFriend is clicked, send a friend request
+	$('#infoButton #addFriend').click(function() {
+		$.post('/api/friend/request', {
+			uid: uid,
+			fid: id
+		})
+		.done( function(response) {
+			console.log(response);
+			//TODO: Add feedback! Popout or something!
+		})
+		.fail( function(response) {
+			console.log(response);
+		})
+	});
+
 	/*******************
 	 * Load profile info
 	 *
@@ -245,7 +272,7 @@ $(document).ready(function () {
 			$.get("/temps/profInfo.hjs", function (info) {
 				var template = Hogan.compile(info);
 				var output = template.render(response.data);
-				$('#infoContainer').append(output);
+				$('#infoContainer').prepend(output);
 			});
 		})
 		.fail(
