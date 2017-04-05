@@ -113,6 +113,7 @@ module.exports = function (DBPosts, collectionPosts) {
 	//Get posts per post id
 	DBPosts.find = function (req, res, callback) {
 		var query = req.query;
+		Object.assign(query, req.body);
 		if (query.pid) {
 			query._id = new ObjectID(query.pid);
 		}
