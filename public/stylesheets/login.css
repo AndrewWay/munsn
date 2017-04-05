@@ -1,25 +1,23 @@
-body, html {
+body,
+html {
 	/*Set height through javascript or something getting screen height?*/
 	min-height: 666px;
 	height: 100%;
 	width: 100%;
 	min-width: 1000px;
 	margin: 0;
-	
 	/*REMOVE IF CAUSES ISSUES*/
 	display: flex;
 	flex-direction: column;
 }
 
-
 #wrapper {
-	min-height:100%;
+	min-height: 100%;
 	position: relative;
-	padding:0;
-	margin:0;
-	left:0;
-	top:0;
-	
+	padding: 0;
+	margin: 0;
+	left: 0;
+	top: 0;
 	/*REMOVE IF CAUSES ISSUES*/
 	display: flex;
 	flex-direction: column;
@@ -33,7 +31,6 @@ body, html {
 	top: 0;
 	left: 0;
 	background: #eeeeee;
-	
 	border: 2px solid #cccccc;
 }
 
@@ -56,15 +53,14 @@ body, html {
 	max-width: 40%;
 	min-width: 400px;
 	float: right;
-	padding:0;
+	padding: 0;
 	margin: 0;
-	
 	/*REMOVE IF CAUSES ISSUES*/
 	display: flex;
 	flex-direction: column;
 	overflow: hidden;
-
 }
+
 
 /*Start of login panel css*/
 
@@ -82,19 +78,14 @@ body, html {
 	/*box-shadow: inset 0 0 2px 2px #7f1734; /*claret */
 	border-radius: 50% / 5%;
 	/*border-radius: 20px;*/
-	
 	z-index: 2;
-	
 }
 
-#loginFields img{
-
+#loginFields img {
 	width: 150px;
 	left: 25px;
 	margin-top: 10px;
-	
 	border-radius: 10px;
-	
 }
 
 #loginFields {
@@ -105,7 +96,8 @@ body, html {
 
 .logButton {
 	float: left;
-	background-color: #fcfcfc; /*light gray*/
+	background-color: #fcfcfc;
+	/*light gray*/
 	/*background-color: #7f1734; /*claret*/
 	border-radius: 5px;
 	cursor: pointer;
@@ -131,7 +123,6 @@ body, html {
 	width: 100%;
 	text-align: center;
 	margin-top: 25px;
-	
 	text-decoration: none;
 	color: #7f1734;
 }
@@ -242,12 +233,12 @@ body, html {
 	text-align: center;
 }
 
+
 /*End of login panel css (unless want to include the obscure?*/
 
 .popup {
 	background-color: #efefef;
 	border: solid 1px #cccccc;
-
 	position: absolute;
 	display: none;
 	z-index: 100;
@@ -259,7 +250,6 @@ body, html {
 	margin: auto;
 	height: 200px;
 	width: 400px;
-
 	text-align: center;
 }
 
@@ -314,9 +304,7 @@ body, html {
 	height: 80%;
 	top: 5%;
 	margin: auto;
-
 	overflow: scroll;
-
 	background-color: white;
 	color: black;
 }
@@ -326,7 +314,9 @@ body, html {
 	margin-top: 10px;
 }
 
+
 /*Maybe just use wrapper and change it's background to this. But how to animate?*/
+
 #obscure {
 	position: absolute;
 	top: 0;
@@ -334,6 +324,6 @@ body, html {
 	z-index: 1;
 	height: 100%;
 	width: 100%;
-	background: rgba(0,0,0,0.5);
+	background: rgba(0, 0, 0, 0.5);
 	display: none;
 }
