@@ -6,7 +6,7 @@
 						<img src='/content/image/profile/{{uid}}'>
 					</div>
 					<div class="postName">
-						<a href="/profile/#{{uid}}">{{fname}} {{lname}}</a> <br>
+						<a href="/profile#{{uid}}">{{fname}} {{lname}}</a> <br>
 						<span>{{date}}</span>
 					</div>
 				</div>
@@ -20,7 +20,7 @@
 
 			<div class="commBox">
 				<textarea id="commText" placeholder="Make a comment!"></textarea><button id="commSubmit">Submit</button>
-				
+
 
 				<div id="commDisp">
 					<img id="commImgDisp" src="#" style="display: none;">
