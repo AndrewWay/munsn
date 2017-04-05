@@ -1,5 +1,5 @@
 var suggOutput;
-var suggIter=0;
+var suggIter = 0;
 
 /******************
  * Get uid for future use
@@ -58,7 +58,7 @@ $(document).ready(function () {
 
 					//Titles list for Hogan templating purposes.
 					var titles = {
-						"users": "profile",						
+						"users": "profile",
 						"groups": "group",
 						"course": "group"
 					}
@@ -80,6 +80,8 @@ $(document).ready(function () {
 							u = $.extend({}, u, {
 								"title": titles[i]
 							});
+							u.image = u.gender ? "/content/image/profile/" + u._id : u.image;
+							u.image = u.creatorid && u.ownerid ? "/content/image/group/" + u._id : u.image;
 							data.list.push(u);
 						})
 
@@ -185,7 +187,7 @@ $(document).ready(function () {
 
 		//Empty all inputs
 		$('#coursePop *').val('');
-		$('#coursePop *').attr('checked',false)
+		$('#coursePop *').attr('checked', false)
 
 		$('#coursePop').hide();
 	});
@@ -209,8 +211,18 @@ $(document).ready(function () {
 	//Details for the course.
 	//days = [RRule.MO, RRule.TU, RRule.WE, RRule.TH, RRule.FR, RRule.SA, RRule.SU];
 	days = ["Monday", "Tueday", "Wednesday", "Thursday", "Friday"];
-	semStart = { "Winter" : "Jan. 1", "Spring" : "May. 1", "Summer MI" : "May 1", "Fall" : "Sept. 1"}
-	semEnd = { "Winter" : "Apr. 30", "Spring" : "Aug. 31", "Summer MI" : "June 30", "Fall" : "Dec. 31"}
+	semStart = {
+		"Winter": "Jan. 1",
+		"Spring": "May. 1",
+		"Summer MI": "May 1",
+		"Fall": "Sept. 1"
+	}
+	semEnd = {
+		"Winter": "Apr. 30",
+		"Spring": "Aug. 31",
+		"Summer MI": "June 30",
+		"Fall": "Dec. 31"
+	}
 
 	//Add new course
 	$('#cAdd').click(function () {
@@ -223,46 +235,46 @@ $(document).ready(function () {
 			})
 			.done(function (response) {
 				//If it exists: Add user to course. Else: Create course.
-				if(!(response.data.length==0)) {
+				if (!(response.data.length == 0)) {
 					//TODO: Add user to course.
 
 					//Empty all inputs
 					$('#coursePop *').val('');
-					$('#coursePop *').attr('checked',false)
+					$('#coursePop *').attr('checked', false)
 
 					$('#coursePop').hide();
 				} else {
 					var cDays = [];
 
-					$('.cDays:checked').each(function(i,v){
+					$('.cDays:checked').each(function (i, v) {
 						cDays.push(days[this.value]);
 					});
 
 					//If course doesn't already exist, create it.
-					$.post('/api/course/',{
-						label: $('input[name="cDepartment"]').val() + " " + $('input[name="cNumber"]').val(),
- 						name: $('input[name="cName"]').val(),
- 						Description: "TODO: Add descriptions",
- 						semester: $('#semester').val(),
- 						department: $('input[name="cDepartment"]').val(),
- 						location: $('input[name="cRoom"]').val(),
- 						year: $('input[name="cYear"]').val(),
- 						cid: uid,
- 						days: cDays,
- 						timeStart: semStart[$('#semester').val()],
- 						timeEnd: semEnd[$('#semester').val()]
-					})
-					.done(function(response) {
-						console.log(response);
+					$.post('/api/course/', {
+							label: $('input[name="cDepartment"]').val() + " " + $('input[name="cNumber"]').val(),
+							name: $('input[name="cName"]').val(),
+							Description: "TODO: Add descriptions",
+							semester: $('#semester').val(),
+							department: $('input[name="cDepartment"]').val(),
+							location: $('input[name="cRoom"]').val(),
+							year: $('input[name="cYear"]').val(),
+							cid: uid,
+							days: cDays,
+							timeStart: semStart[$('#semester').val()],
+							timeEnd: semEnd[$('#semester').val()]
+						})
+						.done(function (response) {
+							console.log(response);
 
-						//Empty all inputs
-						$('#coursePop *').val('');
-						$('#coursePop *').attr('checked',false)
-						$('#coursePop').hide();
-					})
-					.fail(function(response) {
-						console.log(response);
-					})
+							//Empty all inputs
+							$('#coursePop *').val('');
+							$('#coursePop *').attr('checked', false)
+							$('#coursePop').hide();
+						})
+						.fail(function (response) {
+							console.log(response);
+						})
 				}
 			})
 			.fail(function (response) {
@@ -315,37 +327,37 @@ $(document).ready(function () {
 
 	/***********************
 	 * Timepicker for course add
-	 * 
+	 *
 	 * @params: null
-	 * 
+	 *
 	 * Creates timepicker for course times
 	 ************************/
 
 	//initialize end time
 	$('#endTime').datetimepicker({
- 		 datepicker: false,
- 		 format: 'H:i'
-	 });
+		datepicker: false,
+		format: 'H:i'
+	});
 
-	 //Intialize start time
-	 $('#startTime').datetimepicker({
-		 datepicker: false,
-		 format: 'H:i'
-	 });
+	//Intialize start time
+	$('#startTime').datetimepicker({
+		datepicker: false,
+		format: 'H:i'
+	});
 
 
 	//TODO: Any other elements of left sidebar?
 
 	/********************
 	 * Menu functions
-	 * 
+	 *
 	 * @params: null
-	 * 
+	 *
 	 * Functions for the upper left menu buttons.
 	 ********************/
 
-	 //Friend button functionality when clicked.
-	$('#friendButton').click(function() {
+	//Friend button functionality when clicked.
+	$('#friendButton').click(function () {
 		$('#groupPan').hide();
 
 		//Make sure div is empty
@@ -356,88 +368,92 @@ $(document).ready(function () {
 		$('#friendPan').show();
 
 		//API call to get friend requests
-		$.get('/api/friend/received/'+uid, {
-			uid: uid
-		})
-		.done(function(response) {
+		$.get('/api/friend/received/' + uid, {
+				uid: uid
+			})
+			.done(function (response) {
 
-			//Remove loading gif. TODO: Check if this is better placed somewhere else.
-			$('#friendPan').html('');
-
-			//Setup variable to hold data for templates
-			var data = {
-				"list": []
-			};
-
-			
-
-			$.each(response.data, function(i, v) {
-				v=$.extend({}, v, {"title" : "profile" });
-				data.list.push(v);
-			});
-
-			//If no friend requests exist, skip rendering.
-			if(!(data.list.length==0)) {
-				$.get("/temps/frireqTemp.hjs", function (result) {
-					$('#friendPan').append("<h3> Friend Requests </h3>");
-					var template = Hogan.compile("{{#list}}" + result + "{{/list}}");
-					var output = template.render(data);
-					$('#friendPan').append(output);
-				});
-			}
-
-			//API call to get user friends
-			$.get('/api/friends/'+uid)
-			.done(function(response){
+				//Remove loading gif. TODO: Check if this is better placed somewhere else.
+				$('#friendPan').html('');
 
 				//Setup variable to hold data for templates
 				var data = {
 					"list": []
 				};
-				
-				//Make array to hold promises.
-				var promises = [];
 
-				//Display friend title
-				$('#friendPan').append("<h3> Friends </h3>");
 
-				//For each friend in the friends array
-				if(!(typeof response.data[0] == 'undefined')) {
-					$.each(response.data[0].friends, function(j, u) {
 
-						//Push gets to array so next function waits.
-						promises.push($.get('/api/user/'+u)
-						.done(function(response){
-							var x=$.extend({},response.data,{"title" : "profile"})
-							data.list.push(x);
-						})
-						.fail());
-					})	
+				$.each(response.data, function (i, v) {
+					v = $.extend({}, v, {
+						"title": "profile"
+					});
+					data.list.push(v);
+				});
 
-					//Waits until all data is loaded then displays friend list.
-					$.when.apply($, promises).then(function(){	
-						//If no friends exist, display sad face
-						if(!(data.list.length==0)) {
-							$.get("/temps/searchTemp.hjs", function (result) {
-								var template = Hogan.compile("{{#list}}" + result + "{{/list}}");
-								var output = template.render(data);
-								$('#friendPan').append(output);
-							});
-					} 
+				//If no friend requests exist, skip rendering.
+				if (!(data.list.length == 0)) {
+					$.get("/temps/frireqTemp.hjs", function (result) {
+						$('#friendPan').append("<h3> Friend Requests </h3>");
+						var template = Hogan.compile("{{#list}}" + result + "{{/list}}");
+						var output = template.render(data);
+						$('#friendPan').append(output);
+					});
+				}
+
+				//API call to get user friends
+				$.get('/api/friends/' + uid)
+					.done(function (response) {
+
+						//Setup variable to hold data for templates
+						var data = {
+							"list": []
+						};
+
+						//Make array to hold promises.
+						var promises = [];
+
+						//Display friend title
+						$('#friendPan').append("<h3> Friends </h3>");
+
+						//For each friend in the friends array
+						if (!(typeof response.data[0] == 'undefined')) {
+							$.each(response.data[0].friends, function (j, u) {
+
+								//Push gets to array so next function waits.
+								promises.push($.get('/api/user/' + u)
+									.done(function (response) {
+										var x = $.extend({}, response.data, {
+											"title": "profile"
+										})
+										data.list.push(x);
+									})
+									.fail());
+							})
+
+							//Waits until all data is loaded then displays friend list.
+							$.when.apply($, promises).then(function () {
+								//If no friends exist, display sad face
+								if (!(data.list.length == 0)) {
+									$.get("/temps/searchTemp.hjs", function (result) {
+										var template = Hogan.compile("{{#list}}" + result + "{{/list}}");
+										var output = template.render(data);
+										$('#friendPan').append(output);
+									});
+								}
+							})
+						} else {
+							//Display no friends
+							$('#friendPan').append("<h5> No friends to display =( </h5>");
+						}
+
 					})
-				} else {
-					//Display no friends
-					$('#friendPan').append("<h5> No friends to display =( </h5>");
-				}	
-				
+					.fail()
 			})
 			.fail()
-		})
-		.fail()
 	});
 
 	//Group button functionality when clicked.
-	$('#groupButton').on('click', function() {
+	$('#groupButton').on('click', function () {
 		//Hide other panels
 		$('#friendPan').hide();
 
@@ -449,43 +465,45 @@ $(document).ready(function () {
 		$('#groupPan').show();
 
 
-			$.get('/api/groups/user/'+uid)
-			.done(function(response){
+		$.get('/api/groups/user/' + uid)
+			.done(function (response) {
 				//Remove loading gif. TODO: Check if this is better placed somewhere else.
 				$('#groupPan').html('');
 
 				//Setup variable to hold data for templates
-					var data = {
+				var data = {
 					"list": []
 				};
 
 				//Display friend title
 				$('#groupPan').append("<h3> Groups </h3>");
 
-				if(!(typeof response.data[0] == 'undefined')) {
-					$.each(response.data, function(j, u) {
+				if (!(typeof response.data[0] == 'undefined')) {
+					$.each(response.data, function (j, u) {
 
 						//Push gets to array so next function waits.
-						var x=$.extend({},u,{"title" : "group"})
+						var x = $.extend({}, u, {
+							"title": "group"
+						})
 						data.list.push(x);
-						
-					})	
+
+					})
 
 					//If no friends exist, display sad face
-					if(!(data.list.length==0)) {
+					if (!(data.list.length == 0)) {
 						$.get("/temps/searchTemp.hjs", function (result) {
 							var template = Hogan.compile("{{#list}}" + result + "{{/list}}");
 							var output = template.render(data);
 							$('#groupPan').append(output);
 						});
-					} 
-					
-			} else {
-				//Display no groups
-				$('#groupPan').append("<h5> No groups to display =( </h5>");
-			}
-		})
-		.fail()
+					}
+
+				} else {
+					//Display no groups
+					$('#groupPan').append("<h5> No groups to display =( </h5>");
+				}
+			})
+			.fail()
 	});
 
 	//If somewhere outside of the panel is clicked: Close the panel.
@@ -512,51 +530,53 @@ $(document).ready(function () {
 	 * Functionality to grab and navigate suggested friends list.
 	 *************************/
 
-	 //Wait until uid is ready
-	$.when.apply($, uidProm).then(function(){
-		$.get('/api/friend/suggest/'+uid)
-		//TODO: Add done and fail callbacks
-		.done(function (response) {
+	//Wait until uid is ready
+	$.when.apply($, uidProm).then(function () {
+		$.get('/api/friend/suggest/' + uid)
+			//TODO: Add done and fail callbacks
+			.done(function (response) {
 
-			//Setup variable to hold data for templates
-			var data = {
-				"list": []
-			};
-			
-			//Make array to hold promises.
-			var suggProm = [];
+				//Setup variable to hold data for templates
+				var data = {
+					"list": []
+				};
 
-			$.each(response.data, function(i,v) {
-				//Push gets to array so next function waits.
-				suggProm.push($.get('/api/user/'+v)
-				.done(function(response){
-					var x=$.extend({},response.data,{"title" : "profile"})
-					data.list.push(x);
-				})
-				.fail());
-			});
+				//Make array to hold promises.
+				var suggProm = [];
 
-			$.when.apply($, suggProm).then(function(){	
-				if(!(data.list.length==0)) {
-					$.get("/temps/suggTemp.hjs", function (result) {
-						var template = Hogan.compile("{{#list}}" + result + "{{/list}}");
-						suggOutput = template.render(data);
-						suggOutput = suggOutput.split('<!-- Split Here -->').slice(0,-1);
-						$('#section-right .content-1 #suggList').append(suggOutput[suggIter]);
-					});
-				} 
-			});
-		})
-		.fail(function (response) {});
+				$.each(response.data, function (i, v) {
+					//Push gets to array so next function waits.
+					suggProm.push($.get('/api/user/' + v)
+						.done(function (response) {
+							var x = $.extend({}, response.data, {
+								"title": "profile"
+							})
+							data.list.push(x);
+						})
+						.fail());
+				});
+
+				$.when.apply($, suggProm).then(function () {
+					if (!(data.list.length == 0)) {
+						$.get("/temps/suggTemp.hjs", function (result) {
+							var template = Hogan.compile("{{#list}}" + result + "{{/list}}");
+							suggOutput = template.render(data);
+							suggOutput = suggOutput.split('<!-- Split Here -->').slice(0, -1);
+							$('#section-right .content-1 #suggList').append(suggOutput[suggIter]);
+						});
+					}
+				});
+			})
+			.fail(function (response) {});
 	})
 
 	//When Previous button is clicked move backwards through list of suggested friends.
 	$('#suggPrev').click(function () {
 		//If suggIter is 0: Move to last element. Else: subtract 1;
-		if(suggIter > 0){
-			suggIter= suggIter-1;
+		if (suggIter > 0) {
+			suggIter = suggIter - 1;
 		} else {
-			suggIter = suggOutput.length-1;
+			suggIter = suggOutput.length - 1;
 		}
 
 		//Render new suggested friend
@@ -568,8 +588,8 @@ $(document).ready(function () {
 	//When Next button is clicked move forwards through list of suggested friends.
 	$('#suggNext').click(function () {
 		//If suggIter is max: Move to first element. Else: add 1
-		if(suggIter < suggOutput.length-1){
-			suggIter= suggIter+1;
+		if (suggIter < suggOutput.length - 1) {
+			suggIter = suggIter + 1;
 		} else {
 			suggIter = 0;
 		}
@@ -606,7 +626,7 @@ $(document).ready(function () {
 			height: "0px"
 		}, 200);
 	});
-	
+
 
 });
 

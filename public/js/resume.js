@@ -6,37 +6,41 @@ $(document).ready(function () {
 
   // If absolute URL from the remote server is provided, configure the CORS
   // header on that server.
-  var url = '/content/resume/user/'+id;
+  var url = '/content/resume/user/' + id;
 
   /*************************
    * Upload Button
-   * 
+   *
    * @params: null
-   * 
+   *
    * Functions for upload buttons
    *************************/
 
-  $('#selectButton').click(function() {
+  $('#selectButton').click(function () {
 
-		$('#resumeIn').click();
+    $('#resumeIn').click();
 
   });
 
-  $('#uploadButton').click(function() {
+  $('#uploadButton').click(function () {
 
     var resForm = new FormData();
-		resForm.append("file", $("#resumeIn")[0].files[0]);
+    resForm.append("file", $("#resumeIn")[0].files[0]);
 
     $.ajax({
-					url: url, //Get :uid from the return.
-					type: 'post',
-					data: resForm,
-					cache: false,
-					contentType: false,
-					processData: false,
-		})
-    .done()
-    .fail()
+        url: url, //Get :uid from the return.
+        type: 'post',
+        data: resForm,
+        cache: false,
+        contentType: false,
+        processData: false,
+      })
+      .done(function () {
+        window.location.reload();
+      })
+      .fail(function () {
+        window.location.reload();
+      })
 
 
   });
@@ -50,7 +54,7 @@ $(document).ready(function () {
    **************************/
 
 
-  
+
 
   console.log(url)
 

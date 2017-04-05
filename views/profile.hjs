@@ -38,17 +38,17 @@
 		</div>
         </div>
 
-		
+
 
         <div class="search">
 			  	<input type="search" id="searchbar" placeholder="Search MunSN"><button id="searchbtn" class="searchbtn">Search</button>
 
 			<div class="search" id="searchRes" style="display: none;">
-			
+
 			</div>
 		</div>
 
-		
+
 
 		<div class="buttons">
 			<a href="javascript:void(0)"><img id="not" src="/img/notification-red.png"></a>
@@ -70,7 +70,7 @@
 				</div></a>
 			</div>
 		</div>
-		
+
 	</div>
 	</nav>
 
@@ -149,8 +149,8 @@
 	<div class="timeline">
 
 		<div id="infoContainer">
-			
-			
+
+
 		</div>
 		<div class="info" id="postBox">
 				<textarea id="text" placeholder="Make a post!"></textarea><button id="postSubmit">Submit</button>
@@ -173,15 +173,15 @@
 
 					<input type="file" id="newPostImg" style="display: none;" accept="image/*" />
 				</div>
-			
+
 			</div>
 
 		<!-- Will be filled with posts from server  -->
-	
+
 		<div class="posts" id="posts">
-			
+
 		</div>
-		
+
 	</div>
 	<div class="sidebars" id="section-right">
 		<div class= "content-1">
@@ -197,8 +197,10 @@
 		</div>
 	</div>
 	</div>
-    <div id="chat"> <div id="chatTop"> CHAT </div><iframe src="/chat" id="chatBox" name="chat"></iframe> </div>
-	<button id="chatButton"> CHAT </button>
+	<div id="chat">
+		<button id="chatButton"> CHAT </button>
+		<div id="chatTop"> CHAT </div>
+		<iframe src="/chat" id="chatBox" name="chat"></iframe>
 	</div>
 </body>
 </html>
