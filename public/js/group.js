@@ -259,7 +259,8 @@ $(document).ready(function () {
 			console.log(response);
             response.data.created = new Date(response.data.created).toLocaleDateString();
 
-            $.get('/api/user/' + response.data.creatorid).done(function (res) {
+            $.get('/api/user/' + response.data.creatorid)
+			.done(function (res) {
                 response.data.fname = res.data.fname;
                 response.data.lname = res.data.lname;
                 			
@@ -273,15 +274,4 @@ $(document).ready(function () {
 		.fail(
 			//TODO: Function on failures.
 		)
-	.done(function (response) {
-		
-		$.get("/temps/groupInfo.hjs", function (info) {
-			var template = Hogan.compile(info);
-			var output = template.render(response.data);
-			$('#infoContainer').append(output);
-		});
-	})
-	.fail(
-		//TODO: Function on failures.
-	);
 });
