@@ -61,9 +61,9 @@ nsChat.on('connection', function (socket) {
                 console.log("[Socket] FindUid->Result", JSON.stringify(recieverResult));
                 //Get the senders user id
                 DB.Socket.findSid(socket.id, function (sidError, senderResult) {
-                    nsChat.to(recieverResult.socketid).emit('chat message', "[PM: " + senderResult._id + "] " + msg);
-                    nsChat.to(senderResult.socketid).emit('chat message', "[PM: " + senderResult._id + "] " + msg);
-                    DB.Socket.saveMessage(senderResult._id, recieverResult._id, {user: senderResult._id, message: msg}, function(err, saveResult) {
+                    nsChat.to(recieverResult.socketid).emit('chat message', "[" + senderResult._id + "] " + msg);
+                    nsChat.to(senderResult.socketid).emit('chat message', "[" + senderResult._id + "] " + msg);
+                    DB.Socket.saveMessage(senderResult._id, recieverResult._id, {user: senderResult._id, message: msg, date: new Date()}, function(err, saveResult) {
                         //TODO: Write stuff here
                     });
                 });
