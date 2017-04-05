@@ -1,14 +1,14 @@
-<div class="commTemp">
+<div class="commTemp" id="{{_id}}">
 	<div class="commInfo">
 		<div class="commPic">
-			<img src="../img/SEAHAWK_SIL.jpg">
+			<img src="/content/image/profile/{{uid}}">
 		</div>
 		<div class="commName">
-			<a href="{{ COMM_LINK }}"> {{ COMM_NAME }} </a> <br>
-			<span>{{ COMM_TIME }}</span>
+			<a href="/profile/{{uid}}"> {{fname}} {{lname}} </a> <br>
+			<span>{{date}}</span>
 		</div>
 	</div>
 	<div class="commCont">
-			<p> {{ COMM_TEXT }} </p>
+			<p> {{text}} </p>
 	</div>
 </div>
