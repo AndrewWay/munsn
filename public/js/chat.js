@@ -14,9 +14,9 @@ $(function () {
         window.parent.$('#chat').animate({
             height: "300px"
         }, 200);
-        friendId = window.parent.location.href.substring(window.parent.location.href.indexOf("/profile/#") + "/profile/#".length);
+        friendId = $(window.parent.location).attr('href').substring($(window.parent.location).attr('href').indexOf("/profile/#") + "/profile/#".length);
         console.log(window.parent.location.href.substring(window.parent.location.href.indexOf("/profile/#") + "/profile/#".length));
-        console.log($(window.parent.location).attr('href'));
+        console.log($(window.parent.location).attr('href').substring($(window.parent.location).attr('href').indexOf("/profile/#") + "/profile/#".length));
         $.get('/api/session', function(sess) {
             $.get('/api/messages', {uid1: sess.user._id, uid2: friendId}, function(data) {
                 console.log(JSON.stringify(data));
