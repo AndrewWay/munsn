@@ -47,14 +47,16 @@ $(function () {
             console.log("PM: USER " + user + ", MSG: " + msg);
         }
         else if (str[0].indexOf(cmdLoad) == 0 ) {
-            var user = str[1];
-            $.get('/api/messages', {uid1: 'dfcm15', uid2: user}, function(data) {
-                console.log(JSON.stringify(data));
-                for (var i = 0; i < data.data[0].messages.length; i++) {
-                    $('#messages').append($('<li>').text("[PM: " + data.data[0].messages[i].user + "] " + data.data[0].messages[i].message));
-                    console.log("LOADING MESSAGES: " + i + ": " + data.data[0].messages[i].message);
-                }
-            $('#m').val('');         
+            $.get('/api/session', function(sess) {
+                var user = str[1];
+                $.get('/api/messages', {uid1: sess.user._id, uid2: user}, function(data) {
+                    console.log(JSON.stringify(data));
+                    for (var i = 0; i < data.data[0].messages.length; i++) {
+                        $('#messages').append($('<li>').text("[PM: " + data.data[0].messages[i].user + "] " + data.data[0].messages[i].message));
+                        console.log("LOADING MESSAGES: " + i + ": " + data.data[0].messages[i].message);
+                    }
+                $('#m').val('');         
+                });
             });
         }
         //Else send message to current room
