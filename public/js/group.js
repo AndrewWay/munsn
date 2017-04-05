@@ -146,11 +146,13 @@ $(document).ready(function () {
 							$("#clearPost").click();
 						})
 				} else {
+                    location.reload();
 					//Clear the fields
 					$("#clearPost").click()
 				}
 			})
-			.fail();
+			.fail()
+            .always(function() {location.reload()});
 	});
 
 	//TODO: Potentially move to it's own file to be accessed by every page that needs it.
@@ -175,15 +177,26 @@ $(document).ready(function () {
 
 			$.each(response.data, function (i, v) {
 
-				var postInfo = $.extend({}, v, v.history.slice(-1).pop());
+				var postInfo = $.extend({}, v, v.history.slice(-1).pop());				
+                postInfo.date = new Date(postInfo.date).toLocaleString();
 
+				$.ajax({
+					type: 'GET',
+                    async: false,
+					url: '/api/user/' + v.uid
+				}).done(function (res) {
+					postInfo.fname = res.data.fname;
+					postInfo.lname = res.data.lname;
+				});
+				postInfo.image = postInfo.image ? 'visibility:visible' : 'visibility:hidden';
 				data.list.push(postInfo);
 				console.log(data);
 				//Stop at 5 posts. Arbitrary
-				return i < 4;
+				return i < 20;
 			});
 
 			$.get("/temps/postTemp.hjs", function (post) {
+                data.list.reverse();
 				var template = Hogan.compile("{{#list}}" + post + "{{/list}}");
 				var output = template.render(data);
 				$('#posts').append(output);
@@ -246,13 +259,18 @@ $(document).ready(function () {
 	$.get('/api/group/' + id)
 		.done(function (response) {
 			console.log(response);
+            response.data.created = new Date(response.data.created).toLocaleDateString();
 
-
-			$.get("/temps/groupInfo.hjs", function (info) {
-				var template = Hogan.compile(info);
-				var output = template.render(response.data);
-				$('#infoContainer').append(output);
-			});
+            $.get('/api/user/' + response.data.creatorid).done(function (res) {
+                response.data.fname = res.data.fname;
+                response.data.lname = res.data.lname;
+                			
+                $.get("/temps/groupInfo.hjs", function (info) {
+                    var template = Hogan.compile(info);
+                    var output = template.render(response.data);
+                    $('#infoContainer').append(output);
+			    });
+            });
 		})
 		.fail(
 			//TODO: Function on failures.

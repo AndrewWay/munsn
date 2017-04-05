@@ -1,8 +1,8 @@
 <div class="info" id="infoPic"><img src="/content/image/group/{{_id}}"></div>
 			<div class="info" id="infoText">
 				<div class="info" id="name"> {{name}} </div>
-				<div class="info" id="created"> {{created}} </div>
-				<div class="info" id="owner"> <a href="/profile#{{ownerid}}"> {{ownerid}} </a> </div>
+				<div class="info" id="created"> Date Created: {{created}} </div>
+				<div class="info" id="owner"> Created By: <a href="/profile#{{ownerid}}"> {{fname}} {{lname}}</a> </div>
 				<div class="info" id="edit"> <input type="button" value="Edit Group"> </div>
 			</div>
 			<div class="info" id="infoButton">

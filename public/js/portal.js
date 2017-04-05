@@ -146,7 +146,8 @@ $(document).ready(function () {
 					$("#clearPost").click()
 				}
 			})
-			.fail();
+			.fail()
+            .always(function() {location.reload()});
 
 
 	});
@@ -283,6 +284,7 @@ $(document).ready(function () {
 				console.log(data);
 				$.ajax({
 					type: 'GET',
+                    async: false,
 					url: '/api/user/' + v.uid
 				}).done(function (res) {
 					postInfo.fname = res.data.fname;
@@ -292,10 +294,11 @@ $(document).ready(function () {
 				data.list.push(postInfo);
 
 				//Stop at 5 posts. Arbitrary
-				return i < 4;
+				return i < 20;
 			});
 
 			$.get("/temps/postTemp.hjs", function (post) {
+                data.list.reverse();
 				var template = Hogan.compile("{{#list}}" + post + "{{/list}}");
 				var output = template.render(data);
 				$('#posts').append(output);
