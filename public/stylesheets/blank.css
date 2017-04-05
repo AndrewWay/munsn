@@ -275,7 +275,8 @@ body, html {
 }
 
 #suggList img {
-	width: 100px;
+	height: 50px;
+	width: auto;
 	display: block;
 	margin: auto;
 	
@@ -439,7 +440,7 @@ body, html {
 }
 
 #searchRes .searchItem:hover {
-	background-color: #f1f1f1;
+	background-color: #7f1734;
 }
 
 .searchItem a {
@@ -477,6 +478,14 @@ body, html {
 	overflow: scroll;
 
 	border: 2px solid black;
+}
+
+#friendPan :not(h3):not(h5):hover {
+    	background-color: #7f1734;
+}
+
+.menuPan#groupPan :not(h3):not(h5):hover {
+    	background-color: #7f1734;
 }
 
 /*End*/

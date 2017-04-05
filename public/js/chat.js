@@ -1,11 +1,32 @@
 $(function () {
     var currentRoom;
+    var friendId;
     var socket = io("/chat");
     //Init chat
     socket.emit('initChat', null, function(result) {
         console.log("init chat");
         currentRoom = result;
 	});
+
+    window.parent.$('#sendMessage').click(function() {
+        console.log("I PRESSED SHIT");
+        window.parent.$('#chatButton').hide();
+        window.parent.$('#chat').animate({
+            height: "300px"
+        }, 200);
+        friendId = window.parent.location.href.substring(window.parent.location.href.indexOf("/profile/#") + "/profile/#".length);
+        console.log(window.parent.location.href.substring(window.parent.location.href.indexOf("/profile/#") + "/profile/#".length));
+        $.get('/api/session', function(sess) {
+            $.get('/api/messages', {uid1: sess.user._id, uid2: friendId}, function(data) {
+                console.log(JSON.stringify(data));
+                for (var i = 0; i < data.data[0].messages.length; i++) {
+                    $('#messages').append($('<li>').text("[PM: " + data.data[0].messages[i].user + "] " + data.data[0].messages[i].message));
+                    console.log("LOADING MESSAGES: " + i + ": " + data.data[0].messages[i].message);
+                }
+            $('#m').val('');         
+            });
+        });
+    });
     //Fired when enter is pressed
     $('form').submit(function () {
         //Declare commands
@@ -65,7 +86,7 @@ $(function () {
             for (var i = 0; i < str.length; i++) {
                 msg = msg + str[i] + " ";
             }
-            socket.emit('chat message', currentRoom, msg);
+            socket.emit('pm', friendId, msg);
             $('#m').val('');
             console.log("MESSAGE: " + str[0]);
         } 

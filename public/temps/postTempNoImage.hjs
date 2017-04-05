@@ -1,0 +1,24 @@
+<!-- Basic Post Structure -->
+
+<div class="postTemp" id={{_id}}>
+				<div class="postInfo">
+					<div class="postPic">
+						<img src='/content/image/profile/{{uid}}'>
+					</div> 
+					<div class="postName">
+						<a href="/profile/#{{uid}}"> {{uid}} </a> <br>
+						<span>{{date}}</span>
+					</div>
+				</div>
+				<div class="postCont">
+					<p> {{text}}</p>
+				</div>
+				
+				<div class="postComm">
+					
+				</div>
+
+				<div class="commField">
+						<!--Text field for comments to be posted, followed by a submit button -->
+				</div>
+</div>
