@@ -7,7 +7,7 @@
 			</div>
 			<div class="info" id="infoButton">
 				<button id="addFriend">Add Friend</button>
-				<button>Send Message</button>
+				<button id="sendMessage">Send Message</button>
 				<button>Friends</button>
 				<button>Groups</button>
 				<button>Classes</button>
