@@ -544,19 +544,19 @@ $(document).ready(function () {
 
 				//Make array to hold promises.
 				var suggProm = [];
-
-				$.each(response.data, function (i, v) {
-					//Push gets to array so next function waits.
-					suggProm.push($.get('/api/user/' + v)
-						.done(function (response) {
-							var x = $.extend({}, response.data, {
-								"title": "profile"
+				if (response.data) {
+					$.each(response.data, function (i, v) {
+						//Push gets to array so next function waits.
+						suggProm.push($.get('/api/user/' + v)
+							.done(function (response) {
+								var x = $.extend({}, response.data, {
+									"title": "profile"
+								})
+								data.list.push(x);
 							})
-							data.list.push(x);
-						})
-						.fail());
-				});
-
+							.fail());
+					});
+				}
 				$.when.apply($, suggProm).then(function () {
 					if (!(data.list.length == 0)) {
 						$.get("/temps/suggTemp.hjs", function (result) {

@@ -37,17 +37,17 @@
 		</div>
         </div>
 
-		
+
 
         <div class="search">
 			  	<input type="search" id="searchbar" placeholder="Search MunSN"><button id="searchbtn" class="searchbtn">Search</button>
 
 			<div class="search" id="searchRes" style="display: none;">
-			
+
 			</div>
 		</div>
 
-		
+
 
 		<div class="buttons">
 			<a href="javascript:void(0)"><img id="not" src="/img/notification-red.png"></a>
@@ -69,7 +69,7 @@
 				</div></a>
 			</div>
 		</div>
-		
+
 	</div>
 	</nav>
 
@@ -160,8 +160,8 @@
 				<div class="textDesc">
 					<textarea class="text" id="description" placeholder="Description..."></textarea>
 				</div>
-				<input id="startTime" type="text" />
-				<input id="endTime" type="text" />
+				<input id='sTime' type="text" />
+				<input id='eTime' type="text" />
 
 				<div class='rrule' id='freq'>
 					<label><input name="freq" type="radio" value="0" checked />Once</label>
@@ -193,6 +193,9 @@
                 	<label><input name="bymonth" type="checkbox" value="10"/> Oct</label>
                 	<label><input name="bymonth" type="checkbox" value="11"/> Nov</label>
                 	<label><input name="bymonth" type="checkbox" value="12"/> Dec</label>
+				</div>
+				<div class='rrule'>
+				    <label>Until<input name="bymonth" type="datetime-local" id='until'/></label>
 				</div>
 			</div>
 			<div id="newEventButton">

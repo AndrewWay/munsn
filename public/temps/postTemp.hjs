@@ -13,15 +13,10 @@
 				<div class="postCont">
 					<p> {{text}}</p><img src="/content/posts/{{_id}}/{{_id}}" style={{image}}>
 				</div>
-
 				<div class="postComm">
-
 				</div>
-
 			<div class="commBox">
 				<textarea id="commText" placeholder="Make a comment!"></textarea><button id="commSubmit">Submit</button>
-
-
 				<div id="commDisp">
 					<img id="commImgDisp" src="#" style="display: none;">
 				</div>
