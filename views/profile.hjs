@@ -6,11 +6,13 @@
 	<link href="/stylesheets/blank.css" rel="stylesheet"/>
 	<link href="/stylesheets/post.css" rel="stylesheet"/>
 	<link href="/stylesheets/profile.css" rel="stylesheet"/>
+	<link href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet" >
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.4/build/jquery.datetimepicker.min.css" rel="stylesheet"/>
 
 	<script src="/scripts/jquery.min.js"></script>
 	<script src="/scripts/jquery-ui.js"></script>
 	<script src="/scripts/socket.io.js"></script>
+	<script src="/scripts/jquery-1.11.1"></script>
 	<script src="/scripts/jquery.datetimepicker.full.min.js"></script>
 	<script src="/scripts/hogan-3.0.1.js"></script>
 	<script src="/js/rrule.js"></script>
@@ -164,7 +166,6 @@
 					<button class="postOption" id="pollPost">Add Poll</button>
 					<button class="postOption" id="clearPost">Clear Post</button>
 					<select id="vis">
-						<option value="" disabled selected>Visibility</option>
 						<option value="public">Public</option>
 						<option value="friends">Friends Only</option>
 						<option value="private">Private</option>
@@ -172,6 +173,7 @@
 					</select>
 
 					<input type="file" id="newPostImg" style="display: none;" accept="image/*" />
+					<div id="postProgress"></div>
 				</div>
 
 			</div>

@@ -128,6 +128,22 @@ $(document).ready(function () {
 					picForm.append("image", $("#newPostImg")[0].files[0]);
 
 					$.ajax({
+							xhr: function () {
+								var xhr = new window.XMLHttpRequest();
+								xhr.upload.addEventListener("progress", function (evt) {
+									if (evt.lengthComputable) {
+										var percentComplete = evt.loaded / evt.total;
+										percentComplete = parseInt(percentComplete * 100);
+										$("#resumeProgress").progressbar({
+											value: percentComplete
+										});
+										if (percentComplete === 100) {
+											location.reload();
+										}
+									}
+								}, false);
+								return xhr;
+							},
 							url: '/content/posts/' + pid + '/' + pid,
 							type: 'post',
 							data: picForm,
@@ -148,10 +164,7 @@ $(document).ready(function () {
 					$("#clearPost").click()
 				}
 			})
-			.fail()
-			.always(function () {
-				location.reload();
-			});
+			.fail();
 	});
 
 	//TODO: Potentially move to it's own file to be accessed by every page that needs it.

@@ -26,8 +26,25 @@ $(document).ready(function () {
 
     var resForm = new FormData();
     resForm.append("file", $("#resumeIn")[0].files[0]);
-
     $.ajax({
+        xhr: function () {
+          var xhr = new window.XMLHttpRequest();
+          xhr.upload.addEventListener("progress", function (evt) {
+            if (evt.lengthComputable) {
+              var percentComplete = evt.loaded / evt.total;
+              percentComplete = parseInt(percentComplete * 100);
+              $("#resumeProgress").progressbar({
+                value: percentComplete
+              });
+
+              if (percentComplete === 100) {
+
+              }
+
+            }
+          }, false);
+          return xhr;
+        },
         url: url, //Get :uid from the return.
         type: 'post',
         data: resForm,
