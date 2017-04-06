@@ -13,21 +13,22 @@ var suggIter = 0;
 var uid;
 var uidProm = [];
 
-//Get variable and store it.
-uidProm.push($.get('/api/session')
-	.done(function (response) {
-		if (response.user === undefined) {
-			console.log("ERROR: Session not found.");
-		} else {
-			uid = response.user._id;
-			$('#userPic a').attr('href', '/profile#' + uid);
-		}
-	})
-	.fail(function (response) {
-		console.log('ERROR: Request failed.');
-	}));
-
 $(document).ready(function () {
+	//Get variable and store it.
+	uidProm.push($.get('/api/session')
+		.done(function (response) {
+			if (response.user === undefined) {
+				console.log("ERROR: Session not found.");
+			} else {
+				uid = response.user._id;
+				$('#userPic a').attr('href', '/profile#' + uid);
+				$(document).trigger('uidReady');
+			}
+		})
+		.fail(function (response) {
+			console.log('ERROR: Request failed.');
+		}));
+
 
 	/******************
 	 * Search
@@ -654,8 +655,6 @@ $(document).ready(function () {
 			height: "0px"
 		}, 200);
 	});
-	$(document).trigger('uidReady');
-
 });
 
 
