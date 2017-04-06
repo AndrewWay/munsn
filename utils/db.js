@@ -196,7 +196,6 @@ mongoClient.connect(dbURL, function (err, DB) {
 			}]
 		}
 	});
-
 	DB.createCollection('posts', {
 		validator: {
 			$and: [{

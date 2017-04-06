@@ -254,18 +254,17 @@ $(document).ready(function () {
 					rule = new RRule({
 						freq: RRule.WEEKLY,
 						byweekday: cDays,
-						until: new Date($('#lastDay').val() + ' ' + '23:59:59')
+						until: new Date($('#lastDay').val() + ' ' + '23:59:59Z').toISOString().substr(0, 19)
 					});
-
 					var evnt = {
 						'start': {
 							//This substr is not a mistake, the time zone gets janked without it.
-							'dateTime': new Date($('#firstDay').val() + ' ' + $('#startTime').val() + ":00").toISOString().substr(0, 19),
+							'dateTime': new Date($('#firstDay').val() + ' ' + $('#startTime').val() + 'Z').toISOString().substr(0, 19),
 							'timeZone': 'America/St_Johns'
 						},
 						'end': {
 							//This substr is not a mistake, the time zone gets janked without it.
-							'dateTime': new Date($('#firstDay').val() + ' ' + $('#endTime').val() + ":00").toISOString().substr(0, 19),
+							'dateTime': new Date($('#firstDay').val() + ' ' + $('#endTime').val() + 'Z').toISOString().substr(0, 19),
 							'timeZone': 'America/St_Johns'
 						},
 						'recurrence': ['RRULE:' + rule.toString()],
