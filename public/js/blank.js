@@ -356,18 +356,26 @@ $(document).ready(function () {
 	//initialize end time
 	$('#endTime').datetimepicker({
 		datepicker: false,
-		format: 'H:i'
+		formatTime: 'H:i A',
+		format: 'H:i:s',
+		step: 30,
+		useCurrent: false,
+		defaultDate: new Date(new Date().toLocaleDateString())
 	});
 
 	//Intialize start time
 	$('#startTime').datetimepicker({
 		datepicker: false,
-		format: 'H:i'
+		formatTime: 'H:i A',
+		format: 'H:i:s A',
+		step: 30,
+		useCurrent: false,
+		defaultDate: new Date(new Date().toLocaleDateString())
 	});
 
 	$('#firstDay').datepicker({
 		datepicker: true,
-		format: 'MM/DD/YY'
+		formatTime: 'MM/DD/YY'
 	});
 	$('#lastDay').datepicker({
 		datepicker: true,
