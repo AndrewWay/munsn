@@ -227,7 +227,6 @@ $(document).ready(function () {
 
 				//Wait until all data is loaded for the posts.
 				$.when.apply($, postProm).then(function () {
-					postData.list.reverse();
 					$.get("/temps/postTemp.hjs", function (post) {
 						var template = Hogan.compile("{{#list}}" + post + "{{/list}}");
 						var output = template.render(postData);

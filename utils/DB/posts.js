@@ -187,13 +187,15 @@ module.exports = function (DBPosts, collectionPosts, collectionFriends) {
 				}
 				cbPrivate = true;
 			});
-			collectionFriends.find({
-				uid: query.uid
+			collectionFriends.findOne({
+				_id: query.uid
 			}, function (listErr, listResults) {
 				if (listErr) {
 					console.error("[DBPosts] FindTimeline->List", "'" + listErr.message + "'");
 
-				} else {
+				} else if (listResults !== null) {
+					//Add the current user to the list so they can see their own friends only posts
+					listResults.friends.push(query.uid);
 					queryFriends.uid = {
 						'$in': listResults.friends
 					};
