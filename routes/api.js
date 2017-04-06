@@ -692,7 +692,7 @@ var findPostByUID = "/post/:uid"; //GET
  * Returns:
  *      - JSON mongo result
  */
-var findTimelinePosts = "/post/timeline"; //GET
+var findTimelinePosts = "/posts/timeline"; //GET
 /**
  * addComment
  *

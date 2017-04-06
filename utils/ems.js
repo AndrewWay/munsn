@@ -1,4 +1,3 @@
-var email = require('emailjs/email');
 var gmail = require('gmail-node');
 var console = require("./consoleLogger");
 var secret = {
@@ -17,19 +16,6 @@ gmail.init(secret, require('path').join(__dirname, '../.credentials/gmail_creds.
 });
 var http = require('http');
 //The MUNSN email used to send emails to users
-var emsSender = {
-	name: 'Mun Social Network',
-	address: 'munsocialnetwork@gmail.com',
-	pass: 'comp4770'
-};
-
-//Email server information
-var emsServer = email.server.connect({
-	user: emsSender.address,
-	password: emsSender.pass,
-	host: 'smtp.gmail.com',
-	ssl: true
-});
 
 /**
  * A generic Email function.

@@ -190,13 +190,13 @@ $(document).ready(function () {
 	//Get and display a number of posts.
 	//TODO: Get and display posts based on their type (poll, photo, text)
 	$.ajax({
-		url: '/api/post/timeline',
-		type: 'GET',
-		contentType: 'application/json; charset=utf-8',
-    	dataType: 'json',
-		data: {
-			uid: uid
-		}
+			url: '/api/posts/timeline',
+			type: 'GET',
+			contentType: 'application/json; charset=utf-8',
+			dataType: 'json',
+			data: {
+				uid: uid
+			}
 		}).done(function (response) {
 			var postData = {
 				"list": []
@@ -233,7 +233,7 @@ $(document).ready(function () {
 					$('#posts').append(output);
 
 					//Post delete button click functionality
-					$('.postDel').click(function() {
+					$('.postDel').click(function () {
 						var p_id = $(this).parents('.postTemp').attr('id');
 						console.log("PID: " + p_id);
 					});
