@@ -173,7 +173,7 @@ module.exports = function (DBPosts, collectionPosts, collectionFriends) {
 					console.error("[DBPosts] FindTimeline->Public", "'" + publicError.message + "'");
 				} else {
 					results = publicResults.length ? results.concat(publicResults) : results;
-					console.log("[DBPosts] FindTimeline->Public", "'" + (publicResults[0] ? "Found Results" : "No Results"));
+					console.log("[DBPosts] FindTimeline->Public", "'" + (publicResults[0] ? "Found Results" : "No Results") + "'->'" + publicResults.length + "'");
 				}
 				cbPublic = true;
 			});
@@ -183,7 +183,7 @@ module.exports = function (DBPosts, collectionPosts, collectionFriends) {
 
 				} else {
 					results = privateResults.length ? results.concat(privateResults) : results;
-					console.log("[DBPosts] FindTimeline->Private", "'" + (privateResults[0] ? "Found Results" : "No Results"));
+					console.log("[DBPosts] FindTimeline->Private", "'" + (privateResults[0] ? "Found Results" : "No Results") + "'->'" + privateResults.length + "'");
 				}
 				cbPrivate = true;
 			});
@@ -206,7 +206,7 @@ module.exports = function (DBPosts, collectionPosts, collectionFriends) {
 
 						} else {
 							results = friendResults.length ? results.concat(friendResults) : results;
-							console.log("[DBPosts] FindTimeline->Friends", "'" + (friendResults[0] ? "Found Results" : "No Results") + "'");
+							console.log("[DBPosts] FindTimeline->Friends", "'" + (friendResults[0] ? "Found Results" : "No Results") + "'->'" + friendResults.length + "'");
 						}
 						cbFriends = true;
 					});
@@ -215,7 +215,7 @@ module.exports = function (DBPosts, collectionPosts, collectionFriends) {
 							console.error("[DBPosts] FindTimeline->List", "'" + listError.message + "'");
 						} else {
 							results = listResults.length ? results.concat(listResults) : results;
-							console.log("[DBPosts] FindTimeline->List", "'" + (listResults[0] ? "Found Results" : "No Results") + "'");
+							console.log("[DBPosts] FindTimeline->List", "'" + (listResults[0] ? "Found Results" : "No Results") + "'->'" + listResults.length + "'");
 						}
 						cbList = true;
 					});
@@ -227,7 +227,7 @@ module.exports = function (DBPosts, collectionPosts, collectionFriends) {
 				console.log("[DBPosts] FindTimeline", "'Searching...'");
 				//If all searches are finish, then break loop, send back data
 				if (cbPublic && cbPrivate && cbFriends && cbList) {
-					console.log("[DBPosts] FindTimeline->Finished", "'Found'->'" + JSON.stringify(results) + "'");
+					console.log("[DBPosts] FindTimeline->Finished", "'Found[" + results.length + "]'->'" + JSON.stringify(results) + "'");
 					clearInterval(resultsLoop);
 					results.sort(function (a, b) {
 						a = new Date(a.history[a.history.length - 1].date);
