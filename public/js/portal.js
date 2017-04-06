@@ -44,6 +44,8 @@ $(document).ready(function () {
 
 	});
 
+
+
 	/****************************
 	 * Making post
 	 *
@@ -224,6 +226,12 @@ $(document).ready(function () {
 					var template = Hogan.compile("{{#list}}" + post + "{{/list}}");
 					var output = template.render(postData);
 					$('#posts').append(output);
+
+					//Post delete button click functionality
+					$('.postDel').click(function() {
+						var p_id = $(this).parents('.postTemp').attr('id');
+						console.log("PID: " + p_id);
+					});
 				});
 			});
 		})
