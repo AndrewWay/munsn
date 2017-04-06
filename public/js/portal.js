@@ -182,7 +182,7 @@ $(document).ready(function () {
 	//TODO: Get and display posts based on their type (poll, photo, text)
 	$(document).on('uidReady', function () {
 		$.ajax({
-				url: '/api/posts/timeline',
+				url: '/api/posts/portal',
 				type: 'GET',
 				contentType: 'application/json; charset=utf-8',
 				dataType: 'json',
