@@ -119,8 +119,6 @@ $(document).ready(function () {
 			})
 			.done(function (response) {
 				var pid = response.data._id;
-
-
 				//If image is supplied. Store that image.
 				//TODO: Figure out why done et al aren't firing. Reload timeline with new post!
 				if (imgBool) {
@@ -173,11 +171,7 @@ $(document).ready(function () {
 				}
 			})
 			.fail();
-
-
 	});
-
-
 	//TODO: Potentially move to it's own file to be accessed by every page that needs it.
 	/*******************
 	 * Load posts
@@ -243,7 +237,5 @@ $(document).ready(function () {
 			.fail(
 				//TODO: Function on failures.
 			);
-	})
-
-
+	});
 });

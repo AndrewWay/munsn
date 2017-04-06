@@ -13,22 +13,22 @@ var suggIter = 0;
 var uid;
 var uidProm = [];
 
-//Get variable and store it.
-uidProm.push($.get('/api/session')
-	.done(function (response) {
-		if (response.user === undefined) {
-			console.log("ERROR: Session not found.");
-		} else {
-			uid = response.user._id;
-			$('#userPic a').attr('href', '/profile#' + uid);
-		}
-		$(document).trigger('uidReady');
-	})
-	.fail(function (response) {
-		console.log('ERROR: Request failed.');
-	}));
-
 $(document).ready(function () {
+	//Get variable and store it.
+	uidProm.push($.get('/api/session')
+		.done(function (response) {
+			if (response.user === undefined) {
+				console.log("ERROR: Session not found.");
+			} else {
+				uid = response.user._id;
+				$('#userPic a').attr('href', '/profile#' + uid);
+				$(document).trigger('uidReady');
+			}
+		})
+		.fail(function (response) {
+			console.log('ERROR: Request failed.');
+		}));
+
 
 	/******************
 	 * Search
@@ -356,18 +356,26 @@ $(document).ready(function () {
 	//initialize end time
 	$('#endTime').datetimepicker({
 		datepicker: false,
-		format: 'H:i'
+		formatTime: 'H:i A',
+		format: 'H:i:s',
+		step: 30,
+		useCurrent: false,
+		defaultDate: new Date(new Date().toLocaleDateString())
 	});
 
 	//Intialize start time
 	$('#startTime').datetimepicker({
 		datepicker: false,
-		format: 'H:i'
+		formatTime: 'H:i A',
+		format: 'H:i:s',
+		step: 30,
+		useCurrent: false,
+		defaultDate: new Date(new Date().toLocaleDateString())
 	});
 
 	$('#firstDay').datepicker({
 		datepicker: true,
-		format: 'MM/DD/YY'
+		formatTime: 'MM/DD/YY'
 	});
 	$('#lastDay').datepicker({
 		datepicker: true,
@@ -655,8 +663,6 @@ $(document).ready(function () {
 			height: "0px"
 		}, 200);
 	});
-
-
 });
 
 

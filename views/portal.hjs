@@ -7,7 +7,7 @@
 	<link href="/stylesheets/post.css" rel="stylesheet"/>
 	<link href="/stylesheets/portal.css" rel="stylesheet"/>
 	<link href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet" >
-	<link href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.4/build/jquery.datetimepicker.min.css" rel="stylesheet"/>
+	<link href="/stylesheets/jquery.datetimepicker.min.css" rel="stylesheet"/>
 
 	<script src="/scripts/jquery.min.js"></script>
 	<script src="/scripts/jquery-ui.js"></script>
