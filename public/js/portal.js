@@ -119,8 +119,6 @@ $(document).ready(function () {
 			})
 			.done(function (response) {
 				var pid = response.data._id;
-
-
 				//If image is supplied. Store that image.
 				//TODO: Figure out why done et al aren't firing. Reload timeline with new post!
 				if (imgBool) {
@@ -173,78 +171,72 @@ $(document).ready(function () {
 				}
 			})
 			.fail();
-
-
 	});
+});
+//TODO: Potentially move to it's own file to be accessed by every page that needs it.
+/*******************
+ * Load posts
+ *
+ * @params: null
+ *
+ * Functions for loading relevant posts into the page
+ ********************/
 
+//Get and display a number of posts.
+//TODO: Get and display posts based on their type (poll, photo, text)
+$(document).on('uidReady', function () {
+	$.ajax({
+			url: '/api/posts/timeline',
+			type: 'GET',
+			contentType: 'application/json; charset=utf-8',
+			dataType: 'json',
+			data: {
+				"uid": uid
+			}
+		}).done(function (response) {
+			var postData = {
+				"list": []
+			};
 
-	//TODO: Potentially move to it's own file to be accessed by every page that needs it.
-	/*******************
-	 * Load posts
-	 *
-	 * @params: null
-	 *
-	 * Functions for loading relevant posts into the page
-	 ********************/
+			var postProm = [];
 
-	//Get and display a number of posts.
-	//TODO: Get and display posts based on their type (poll, photo, text)
-	$(document).on('uidReady', function () {
-		$.ajax({
-				url: '/api/posts/timeline',
-				type: 'GET',
-				contentType: 'application/json; charset=utf-8',
-				dataType: 'json',
-				data: {
-					"uid": uid
-				}
-			}).done(function (response) {
-				var postData = {
-					"list": []
-				};
+			$.each(response.data, function (i, v) {
 
-				var postProm = [];
+				var postInfo = $.extend({}, v, v.history.slice(-1).pop());
+				postInfo.date = new Date(postInfo.date).toLocaleString();
 
-				$.each(response.data, function (i, v) {
+				postProm.push($.ajax({
+					type: 'GET',
+					url: '/api/user/' + v.uid
+				}).done(function (res) {
+					postInfo.fname = res.data.fname;
+					postInfo.lname = res.data.lname;
+				}))
+				postInfo.image = postInfo.image ? 'visibility:visible' : 'visibility:hidden';
 
-					var postInfo = $.extend({}, v, v.history.slice(-1).pop());
-					postInfo.date = new Date(postInfo.date).toLocaleString();
+				postData.list.push(postInfo);
 
-					postProm.push($.ajax({
-						type: 'GET',
-						url: '/api/user/' + v.uid
-					}).done(function (res) {
-						postInfo.fname = res.data.fname;
-						postInfo.lname = res.data.lname;
-					}))
-					postInfo.image = postInfo.image ? 'visibility:visible' : 'visibility:hidden';
+				//Stop at 5 posts. Arbitrary
+				return i < 20;
+			});
 
-					postData.list.push(postInfo);
+			//Wait until all data is loaded for the posts.
+			$.when.apply($, postProm).then(function () {
+				postData.list.reverse();
+				$.get("/temps/postTemp.hjs", function (post) {
+					var template = Hogan.compile("{{#list}}" + post + "{{/list}}");
+					var output = template.render(postData);
+					$('#posts').append(output);
 
-					//Stop at 5 posts. Arbitrary
-					return i < 20;
-				});
-
-				//Wait until all data is loaded for the posts.
-				$.when.apply($, postProm).then(function () {
-					postData.list.reverse();
-					$.get("/temps/postTemp.hjs", function (post) {
-						var template = Hogan.compile("{{#list}}" + post + "{{/list}}");
-						var output = template.render(postData);
-						$('#posts').append(output);
-
-						//Post delete button click functionality
-						$('.postDel').click(function () {
-							var p_id = $(this).parents('.postTemp').attr('id');
-							console.log("PID: " + p_id);
-						});
+					//Post delete button click functionality
+					$('.postDel').click(function () {
+						var p_id = $(this).parents('.postTemp').attr('id');
+						console.log("PID: " + p_id);
 					});
 				});
-			})
-			.fail(
-				//TODO: Function on failures.
-			);
-	})
-
-
+			});
+		})
+		.fail(
+			//TODO: Function on failures.
+		);
 });

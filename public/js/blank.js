@@ -22,7 +22,6 @@ uidProm.push($.get('/api/session')
 			uid = response.user._id;
 			$('#userPic a').attr('href', '/profile#' + uid);
 		}
-		$(document).trigger('uidReady');
 	})
 	.fail(function (response) {
 		console.log('ERROR: Request failed.');
@@ -655,7 +654,7 @@ $(document).ready(function () {
 			height: "0px"
 		}, 200);
 	});
-
+	$(document).trigger('uidReady');
 
 });
 
