@@ -365,34 +365,27 @@ module.exports = function (DBPosts, collectionPosts, collectionFriends) {
 	//=====================================================================================================================================
 
 	DBPosts.addComment = function (req, res, callback) {
-		var date = new Date();
 		var comment = {
-			authorid: undefined
+			_id: new ObjectID(),
+			authorid: req.body.authorid,
+			history: req.body.data ? (
+				[{
+					date: new Date(),
+					image: req.body.data.image === "true",
+					text: req.body.data.text
+				}]
+			) : undefined,
 		};
 		Object.keys(comment).forEach(k => {
-			if (!req.body[k]) {
+			if (comment[k] === undefined) {
 				delete comment[k];
-			} else {
-				comment[k] = req.body[k];
 			}
 		});
-
-		var commentData = {
-			text: undefined,
-			image: undefined,
-		};
-
-		Object.keys(commentData).forEach(k => {
-			if (!req.body.data[k]) {
-				delete commentData[k];
-			} else {
-				commentData[k] = req.body.data[k];
+		Object.keys(comment.history[0]).forEach(k => {
+			if (comment.history[0][k] === undefined) {
+				delete comment.history[0][k];
 			}
 		});
-		commentData.date = date;
-		commentData.image = (commentData.image === "true" ? true : false);
-		comment._id = new ObjectID();
-		comment.history = [commentData];
 		console.log("[DBPosts] addComment", "'" + JSON.stringify(comment) + "'");
 		collectionPosts.update({
 			_id: new ObjectID(req.body.pid)

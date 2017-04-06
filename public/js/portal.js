@@ -177,27 +177,6 @@ $(document).ready(function () {
 	 *
 	 * Functions for loading relevant posts into the page
 	 ********************/
-	{
-		"_id": ObjectId("58e6c331d4e3741c40aef1a0"),
-		"uid": "jh2587",
-		"type": "timeline",
-		"targetid": "jh2587",
-		"visibility": "public",
-		"history": [{
-			"date": ISODate("2017-04-06T22:37:37.781Z"),
-			"image": false,
-			"text": "test"
-		}],
-		"comments": [{
-			"authorid": "jh2587",
-			"_id": ObjectId("58e6c38d26d7f5272cb18ef0"),
-			"history": [{
-				"text": "test",
-				"image": false,
-				"date": ISODate("2017-04-06T22:39:09.317Z")
-			}]
-		}]
-	}
 	//Get and display a number of posts.
 	//TODO: Get and display posts based on their type (poll, photo, text)
 	$(document).on('uidReady', function () {
