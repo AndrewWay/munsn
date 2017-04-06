@@ -152,9 +152,10 @@ $(document).ready(function () {
 	//Display create group popup.
 	$('#createGroup').on('click', function () {
 		//Disable screen scrowing when open.
-		$('html, body').css({
-			overflow: 'hidden'
-		});
+		if ($(document).height() > $(window).height()) {
+    		 var scrollTop = ($('html').scrollTop()) ? $('html').scrollTop() : $('body').scrollTop(); // Works for Chrome, Firefox, IE...
+    		 $('html').addClass('noscroll').css('top',-scrollTop);         
+		}
 
 		$('#groupPop').show();
 	});
@@ -162,9 +163,10 @@ $(document).ready(function () {
 	//Display create course popup
 	$('#createCourse').on('click', function () {
 		//Disable screen scrolling when open.
-		$('html, body').css({
-			overflow: 'hidden'
-		});
+		if ($(document).height() > $(window).height()) {
+    		 var scrollTop = ($('html').scrollTop()) ? $('html').scrollTop() : $('body').scrollTop(); // Works for Chrome, Firefox, IE...
+    		 $('html').addClass('noscroll').css('top',-scrollTop);         
+		}
 
 		$('#coursePop').show();
 	});
@@ -172,9 +174,9 @@ $(document).ready(function () {
 	//Close create group popup
 	$('#gClose').click(function () {
 		//Allow screen scrolling when closed.
-		$('html, body').css({
-			overflow: 'auto'
-		});
+		var scrollTop = parseInt($('html').css('top'));
+		$('html').removeClass('noscroll');
+		$('html,body').scrollTop(-scrollTop);
 
 		$('#groupPop').hide();
 	});
@@ -182,9 +184,9 @@ $(document).ready(function () {
 	//Close create course popup
 	$('#cClose').click(function () {
 		//Allow screen scrolling when closed.
-		$('html, body').css({
-			overflow: 'auto'
-		});
+		var scrollTop = parseInt($('html').css('top'));
+		$('html').removeClass('noscroll');
+		$('html,body').scrollTop(-scrollTop);
 
 		//Empty all inputs
 		$('#coursePop *').val('');
