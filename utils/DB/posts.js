@@ -173,7 +173,7 @@ module.exports = function (DBPosts, collectionPosts, collectionFriends) {
 					console.error("[DBPosts] FindTimeline->Public", "'" + publicError.message + "'");
 				} else {
 					results = publicResults.length ? results.concat(publicResults) : results;
-					console.log("[DBPosts] FindTimeline->Public", "'" + (publicResults[0] ? "Found Results" : "No Results") + "'->'" + publicResults.length + "'");
+					console.log("[DBPosts] FindTimeline->Public", "'Found'->'" + publicResults.length + "'");
 				}
 				cbPublic = true;
 			});
@@ -183,7 +183,7 @@ module.exports = function (DBPosts, collectionPosts, collectionFriends) {
 
 				} else {
 					results = privateResults.length ? results.concat(privateResults) : results;
-					console.log("[DBPosts] FindTimeline->Private", "'" + (privateResults[0] ? "Found Results" : "No Results") + "'->'" + privateResults.length + "'");
+					console.log("[DBPosts] FindTimeline->Private", "'Found'->'" + privateResults.length + "'");
 				}
 				cbPrivate = true;
 			});
@@ -206,7 +206,7 @@ module.exports = function (DBPosts, collectionPosts, collectionFriends) {
 
 						} else {
 							results = friendResults.length ? results.concat(friendResults) : results;
-							console.log("[DBPosts] FindTimeline->Friends", "'" + (friendResults[0] ? "Found Results" : "No Results") + "'->'" + friendResults.length + "'");
+							console.log("[DBPosts] FindTimeline->Friends", "'Found'->'" + friendResults.length + "'");
 						}
 						cbFriends = true;
 					});
@@ -215,7 +215,7 @@ module.exports = function (DBPosts, collectionPosts, collectionFriends) {
 							console.error("[DBPosts] FindTimeline->List", "'" + listError.message + "'");
 						} else {
 							results = listResults.length ? results.concat(listResults) : results;
-							console.log("[DBPosts] FindTimeline->List", "'" + (listResults[0] ? "Found Results" : "No Results") + "'->'" + listResults.length + "'");
+							console.log("[DBPosts] FindTimeline->List", "'Found'->'" + listResults.length + "'");
 						}
 						cbList = true;
 					});
