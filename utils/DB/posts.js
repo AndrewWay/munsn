@@ -139,10 +139,11 @@ module.exports = function (DBPosts, collectionPosts, collectionFriends) {
 	};
 
 	DBPosts.findTimeline = function (req, res, callback) {
-		Object.assign(req.body, req.query);
-		console.log("[DBPosts] FindTimeline", JSON.stringify(req.body.uid));
-		if (req.body.uid) {
-			var results = {};
+		var query = req.query;
+		Object.assign(query, req.body);
+		console.log("[DBPosts] FindTimeline", JSON.stringify(query.uid));
+		if (query.uid) {
+			var results = [];
 			// Declare loop control variables
 			var cbPublic = false,
 				cbPrivate = false,
@@ -155,7 +156,7 @@ module.exports = function (DBPosts, collectionPosts, collectionFriends) {
 			};
 			var queryPrivate = {
 				visibility: 'private',
-				uid: req.body.uid
+				uid: query.uid
 			};
 			var queryFriends = {
 				visibility: 'friends'
@@ -164,66 +165,66 @@ module.exports = function (DBPosts, collectionPosts, collectionFriends) {
 				visibility: 'list'
 			};
 			//Modify queries if targetid is given
-			if (req.body.targetid) {
-				queryPrivate.targetid = req.body.targetid;
+			if (query.targetid) {
+				queryPrivate.targetid = query.targetid;
 			}
-			collectionPosts.find(queryPublic).toArray(function (pubErr, pubResults) {
-				if (pubErr) {
-					console.error("[DBPosts] FindTimeline->Public", "'" + pubErr.message + "'->'" + search + "'");
+			collectionPosts.find(queryPublic).toArray(function (publicError, publicResults) {
+				if (publicError) {
+					console.error("[DBPosts] FindTimeline->Public", "'" + publicError.message + "'");
 				} else {
-					results = results.concat(pubResults);
-					cbPublic = true;
-					console.log("[DBPosts] FindTimeline->Public", "'" + (pubResults[0] ? "Found Results" : "No Results"));
+					results = publicResults.length ? results.concat(publicResults) : results;
+					console.log("[DBPosts] FindTimeline->Public", "'" + (publicResults[0] ? "Found Results" : "No Results"));
 				}
+				cbPublic = true;
 			});
-			collectionPosts.find(queryPrivate).toArray(function (priErr, priResults) {
-				if (priErr) {
-					console.error("[DBPosts] FindTimeline->Private", "'" + priErr.message + "'->'" + search + "'");
+			collectionPosts.find(queryPrivate).toArray(function (privateError, privateResults) {
+				if (privateError) {
+					console.error("[DBPosts] FindTimeline->Private", "'" + privateError.message + "'");
 
 				} else {
-					results = results.concat(priResults);
-					cbPrivate = true;
-					console.log("[DBPosts] FindTimeline->Private", "'" + (priResults[0] ? "Found Results" : "No Results"));
+					results = privateResults.length ? results.concat(privateResults) : results;
+					console.log("[DBPosts] FindTimeline->Private", "'" + (privateResults[0] ? "Found Results" : "No Results"));
 				}
+				cbPrivate = true;
 			});
 			collectionFriends.find({
-				uid: req.body.uid
-			}, function (friListErr, friListResults) {
-				if (friListErr) {
-					console.error("[DBPosts] FindTimeline->FriendsListSearch", "'" + friListErr.message + "'->'" + search + "'");
+				uid: query.uid
+			}, function (listErr, listResults) {
+				if (listErr) {
+					console.error("[DBPosts] FindTimeline->List", "'" + listErr.message + "'");
 
 				} else {
 					queryFriends.uid = {
-						'$in': friListResults.friends
+						'$in': listResults.friends
 					};
 					queryList.whitelist = {
-						'$in': [req.body.uid]
+						'$in': [query.uid]
 					}
-					collectionPosts.find(queryFriends).toArray(function (friErr, friResults) {
-						if (friErr) {
-							console.error("[DBPosts] FindTimeline->Friends", "'" + friErr.message + "'->'" + search + "'");
+					collectionPosts.find(queryFriends).toArray(function (friendError, friendResults) {
+						if (friendError) {
+							console.error("[DBPosts] FindTimeline->Friends", "'" + friendError.message + "'");
 
 						} else {
-							results = results.concat(friResults);
-							cbFriends = true;
-							console.log("[DBPosts] FindTimeline->Friends", "'" + (friResults[0] ? "Found Results" : "No Results"));
+							results = friendResults.length ? results.concat(friendResults) : results;
+							console.log("[DBPosts] FindTimeline->Friends", "'" + (friendResults[0] ? "Found Results" : "No Results") + "'");
 						}
+						cbFriends = true;
 					});
-					collectionPosts.find(queryList).toArray(function (listErr, listResults) {
-						if (listErr) {
-							console.error("[DBPosts] FindTimeline->List", "'" + listErr.message + "'->'" + search + "'");
+					collectionPosts.find(queryList).toArray(function (listError, listResults) {
+						if (listError) {
+							console.error("[DBPosts] FindTimeline->List", "'" + listError.message + "'");
 						} else {
-							results = results.concat(listResults);
-							cbList = true;
-							console.log("[DBPosts] FindTimeline->List", "'" + (listResults[0] ? "Found Results" : "No Results"));
+							results = listResults.length ? results.concat(listResults) : results;
+							console.log("[DBPosts] FindTimeline->List", "'" + (listResults[0] ? "Found Results" : "No Results") + "'");
 						}
+						cbList = true;
 					});
 				}
 			});
 			//Start search loop after MAX_SEARCH_TIME seconds
 			var count = 1;
 			var resultsLoop = setInterval(function () {
-				console.log("[DBPosts] FindTimeline", "Iteration " + count + " of " + MAX_TRIES);
+				console.log("[DBPosts] FindTimeline", "'Searching...'");
 				//If all searches are finish, then break loop, send back data
 				if (cbPublic && cbPrivate && cbFriends && cbList) {
 					console.log("[DBPosts] FindTimeline->Finished", "'Found'->'" + JSON.stringify(results) + "'");
@@ -238,10 +239,12 @@ module.exports = function (DBPosts, collectionPosts, collectionFriends) {
 						status: 'ok',
 						data: results
 					});
-				} else {
+				}
+				//NOTE: This code is garbage that is unncessary.
+				/*else {
 					//If not, then repeat MAX_SEARCH_TRIES amount
 					if (count < MAX_TRIES) {
-						count++;
+						//count++;
 					}
 					//If MAX_SEARCH_TRIES is exceeded, then return whatever search data is complete
 					else {
@@ -254,7 +257,7 @@ module.exports = function (DBPosts, collectionPosts, collectionFriends) {
 							data: results
 						});
 					}
-				}
+				}*/
 			}, MAX_TIME);
 		} else {
 			console.warn("[DBPosts] FindTimeline", "'Missing Fields'");

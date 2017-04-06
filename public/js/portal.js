@@ -189,61 +189,62 @@ $(document).ready(function () {
 
 	//Get and display a number of posts.
 	//TODO: Get and display posts based on their type (poll, photo, text)
-	$.ajax({
-			url: '/api/posts/timeline',
-			type: 'GET',
-			contentType: 'application/json; charset=utf-8',
-			dataType: 'json',
-			data: {
-				uid: uid
-			}
-		}).done(function (response) {
-			var postData = {
-				"list": []
-			};
+	$(document).on('uidReady', function () {
+		$.ajax({
+				url: '/api/posts/timeline',
+				type: 'GET',
+				contentType: 'application/json; charset=utf-8',
+				dataType: 'json',
+				data: {
+					"uid": uid
+				}
+			}).done(function (response) {
+				var postData = {
+					"list": []
+				};
 
-			var postProm = [];
+				var postProm = [];
 
-			$.each(response.data, function (i, v) {
+				$.each(response.data, function (i, v) {
 
-				var postInfo = $.extend({}, v, v.history.slice(-1).pop());
-				postInfo.date = new Date(postInfo.date).toLocaleString();
+					var postInfo = $.extend({}, v, v.history.slice(-1).pop());
+					postInfo.date = new Date(postInfo.date).toLocaleString();
 
-				postProm.push($.ajax({
-					type: 'GET',
-					url: '/api/user/' + v.uid
-				}).done(function (res) {
-					postInfo.fname = res.data.fname;
-					postInfo.lname = res.data.lname;
-				}))
-				postInfo.image = postInfo.image ? 'visibility:visible' : 'visibility:hidden';
+					postProm.push($.ajax({
+						type: 'GET',
+						url: '/api/user/' + v.uid
+					}).done(function (res) {
+						postInfo.fname = res.data.fname;
+						postInfo.lname = res.data.lname;
+					}))
+					postInfo.image = postInfo.image ? 'visibility:visible' : 'visibility:hidden';
 
-				postData.list.push(postInfo);
+					postData.list.push(postInfo);
 
-				//Stop at 5 posts. Arbitrary
-				return i < 20;
-			});
+					//Stop at 5 posts. Arbitrary
+					return i < 20;
+				});
 
-			//Wait until all data is loaded for the posts.
-			$.when.apply($, postProm).then(function () {
-				postData.list.reverse();
-				$.get("/temps/postTemp.hjs", function (post) {
-					var template = Hogan.compile("{{#list}}" + post + "{{/list}}");
-					var output = template.render(postData);
-					$('#posts').append(output);
+				//Wait until all data is loaded for the posts.
+				$.when.apply($, postProm).then(function () {
+					postData.list.reverse();
+					$.get("/temps/postTemp.hjs", function (post) {
+						var template = Hogan.compile("{{#list}}" + post + "{{/list}}");
+						var output = template.render(postData);
+						$('#posts').append(output);
 
-					//Post delete button click functionality
-					$('.postDel').click(function () {
-						var p_id = $(this).parents('.postTemp').attr('id');
-						console.log("PID: " + p_id);
+						//Post delete button click functionality
+						$('.postDel').click(function () {
+							var p_id = $(this).parents('.postTemp').attr('id');
+							console.log("PID: " + p_id);
+						});
 					});
 				});
-			});
-		})
-		.fail(
-			//TODO: Function on failures.
-		);
-
+			})
+			.fail(
+				//TODO: Function on failures.
+			);
+	})
 
 
 });

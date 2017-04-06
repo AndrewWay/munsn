@@ -1299,7 +1299,7 @@ router.get(findPostByUID, UserID, function (req, res, next) {
 	});
 });
 router.get(findTimelinePosts, UserID, function (req, res, next) {
-	DB.Posts.findTimelinePosts(req, res, function (result) {
+	DB.Posts.findTimeline(req, res, function (result) {
 		res.json(result);
 	});
 });
