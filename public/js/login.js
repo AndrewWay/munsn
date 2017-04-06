@@ -1,3 +1,5 @@
+window.location.hash='';
+
 //Initialized datepicker for registration form.
 $(function () {
 	$("#datePick").datepicker({
