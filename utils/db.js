@@ -226,7 +226,6 @@ mongoClient.connect(dbURL, function (err, DB) {
 			]
 		}
 	});
-
 	/**
 	 * The comments collection is a little special. It contains two fields:
 	 *  - (objectId) _id: The same id as its matching post object (post._id = comment._id)

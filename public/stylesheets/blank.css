@@ -1,11 +1,11 @@
-body, html {
+body,
+html {
 	/*Set height through javascript or something getting screen height?*/
 	min-height: 666px;
 	height: 100vh;
 	width: 100%;
 	min-width: 1000px;
 	margin: 0;
-	
 	/*REMOVE IF CAUSES ISSUES*/
 	overflow: scroll;
 }
@@ -13,124 +13,116 @@ body, html {
 .navbar {
 	background-color: #333;
 	position: absolute;
-	top:0;
-	width:100%;
+	top: 0;
+	width: 100%;
 	height: 3.1em;
 	min-width: 1000px;
 	display: inline-block;
 	z-index: 1;
 	box-sizing: content-box;
-
 }
 
-
-.menu{
-	float:left;
-	display:inline-block;
-	width:27%;
+.menu {
+	float: left;
+	display: inline-block;
+	width: 27%;
 	margin-left: 10px;
-
 }
 
-.menu li{
+.menu li {
 	padding-left: 10px
 }
-.menu a:hover{
+
+.menu a:hover {
 	background-color: #444;
 }
 
-.menu ul{
+.menu ul {
 	display: inline-block;
 	margin: 0;
 	padding: 0;
-} 
+}
 
 .menu ul li {
 	display: inline-block;
 	list-style-type: none;
 }
 
-.menu > ul > li > a {
+.menu>ul>li>a {
 	color: #aaa;
 	background-color: #333;
 	display: block;
 	line-height: 2.9em;
-	padding: 0.5em,0.5em;
+	padding: 0.5em, 0.5em;
 	text-decoration: none;
 }
 
-.search{
+.search {
 	display: inline-block;
 	line-height: 3em;
-	width:45%;	
+	width: 45%;
 }
 
-.search input{
+.search input {
 	border-bottom-left-radius: 9px;
 	border-top-left-radius: 9px;
-	padding-left:10px;
-	width:85%;
+	padding-left: 10px;
+	width: 85%;
 	min-width: 4%;
 	border-style: none;
 	height: 1.75em;
 }
 
-.search button{
+.search button {
 	border-top-right-radius: 9px;
 	border-bottom-right-radius: 9px;
 	border-style: none;
-	height:1.75em;
-	position:absolute;
-	top:.95em;
+	height: 1.75em;
+	position: absolute;
+	top: .95em;
 }
 
-.buttons{
+.buttons {
 	display: inline-block;
 	float: right;
 }
 
-.buttons a{
+.buttons a {
 	display: inline-block;
 	line-height: 3em;
 	margin-right: 10px;
 }
 
-#cog, #log{
+#cog,
+#log {
 	vertical-align: middle;
 	padding-bottom: 3px;
 }
 
-#not{
+#not {
 	vertical-align: middle;
 	padding-bottom: 2px;
 }
 
-#not-center{
+#not-center {
 	position: absolute;
 	height: 300px;
 	width: 300px;
-	
 	top: 3.1em;
 	right: 0;
-	
 	display: none;
-	
 	z-index: 100;
-	
 	background: #ffffff;
 	border: 2px solid #dddddd;
 }
 
 #not-center #note {
 	display: block;
-	
 	height: 50px;
-	
 	white-space: nowrap;
 	text-overflow: ellipsis;
 	overflow: hidden;
 	border-bottom: 1px solid #777777;
-	
 	font-family: Tahoma;
 	text-decoration: none;
 	font-size: 0.9em;
@@ -141,7 +133,7 @@ body, html {
 	background-color: #dddddd;
 }
 
-.sidebars{
+.sidebars {
 	height: calc(100% - 50px);
 	width: 16%;
 	min-width: 160px;
@@ -151,45 +143,43 @@ body, html {
 	box-sizing: content-box;
 }
 
-#section-left{
-	left:0;
+#section-left {
+	left: 0;
 	display: inline-block;
 	border-right: 2px solid #cccccc;
-	
 }
 
-#section-right{
-	right:0;
+#section-right {
+	right: 0;
 	display: inline-block;
 	border-left: 2px solid #cccccc;
 }
 
-.timeline{
+.timeline {
 	display: inline-block;
 	position: absolute;
-	margin-left: 16%; 
-	top:3.1em;
-	width:68%;
+	margin-left: 16%;
+	top: 3.1em;
+	width: 68%;
 	min-width: 680px;
 }
 
-.container{
+.container {
 	position: absolute;
 	top: 0;
-	
-	height:100vh;
+	height: 100vh;
 	width: 100%;
 	min-width: 1000px;
 }
 
-/*Left sidebar CSS*/ 
+
+/*Left sidebar CSS*/
+
 .sidebars div {
 	position: static;
 	display: inline-block;
-	
-	margin-top:10px;
+	margin-top: 10px;
 	width: 100%;
-
 }
 
 .userLists {
@@ -211,17 +201,14 @@ body, html {
 .userLists a {
 	position: relative;
 	display: block;
-	
 	max-width: 90%;
 	min-width: 90%;
 	margin-left: 10%;
-	
 	font-family: Tahoma;
 	text-decoration: none;
 	font-size: 0.9em;
 	font-weight: bold;
 	color: #000000;
-	
 	white-space: nowrap;
 	text-overflow: ellipsis;
 	overflow: hidden;
@@ -239,14 +226,11 @@ body, html {
 	border-bottom: none;
 }
 
-#userPic img{
+#userPic img {
 	position: relative;
-	
-	display:block;
+	display: block;
 	margin: auto;
-	
 	width: 80%;
-	
 	border-style: outset;
 	border-width: 2px;
 	border-color: #aaaaaa #7f1734 #7f1734 #aaaaaa;
@@ -256,17 +240,13 @@ body, html {
 /*Suggested Friends. Could be moved?*/
 
 #suggFriend {
-		position: relative;
-		background: #cccccc;
-	
-		display: inline-block;
-		
-		height: 180px;
-		width: 100%;
-		
-		margin: 0;
-		
-		overflow: hidden;
+	position: relative;
+	background: #cccccc;
+	display: inline-block;
+	height: 180px;
+	width: 100%;
+	margin: 0;
+	overflow: hidden;
 }
 
 #suggList {
@@ -279,14 +259,12 @@ body, html {
 	width: auto;
 	display: block;
 	margin: auto;
-	
 	border: 2px outset;
-	
 	border-color: #aaaaaa #7f1734 #7f1734 #aaaaaa;
 }
 
 #suggName {
-	height:30px;
+	height: 30px;
 	text-align: center;
 	vertical-align: middle;
 	line-height: 30px;
@@ -300,26 +278,20 @@ body, html {
 #suggButt {
 	height: 30px;
 	margin: 0;
-	width:100%;
+	width: 100%;
 	bottom: 0;
 }
 
 #suggButt button {
 	height: 100%;
 	width: 49%;
-	
 	border: none;
 	background-color: #eeeeee;
-	
 	border-right: 1px solid #000000;
-	
-	
-	
 }
 
 #suggButt button:last-of-type {
 	border-right: none;
-	
 }
 
 #suggButt button:hover {
@@ -330,7 +302,6 @@ body, html {
 .popup {
 	background-color: #efefef;
 	border: solid 1px #cccccc;
-
 	position: fixed;
 	display: none;
 	z-index: 100;
@@ -364,14 +335,13 @@ body, html {
 	margin: auto;
 	height: 200px;
 	width: 400px;
-
 	text-align: center;
 }
 
 @media all and (max-width: 1000px) {
-    #groupPop{
+	#groupPop {
 		left: 300px;
-    }
+	}
 }
 
 #groupPop * {
@@ -389,16 +359,15 @@ body, html {
 	top: calc(50% - 100px);
 	left: calc(50% - 200px);
 	margin: auto;
-	height: 200px;
+	height: 240px;
 	width: 400px;
-
 	text-align: center;
 }
 
 @media all and (max-width: 1000px) {
-    #coursePop{
+	#coursePop {
 		left: 300px;
-    }
+	}
 }
 
 #coursePop * {
@@ -412,27 +381,21 @@ body, html {
 	margin-top: 10px;
 }
 
+
 /*Styling for search results*/
 
-#searchRes{
+#searchRes {
 	position: relative;
-
 	background: white;
-
 	border: 2px solid black;
-
-	width: 95%;	
-
+	width: 95%;
 	margin: auto;
 	text-align: center;
-
 	overflow-y: scroll;
 	overflow-x: hidden;
 }
 
-#searchRes h3{
-
-}
+#searchRes h3 {}
 
 #searchRes .searchItem {
 	border-top: 1px solid #000000;
@@ -446,17 +409,14 @@ body, html {
 .searchItem a {
 	position: relative;
 	display: block;
-	
 	max-width: 100%;
 	min-width: 100%;
 	margin-left: 0;
-	
 	font-family: Tahoma;
 	text-decoration: none;
 	font-size: 0.9em;
 	font-weight: bold;
 	color: #000000;
-	
 	white-space: nowrap;
 	text-overflow: ellipsis;
 	overflow: hidden;
@@ -465,18 +425,14 @@ body, html {
 
 /*Styling for friend box*/
 
-.menuPan{
+.menuPan {
 	position: relative;
 	height: 500px;
 	width: 400px;
-
-	background:white;
-
+	background: white;
 	margin: auto;
 	text-align: center;
-
 	overflow: scroll;
-
 	border: 2px solid black;
 }
 
@@ -486,11 +442,12 @@ body, html {
 }
 
 #friendPan :not(h3):not(h5):hover {
-    	background-color: #7f1734;
+	background-color: #7f1734;
 }
 
 .menuPan#groupPan :not(h3):not(h5):hover {
-    	background-color: #7f1734;
+	background-color: #7f1734;
 }
+
 
 /*End*/

@@ -108,7 +108,9 @@
 			</div>
 			<div id="times">
 			 	<input id="startTime" type="text" placeholder="Start Time"/>
+				<input id="firstDay" type="text" placeholder="First Day"/>
 				<input id="endTime" type="text" placeholder="End Time"/>
+				<input id="lastDay" type="text" placeholder="Last Day"/>
 			</div>
 
 			<div id="cButton">

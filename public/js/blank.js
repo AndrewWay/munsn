@@ -210,7 +210,8 @@ $(document).ready(function () {
 
 	//Details for the course.
 	//days = [RRule.MO, RRule.TU, RRule.WE, RRule.TH, RRule.FR, RRule.SA, RRule.SU];
-	days = ["Monday", "Tueday", "Wednesday", "Thursday", "Friday"];
+	days = [RRule.MO, RRule.TU, RRule.WE, RRule.TH, RRule.FR, RRule.SA, RRule.SU];
+
 	semStart = {
 		"Winter": "Jan. 1",
 		"Spring": "May. 1",
@@ -245,24 +246,42 @@ $(document).ready(function () {
 					$('#coursePop').hide();
 				} else {
 					var cDays = [];
-
+					var rule;
 					$('.cDays:checked').each(function (i, v) {
 						cDays.push(days[this.value]);
 					});
+					rule = new RRule({
+						freq: RRule.WEEKLY,
+						byweekday: cDays,
+						until: new Date($('#lastDay').val() + ' ' + '23:59:59')
+					});
 
+					var evnt = {
+						'start': {
+							//This substr is not a mistake, the time zone gets janked without it.
+							'dateTime': new Date($('#firstDay').val() + ' ' + $('#startTime').val() + ":00").toISOString().substr(0, 19),
+							'timeZone': 'America/St_Johns'
+						},
+						'end': {
+							//This substr is not a mistake, the time zone gets janked without it.
+							'dateTime': new Date($('#firstDay').val() + ' ' + $('#endTime').val() + ":00").toISOString().substr(0, 19),
+							'timeZone': 'America/St_Johns'
+						},
+						'recurrence': ['RRULE:' + rule.toString()],
+						'summary': $('input[name="cDepartment"]').val() + " " + $('input[name="cNumber"]').val(),
+						'description': 'Arbitrary Description'
+					};
 					//If course doesn't already exist, create it.
 					$.post('/api/course/', {
 							label: $('input[name="cDepartment"]').val() + " " + $('input[name="cNumber"]').val(),
+							description: "TODO: Add descriptions",
 							name: $('input[name="cName"]').val(),
-							Description: "TODO: Add descriptions",
 							semester: $('#semester').val(),
-							department: $('input[name="cDepartment"]').val(),
 							location: $('input[name="cRoom"]').val(),
+							department: $('input[name="cDepartment"]').val(),
 							year: $('input[name="cYear"]').val(),
 							cid: uid,
-							days: cDays,
-							timeStart: semStart[$('#semester').val()],
-							timeEnd: semEnd[$('#semester').val()]
+							event: evnt
 						})
 						.done(function (response) {
 							console.log(response);
@@ -345,6 +364,14 @@ $(document).ready(function () {
 		format: 'H:i'
 	});
 
+	$('#firstDay').datepicker({
+		datepicker: true,
+		format: 'MM/DD/YY'
+	});
+	$('#lastDay').datepicker({
+		datepicker: true,
+		format: 'MM/DD/YY'
+	});
 
 	//TODO: Any other elements of left sidebar?
 

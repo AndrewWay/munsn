@@ -79,7 +79,6 @@ $(document).ready(function () {
 			byweekday: dayList,
 			until: $('#until').val()
 		});
-
 		var evnt = {
 			'start': {
 				'dateTime': (new Date($('#sTime').val())).toISOString(),
