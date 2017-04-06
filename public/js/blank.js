@@ -193,6 +193,16 @@ $(document).ready(function () {
 		$('#coursePop').hide();
 	});
 
+	//Upload group image: On image click open hidden input.
+	$('#grImgDisp').click(function(){
+		$('grImgUp').click();
+	});
+
+	//Update the image with the uploaded image.
+	$("#grImgUp").change(function () {
+		$("#grImgDisp").attr("src", window.URL.createObjectURL(this.files[0]));
+	});
+
 	//Create new group
 	$('#gCreate').click(function () {
 		$.post('/api/group', {

@@ -149,7 +149,7 @@ $(document).ready(function() {
 					picForm.append("image", $("#lostImg")[0].files[0]);
 					//Send multipart/formdata with the image
 					$.ajax({
-						url: '/content/image/profile/' + result.data._id, //Get :lostfoundid from the return.
+						url: '/content/posts/' + pid + '/' + result.data._id, //Get :lostfoundid from the return.
 						type: 'post',
 						data: picForm,
 						cache: false,
@@ -157,17 +157,64 @@ $(document).ready(function() {
 						processData: false,
 					}).done(function (data) {
 						console.log("img uploaded");
-						//Display text alert to check email
-						$('#textAlert').css({
-							color: 'black'
-						});
-						$('#textAlert').html('Account created. Check email for confirmation.');
-						$('#textAlert').show();
+						//TODO: User feedback
 					}).fail(function (data) {
 						console.log("img not uploaded");
 					})
 				}
 			$("#lostContent")[0].reset();
-		});
+		})
+		.fail(function(response) {
+			console.log(response);
+		})
+	});	
+
+	$("#submitFound").click(function () {
+		//Read in information from lost and found div
+		var jqxhr = $.post("/api/lostfound", 
+			{
+				description: $('#lostContent input[name="desc"]').val(),
+				latitude: $('#lostContent input[name="lat"]').val(),
+				longitude: $('#lostContent input[name="long"]').val(),
+				locate: $('#lostContent input[name="locate"]').val(),
+				name: $('#lostContent input[name="name"]').val(),
+				phone: $('#lostContent input[name="phone"]').val(),
+				email: $('#lostContent input[name="email"]').val()
+			},
+			function () 
+			{
+				console.log("post");
+			}
+		)
+		.done(function (result) {
+			console.log(result.status);
+				if (result.status === 'fail') {
+				//If ajax request returns false: display error in console
+					console.log("Oh no. Something bad happened");
+				} 
+				else 
+				{
+					var picForm = new FormData();
+					picForm.append("image", $("#lostImg")[0].files[0]);
+					//Send multipart/formdata with the image
+					$.ajax({
+						url: '/content/posts/' + pid + '/' + result.data._id, //Get :lostfoundid from the return.
+						type: 'post',
+						data: picForm,
+						cache: false,
+						contentType: false,
+						processData: false,
+					}).done(function (data) {
+						console.log("img uploaded");
+						//TODO: User feedback
+					}).fail(function (data) {
+						console.log("img not uploaded");
+					})
+				}
+			$("#lostContent")[0].reset();
+		})
+		.fail(function(response) {
+			console.log(response);
+		})
 	});	
 });

@@ -79,7 +79,10 @@
 
 	<div class="popup" id="groupPop">
 			Create a new group:
-			<input class="popField" type="text" name="gName" placeholder="Group Name"><br>
+			<input class="popField" id="gName" type="text" name="gName" placeholder="Group Name"><br>
+			
+			<img id="grImgDisp" src="/img/SEAHAWK_SIL.jpg">
+			<input id="grImgUp" type="file" name="pic" accept="image/*" style="display: none;">
 			<div id="gButton">
 				<button class="popButton" id="gCreate"> CREATE </button>
 				<button class="popButton" id="gClose"> CLOSE </button>
