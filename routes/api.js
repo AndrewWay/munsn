@@ -677,22 +677,55 @@ var findPost = "/post"; //GET
  */
 var findPostByUID = "/post/:uid"; //GET
 /**
- * findTimelinePosts
+ * findPortalPosts
  *
  * URL:
- * 		- %server%/api/post/timeline
+ * 		- %server%/api/posts/portal
  * Description:
- *      - Get all relavent posts to the user
+ *      - Get all relavent posts to the user's timeline
  * Method:
  *      - GET
  * Params:
  *      - uid: The user id
- * //TODO:
- * 		- targetid: Not yet implemented
+ * NOTE: Devin, Don't even think about it, Leave this one for the portal cause I believe this is best on the portal. Do a call for each kind of page, group, profile, portal.
+ * Returns:
+ *      - JSON mongo result
+ */
+var findPortalPosts = "/posts/portal"; //GET
+/**
+ * NOTE: THIS IS NOT PROGRAMMED YET
+ * TODO: DEVIN FINISHES THIS
+ *
+ * findTimelinePosts
+ * URL:
+ * 		- %server%/api/posts/portal
+ * Description:
+ *      - Get all relavent posts to the current timeline
+ * Method:
+ *      - GET
+ * Params:
+ *      - uid: The user id
  * Returns:
  *      - JSON mongo result
  */
 var findTimelinePosts = "/posts/timeline"; //GET
+/**
+ * NOTE: THIS IS NOT PROGRAMMED YET
+ * TODO: DEVIN FINISHES THIS
+ *
+ * findGroupPosts
+ * URL:
+ * 		- %server%/api/posts/group
+ * Description:
+ *      - Get all relavent posts to the current timeline
+ * Method:
+ *      - GET
+ * Params:
+ *      - uid: The user id
+ * Returns:
+ *      - JSON mongo result
+ */
+var findGroupPosts = "/posts/group"; //GET
 /**
  * addComment
  *
@@ -1298,8 +1331,8 @@ router.get(findPostByUID, UserID, function (req, res, next) {
 		res.json(result);
 	});
 });
-router.get(findTimelinePosts, UserID, function (req, res, next) {
-	DB.Posts.findTimeline(req, res, function (result) {
+router.get(findPortalPosts, UserID, function (req, res, next) {
+	DB.Posts.findPortal(req, res, function (result) {
 		res.json(result);
 	});
 });

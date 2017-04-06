@@ -138,7 +138,7 @@ module.exports = function (DBPosts, collectionPosts, collectionFriends) {
 		});
 	};
 
-	DBPosts.findTimeline = function (req, res, callback) {
+	DBPosts.findPortal = function (req, res, callback) {
 		var query = req.query;
 		Object.assign(query, req.body);
 		console.log("[DBPosts] FindTimeline", JSON.stringify(query.uid));
