@@ -1,6 +1,6 @@
 var console = require('../consoleLogger');
 var ObjectID = require('mongodb').ObjectID;
-module.exports = function (DBPosts, collectionPosts) {
+module.exports = function (DBPosts, collectionPosts, collectionFriends) {
 
 	//POST DATA
 	//=====================================================================================================================================
@@ -137,6 +137,119 @@ module.exports = function (DBPosts, collectionPosts) {
 			}
 		});
 	};
+
+	DBPosts.findTimelinePosts = function (req, res, callback) {
+        console.log("[DBPosts] FindTimelinePosts", JSON.stringify(req.body.uid));
+        if (req.body.uid) {
+            var results = {};
+            // Declare loop control variables
+            var cbPublic = false,
+                cbPrivate = false,
+                cbFriends = false,
+                cbList = false;
+			var MAX_TIME = 1000 * 0.2, MAX_TRIES = 5;
+			var queryPublic = {visibility: 'public'};
+			var queryPrivate = {visibility: 'private', uid: req.body.uid};
+			var queryFriends = {visibility: 'friends'};
+			var queryList = {visibility: 'list'};
+			//Modify queries if targetid is given
+			if (req.body.targetid) {
+				queryPrivate.targetid = req.body.targetid;
+			}
+           
+		    collectionPosts.find(queryPublic).toArray(function(pubErr, pubResults) {
+				if (pubErr) {
+                    console.error("[DBPosts] FindTimelinePosts->Public", "'" + pubErr.message + "'->'" + search + "'");
+
+                } else {
+                    results = results.concat(pubResults);
+                    cbPublic = true;
+                    console.log("[DBPosts] FindTimelinePosts->Public", "'" + (pubResults[0] ? "Found Results" : "No Results"));
+                }
+		    });
+			collectionPosts.find(queryPrivate).toArray(function(priErr, priResults) {
+				if (priErr) {
+                    console.error("[DBPosts] FindTimelinePosts->Private", "'" + priErr.message + "'->'" + search + "'");
+
+                } else {
+                    results = results.concat(priResults);
+                    cbPrivate = true;
+                    console.log("[DBPosts] FindTimelinePosts->Private", "'" + (priResults[0] ? "Found Results" : "No Results"));
+                }
+		   	});
+		   	collectionFriends.find({uid: req.body.uid}, function(friListErr, friListResults) {
+				if (friListErr) {
+                    console.error("[DBPosts] FindTimelinePosts->FriendsListSearch", "'" + friListErr.message + "'->'" + search + "'");
+
+                } else {
+					queryFriends.uid = {'$in': friListResults.friends};
+					queryList.whitelist = {'$in': [req.body.uid]}
+					collectionPosts.find(queryFriends).toArray(function(friErr, friResults) {
+						if (friErr) {
+							console.error("[DBPosts] FindTimelinePosts->Friends", "'" + friErr.message + "'->'" + search + "'");
+
+						} else {
+							results = results.concat(friResults);
+							cbFriends = true;
+							console.log("[DBPosts] FindTimelinePosts->Friends", "'" + (friResults[0] ? "Found Results" : "No Results"));
+						}
+					});
+					collectionPosts.find(queryList).toArray(function(listErr, listResults) {
+						if (listErr) {
+							console.error("[DBPosts] FindTimelinePosts->List", "'" + listErr.message + "'->'" + search + "'");
+						} else {
+							results = results.concat(listResults);
+							cbList = true;
+							console.log("[DBPosts] FindTimelinePosts->List", "'" + (listResults[0] ? "Found Results" : "No Results"));
+						}
+					});
+                }
+			});
+
+            //Start search loop after MAX_SEARCH_TIME seconds
+            var count = 1;
+            var resultsLoop = setInterval(function () {
+                console.log("[DBPosts] FindTimelinePosts", "Iteration " + count + " of " + MAX_TRIES);
+                //If all searches are finish, then break loop, send back data
+                if (cbPublic && cbPrivate && cbFriends && cbList) {
+                    console.log("[DBPosts] FindTimelinePosts->Finished", "'Found'->'" + JSON.stringify(results) + "'");
+                    clearInterval(resultsLoop);
+					results.sort(function(a, b) {
+						a = new Date(a.history[a.history.length-1].date);
+						b = new Date(b.history[b.history.length-1].date);
+						return a>b ? -1 : a<b ? 1 : 0;
+					});
+                    callback({
+                        session: req.session,
+                        status: 'ok',
+                        data: results
+                    });
+                } else {
+                    //If not, then repeat MAX_SEARCH_TRIES amount
+                    if (count < MAX_TRIES) {
+                        count++;
+                    }
+                    //If MAX_SEARCH_TRIES is exceeded, then return whatever search data is complete
+                    else {
+                        console.log("[DBPosts] FindTimelinePosts->Finished", "'Attempts Exceeded'");
+                        console.log("[DBPosts] FindTimelinePosts->Finished", "'Found'->'" + JSON.stringify(results) + "'");
+                        clearInterval(resultsLoop);
+                        callback({
+                            session: req.session,
+                            status: 'ok',
+                            data: results
+                        });
+                    }
+                }
+            }, MAX_TIME);
+        } else {
+            console.warn("[DBPosts] FindTimelinePosts", "'Missing Fields'");
+            callback({
+                session: req.session,
+                status: "fail"
+            });
+        }
+    };
 
 	//Update post visibility
 	DBPosts.updateVisibility = function (req, res, callback) {

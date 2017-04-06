@@ -677,6 +677,23 @@ var findPost = "/post"; //GET
  */
 var findPostByUID = "/post/:uid"; //GET
 /**
+ * findTimelinePosts
+ *
+ * URL:
+ * 		- %server%/api/post/timeline
+ * Description:
+ *      - Get all relavent posts to the user
+ * Method:
+ *      - GET
+ * Params:
+ *      - uid: The user id
+ * //TODO:
+ * 		- targetid: Not yet implemented
+ * Returns:
+ *      - JSON mongo result
+ */
+var findTimelinePosts = "/post/timeline"; //GET
+/**
  * addComment
  *
  * URL:
@@ -1278,6 +1295,11 @@ router.get(findPost, UserID, function (req, res, next) {
 });
 router.get(findPostByUID, UserID, function (req, res, next) {
 	DB.Posts.findByUserId(req, res, function (result) {
+		res.json(result);
+	});
+});
+router.get(findTimelinePosts, UserID, function (req, res, next) {
+	DB.Posts.findTimelinePosts(req, res, function (result) {
 		res.json(result);
 	});
 });

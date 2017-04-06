@@ -404,7 +404,7 @@ mongoClient.connect(dbURL, function (err, DB) {
 	require('./DB/groups')(DBGroups, collectionGroups, collectionGroupMembers, collectionGroupAdmins, collectionGroupRequests, collectionUsers);
 	require('./DB/admins')(DBGroupAdmins, collectionGroupAdmins);
 	require('./DB/members')(DBGroupMembers, collectionGroupMembers);
-	require('./DB/posts')(DBPosts, collectionPosts);
+	require('./DB/posts')(DBPosts, collectionPosts, collectionFriends);
 	require('./DB/comments')(DBComments, collectionComments);
 	require('./DB/courses')(DBCourses, collectionCourses, collectionUserCourses, collectionGroupCourses);
 	require('./DB/lostfound')(DBLostFound, collectionLostFound);

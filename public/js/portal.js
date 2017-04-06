@@ -189,10 +189,15 @@ $(document).ready(function () {
 
 	//Get and display a number of posts.
 	//TODO: Get and display posts based on their type (poll, photo, text)
-	$.get('/api/post/', {
-			visibility: 'public'
-		})
-		.done(function (response) {
+	$.ajax({
+		url: '/api/post/timeline',
+		type: 'GET',
+		contentType: 'application/json; charset=utf-8',
+    	dataType: 'json',
+		data: {
+			uid: uid
+		}
+		}).done(function (response) {
 			var postData = {
 				"list": []
 			};
