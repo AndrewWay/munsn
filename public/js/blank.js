@@ -367,7 +367,7 @@ $(document).ready(function () {
 	$('#startTime').datetimepicker({
 		datepicker: false,
 		formatTime: 'H:i A',
-		format: 'H:i:s A',
+		format: 'H:i:s',
 		step: 30,
 		useCurrent: false,
 		defaultDate: new Date(new Date().toLocaleDateString())
