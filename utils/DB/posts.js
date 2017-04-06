@@ -221,6 +221,11 @@ module.exports = function (DBPosts, collectionPosts, collectionFriends) {
 						}
 						cbList = true;
 					});
+				} else {
+					cbList = true;
+					cbFriends = true;
+					console.log("[DBPosts] FindTimeline->Friends", "'Found'->'0'");
+					console.log("[DBPosts] FindTimeline->List", "'Found'->'0'");
 				}
 			});
 			//Start search loop after MAX_SEARCH_TIME seconds
