@@ -81,7 +81,10 @@
 
 	<div class="popup" id="groupPop">
 			Create a new group:
-			<input class="popField" type="text" name="gName" placeholder="Group Name"><br>
+			<input class="popField" id="gName" type="text" name="gName" placeholder="Group Name"><br>
+			
+			<img id="grImgDisp" src="/img/SEAHAWK_SIL.jpg">
+			<input id="grImgUp" type="file" name="pic" accept="image/*" style="display: none;">
 			<div id="gButton">
 				<button class="popButton" id="gCreate"> CREATE </button>
 				<button class="popButton" id="gClose"> CLOSE </button>
@@ -155,75 +158,7 @@
 
 		<div id="mapHolder"><div id="map"> </div></div>
 
-		<!-- RANDOM POSTS FOR TESTING -->
-		<div class="postTemp">
-				<div class="postInfo">
-					<div class="postPic">
-						<img src="/img/SEAHAWK_SIL.jpg">
-					</div>
-					<div class="postName">
-						<a href="{{ POST_LINK }}"> {{ POST_NAME }} </a> <br>
-						<span>{{ POST_TIME }}</span>
-					</div>
-				</div>
-				<div class="postCont">
-					<p> {{ POST_TEXT }}</p><img src="/img/postImg.png">
-				</div>
-
-				<div class="postComm">
-					<div class="commTemp">
-						<div class="commInfo">
-							<div class="commPic">
-								<img src="/img/SEAHAWK_SIL.jpg">
-							</div>
-							<div class="commName">
-								<a href="{{ COMM_LINK }}"> {{ COMM_NAME }} </a> <br>
-								<span>{{ COMM_TIME }}</span>
-							</div>
-						</div>
-						<div class="commCont">
-							<p> {{ COMM_TEXT }} </p>
-						</div>
-					</div>
-					<div class="commField">
-						<!--Text field for comments to be posted, followed by a submit button -->
-					</div>
-				</div>
-		</div>
-
-		<div class="postTemp">
-				<div class="postInfo">
-					<div class="postPic">
-						<img src="/img/SEAHAWK_SIL.jpg">
-					</div>
-					<div class="postName">
-						<a href="{{ POST_LINK }}"> {{ POST_NAME }} </a> <br>
-						<span>{{ POST_TIME }}</span>
-					</div>
-				</div>
-				<div class="postCont">
-					<p> {{ POST_TEXT }}</p><img src="/img/postImg.png">
-				</div>
-
-				<div class="postComm">
-					<div class="commTemp">
-						<div class="commInfo">
-							<div class="commPic">
-								<img src="/img/SEAHAWK_SIL.jpg">
-							</div>
-							<div class="commName">
-								<a href="{{ COMM_LINK }}"> {{ COMM_NAME }} </a> <br>
-								<span>{{ COMM_TIME }}</span>
-							</div>
-						</div>
-						<div class="commCont">
-							<p> {{ COMM_TEXT }} </p>
-						</div>
-					</div>
-					<div class="commField">
-						<!--Text field for comments to be posted, followed by a submit button -->
-					</div>
-				</div>
+		
 		</div>
 	</div>
 	<div class="sidebars" id="section-right">

@@ -352,7 +352,24 @@ html {
 #groupPop #gButton {
 	position: relative;
 	margin-top: 10px;
-	bottom: -50px;
+	bottom: 0px;
+}
+
+#groupPop #gName {
+	position: relative;
+
+	top: 70px;
+}
+
+#groupPop #grImgDisp {
+	position: relative;
+
+	top: -30px;
+
+	width: 50px;
+	height: 50px;
+
+	cursor: pointer;
 }
 
 #coursePop {
