@@ -362,10 +362,10 @@ module.exports = function (DBPosts, collectionPosts, collectionFriends) {
 	DBPosts.addComment = function (req, res, callback) {
 		var date = new Date();
 		var comment = {
-			uid: undefined,
+			authorid: undefined
 		};
 		Object.keys(comment).forEach(k => {
-			if (req.body[k] == undefined) {
+			if (!req.body[k]) {
 				delete comment[k];
 			} else {
 				comment[k] = req.body[k];
@@ -378,14 +378,17 @@ module.exports = function (DBPosts, collectionPosts, collectionFriends) {
 		};
 
 		Object.keys(commentData).forEach(k => {
-			if (req.body.commentData[k] != undefined) {
-				commentData[k] = req.body.commentData[k];
+			if (!req.body.data[k]) {
+				delete commentData[k];
+			} else {
+				commentData[k] = req.body.data[k];
 			}
 		});
-		console.log("[DBPosts] addComment", "'" + JSON.stringify(req.body) + "'");
-		comment.history = [commentData];
-		comment.history[0].date = date;
+		commentData.date = date;
+		commentData.image = (commentData.image === "true" ? true : false);
 		comment._id = new ObjectID();
+		comment.history = [commentData];
+		console.log("[DBPosts] addComment", "'" + JSON.stringify(comment) + "'");
 		collectionPosts.update({
 			_id: new ObjectID(req.body.pid)
 		}, {
@@ -404,6 +407,7 @@ module.exports = function (DBPosts, collectionPosts, collectionFriends) {
 			} else {
 				callback({
 					session: req.session,
+					data: comment,
 					status: 'ok'
 				});
 			}
