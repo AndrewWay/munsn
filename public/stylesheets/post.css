@@ -2,7 +2,6 @@
 	position: static;
 	margin: 10px;
 	background: #eeeeee;
-	min-height: 100px; /*Shouldn't be necessary once everything is loaded in*/
 	
 	/*Maybe not, must consider what else could be done*/
 	width: 80%;
@@ -51,7 +50,7 @@
 	border-color: #aaaaaa #7f1734 #7f1734 #aaaaaa;
 }
 
-.postName, .commName {
+.postName {
 	position: absolute;
 	left: 60px;
 	margin: 2px;
@@ -59,23 +58,23 @@
 	display: inline-block;
 }
 
-.postPic img, .commPic img {
+.postPic img {
 	width: 50px;
 }
 
-.postName a, .commName a {
+.postName a {
 	position: relative;
 	font-family: Arial Black;
 	color: #7f1734;
 	text-decoration: none;
 }
 
-.postName a:hover, .commName a:hover {
+.postName a:hover {
 	cursor: pointer;
 	color: #9c2542;
 }
 
-.postName span, .commName span {
+.postName span {
 	margin: 10px;
 	font-size: 10px;
 }
@@ -131,13 +130,14 @@
 	margin-right: 3px;
 	margin-left: 3px;
 	
-	background-color: #eeeeee;
 	padding: 2%;
-	
-	border: 2px solid #cccccc;
 
 	overflow: hidden;
 	
+}
+
+.commTemp {
+	border-bottom: 1px solid #999999;
 }
 
 .commBox .commText {
@@ -147,22 +147,23 @@
 	   
 	resize: none;
     outline: none;
-	
-	
-
 }
 
 .commInfo {
 	position: relative;
-	height: 20px;
+	height: 30px;
 	width: 95%;
 	margin: 5px;
 	display: inline-block;
 }
 
+.commPic img {
+	width: 30px;
+}
+
 .commPic {
 	position: absolute;
-	width: 20px;
+	width: 30px;
 	height: inherit;
 	display: inline-block;
 	top: 0;
@@ -183,7 +184,41 @@
 	padding:0;
 }
 
-.postOpt{
+.commName {
+	position: absolute;
+	left: 60px;
+	margin: 2px;
+	width: 80%;
+	display: inline-block;
+	font-size: 15px;
+}
+
+.commName a {
+	position: relative;
+	font-family: Arial Black;
+	color: #7f1734;
+	text-decoration: none;
+}
+
+.commName a:hover {
+	cursor: pointer;
+	color: #9c2542;
+}
+
+.commName span {
+	margin: 10px;
+	font-size: 8px;
+}
+
+.commCont {
+	position: relative;
+	margin: auto;
+	margin-left: 30px;
+	width: 90%;
+}
+
+
+.postOpt, .commOpt{
 	position: relative;
 
 	box-sizing: content-box;
@@ -193,7 +228,7 @@
 	float: right;
 }
 
-.postOpt button {
+.postOpt button , .commOpt button{
 	height: 20px;
 	width: 50px;
 	font-size: 0.5em;

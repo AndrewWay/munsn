@@ -196,8 +196,6 @@ $(document).ready(function () {
 				"list": []
 			};
 
-			console.log(response);
-
 			$.each(response.data, function (i, v) {
 
 				var postInfo = $.extend({}, v, v.history.slice(-1).pop());
@@ -231,7 +229,6 @@ $(document).ready(function () {
 					$.get("/temps/commTemp.hjs", function(commTemp) {
 						var template = Hogan.compile("{{#list}}" + commTemp + "{{/list}}");
 						var output = template.render(commData);
-						console.log(output);
 						postInfo.comments = output;
 					});
 				};
@@ -258,17 +255,6 @@ $(document).ready(function () {
 				$('#posts').append(output);
 
 				/****************
-				 * Load comments
-				 * 
-				 * @params: pid
-				 * 
-				 * Load comments into the post
-				 *****************/
-
-
-				//$.each();
-
-				/****************
 				 * Post button
 				 * 
 				 * @params: pid
@@ -285,6 +271,26 @@ $(document).ready(function () {
 				//Post edit button click functionality
 				$('.postEdit').click(function() {
 					var p_id = $(this).parents('.postTemp').attr('id');
+					console.log("PID: " + p_id);
+				});
+
+				/****************
+				 * Comment button
+				 * 
+				 * @params: pid
+				 * 
+				 * Functionality for post edit and delete buttons
+				 ****************/
+
+				//Comment delete button click functionality
+				$('.commDel').click(function() {
+					var p_id = $(this).parents('.commTemp').attr('id');
+					console.log("PID: " + p_id);
+				});
+
+				//Comment edit button click functionality
+				$('.commEdit').click(function() {
+					var p_id = $(this).parents('.commTemp').attr('id');
 					console.log("PID: " + p_id);
 				});
 
