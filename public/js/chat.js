@@ -28,10 +28,10 @@
                     uid2: friendId
                 }, function (data) {
                     $('#messages').empty();
-                    $('#messages').append($('<li>').text("- " + friendId + "'s Conversation -"));
                     for (var i = 0; i < data.data[0].messages.length; i++) {
                         $('#messages').append($('<li>').text("[" + new Date(data.data[0].messages[i].date).toLocaleString() + "][" + data.data[0].messages[i].user + "] " + data.data[0].messages[i].message));
                     }
+                    window.parent.$('#chatTop').html(friendId);
                     $('#m').val('');
                 });
             });
@@ -55,7 +55,6 @@
                             uid2: friendId
                         }, function (data) {
                             if (data.data.length !== 0) {
-                                $('#messages').append($('<li>').text("- " + friendId + "'s Conversation -"));
                                 for (var i = 0; i < data.data[0].messages.length; i++) {
                                     $('#messages').append($('<li>').text("[" + new Date(data.data[0].messages[i].date).toLocaleString() + "][" + data.data[0].messages[i].user + "] " + data.data[0].messages[i].message));
                                 }
@@ -63,6 +62,7 @@
                             else {
                                 $('#messages').append($('<li>').text("You have no chat history with " + friendId + ". Why not send a message?"));
                             }
+                            window.parent.$('#chatTop').html(friendId);
                             $('#m').val('');
                         });
                 }

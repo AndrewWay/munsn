@@ -156,6 +156,14 @@
 
 		<div id="infoContainer">
 
+
+			<div class="info" id="infoButton">
+				<button class="groupCr" id="grRequest" style="display: none;"> Group Join Requests </button>
+				<button class="groupCr" id="grDelete" style="display: none;"> Delete </button>
+				<button class="notCr" id="grJoin" style="display: none;"> Ask to Join </button>
+				<button id="grMembers"> Members </button>
+				<button id="grEvents"> Events </button>
+			</div>
 		</div>
 
 		<div class="info" id="postBox">

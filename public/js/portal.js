@@ -388,6 +388,7 @@ $(document).ready(function () {
 	//Get and display a number of posts.
 	//TODO: Get and display posts based on their type (poll, photo, text)
 	$(document).on('uidReady', function () {
+        $('#posts').html('<img src="/img/ring-alt.gif" width="50" height="auto" style="display: block; margin: auto; margin-top: 20%">');
 		$.ajax({
 				url: '/api/posts/portal',
 				type: 'GET',
@@ -453,7 +454,9 @@ $(document).ready(function () {
 					//Stop at 5 posts. Arbitrary
 					return i < 20;
 				});
-
+    			
+                $('#posts').html('');
+                
 				//Wait until all data is loaded for the posts.
 				$.when.apply($, postProm).then(function () {
 					$.get("/temps/postTemp.hjs", function (post) {
