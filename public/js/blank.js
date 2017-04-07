@@ -151,11 +151,14 @@ $(document).ready(function () {
 
 	//Display create group popup.
 	$('#createGroup').on('click', function () {
-		//Disable screen scrowing when open.
-		if ($(document).height() > $(window).height()) {
-			var scrollTop = ($('html').scrollTop()) ? $('html').scrollTop() : $('body').scrollTop(); // Works for Chrome, Firefox, IE...
-			$('html').addClass('noscroll').css('top', -scrollTop);
-		}
+
+		//Disable screen scrolling when open.
+		window.oldScrollPos = $(window).scrollTop();
+
+    	$(window).on('scroll.scrolldisabler',function ( event ) {
+       		$(window).scrollTop( window.oldScrollPos );
+       		event.preventDefault();
+    	});
 
 		$('#groupPop').show();
 	});
@@ -163,20 +166,20 @@ $(document).ready(function () {
 	//Display create course popup
 	$('#createCourse').on('click', function () {
 		//Disable screen scrolling when open.
-		if ($(document).height() > $(window).height()) {
-			var scrollTop = ($('html').scrollTop()) ? $('html').scrollTop() : $('body').scrollTop(); // Works for Chrome, Firefox, IE...
-			$('html').addClass('noscroll').css('top', -scrollTop);
-		}
 
+		window.oldScrollPos = $(window).scrollTop();
+
+    	$(window).on('scroll.scrolldisabler',function ( event ) {
+       		$(window).scrollTop( window.oldScrollPos );
+       		event.preventDefault();
+    	});
 		$('#coursePop').show();
 	});
 
 	//Close create group popup
 	$('#gClose').click(function () {
 		//Allow screen scrolling when closed.
-		var scrollTop = parseInt($('html').css('top'));
-		$('html').removeClass('noscroll');
-		$('html,body').scrollTop(-scrollTop);
+		$(window).off('scroll.scrolldisabler');
 
 		$('#groupPop').hide();
 	});
@@ -184,12 +187,10 @@ $(document).ready(function () {
 	//Close create course popup
 	$('#cClose').click(function () {
 		//Allow screen scrolling when closed.
-		var scrollTop = parseInt($('html').css('top'));
-		$('html').removeClass('noscroll');
-		$('html,body').scrollTop(-scrollTop);
+		$(window).off('scroll.scrolldisabler');
 
 		//Empty all inputs
-		$('#coursePop *').val('');
+		$('#coursePop *').val(null);
 		$('#coursePop *').attr('checked', false)
 
 		$('#coursePop').hide();

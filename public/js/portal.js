@@ -222,7 +222,6 @@ $(document).ready(function () {
 
 					var postInfo = $.extend({}, v, v.history.slice(-1).pop());
 					postInfo.date = new Date(postInfo.date).toLocaleString();
-
 					//Grab all the comments, get the appropriate data and render them
 					if (!(typeof v.comments === 'undefined')) {
 						var commData = {
@@ -277,6 +276,7 @@ $(document).ready(function () {
 						var output = template.render(postData);
 						$('#posts').append(output);
 
+
 						/****************
 						 * Post button
 						 *
@@ -319,14 +319,28 @@ $(document).ready(function () {
 
 						//Comment delete button click functionality
 						$('.commDel').click(function () {
-							var p_id = $(this).parents('.commTemp').attr('id');
+							var c_id = $(this).parents('.commTemp').attr('id');
+							var p_id = $('#' + c_id).parents('.postTemp').attr('id');
 							console.log("PID: " + p_id);
+							$.ajax({
+								method: 'DELETE',
+								url: '/api/comment',
+								data: {
+									pid: p_id,
+									cid: c_id
+								}
+							}).done(function () {
+								$('#' + c_id).fadeOut('slow');
+								$('#' + c_id + ' *').fadeOut('fast');
+							}).fail(function () {
+
+							});
 						});
 
 						//Comment edit button click functionality
 						$('.commEdit').click(function () {
-							var p_id = $(this).parents('.commTemp').attr('id');
-							console.log("PID: " + p_id);
+							var c_id = $(this).parents('.commTemp').attr('id');
+							console.log("CID: " + c_id);
 						});
 
 						/******************
