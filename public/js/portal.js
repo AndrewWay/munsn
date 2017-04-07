@@ -200,7 +200,7 @@ $(document).ready(function () {
 					var postInfo = $.extend({}, v, v.history.slice(-1).pop());
 					postInfo.date = new Date(postInfo.date).toLocaleString();
 
-					//Grab all the comments, get the appropriate data and render them
+				//Grab all the comments, get the appropriate data and render them
 				if(!(typeof v.comments === 'undefined')){
 					var commData = {
 						"list": []
@@ -254,7 +254,7 @@ $(document).ready(function () {
 						var output = template.render(postData);
 						$('#posts').append(output);
 
-						/****************
+				/****************
 				 * Post button
 				 * 
 				 * @params: pid
