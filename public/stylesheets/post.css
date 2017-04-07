@@ -2,6 +2,7 @@
 	position: static;
 	margin: 10px;
 	background: #eeeeee;
+	min-height: 100px; /*Shouldn't be necessary once everything is loaded in*/
 	
 	/*Maybe not, must consider what else could be done*/
 	width: 80%;
@@ -50,7 +51,7 @@
 	border-color: #aaaaaa #7f1734 #7f1734 #aaaaaa;
 }
 
-.postName {
+.postName, .commName {
 	position: absolute;
 	left: 60px;
 	margin: 2px;
@@ -58,28 +59,28 @@
 	display: inline-block;
 }
 
-.postPic img {
+.postPic img, .commPic img {
 	width: 50px;
 }
 
-.postName a {
+.postName a, .commName a {
 	position: relative;
 	font-family: Arial Black;
 	color: #7f1734;
 	text-decoration: none;
 }
 
-.postName a:hover {
+.postName a:hover, .commName a:hover {
 	cursor: pointer;
 	color: #9c2542;
 }
 
-.postName span {
+.postName span, .commName span {
 	margin: 10px;
 	font-size: 10px;
 }
 
-.postCont {
+.postCont, .commCont {
 	position: relative;
 	margin: auto;
 	width: 90%;
@@ -102,6 +103,7 @@
 	margin: 10px 20px 20px 20px;
 	border-radius: 5px;
 	background: #e1e1e1;
+	min-height: 100px; /*Shouldn't be necessary once everything is loaded in*/
 	
 	/*Maybe not, must consider what else could be done*/
 	width: 95%;
@@ -119,10 +121,6 @@
 	flex-shrink: 0;
 }
 
-.commTemp {
-	border-bottom: 1px solid #999999;
-}
-
 .commBox {
 	width: 94%;
 	
@@ -133,22 +131,30 @@
 	margin-right: 3px;
 	margin-left: 3px;
 	
+	background-color: #eeeeee;
 	padding: 2%;
 	
-	overflow: hidden;	
+	border: 2px solid #cccccc;
+
+	overflow: hidden;
+	
 }
 
 .commBox .commText {
 	width: 85%;
 	height: 30px;
-		   
+	
+	   
 	resize: none;
     outline: none;
+	
+	
+
 }
 
 .commInfo {
 	position: relative;
-	height: 30px;
+	height: 20px;
 	width: 95%;
 	margin: 5px;
 	display: inline-block;
@@ -156,7 +162,7 @@
 
 .commPic {
 	position: absolute;
-	width: 30px;
+	width: 20px;
 	height: inherit;
 	display: inline-block;
 	top: 0;
@@ -169,10 +175,6 @@
 	border-color: #aaaaaa #7f1734 #7f1734 #aaaaaa;
 }
 
-.commPic img {
-	width: 30px;
-}
-
 .commBox .commSubmit {
 	position: relative;
 	top: -15px;
@@ -181,40 +183,7 @@
 	padding:0;
 }
 
-.commName {
-	position: absolute;
-	left: 60px;
-	margin: 2px;
-	width: 80%;
-	display: inline-block;
-	font-size: 15px;
-}
-
-.commName a {
-	position: relative;
-	font-family: Arial Black;
-	color: #7f1734;
-	text-decoration: none;
-}
-
-.commName a:hover {
-	cursor: pointer;
-	color: #9c2542;
-}
-
-.commName span {
-	margin: 10px;
-	font-size: 8px;
-}
-
-.commCont {
-	position: relative;
-	margin: auto;
-	margin-left: 30px;
-	width: 90%;
-}
-
-.postOpt, .commOpt{
+.postOpt{
 	position: relative;
 
 	box-sizing: content-box;
@@ -224,7 +193,7 @@
 	float: right;
 }
 
-.postOpt button, .commOpt button {
+.postOpt button {
 	height: 20px;
 	width: 50px;
 	font-size: 0.5em;
