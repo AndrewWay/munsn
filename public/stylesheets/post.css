@@ -46,10 +46,17 @@
 	border-color: #aaaaaa #7f1734 #7f1734 #aaaaaa;
 }
 
-.postName,
-.commName {
+.postName {
 	position: absolute;
 	left: 60px;
+	margin: 2px;
+	width: 80%;
+	display: inline-block;
+}
+
+.commName {
+	position: absolute;
+	left: 30px;
 	margin: 2px;
 	width: 80%;
 	display: inline-block;
@@ -141,6 +148,10 @@
 	height: 30px;
 	resize: none;
 	outline: none;
+}
+
+.commTemp {
+	border-style: ridge;
 }
 
 .commInfo {

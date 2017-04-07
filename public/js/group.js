@@ -221,6 +221,28 @@ $(document).ready(function () {
 				var template = Hogan.compile("{{#list}}" + post + "{{/list}}");
 				var output = template.render(data);
 				$('#posts').append(output);
+				$('.postDel').click(function () {
+					var p_id = $(this).parents('.postTemp').attr('id');
+					console.log("PID: " + p_id);
+					$.ajax({
+						method: 'DELETE',
+						url: '/api/post',
+						data: {
+							pid: p_id
+						}
+					}).done(function () {
+						$('#' + p_id).fadeOut('slow');
+						$('#' + p_id + ' *').fadeOut('fast');
+					}).fail(function () {
+
+					});
+				});
+
+				//Post edit button click functionality
+				$('.postEdit').click(function () {
+					var p_id = $(this).parents('.postTemp').attr('id');
+					console.log("PID: " + p_id);
+				});
 			});
 		})
 		.fail(

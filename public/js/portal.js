@@ -169,6 +169,29 @@ $(document).ready(function () {
 			})
 			.fail();
 	});
+
+	$('.postDel').click(function () {
+		var p_id = $(this).parents('.postTemp').attr('id');
+		console.log("PID: " + p_id);
+		$.ajax({
+			method: 'DELETE',
+			url: '/api/post',
+			data: {
+				pid: p_id
+			}
+		}).done(function () {
+			$('#' + p_id).fadeOut('slow');
+			$('#' + p_id + ' *').fadeOut('fast');
+		}).fail(function () {
+
+		});
+	});
+
+	//Post edit button click functionality
+	$('.postEdit').click(function () {
+		var p_id = $(this).parents('.postTemp').attr('id');
+		console.log("PID: " + p_id);
+	});
 	//TODO: Potentially move to it's own file to be accessed by every page that needs it.
 	/*******************
 	 * Load posts
@@ -224,6 +247,24 @@ $(document).ready(function () {
 
 						//Post delete button click functionality
 						$('.postDel').click(function () {
+							var p_id = $(this).parents('.postTemp').attr('id');
+							console.log("PID: " + p_id);
+							$.ajax({
+								method: 'DELETE',
+								url: '/api/post',
+								data: {
+									pid: p_id
+								}
+							}).done(function () {
+								$('#' + p_id).fadeOut('slow');
+								$('#' + p_id + ' *').fadeOut('fast');
+							}).fail(function () {
+
+							});
+						});
+
+						//Post edit button click functionality
+						$('.postEdit').click(function () {
 							var p_id = $(this).parents('.postTemp').attr('id');
 							console.log("PID: " + p_id);
 						});

@@ -153,8 +153,8 @@ $(document).ready(function () {
 	$('#createGroup').on('click', function () {
 		//Disable screen scrowing when open.
 		if ($(document).height() > $(window).height()) {
-    		 var scrollTop = ($('html').scrollTop()) ? $('html').scrollTop() : $('body').scrollTop(); // Works for Chrome, Firefox, IE...
-    		 $('html').addClass('noscroll').css('top',-scrollTop);         
+			var scrollTop = ($('html').scrollTop()) ? $('html').scrollTop() : $('body').scrollTop(); // Works for Chrome, Firefox, IE...
+			$('html').addClass('noscroll').css('top', -scrollTop);
 		}
 
 		$('#groupPop').show();
@@ -164,8 +164,8 @@ $(document).ready(function () {
 	$('#createCourse').on('click', function () {
 		//Disable screen scrolling when open.
 		if ($(document).height() > $(window).height()) {
-    		 var scrollTop = ($('html').scrollTop()) ? $('html').scrollTop() : $('body').scrollTop(); // Works for Chrome, Firefox, IE...
-    		 $('html').addClass('noscroll').css('top',-scrollTop);         
+			var scrollTop = ($('html').scrollTop()) ? $('html').scrollTop() : $('body').scrollTop(); // Works for Chrome, Firefox, IE...
+			$('html').addClass('noscroll').css('top', -scrollTop);
 		}
 
 		$('#coursePop').show();
@@ -196,7 +196,7 @@ $(document).ready(function () {
 	});
 
 	//Upload group image: On image click open hidden input.
-	$('#grImgDisp').click(function(){
+	$('#grImgDisp').click(function () {
 		$('grImgUp').click();
 	});
 
@@ -568,6 +568,7 @@ $(document).ready(function () {
 		}, 50);
 
 	});
+
 
 	//TODO: Move to it's own file to be called by all pages which need it.
 	/*************************
