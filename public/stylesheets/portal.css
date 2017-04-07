@@ -26,6 +26,10 @@
 	padding: 0;
 }
 
+#postBox #option {
+	margin-top: 0.5%;
+}
+
 #postProgress {
 	position: relative;
 	width: 99%;
