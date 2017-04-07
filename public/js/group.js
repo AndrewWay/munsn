@@ -472,4 +472,89 @@ $(document).ready(function () {
 			$('#infoButton .groupCr').show();
 		}
 	});
+
+	/*************
+	 * Profile button
+	 *
+	 * @params: id
+	 *
+	 * Profile button functionality
+	 **************/
+
+	//Member button functionality when clicked.
+	$('#grMembers').click(function () {
+		$('.grPopup').hide();
+
+		//Make sure div is empty
+		$('#grMembersPU').html('');
+
+		//Add loading gif and then show.
+		$('#grMembersPU').html('<img src="/img/ring-alt.gif">');
+		$('#grMembersPU').show();
+
+		//API call to get user friends
+		$.get('/api//groups/members/' + id)
+			.done(function (response) {
+
+				//Setup variable to hold data for templates
+				var data = {
+					"list": []
+				};
+
+				//Make array to hold promises.
+				var promises = [];
+
+				//Remove loading gif. TODO: Check if this is better placed somewhere else.
+				$('#grMembersPU').html('');
+
+				//Display friend title
+				$('#grMembersPU').append("<h3> Members </h3>");
+
+				//For each friend in the friends array
+				if (!(typeof response.data[0] == 'undefined')) {
+					$.each(response.data[0].members, function (i, v) {
+
+						//Push gets to array so next function waits.
+						promises.push($.get('/api/user/' + v.user)
+							.done(function (response) {
+								var x = $.extend({}, response.data, {
+									"title": "profile"
+								})
+								x.image = x.gender ? "/content/image/profile/" + x._id : x.image;
+								data.list.push(x);
+							})
+							.fail());
+					})
+
+					//Waits until all data is loaded then displays friend list.
+					$.when.apply($, promises).then(function () {
+						//If no friends exist, display sad face
+						if (!(data.list.length == 0)) {
+							$.get("/temps/searchTemp.hjs", function (result) {
+								var template = Hogan.compile("{{#list}}" + result + "{{/list}}");
+								var output = template.render(data);
+								$('#grMembersPU').append(output);
+							});
+						}
+					})
+				} else {
+					//Display no members
+					$('#grMembersPU').append("<h5> No members to display =( </h5>");
+				}
+			})
+			.fail()
+	});
+
+	//If somewhere outside of the panel is clicked: Close the panel.
+	$("#infoButton *").focusout(function () {
+		//Use a timeout to wait for focus to transfer to other children elements
+		window.setTimeout(function () {
+			//If there are no elements focused: close the panel
+			if ($('#infoButton *:focus').length == 0) {
+				$('.prPopup').hide();
+				$('.prPopup').html('');
+			}
+		}, 50);
+
+	});
 });
