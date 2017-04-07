@@ -48,7 +48,7 @@ $(document).ready(function () {
 			$('#searchRes').html('');
 
 			//Add loading gif and then show.
-			$('#searchRes').html('<img src="/img/ring-alt.gif" width="50" height="auto">');
+            $('#searchRes').html('<img src="/img/ring-alt.gif" width="50" height="auto" style="display: block; margin: auto; margin-top: 10px; margin-bottom: 10px">');
 			$('#searchRes').show();
 
 			//API call for search
