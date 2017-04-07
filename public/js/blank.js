@@ -155,10 +155,10 @@ $(document).ready(function () {
 		//Disable screen scrolling when open.
 		window.oldScrollPos = $(window).scrollTop();
 
-    	$(window).on('scroll.scrolldisabler',function ( event ) {
-       		$(window).scrollTop( window.oldScrollPos );
-       		event.preventDefault();
-    	});
+		$(window).on('scroll.scrolldisabler', function (event) {
+			$(window).scrollTop(window.oldScrollPos);
+			event.preventDefault();
+		});
 
 		$('#groupPop').show();
 	});
@@ -169,10 +169,10 @@ $(document).ready(function () {
 
 		window.oldScrollPos = $(window).scrollTop();
 
-    	$(window).on('scroll.scrolldisabler',function ( event ) {
-       		$(window).scrollTop( window.oldScrollPos );
-       		event.preventDefault();
-    	});
+		$(window).on('scroll.scrolldisabler', function (event) {
+			$(window).scrollTop(window.oldScrollPos);
+			event.preventDefault();
+		});
 		$('#coursePop').show();
 	});
 
@@ -197,8 +197,8 @@ $(document).ready(function () {
 	});
 
 	//Upload group image: On image click open hidden input.
-	$('#grImgDisp').click(function () {
-		$('#grImgUp').click();
+	$("#grImgDisp").click(function () {
+		$("#grImgUp").click();
 	});
 
 	//Update the image with the uploaded image.
@@ -216,6 +216,45 @@ $(document).ready(function () {
 				//Maybe add some functionality?
 				$('#groupList').prepend('<li><a href="/group#' + result.data._id + '"> ' + result.data.name + ' </a></li>');
 				$('#coursePop').hide();
+				if (result.status === 'fail') {
+					//If ajax request returns false: display error in console
+					console.log("Oh no. Something bad happened to the group submission");
+				} else {
+					var picForm = new FormData();
+					picForm.append("image", $("#grImgUp")[0].files[0]);
+					//Send multipart/formdata with the image
+					$.ajax({
+						xhr: function () {
+							var xhr = new window.XMLHttpRequest();
+							xhr.upload.addEventListener("progress", function (evt) {
+								if (evt.lengthComputable) {
+									var percentComplete = evt.loaded / evt.total;
+									percentComplete = parseInt(percentComplete * 100);
+									$("#grImgProgress").progressbar({
+										value: percentComplete
+									});
+									if (percentComplete === 100) {
+										window.setTimeout(function () {
+											location.reload();
+										}, 1000);
+									}
+								}
+							}, false);
+							return xhr;
+						},
+						url: '/content/image/group/' + result.data._id, //Get :gid from the return.
+						type: 'POST',
+						data: picForm,
+						cache: false,
+						contentType: false,
+						processData: false,
+					}).done(function (data) {
+						console.log("group img uploaded");
+						//TODO: User feedback
+					}).fail(function (data) {
+						console.log("group img not uploaded");
+					})
+				}
 			})
 			.fail(function (result) {
 				//TODO: Alert user when failed.

@@ -15,12 +15,6 @@
 	color: #ffffff;
 }
 
-.ui-progressbar .ui-progressbar-value {
-	margin: -1px;
-	height: 100%;
-	background-color: #0099dd;
-}
-
 #resumeProgress {
 	position: relative;
 	width: 80%;

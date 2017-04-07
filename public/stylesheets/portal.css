@@ -30,20 +30,6 @@
 	margin-top: 0.5%;
 }
 
-#postProgress {
-	position: relative;
-	width: 99%;
-	display: block;
-	left: 0px;
-	margin-top: 1em;
-}
-
-.ui-progressbar .ui-progressbar-value {
-	margin: -1px;
-	height: 100%;
-	background-color: #0099dd;
-}
-
 #chatButton {
 	position: fixed;
 	bottom: 5px;

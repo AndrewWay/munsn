@@ -11,9 +11,9 @@ html {
 }
 
 html.noscroll {
-    position: fixed; 
-    overflow-y: scroll;
-    width: 100%;
+	position: fixed;
+	overflow-y: scroll;
+	width: 100%;
 }
 
 .navbar {
@@ -335,6 +335,31 @@ html.noscroll {
 	margin-top: 5px;
 }
 
+#postProgress {
+	position: relative;
+	width: 99%;
+	display: block;
+	left: 0px;
+	margin-top: 1em;
+}
+
+#grImgProgress {
+	position: relative;
+	width: 300px;
+	left: 0px;
+	margin-top: 1em;
+}
+
+.ui-progressbar .ui-progressbar-value {
+	margin: -1px;
+	height: 100%;
+	background-color: #0099dd;
+}
+
+.ui-progressbar-value.ui-widget-header.ui-corner-left {
+	display: inline-block;
+}
+
 #groupPop {
 	top: calc(50% - 100px);
 	left: calc(50% - 200px);
@@ -351,30 +376,28 @@ html.noscroll {
 }
 
 #groupPop * {
-	display: block;
 	margin: auto;
 }
 
 #groupPop #gButton {
+	display: block;
 	position: relative;
 	margin-top: 10px;
 	bottom: 0px;
 }
 
 #groupPop #gName {
+	display: block;
 	position: relative;
-
 	top: 70px;
 }
 
 #groupPop #grImgDisp {
+	display: block;
 	position: relative;
-
 	top: -30px;
-
 	width: 50px;
 	height: 50px;
-
 	cursor: pointer;
 }
 

@@ -1,98 +1,110 @@
-$(document).ready(function() {
-	
+$(document).ready(function () {
+
 	/******************
-	* Map functions
-	*
-	* @params: null
-	*
-	* Functions used to display and use locationPicker map.
-	*******************/
-	
+	 * Map functions
+	 *
+	 * @params: null
+	 *
+	 * Functions used to display and use locationPicker map.
+	 *******************/
+
 	//Display or hide the map.
-	$('.mapToggle').click(function() {
-		if($('#mapHolder').css("width") == "550px"){
-			$("#mapHolder").animate({width: "0px" }, 200);			
-		}
-		else{
-			$("#mapHolder").animate({width: "550px"	}, 200);
+	$('.mapToggle').click(function () {
+		if ($('#mapHolder').css("width") == "550px") {
+			$("#mapHolder").animate({
+				width: "0px"
+			}, 200);
+		} else {
+			$("#mapHolder").animate({
+				width: "550px"
+			}, 200);
 		}
 	});
-	
+
 	//Initialize the map and set input fields.
 	$('#map').locationpicker({
-		location: {latitude: 47.5738, longitude: -52.7329},
+		location: {
+			latitude: 47.5738,
+			longitude: -52.7329
+		},
 		radius: 0,
 		zoom: 15,
 		inputBinding: {
 			latitudeInput: $('#lat'),
 			longitudeInput: $('#long'),
 			locationNameInput: $('.locate')
-			
+
 		},
 		enableAutocomplete: true
 	});
-	
+
 	/**********************
-	* Lost/Found selector functions
-	*
-	* @params: null
-	*
-	* Functions used to display the correct fields in the right sidebar
-	***********************/
-	
+	 * Lost/Found selector functions
+	 *
+	 * @params: null
+	 *
+	 * Functions used to display the correct fields in the right sidebar
+	 ***********************/
+
 	//Display lost fields if lost is clicked.
-	$('#lostChoice').click(function(){
-		if($('#lostContent').css("display") == "none"){
-			$('#foundChoice').css({boxShadow: "none"});
-			$('#lostChoice').css({boxShadow: "1px 1px 5px #555 inset"});
+	$('#lostChoice').click(function () {
+		if ($('#lostContent').css("display") == "none") {
+			$('#foundChoice').css({
+				boxShadow: "none"
+			});
+			$('#lostChoice').css({
+				boxShadow: "1px 1px 5px #555 inset"
+			});
 			$('#foundContent').toggle();
 			$('#lostContent').toggle();
-		}
-		else{
+		} else {
 			//Do nothing.
 		}
 	});
-	
+
 	//Display found fields if found is clicked.
-	$('#foundChoice').click(function(){
-		if($('#foundContent').css("display") == "none"){
-			$('#lostChoice').css({boxShadow: "none"});
-			$('#foundChoice').css({boxShadow: "1px 1px 5px #555 inset"});
+	$('#foundChoice').click(function () {
+		if ($('#foundContent').css("display") == "none") {
+			$('#lostChoice').css({
+				boxShadow: "none"
+			});
+			$('#foundChoice').css({
+				boxShadow: "1px 1px 5px #555 inset"
+			});
 			$('#lostContent').toggle();
 			$('#foundContent').toggle();
-		}
-		else{
+		} else {
 			//Do nothing.
 		}
 	});
-	
+
 	/**************
-	*Image upload functions
-	*
-	*@params: null
-	*
-	*Allows user to upload image by clicking on image. After upload, update this field with new image.
-	**************/
-	
+	 *Image upload functions
+	 *
+	 *@params: null
+	 *
+	 *Allows user to upload image by clicking on image. After upload, update this field with new image.
+	 **************/
+
 	//Display hidden input file field when image is clicked.
-	$('#lostImgDisp').click(function(){
+	$('#lostImgDisp').click(function () {
 		$('#lostImg').click();
 	});
-	
-	
+
+
 	//Update the image with the uploaded image.
 	$("#lostImg").change(function () {
 		$("#lostImgDisp").attr("src", window.URL.createObjectURL(this.files[0]));
 	});
-	
+
 	/****************
-	*Expanding description box
-	*
-	*@params: null
-	*
-	*Expands and contracts the description box as it comes in and out of focus.
-	****************/
-	
+	 *Expanding description box
+	 *
+	 *@params: null
+	 *
+	 *Expands and contracts the description box as it comes in and out of focus.
+	 ****************/
+
 	//Expand box when focused.
 	$(".textDesc .text").focus(function () {
 
@@ -122,29 +134,25 @@ $(document).ready(function() {
 
 	$("#submitLost").click(function () {
 		//Read in information from lost and found div
-		var jqxhr = $.post("/api/lostfound", 
-			{
-				description: $('#lostContent input[name="desc"]').val(),
-				latitude: $('#lostContent input[name="lat"]').val(),
-				longitude: $('#lostContent input[name="long"]').val(),
-				locate: $('#lostContent input[name="locate"]').val(),
-				name: $('#lostContent input[name="name"]').val(),
-				phone: $('#lostContent input[name="phone"]').val(),
-				email: $('#lostContent input[name="email"]').val()
-			},
-			function () 
-			{
-				console.log("post");
-			}
-		)
-		.done(function (result) {
-			console.log(result.status);
+		var jqxhr = $.post("/api/lostfound", {
+					description: $('#lostContent input[name="desc"]').val(),
+					latitude: $('#lostContent input[name="lat"]').val(),
+					longitude: $('#lostContent input[name="long"]').val(),
+					locate: $('#lostContent input[name="locate"]').val(),
+					name: $('#lostContent input[name="name"]').val(),
+					phone: $('#lostContent input[name="phone"]').val(),
+					email: $('#lostContent input[name="email"]').val()
+				},
+				function () {
+					console.log("post");
+				}
+			)
+			.done(function (result) {
+				console.log(result.status);
 				if (result.status === 'fail') {
-				//If ajax request returns false: display error in console
+					//If ajax request returns false: display error in console
 					console.log("Oh no. Something bad happened");
-				} 
-				else 
-				{
+				} else {
 					var picForm = new FormData();
 					picForm.append("image", $("#lostImg")[0].files[0]);
 					//Send multipart/formdata with the image
@@ -162,38 +170,34 @@ $(document).ready(function() {
 						console.log("img not uploaded");
 					})
 				}
-			$("#lostContent")[0].reset();
-		})
-		.fail(function(response) {
-			console.log(response);
-		})
-	});	
+				$("#lostContent")[0].reset();
+			})
+			.fail(function (response) {
+				console.log(response);
+			})
+	});
 
 	$("#submitFound").click(function () {
 		//Read in information from lost and found div
-		var jqxhr = $.post("/api/lostfound", 
-			{
-				description: $('#lostContent input[name="desc"]').val(),
-				latitude: $('#lostContent input[name="lat"]').val(),
-				longitude: $('#lostContent input[name="long"]').val(),
-				locate: $('#lostContent input[name="locate"]').val(),
-				name: $('#lostContent input[name="name"]').val(),
-				phone: $('#lostContent input[name="phone"]').val(),
-				email: $('#lostContent input[name="email"]').val()
-			},
-			function () 
-			{
-				console.log("post");
-			}
-		)
-		.done(function (result) {
-			console.log(result.status);
+		var jqxhr = $.post("/api/lostfound", {
+					description: $('#lostContent input[name="desc"]').val(),
+					latitude: $('#lostContent input[name="lat"]').val(),
+					longitude: $('#lostContent input[name="long"]').val(),
+					locate: $('#lostContent input[name="locate"]').val(),
+					name: $('#lostContent input[name="name"]').val(),
+					phone: $('#lostContent input[name="phone"]').val(),
+					email: $('#lostContent input[name="email"]').val()
+				},
+				function () {
+					console.log("post");
+				}
+			)
+			.done(function (result) {
+				console.log(result.status);
 				if (result.status === 'fail') {
-				//If ajax request returns false: display error in console
+					//If ajax request returns false: display error in console
 					console.log("Oh no. Something bad happened");
-				} 
-				else 
-				{
+				} else {
 					var picForm = new FormData();
 					picForm.append("image", $("#lostImg")[0].files[0]);
 					//Send multipart/formdata with the image
@@ -211,10 +215,10 @@ $(document).ready(function() {
 						console.log("img not uploaded");
 					})
 				}
-			$("#lostContent")[0].reset();
-		})
-		.fail(function(response) {
-			console.log(response);
-		})
-	});	
+				$("#lostContent")[0].reset();
+			})
+			.fail(function (response) {
+				console.log(response);
+			})
+	});
 });

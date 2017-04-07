@@ -28,7 +28,6 @@ var sendEmail = function (email, callback) {
 	gmail.send({
 			subject: email.subject,
 			message: email.text,
-			from: emsSender.name + '<' + emsSender.address + '>',
 			to: email.to
 			// cc:      "else <else@your-email.com>",
 		},
@@ -50,7 +49,6 @@ var sendAuthEmail = function (auth, callback) {
 	var email = {
 		subject: 'MUNSON - Confirmation Email',
 		to: auth.userid + '@mun.ca',
-		from: emsSender.name + '<' + emsSender.address + '>',
 		text: "Welcome to MUNSON! In order to continue using the site as a registered user," +
 			" please confirm your registration by clicking the link: " +
 			"http://" + process.env.ADDRESS + "/auth?key=" + auth.key +
@@ -69,7 +67,6 @@ var resendAuthEmail = function (auth, callback) {
 	var email = {
 		subject: 'MUNSON - Confirmation Email',
 		to: auth.userid + '@mun.ca',
-		from: emsSender.name + '<' + emsSender.address + '>',
 		text: "Looks like your old confirmation email expired. Here's a new one: http://" + process.env.ADDRESS + "/auth?key=" + auth.key
 	};
 	sendEmail(email, callback);
