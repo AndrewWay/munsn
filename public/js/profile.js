@@ -604,9 +604,7 @@ $(document).ready(function () {
 						})
 						x.image = u.creatorid && u.ownerid ? "/content/image/group/" + u._id : u.image;
 						data.list.push(x);
-					})
-
-					console.log(data.list);
+					});
 
 					//If no groups exist, display sad face
 					if (!(data.list.length == 0)) {
@@ -630,11 +628,11 @@ $(document).ready(function () {
 		//Use a timeout to wait for focus to transfer to other children elements
 		window.setTimeout(function () {
 			//If there are no elements focused: close the panel
-			if ($('.prPopup *:focus').length == 0) {
+			if ($('#infoButton *:focus').length == 0) {
 				$('.prPopup').hide();
 				$('.prPopup').html('');
 			}
-		}, 100);
+		}, 50);
 
 	});
 });
