@@ -1,14 +1,35 @@
-<div class="commTemp">
+<div class="commTemp" id="{{_id}}">
 	<div class="commInfo">
 		<div class="commPic">
-			<img src="../img/SEAHAWK_SIL.jpg">
+			<img src="/content/image/profile/{{authorid}}">
+		</div>
+		<div class="commOpt" style="display: none;">
+			<button class="commEdit"> Edit </button>
+			<button class="commDel"> Delete </button>
 		</div>
 		<div class="commName">
-			<a href="{{ COMM_LINK }}"> {{ COMM_NAME }} </a> <br>
-			<span>{{ COMM_TIME }}</span>
+			<a href="/profile#{{authorid}}"> {{fname}} {{lname}} </a> <br>
+			<span>{{date}}</span>
 		</div>
 	</div>
 	<div class="commCont">
-			<p> {{ COMM_TEXT }} </p>
+			<p> {{text}} </p>
 	</div>
 </div>
+
+<script type="text/javascript">
+
+	/*********************
+	 * Edit and delete buttons
+	 * 
+	 * @params: uid
+	 * 
+	 * Show buttons if the post belongs to current user
+	 **********************/
+
+	 //If post belongs to user, display edit and delete buttons.
+	 if(uid=="{{authorid}}") {
+	 	$('#{{_id}} .commOpt').show();
+	 }
+
+</script>

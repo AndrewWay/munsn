@@ -6,11 +6,17 @@
 	<link href="/stylesheets/blank.css" rel="stylesheet"/>
 	<link href="/stylesheets/post.css" rel="stylesheet"/>
 	<link href="/stylesheets/portal.css" rel="stylesheet"/>
+	<link href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet" >
+	<link href="/stylesheets/jquery.datetimepicker.min.css" rel="stylesheet"/>
+
 
 	<script src="/scripts/jquery.min.js"></script>
 	<script src="/scripts/jquery-ui.js"></script>
 	<script src="/scripts/socket.io.js"></script>
+	<script src="/scripts/jquery.datetimepicker.full.min.js"></script>
 	<script src="/scripts/hogan-3.0.1.js"></script>
+	<script src="/js/rrule.js"></script>
+	<script src="/js/nlp.js"></script>
 	<script src="/js/blank.js"></script>
 	<script src="/js/portal.js"></script>
 </head>
@@ -33,17 +39,17 @@
 		</div>
         </div>
 
-		
+
 
         <div class="search">
 			  	<input type="search" id="searchbar" placeholder="Search MunSN"><button id="searchbtn" class="searchbtn">Search</button>
 
 			<div class="search" id="searchRes" style="display: none;">
-			
+
 			</div>
 		</div>
 
-		
+
 
 		<div class="buttons">
 			<a href="javascript:void(0)"><img id="not" src="/img/notification-red.png"></a>
@@ -65,7 +71,7 @@
 				</div></a>
 			</div>
 		</div>
-		
+
 	</div>
 	</nav>
 
@@ -73,7 +79,11 @@
 
 	<div class="popup" id="groupPop">
 			Create a new group:
-			<input class="popField" type="text" name="gName" placeholder="Group Name"><br>
+			<input class="popField" id="gName" type="text" name="gName" placeholder="Group Name"><br>
+
+			<img id="grImgDisp" src="/img/SEAHAWK_SIL.jpg">
+			<input id="grImgUp" type="file" name="pic" accept="image/*" style="display: none;">
+			<div id="grImgProgress"></div>
 			<div id="gButton">
 				<button class="popButton" id="gCreate"> CREATE </button>
 				<button class="popButton" id="gClose"> CLOSE </button>
@@ -87,18 +97,27 @@
 			<input class="popField" type="text" name="cNumber" placeholder="Course Number" maxlength="4" style="width: 35%;"><br>
 			<input class="popField" type="text" name="cRoom" placeholder="Course Room"><br>
 			<select id="semester">
+				<option value="" disabled selected>Semester</option>
 				<option value="Fall">Fall</option>
 				<option value="Winter">Winter</option>
 				<option value="Spring">Spring</option>
 				<option value="Summer MI">Summer MI</option>
 			</select>
 			<input class="popField" type="text" name="cYear" placeholder="Year" style="width: 40%;"><br>
-			<div class='rrule' id='weekdays'>
-					<label><input type="checkbox" name="byweekday" value="0">Mon</label>
-                	<label><input type="checkbox" name="byweekday" value="1">Tue</label>
-                	<label><input type="checkbox" name="byweekday" value="2">Wed</label>
-                	<label><input type="checkbox" name="byweekday" value="3">Thu</label>
-                	<label><input type="checkbox" name="byweekday" value="4">Fri</label>
+			Days: <div class='rrule' id='weekdays'>
+					<label><input type="checkbox" class="cDays" name="byweekday" value="0">Mon</label>
+                	<label><input type="checkbox" class="cDays"  name="byweekday" value="1">Tue</label>
+                	<label><input type="checkbox" class="cDays"  name="byweekday" value="2">Wed</label>
+                	<label><input type="checkbox" class="cDays"  name="byweekday" value="3">Thu</label>
+                	<label><input type="checkbox" class="cDays"  name="byweekday" value="4">Fri</label>
+					<label><input type="checkbox" class="cDays"  name="byweekday" value="5">Sat</label>
+					<label><input type="checkbox" class="cDays"  name="byweekday" value="6">Sun</label>
+			</div>
+			<div id="times">
+			 	<input id="startTime" type="text" placeholder="Start Time"/>
+				<input id="firstDay" type="text" placeholder="First Day"/>
+				<input id="endTime" type="text" placeholder="End Time"/>
+				<input id="lastDay" type="text" placeholder="Last Day"/>
 			</div>
 
 			<div id="cButton">
@@ -149,7 +168,6 @@
 					<button class="postOption" id="pollPost">Add Poll</button>
 					<button class="postOption" id="clearPost">Clear Post</button>
 					<select id="vis">
-						<option value="" disabled selected>Visibility</option>
 						<option value="public">Public</option>
 						<option value="friends">Friends Only</option>
 						<option value="private">Private</option>
@@ -157,6 +175,7 @@
 					</select>
 
 					<input type="file" id="newPostImg" style="display: none;" accept="image/*" />
+					<div id="postProgress"></div>
 				</div>
 
 			</div>
@@ -182,8 +201,11 @@
 		</div>
 	</div>
 
-	<div id="chat"> <div id="chatTop"> CHAT </div><iframe src="/chat" id="chatBox" name="chat"></iframe> </div>
-	<button id="chatButton"> CHAT </button>
+	<div id="chat">
+		<button id="chatButton"> CHAT </button>
+		<div id="chatTop"> CHAT </div>
+		<iframe src="/chat" id="chatBox" name="chat"></iframe>
+	</div>
 	</div>
 </body>
 </html>

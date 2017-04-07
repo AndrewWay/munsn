@@ -1,19 +1,21 @@
-var email = require('emailjs/email');
+var gmail = require('gmail-node');
+var console = require("./consoleLogger");
+var secret = {
+	"installed": {
+		"client_id": "672643482220-taibebmg10ikevps3qov5hcsc5kp45bt.apps.googleusercontent.com",
+		"project_id": "munsn-163319",
+		"auth_uri": "https://accounts.google.com/o/oauth2/auth",
+		"token_uri": "https://accounts.google.com/o/oauth2/token",
+		"auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+		"client_secret": "Am1uhXjy7eGYyfUNTJwt08DL",
+		"redirect_uris": ["urn:ietf:wg:oauth:2.0:oob", "http://localhost"]
+	}
+};
+gmail.init(secret, require('path').join(__dirname, '../.credentials/gmail_creds.json'), function (err, result) {
+	console.log("[EMS]", result);
+});
 var http = require('http');
 //The MUNSN email used to send emails to users
-var emsSender = {
-	name: 'Mun Social Network',
-	address: 'munsocialnetwork@gmail.com',
-	pass: 'comp4770'
-};
-
-//Email server information
-var emsServer = email.server.connect({
-	user: emsSender.address,
-	password: emsSender.pass,
-	host: 'smtp.gmail.com',
-	ssl: true
-});
 
 /**
  * A generic Email function.
@@ -23,14 +25,15 @@ var emsServer = email.server.connect({
  }} callback - Currently
  */
 var sendEmail = function (email, callback) {
-	emsServer.send({
+	gmail.send({
 			subject: email.subject,
-			text: email.text,
-			from: emsSender.name + '<' + emsSender.address + '>',
+			message: email.text,
 			to: email.to
 			// cc:      "else <else@your-email.com>",
 		},
 		function (err, message) {
+			message.subject = email.subject;
+			message.to = email.to;
 			callback(err, message);
 		}
 	);
@@ -46,7 +49,6 @@ var sendAuthEmail = function (auth, callback) {
 	var email = {
 		subject: 'MUNSON - Confirmation Email',
 		to: auth.userid + '@mun.ca',
-		from: emsSender.name + '<' + emsSender.address + '>',
 		text: "Welcome to MUNSON! In order to continue using the site as a registered user," +
 			" please confirm your registration by clicking the link: " +
 			"http://" + process.env.ADDRESS + "/auth?key=" + auth.key +
@@ -65,7 +67,6 @@ var resendAuthEmail = function (auth, callback) {
 	var email = {
 		subject: 'MUNSON - Confirmation Email',
 		to: auth.userid + '@mun.ca',
-		from: emsSender.name + '<' + emsSender.address + '>',
 		text: "Looks like your old confirmation email expired. Here's a new one: http://" + process.env.ADDRESS + "/auth?key=" + auth.key
 	};
 	sendEmail(email, callback);

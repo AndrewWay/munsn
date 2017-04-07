@@ -10,7 +10,7 @@
       form input { border: 0; padding: 10px; width: 86%; margin-right: .5%; }
       form button { width: 12%; background: rgb(130, 224, 255); border: none; padding: 1%; }
       #messages { list-style-type: none; margin: 0; padding: 0; }
-      #messages li { padding: 5px 10px; }
+      #messages li { padding: 5px 10px; word-wrap: break-word;}
       #messages li:nth-child(odd) { background: #eee; }
     </style>
     <script src="/socket.io/socket.io.js"></script>
@@ -20,7 +20,7 @@
   <body>
     <ul id="messages"></ul>
     <form action="">
-      <input id="m" autocomplete="off" /><button>Send</button>
+      <input id="m" autocomplete="off" placeholder="Type /help for a list of commands" /><button>Send</button>
     </form>
   </body>
 </html>

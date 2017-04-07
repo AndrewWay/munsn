@@ -5,10 +5,8 @@
 	<title>{{Title}}</title>
 	<link href="/stylesheets/blank.css" rel="stylesheet"/>
 	<link href="/stylesheets/post.css" rel="stylesheet"/>
-
 	<script src="/scripts/jquery.min.js"></script>
 	<script src="/scripts/jquery-ui.js"></script>
-
 	<script src="/js/blank.js"></script>
 
 </head>

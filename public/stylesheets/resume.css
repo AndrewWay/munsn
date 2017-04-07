@@ -15,6 +15,16 @@
 	color: #ffffff;
 }
 
+#resumeProgress {
+	position: relative;
+	width: 80%;
+	display: block;
+	left: 0px;
+	margin-top: 1em;
+	margin-left: auto;
+	margin-right: auto;
+}
+
 #canvasContainer div {
 	margin: auto;
 	display: table;
@@ -30,8 +40,6 @@
 #uploadResume button {
 	display: block;
 	margin: auto;
-	
 	border-radius: 20px;
 	margin-bottom: 20px;
 }
-

@@ -5,33 +5,3 @@
 				<div class="info" id="gender"> {{gender}} </div>
 				<div class="info" id="major"> {{INFO_MAJOR}} </div>
 			</div>
-			<div class="info" id="infoButton">
-				<button id="addFriend">Add Friend</button>
-				<button>Send Message</button>
-				<button>Friends</button>
-				<button>Groups</button>
-				<button>Classes</button>
-				<button id="resume">Resume</button>
-			</div>
-
-			<script type="text/javascript">
-			//When resume button is clicked go to resume page.
-			$('#infoButton #resume').click(function () {
-				window.location.href = "/resume#"+id;
-			});
-
-			//When addFriend is clicked, send a friend request
-			$('#infoButton #addFriend').click(function() {
-				$.post('/api/friend/request', {
-					uid: uid,
-					fid: id
-				})
-				.done( function(response) {
-					console.log(response);
-				})
-				.fail( function(response) {
-					console.log(response);
-				})
-
-			});
-			</script>

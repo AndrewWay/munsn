@@ -77,19 +77,7 @@
 			);
 			$("#calendarEventsPost").click(
 				function(){
-					var evnt = {
-						'start' : {
-							'dateTime':'2017-01-01T11:00:00',
-							'timeZone':'America/St_Johns'
-						},
-						'end':{
-							'dateTime':'2017-01-01T11:50:00',
-							'timeZone':'America/St_Johns'
-						},
-						'recurrence':['RRULE:FREQ=WEEKLY;UNTIL=20170405T023000Z;WKST=MO;BYDAY=MO,WE,FR'],
-						'summary':'test',
-						'description':'descriptionstuff'
-					};
+					var evnt = { "start" : { "dateTime" : "2017-01-02T09:00:00", "timeZone" : "America/St_Johns" }, "end" : { "dateTime" : "2017-01-02T10:30:00", "timeZone" : "America/St_Johns" }, "recurrence" : [ "RRULE:FREQ=WEEKLY;BYDAY=MO,WE,FR;UNTIL=20170405T235959Z" ], "summary" : "COMP 4770", "description" : "Arbitrary Description" };
 					$.post("/content/calendar/events/jh2587",evnt,function(result) {
 						console.log(result)
 					});

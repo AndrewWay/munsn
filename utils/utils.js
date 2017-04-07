@@ -140,13 +140,13 @@ function upload(req, dest, name, callback) {
 				}
 				fstream = fs.createWriteStream(path.join(dir, name));
 				fstream.on("close", function () {
-					console.log("[Content] Upload", "'" + filename + "'->'" + name + "'");
+					console.log("[Content] Upload->Close", "'" + filename + "'->'" + name + "'");
 					callback({
 						status: 'fail'
 					});
 				});
 				fstream.on('error', function (err) {
-					console.error("[Content] Upload", err);
+					console.error("[Content] Upload->Error", err);
 					req.unpipe(req.busboy);
 					callback({
 						status: 'fail'
@@ -166,11 +166,11 @@ function upload(req, dest, name, callback) {
 			});
 		});
 		req.busboy.on('error', function () {
-			console.error("[Content] Upload", "'Error'->'busboy'");
+			console.error("[Content] Upload->Error", "'Error'->'busboy'");
 			req.unpipe(req.busboy);
 		});
 	} catch (err) {
-		console.error("[Content] Upload", "'Error'->'generic'");
+		console.error("[Content] Upload->Error ", "'Error'->'generic'");
 		callback({
 			status: 'fail'
 		});

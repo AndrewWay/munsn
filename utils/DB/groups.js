@@ -4,6 +4,7 @@ module.exports = function (DBGroups, collectionGroups, collectionGroupMembers, c
 	//Add a group
 	DBGroups.add = function (req, res, callback) {
 		var row = {
+			_id: new ObjectID(),
 			name: req.body.name,
 			creatorid: req.body.uid,
 			ownerid: req.body.uid,

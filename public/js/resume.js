@@ -6,37 +6,54 @@ $(document).ready(function () {
 
   // If absolute URL from the remote server is provided, configure the CORS
   // header on that server.
-  var url = '/content/resume/user/'+id;
+  var url = '/content/resume/user/' + id;
 
   /*************************
    * Upload Button
-   * 
+   *
    * @params: null
-   * 
+   *
    * Functions for upload buttons
    *************************/
 
-  $('#selectButton').click(function() {
+  $('#selectButton').click(function () {
 
-		$('#resumeIn').click();
+    $('#resumeIn').click();
 
   });
 
-  $('#uploadButton').click(function() {
+  $('#uploadButton').click(function () {
 
     var resForm = new FormData();
-		resForm.append("file", $("#resumeIn")[0].files[0]);
-
+    resForm.append("file", $("#resumeIn")[0].files[0]);
     $.ajax({
-					url: url, //Get :uid from the return.
-					type: 'post',
-					data: resForm,
-					cache: false,
-					contentType: false,
-					processData: false,
-		})
-    .done()
-    .fail()
+        xhr: function () {
+          var xhr = new window.XMLHttpRequest();
+          xhr.upload.addEventListener("progress", function (evt) {
+            if (evt.lengthComputable) {
+              var percentComplete = evt.loaded / evt.total;
+              percentComplete = parseInt(percentComplete * 100);
+              $("#resumeProgress").progressbar({
+                value: percentComplete
+              });
+              if (percentComplete === 100) {
+                window.setTimeout(function () {
+                  location.reload();
+                }, 1750);
+              }
+            }
+          }, false);
+          return xhr;
+        },
+        url: url, //Get :uid from the return.
+        type: 'post',
+        data: resForm,
+        cache: false,
+        contentType: false,
+        processData: false,
+      })
+      .done(function () {})
+      .fail(function () {})
 
 
   });
@@ -50,7 +67,7 @@ $(document).ready(function () {
    **************************/
 
 
-  
+
 
   console.log(url)
 

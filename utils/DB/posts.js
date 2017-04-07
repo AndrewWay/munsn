@@ -1,6 +1,6 @@
 var console = require('../consoleLogger');
 var ObjectID = require('mongodb').ObjectID;
-module.exports = function (DBPosts, collectionPosts) {
+module.exports = function (DBPosts, collectionPosts, collectionFriends) {
 
 	//POST DATA
 	//=====================================================================================================================================
@@ -112,11 +112,15 @@ module.exports = function (DBPosts, collectionPosts) {
 
 	//Get posts per post id
 	DBPosts.find = function (req, res, callback) {
-		console.log("[DBPosts] Find", "'" + JSON.stringify(req.query) + "'");
 		var query = req.query;
+		Object.assign(query, req.body);
 		if (query.pid) {
 			query._id = new ObjectID(query.pid);
 		}
+		if (query.type === "group") {
+			query.targetid = new ObjectID(query.targetid);
+		}
+		console.log("[DBPosts] Find", "'" + JSON.stringify(query) + "'");
 		collectionPosts.find(query).toArray(function (err, result) {
 			if (err) {
 				console.error("[DBPosts] Find", err.message);
@@ -132,6 +136,143 @@ module.exports = function (DBPosts, collectionPosts) {
 				});
 			}
 		});
+	};
+
+	DBPosts.findPortal = function (req, res, callback) {
+		var query = req.query;
+		Object.assign(query, req.body);
+		console.log("[DBPosts] FindTimeline", JSON.stringify(query.uid));
+		if (query.uid) {
+			var results = [];
+			// Declare loop control variables
+			var cbPublic = false,
+				cbPrivate = false,
+				cbFriends = false,
+				cbList = false;
+			var MAX_TIME = 1000 * 0.2,
+				MAX_TRIES = 5;
+			var queryPublic = {
+				visibility: 'public'
+			};
+			var queryPrivate = {
+				visibility: 'private',
+				uid: query.uid
+			};
+			var queryFriends = {
+				visibility: 'friends'
+			};
+			var queryList = {
+				visibility: 'list'
+			};
+			//Modify queries if targetid is given
+			if (query.targetid) {
+				queryPrivate.targetid = query.targetid;
+			}
+			collectionPosts.find(queryPublic).toArray(function (publicError, publicResults) {
+				if (publicError) {
+					console.error("[DBPosts] FindTimeline->Public", "'" + publicError.message + "'");
+				} else {
+					results = publicResults.length ? results.concat(publicResults) : results;
+					console.log("[DBPosts] FindTimeline->Public", "'Found'->'" + publicResults.length + "'");
+				}
+				cbPublic = true;
+			});
+			collectionPosts.find(queryPrivate).toArray(function (privateError, privateResults) {
+				if (privateError) {
+					console.error("[DBPosts] FindTimeline->Private", "'" + privateError.message + "'");
+
+				} else {
+					results = privateResults.length ? results.concat(privateResults) : results;
+					console.log("[DBPosts] FindTimeline->Private", "'Found'->'" + privateResults.length + "'");
+				}
+				cbPrivate = true;
+			});
+			collectionFriends.findOne({
+				_id: query.uid
+			}, function (listErr, listResults) {
+				if (listErr) {
+					console.error("[DBPosts] FindTimeline->List", "'" + listErr.message + "'");
+
+				} else if (listResults !== null) {
+					//Add the current user to the list so they can see their own friends only posts
+					listResults.friends.push(query.uid);
+					queryFriends.uid = {
+						'$in': listResults.friends
+					};
+					queryList.whitelist = {
+						'$in': [query.uid]
+					}
+					collectionPosts.find(queryFriends).toArray(function (friendError, friendResults) {
+						if (friendError) {
+							console.error("[DBPosts] FindTimeline->Friends", "'" + friendError.message + "'");
+
+						} else {
+							results = friendResults.length ? results.concat(friendResults) : results;
+							console.log("[DBPosts] FindTimeline->Friends", "'Found'->'" + friendResults.length + "'");
+						}
+						cbFriends = true;
+					});
+					collectionPosts.find(queryList).toArray(function (listError, listResults) {
+						if (listError) {
+							console.error("[DBPosts] FindTimeline->List", "'" + listError.message + "'");
+						} else {
+							results = listResults.length ? results.concat(listResults) : results;
+							console.log("[DBPosts] FindTimeline->List", "'Found'->'" + listResults.length + "'");
+						}
+						cbList = true;
+					});
+				} else {
+					cbList = true;
+					cbFriends = true;
+					console.log("[DBPosts] FindTimeline->Friends", "'Found'->'0'");
+					console.log("[DBPosts] FindTimeline->List", "'Found'->'0'");
+				}
+			});
+			//Start search loop after MAX_SEARCH_TIME seconds
+			var count = 1;
+			var resultsLoop = setInterval(function () {
+				console.log("[DBPosts] FindTimeline", "'Searching...'");
+				//If all searches are finish, then break loop, send back data
+				if (cbPublic && cbPrivate && cbFriends && cbList) {
+					console.log("[DBPosts] FindTimeline->Finished", "'Found[" + results.length + "]'->'" + JSON.stringify(results) + "'");
+					clearInterval(resultsLoop);
+					results.sort(function (a, b) {
+						a = new Date(a.history[a.history.length - 1].date);
+						b = new Date(b.history[b.history.length - 1].date);
+						return a > b ? -1 : a < b ? 1 : 0;
+					});
+					callback({
+						session: req.session,
+						status: 'ok',
+						data: results
+					});
+				}
+				//NOTE: This code is garbage that is unncessary.
+				/*else {
+					//If not, then repeat MAX_SEARCH_TRIES amount
+					if (count < MAX_TRIES) {
+						//count++;
+					}
+					//If MAX_SEARCH_TRIES is exceeded, then return whatever search data is complete
+					else {
+						console.log("[DBPosts] FindTimeline->Finished", "'Attempts Exceeded'");
+						console.log("[DBPosts] FindTimeline->Finished", "'Found'->'" + JSON.stringify(results) + "'");
+						clearInterval(resultsLoop);
+						callback({
+							session: req.session,
+							status: 'ok',
+							data: results
+						});
+					}
+				}*/
+			}, MAX_TIME);
+		} else {
+			console.warn("[DBPosts] FindTimeline", "'Missing Fields'");
+			callback({
+				session: req.session,
+				status: "fail"
+			});
+		}
 	};
 
 	//Update post visibility
@@ -224,32 +365,28 @@ module.exports = function (DBPosts, collectionPosts) {
 	//=====================================================================================================================================
 
 	DBPosts.addComment = function (req, res, callback) {
-		var date = new Date();
 		var comment = {
-			uid: undefined,
+			_id: new ObjectID(),
+			authorid: req.body.authorid,
+			history: req.body.data ? (
+				[{
+					date: new Date(),
+					image: req.body.data.image === "true",
+					text: req.body.data.text
+				}]
+			) : undefined,
 		};
 		Object.keys(comment).forEach(k => {
-			if (req.body[k] == undefined) {
+			if (comment[k] === undefined) {
 				delete comment[k];
-			} else {
-				comment[k] = req.body[k];
 			}
 		});
-
-		var commentData = {
-			text: undefined,
-			image: undefined,
-		};
-
-		Object.keys(commentData).forEach(k => {
-			if (req.body.commentData[k] != undefined) {
-				commentData[k] = req.body.commentData[k];
+		Object.keys(comment.history[0]).forEach(k => {
+			if (comment.history[0][k] === undefined) {
+				delete comment.history[0][k];
 			}
 		});
-		console.log("[DBPosts] addComment", "'" + JSON.stringify(req.body) + "'");
-		comment.history = [commentData];
-		comment.history[0].date = date;
-		comment._id = new ObjectID();
+		console.log("[DBPosts] addComment", "'" + JSON.stringify(comment) + "'");
 		collectionPosts.update({
 			_id: new ObjectID(req.body.pid)
 		}, {
@@ -268,6 +405,7 @@ module.exports = function (DBPosts, collectionPosts) {
 			} else {
 				callback({
 					session: req.session,
+					data: comment,
 					status: 'ok'
 				});
 			}

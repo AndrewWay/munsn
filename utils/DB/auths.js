@@ -36,8 +36,8 @@ module.exports = function (DBAuth, collectionAuths, collectionUsers, MAX_VALIDAT
 							status: 'fail'
 						});
 					} else {
-						console.log('[EMS] Sent To', message.header.to);
-						console.log('[EMS] Subject', message.header.subject);
+						console.log('[EMS] Sent To', message.to);
+						console.log('[EMS] Subject', message.subject);
 						callback({
 							session: req.session,
 							data: {
@@ -75,8 +75,8 @@ module.exports = function (DBAuth, collectionAuths, collectionUsers, MAX_VALIDAT
 							status: 'fail'
 						});
 					} else {
-						console.log('[EMS] To', message.header.to);
-						console.log('[EMS] Subject', message.header.subject);
+						console.log('[EMS] To', message.to);
+						console.log('[EMS] Subject', message.subject);
 						callback({
 							session: req.session,
 							status: 'ok'

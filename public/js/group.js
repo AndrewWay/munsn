@@ -6,6 +6,7 @@ window.onhashchange = function () {
 
 var postBoxMax = 140;
 var imgBool = false;
+var cid;
 
 $(document).ready(function () {
 
@@ -92,13 +93,13 @@ $(document).ready(function () {
 		postBoxMax = 140;
 		imgBool = false;
 
-		$('#postBox *').val('');
-
+		$("#postBox #text").val('');
+		$("#postProgress").empty();
 		$("#imgDisp").attr("src", "#");
 		$("#imgDisp").css({
 			display: 'none'
 		});
-
+		$('#vis').val('public');
 		$("#postBox").animate({
 			height: postBoxMax + "px"
 		}, 200);
@@ -128,8 +129,31 @@ $(document).ready(function () {
 				if (imgBool) {
 					var picForm = new FormData();
 					picForm.append("image", $("#newPostImg")[0].files[0]);
-
+					$("#postBox").animate({
+						height: (postBoxMax + 50) + "px"
+					}, 200);
 					$.ajax({
+							xhr: function () {
+								var xhr = new window.XMLHttpRequest();
+								xhr.upload.addEventListener("progress", function (evt) {
+									if (evt.lengthComputable) {
+										var percentComplete = evt.loaded / evt.total;
+										percentComplete = parseInt(percentComplete * 100);
+										$("#postProgress").progressbar({
+											value: percentComplete
+										});
+										if (percentComplete === 100) {
+											window.setTimeout(function () {
+												$("#clearPost").click();
+												window.setTimeout(function () {
+													location.reload();
+												}, 1000);
+											}, 1000);
+										}
+									}
+								}, false);
+								return xhr;
+							},
 							url: '/content/posts/' + pid + '/' + pid,
 							type: 'post',
 							data: picForm,
@@ -140,17 +164,17 @@ $(document).ready(function () {
 						}).done(function (response) {
 							console.log("image uploaded");
 
-						}).fail()
-						.always(function () {
-							//Clear the fields
+						}).fail(function () {
 							$("#clearPost").click();
+							$("#postBox *").focusout(); //<- I dont think this works
 						})
+						.always()
 				} else {
-					//Clear the fields
-					$("#clearPost").click()
+
 				}
 			})
-			.fail();
+			.fail()
+			.always(function () {});
 	});
 
 	//TODO: Potentially move to it's own file to be accessed by every page that needs it.
@@ -176,59 +200,210 @@ $(document).ready(function () {
 			$.each(response.data, function (i, v) {
 
 				var postInfo = $.extend({}, v, v.history.slice(-1).pop());
+				postInfo.date = new Date(postInfo.date).toLocaleString();
 
+				//Grab all the comments, get the appropriate data and render them
+				if(!(typeof v.comments === 'undefined')){
+					var commData = {
+						"list": []
+					};
+
+					$.each(v.comments, function (j, u) {
+						//Grab all the info
+						var commInfo = $.extend({}, u, u.history.slice(-1).pop());
+						//Get correct date format
+						commInfo.date = new Date(commInfo.date).toLocaleString();
+
+						//Get the appropriate username
+						$.ajax({
+							type: 'GET',
+							async: false,
+							url: '/api/user/' + u.authorid
+						}).done(function (res) {
+							commInfo.fname = res.data.fname;
+							commInfo.lname = res.data.lname;
+						});
+
+						commData.list.push(commInfo);
+					});
+
+					$.get("/temps/commTemp.hjs", function(commTemp) {
+						var template = Hogan.compile("{{#list}}" + commTemp + "{{/list}}");
+						var output = template.render(commData);
+						postInfo.comments = output;
+					});
+				};
+
+				$.ajax({
+					type: 'GET',
+					async: false,
+					url: '/api/user/' + v.uid
+				}).done(function (res) {
+					postInfo.fname = res.data.fname;
+					postInfo.lname = res.data.lname;
+				});
+				postInfo.image = postInfo.image ? 'visibility:visible' : 'visibility:hidden';
 				data.list.push(postInfo);
 				console.log(data);
 				//Stop at 5 posts. Arbitrary
-				return i < 4;
+				return i < 20;
 			});
 
 			$.get("/temps/postTemp.hjs", function (post) {
+				data.list.reverse();
 				var template = Hogan.compile("{{#list}}" + post + "{{/list}}");
 				var output = template.render(data);
 				$('#posts').append(output);
+
+				/****************
+				 * Post button
+				 *
+				 * @params: pid
+				 *
+				 * Functionality for post edit and delete buttons
+				 ****************/
+
+				//Post delete button click functionality
+				$('.postDel').click(function () {
+					var p_id = $(this).parents('.postTemp').attr('id');
+					console.log("PID: " + p_id);
+					$.ajax({
+						method: 'DELETE',
+						url: '/api/post',
+						data: {
+							pid: p_id
+						}
+					}).done(function () {
+						$('#' + p_id).fadeOut('slow');
+						$('#' + p_id + ' *').fadeOut('fast');
+					}).fail(function () {
+
+					});
+				});
+
+				//Post edit button click functionality
+				$('.postEdit').click(function () {
+					var p_id = $(this).parents('.postTemp').attr('id');
+					console.log("PID: " + p_id);
+				});
+
+				/****************
+				 * Comment button
+				 *
+				 * @params: pid
+				 *
+				 * Functionality for post edit and delete buttons
+				 ****************/
+
+				//Comment delete button click functionality
+				$('.commDel').click(function() {
+					var p_id = $(this).parents('.commTemp').attr('id');
+					console.log("PID: " + p_id);
+				});
+
+				//Comment edit button click functionality
+				$('.commEdit').click(function() {
+					var p_id = $(this).parents('.commTemp').attr('id');
+					console.log("PID: " + p_id);
+				});
+
+				/******************
+				 * Comment box expansion
+				 *
+				 * @params: pid
+				 *
+				 * Expand and shrink the comment box in a post
+				 ******************/
+
+				//Expand textarea and div on focus
+				$(".commBox *").focus(function () {
+
+					//Box is the commBox of interest
+					var box = $(this).parents('.commBox');
+
+					box.animate({
+						height: "110px"
+					}, 200);
+					$(".commText", box).animate({
+						height: "70px"
+					}, 200);
+				});
+
+				//Shrink textarea and div when focus is lost and there is no text inside.
+				$(".commBox *").focusout(function () {
+
+					//Box is the commBox of interest
+					var box = $(this).parents('.commBox');
+
+					//Use a timeout to wait for focus to transfer to other children elements
+					window.setTimeout(function () {
+					//If there is no text in textarea, and a non child element of postBox was clicked: shrink.
+					if (!$.trim($("*", box).val()) && $('*:focus', box).length == 0) {
+						box.animate({
+							height: "30px"
+						}, 200);
+						$(".commText", box).animate({
+							height: "30px"
+						}, 200);
+					}
+					}, 50);
+				});
+
+				/*********************
+				 * Comment button
+				 *
+				 * @params: pid
+				 *
+				 * Functionality for comment buttons
+				 *********************/
+
+				//Comment clear button functionality
+				$('.commClear').click(function () {
+					//TODO: Add warning: Check if sure.
+					//Box is the commBox of interest
+					var box = $(this).parents('.commBox');
+
+					$(".commText", box).val(null);
+					//$("#postProgress").empty(); TODO: John can deal with this. Idk enough about it
+					box.animate({
+						height: "30px"
+					}, 200);
+					$(".commText", box).animate({
+						height: "30px"
+					}, 200);
+				});
+
+				//Comment submit button functionality
+				$('.commSubmit').click(function () {
+					//TODO: Add warning: Check if sure.
+					//Box is the commBox of interest
+					var box = $(this).parents('.commBox');
+					//TODO: See if changing this p_id variable causes any errors.
+					var p_id = box.parents('.postTemp').attr('id');
+
+					//NOTE: As of now no comments have images. TODO: add images to comments.
+					$.post('/api/comment', {
+						pid: p_id,
+						authorid: uid,
+						data: {
+							image: false,
+							text: $('.commText', box).val(),
+						}
+					})
+					.done(function(response){
+						console.log(response);
+					})
+					.fail(function(response){
+						console.log(response);
+					})
+
+					$(".commClear", box).click();
+				});
 			});
 		})
 		.fail(
 			//TODO: Function on failures.
 		);
-
-	/***********************
-	 * Resume button
-	 *
-	 *@params: null
-	 *
-	 * Button linking to resume page.
-	 ************************/
-
-	//When button is clicked go to resume page.
-	$('#infoButton #resume').click(function () {
-		window.location.href = "/resume/" + id;
-	});
-
-	/************************
-	 * Suggested friend buttons
-	 *
-	 *@params: null
-	 *
-	 * Behaviour of suggested friend box when a button is clicked.
-	 *
-	 *COMMENTS: Should be moved to something outside here so there is no repeated code.
-	 ************************/
-
-	//When Previous button is clicked move backwards through list of suggested friends.
-	$('#suggPrev').click(function () {
-		//TODO -- Implementation when integration is done
-
-
-	});
-
-	//When Next button is clicked move forwards through list of suggested friends.
-	$('#suggNext').click(function () {
-		//TODO -- Implementation when integration is done
-
-
-	});
 
 	//TODO: Potentially move to it's own file to be accessed by every page that needs it.
 	/*******************
@@ -241,16 +416,44 @@ $(document).ready(function () {
 
 	//Get and display group info
 	//TODO: Add findGroupById in API. It's missing for some reason.
-	$.get('/api/group/' + id)
-	.done(function (response) {
-		
-		$.get("/temps/groupInfo.hjs", function (info) {
-			var template = Hogan.compile(info);
-			var output = template.render(response.data);
-			$('#infoContainer').append(output);
+	var groupProm = $.get('/api/group/' + id)
+		.done(function (response) {
+			cid = response.data.creatorid;
+			response.data.created = new Date(response.data.created).toLocaleDateString();
+
+			$.get('/api/user/' + response.data.creatorid)
+				.done(function (res) {
+					response.data.fname = res.data.fname;
+					response.data.lname = res.data.lname;
+
+					$.get("/temps/groupInfo.hjs", function (info) {
+						var template = Hogan.compile(info);
+						var output = template.render(response.data);
+						$('#infoContainer').prepend(output);
+					});
+				});
+		})
+		.fail(
+			//TODO: Function on failures.
+		)
+
+		/*************
+		 * Button display
+		 * 
+		 * @params: uid
+		 * 
+		 * Display button based on user privilege
+		 ************/
+
+		//Wait for uid to be grabbed first
+		$.when($, uidProm, groupProm).then(function() {
+			//If not your profile: show otherPr buttons. Else: show yourPr buttons.
+			console.log(cid);
+			if(!(uid==cid)){
+				$('#infoButton .notCr').show();
+			}
+			else {
+				$('#infoButton .groupCr').show();
+			}
 		});
-	})
-	.fail(
-		//TODO: Function on failures.
-	);
 });

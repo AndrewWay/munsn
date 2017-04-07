@@ -1,32 +1,21 @@
 #postBox {
 	width: 96%;
-	
 	display: inline-block;
-	
-	height:30px;
+	height: 30px;
 	margin-top: 1px;
 	margin-right: 3px;
 	margin-left: 3px;
-	
 	background-color: #eeeeee;
 	padding: 2%;
-	
 	border: 2px solid #cccccc;
-
 	overflow: hidden;
-	
 }
 
 #postBox #text {
 	width: 85%;
 	height: 30px;
-	
-	   
 	resize: none;
-    outline: none;
-	
-	
-
+	outline: none;
 }
 
 #postBox #postSubmit {
@@ -34,7 +23,11 @@
 	top: -15px;
 	width: 10%;
 	height: 30px;
-	padding:0;
+	padding: 0;
+}
+
+#postBox #option {
+	margin-top: 0.5%;
 }
 
 #chatButton {
@@ -61,29 +54,24 @@
 	position: fixed;
 	bottom: 0;
 	right: 0;
-	
 	height: 0;
 	width: 300px;
 	z-index: 3;
-	
 	overflow: hidden;
-	
 	background: white;
-	
 	border: 1px solid #000000;
-	
 }
 
 #chatBox {
 	position: relative;
 	height: 90%;
 	width: 100%;
-	top:10%;
+	top: 10%;
 }
 
 #chatTop {
 	position: relative;
-	height:10%;
+	height: 10%;
 	background-color: #aaaaaa;
 	text-align: center;
 	vertical-align: center;
