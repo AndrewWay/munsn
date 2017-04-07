@@ -196,10 +196,53 @@ $(document).ready(function () {
 				"list": []
 			};
 
+			var commData = {
+				"list": []
+			};
+
+			console.log(response);
+
 			$.each(response.data, function (i, v) {
 
 				var postInfo = $.extend({}, v, v.history.slice(-1).pop());
 				postInfo.date = new Date(postInfo.date).toLocaleString();
+
+				console.log(v.comments);
+
+				//Grab all the comments, get the appropriate data and render them
+				if(!(typeof v.comments === 'undefined')){
+					console.log("here");
+
+					$.each(v.comments, function (j, u) {
+						console.log("here");
+						//Grab all the info
+						var commInfo = $.extend({}, u, u.history.slice(-1).pop());
+						//Get correct date format
+						commInfo.date = new Date(commInfo.date).toLocaleString();
+
+						//Get the appropriate username
+						$.ajax({
+							type: 'GET',
+							async: false,
+							url: '/api/user/' + u.authorid
+						}).done(function (res) {
+							commInfo.fname = res.data.fname;
+							commInfo.lname = res.data.lname;
+						});
+
+						commData.list.push(commInfo);
+
+						console.log(commData);
+
+					});
+
+					$.get("/temps/commTemp.hjs", function(commTemp) {
+						var template = Hogan.compile("{{#list}}" + commTemp + "{{/list}}");
+						var output = template.render(commData);
+						console.log(output);
+						postInfo.comments = output;
+					});
+				};
 
 				$.ajax({
 					type: 'GET',
@@ -210,6 +253,7 @@ $(document).ready(function () {
 					postInfo.lname = res.data.lname;
 				});
 				postInfo.image = postInfo.image ? 'visibility:visible' : 'visibility:hidden';
+
 				data.list.push(postInfo);
 				//Stop at 20 posts. Arbitrary
 				return i < 20;
@@ -229,7 +273,8 @@ $(document).ready(function () {
 				 * Load comments into the post
 				 *****************/
 
-				//TODO: Find out where comments are stored.
+
+				//$.each();
 
 				/****************
 				 * Post button
@@ -307,7 +352,7 @@ $(document).ready(function () {
 					//Box is the commBox of interest
 					var box = $(this).parents('.commBox');
 
-					$(".commText", box).val('');
+					$(".commText", box).val(null);
 					//$("#postProgress").empty(); TODO: John can deal with this. Idk enough about it
 					box.animate({
 						height: "30px"

@@ -28,7 +28,7 @@
 	margin: 4px 10px 4px 10px;
 }
 
-.postInfo, .commInfo {
+.postInfo {
 	position: relative;
 	height: 50px;
 	width: 95%;
@@ -36,13 +36,7 @@
 	display: inline-block;
 }
 
-.postComm {
-	margin: 10px 20px 20px 20px;
-	background-color: #dddddd;
-	border-radius: 5px;
-}
-
-.postPic, .commPic {
+.postPic {
 	position: absolute;
 	width: 50px;
 	height: inherit;
@@ -105,21 +99,26 @@
 /* Comment CSS */
 
 .postComm {
-	width: 94%;
+	position: static;
+	margin: 10px 20px 20px 20px;
+	border-radius: 5px;
+	background: #e1e1e1;
+	min-height: 100px; /*Shouldn't be necessary once everything is loaded in*/
 	
-	display: inline-block;
+	/*Maybe not, must consider what else could be done*/
+	width: 95%;
+	min-width: 95%;
 	
-	height:30px;
-	margin-top: 1px;
-	margin-right: 3px;
-	margin-left: 3px;
-	
-	background-color: #e1e1e1;
-	padding: 2%;
+	border-radius: 5px;
 	
 	border: 2px solid #cccccc;
-
-	overflow: hidden;
+	
+	margin-left: auto;
+	margin-right: auto;
+	
+	display: flex;
+	flex-direction: column;
+	flex-shrink: 0;
 }
 
 .commBox {
@@ -151,6 +150,29 @@
 	
 	
 
+}
+
+.commInfo {
+	position: relative;
+	height: 20px;
+	width: 95%;
+	margin: 5px;
+	display: inline-block;
+}
+
+.commPic {
+	position: absolute;
+	width: 20px;
+	height: inherit;
+	display: inline-block;
+	top: 0;
+	left: 0;
+	border-radius: 5px;
+	overflow: hidden;
+	
+	border-style: outset;
+	border-width: 2px;
+	border-color: #aaaaaa #7f1734 #7f1734 #aaaaaa;
 }
 
 .commBox .commSubmit {
