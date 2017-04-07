@@ -258,17 +258,6 @@ $(document).ready(function () {
 				$('#posts').append(output);
 
 				/****************
-				 * Load comments
-				 * 
-				 * @params: pid
-				 * 
-				 * Load comments into the post
-				 *****************/
-
-
-				//$.each();
-
-				/****************
 				 * Post button
 				 * 
 				 * @params: pid
@@ -285,6 +274,26 @@ $(document).ready(function () {
 				//Post edit button click functionality
 				$('.postEdit').click(function() {
 					var p_id = $(this).parents('.postTemp').attr('id');
+					console.log("PID: " + p_id);
+				});
+
+				/****************
+				 * Comment button
+				 * 
+				 * @params: pid
+				 * 
+				 * Functionality for post edit and delete buttons
+				 ****************/
+
+				//Comment delete button click functionality
+				$('.commDel').click(function() {
+					var p_id = $(this).parents('.commTemp').attr('id');
+					console.log("PID: " + p_id);
+				});
+
+				//Comment edit button click functionality
+				$('.commEdit').click(function() {
+					var p_id = $(this).parents('.commTemp').attr('id');
 					console.log("PID: " + p_id);
 				});
 
