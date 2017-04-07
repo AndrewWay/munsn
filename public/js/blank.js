@@ -198,7 +198,7 @@ $(document).ready(function () {
 
 	//Upload group image: On image click open hidden input.
 	$('#grImgDisp').click(function () {
-		$('grImgUp').click();
+		$('#grImgUp').click();
 	});
 
 	//Update the image with the uploaded image.
