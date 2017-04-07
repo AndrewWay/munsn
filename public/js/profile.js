@@ -196,10 +196,6 @@ $(document).ready(function () {
 				"list": []
 			};
 
-			var commData = {
-				"list": []
-			};
-
 			console.log(response);
 
 			$.each(response.data, function (i, v) {
@@ -207,14 +203,13 @@ $(document).ready(function () {
 				var postInfo = $.extend({}, v, v.history.slice(-1).pop());
 				postInfo.date = new Date(postInfo.date).toLocaleString();
 
-				console.log(v.comments);
-
 				//Grab all the comments, get the appropriate data and render them
 				if(!(typeof v.comments === 'undefined')){
-					console.log("here");
+					var commData = {
+						"list": []
+					};
 
 					$.each(v.comments, function (j, u) {
-						console.log("here");
 						//Grab all the info
 						var commInfo = $.extend({}, u, u.history.slice(-1).pop());
 						//Get correct date format
@@ -231,9 +226,6 @@ $(document).ready(function () {
 						});
 
 						commData.list.push(commInfo);
-
-						console.log(commData);
-
 					});
 
 					$.get("/temps/commTemp.hjs", function(commTemp) {
