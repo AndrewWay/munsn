@@ -8,7 +8,7 @@
 			<button class="commDel"> Delete </button>
 		</div>
 		<div class="commName">
-			<a href="/profile/{{authorid}}"> {{fname}} {{lname}} </a> <br>
+			<a href="/profile#{{authorid}}"> {{fname}} {{lname}} </a> <br>
 			<span>{{date}}</span>
 		</div>
 	</div>
