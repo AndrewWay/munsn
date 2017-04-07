@@ -464,4 +464,76 @@ $(document).ready(function () {
 		.fail(
 			//TODO: Function on failures.
 		);
+
+	/*************
+	 * Profile button
+	 * 
+	 * @params: id
+	 * 
+	 * Profile button functionality
+	 **************/
+
+	//Friend button functionality when clicked.
+	$('#prFriends').click(function () {
+		$('.prPopup').hide();
+
+		//Make sure div is empty
+		$('#prFriendPU').html('');
+
+		//Add loading gif and then show.
+		$('#prFriendPU').html('<img src="/img/ring-alt.gif">');
+		$('#prFriendPU').show();
+
+		//Remove loading gif. TODO: Check if this is better placed somewhere else.
+		$('#prFriendPU').html('');
+
+		//API call to get user friends
+		$.get('/api/friends/' + id)
+			.done(function (response) {
+
+				//Setup variable to hold data for templates
+				var data = {
+					"list": []
+				};
+
+				//Make array to hold promises.
+				var promises = [];
+
+				//Display friend title
+				$('#prFriendPU').append("<h3> Friends </h3>");
+
+				//For each friend in the friends array
+				if (!(typeof response.data[0] == 'undefined')) {
+					$.each(response.data[0].friends, function (j, u) {
+
+						//Push gets to array so next function waits.
+						promises.push($.get('/api/user/' + u)
+							.done(function (response) {
+								var x = $.extend({}, response.data, {
+									"title": "profile"
+								})
+								x.image = x.gender ? "/content/image/profile/" + x._id : x.image;
+								data.list.push(x);
+							})
+							.fail());
+					})
+
+					//Waits until all data is loaded then displays friend list.
+					$.when.apply($, promises).then(function () {
+						//If no friends exist, display sad face
+						if (!(data.list.length == 0)) {
+							$.get("/temps/searchTemp.hjs", function (result) {
+								var template = Hogan.compile("{{#list}}" + result + "{{/list}}");
+								var output = template.render(data);
+								$('#prFriendPU').append(output);
+							});
+						}
+					})
+				} else {
+					//Display no friends
+					$('#prFriendPU').append("<h5> No friends to display =( </h5>");
+				}
+			})
+			.fail()
+	});
 });
