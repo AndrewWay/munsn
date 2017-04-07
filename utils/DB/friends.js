@@ -189,10 +189,24 @@ module.exports = function (DBFriends, collectionFriends, collectionFriendRequest
 							users[fof[i].fof[0].friends[j]] = true;
 						}
 					}
+                    //Trim users that are already friends with the specific user
+                    var usersArr = Object.keys(users);
+                    collectionFriends.findOne({_id: req.UserID}, function(err, results) {
+                        if (results) {
+                            for (var i = 0; i < usersArr.length; i++) {
+                                for (var j = 0; j < results.friends.length; j++) {
+                                    if (usersArr[i] == results.friends[j]) {
+                                        usersArr.splice(i, 1);
+                                        continue;
+                                    }
+                                }
+                            }
+                        }
+                    });
 					callback({
 						session: req.session,
 						status: 'ok',
-						data: Object.keys(users)
+						data: usersArr
 					});
 				} else {
 					console.warn("[DBFriends] Suggest", "'None'->'" + req.UserID + "'");
