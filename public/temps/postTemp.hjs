@@ -18,7 +18,7 @@
 					<p> {{text}}</p><img src="/content/posts/{{_id}}/{{_id}}" style={{image}}>
 				</div>
 				<div class="postComm">
-					{{{comments}}}
+					<div class="commContainer">{{{comments}}}</div>
 
 					<div class="commBox">
 						<textarea class="commText" placeholder="Make a comment!"></textarea><button class="commSubmit">Submit</button>
@@ -28,7 +28,7 @@
 						</div>
 					</div>
 				</div>
-			
+
 </div>
 
 <!--- Scripts for individual posts -->
@@ -36,9 +36,9 @@
 
 	/*********************
 	 * Edit and delete buttons
-	 * 
+	 *
 	 * @params: uid
-	 * 
+	 *
 	 * Show buttons if the post belongs to current user
 	 **********************/
 

@@ -121,7 +121,7 @@ $(document).ready(function () {
 				}
 			})
 			.done(function (response) {
-				var pid = response.data._id;
+				var p_id = response.data._id;
 
 
 				//If image is supplied. Store that image.
@@ -133,48 +133,45 @@ $(document).ready(function () {
 						height: (postBoxMax + 50) + "px"
 					}, 200);
 					$.ajax({
-							xhr: function () {
-								var xhr = new window.XMLHttpRequest();
-								xhr.upload.addEventListener("progress", function (evt) {
-									if (evt.lengthComputable) {
-										var percentComplete = evt.loaded / evt.total;
-										percentComplete = parseInt(percentComplete * 100);
-										$("#postProgress").progressbar({
-											value: percentComplete
-										});
-										if (percentComplete === 100) {
-											window.setTimeout(function () {
-												$("#clearPost").click();
-												window.setTimeout(function () {
-													location.reload();
-												}, 1000);
-											}, 1000);
-										}
+						xhr: function () {
+							var xhr = new window.XMLHttpRequest();
+							xhr.upload.addEventListener("progress", function (evt) {
+								if (evt.lengthComputable) {
+									var percentComplete = evt.loaded / evt.total;
+									percentComplete = parseInt(percentComplete * 100);
+									$("#postProgress").progressbar({
+										value: percentComplete
+									});
+									if (percentComplete === 100) {
+
 									}
-								}, false);
-								return xhr;
-							},
-							url: '/content/posts/' + pid + '/' + pid,
-							type: 'post',
-							data: picForm,
-							cache: false,
-							contentType: false,
-							processData: false
+								}
+							}, false);
+							return xhr;
+						},
+						url: '/content/posts/' + p_id + '/' + p_id,
+						type: 'post',
+						data: picForm,
+						cache: false,
+						contentType: false,
+						processData: false
 
-						}).done(function (response) {
-							console.log("image uploaded");
-
-						}).fail(function () {
-							$("#clearPost").click();
-							$("#postBox *").focusout(); //<- I dont think this works
-						})
-						.always()
+					}).done(function (response) {
+						console.log("image uploaded");
+						$.when.apply($, blankProm).then(function () {
+							postPrepend(response.data, p_id);
+						});
+					}).fail(function () {
+						$("#clearPost").click();
+						$("#postBox *").focusout(); //<- I dont think this works
+					});
 				} else {
-
+					$.when.apply($, blankProm).then(function () {
+						postPrepend(response.data, p_id);
+					});
 				}
 			})
-			.fail()
-			.always(function () {});
+			.fail();
 	});
 
 	//TODO: Potentially move to it's own file to be accessed by every page that needs it.
@@ -197,17 +194,18 @@ $(document).ready(function () {
 				"list": []
 			};
 
+			var postProm = [];
 			$.each(response.data, function (i, v) {
 
 				var postInfo = $.extend({}, v, v.history.slice(-1).pop());
 				postInfo.date = new Date(postInfo.date).toLocaleString();
 
 				//Grab all the comments, get the appropriate data and render them
-				if(!(typeof v.comments === 'undefined')){
+				if (!(typeof v.comments === 'undefined')) {
 					var commData = {
 						"list": []
 					};
-
+					commProm = [];
 					$.each(v.comments, function (j, u) {
 						//Grab all the info
 						var commInfo = $.extend({}, u, u.history.slice(-1).pop());
@@ -215,33 +213,33 @@ $(document).ready(function () {
 						commInfo.date = new Date(commInfo.date).toLocaleString();
 
 						//Get the appropriate username
-						$.ajax({
+						commProm.push($.ajax({
 							type: 'GET',
-							async: false,
 							url: '/api/user/' + u.authorid
 						}).done(function (res) {
 							commInfo.fname = res.data.fname;
 							commInfo.lname = res.data.lname;
-						});
+						}));
 
 						commData.list.push(commInfo);
 					});
 
-					$.get("/temps/commTemp.hjs", function(commTemp) {
-						var template = Hogan.compile("{{#list}}" + commTemp + "{{/list}}");
-						var output = template.render(commData);
-						postInfo.comments = output;
+					$.when.apply($, postProm).then(function () {
+						$.get("/temps/commTemp.hjs", function (commTemp) {
+							var template = Hogan.compile("{{#list}}" + commTemp + "{{/list}}");
+							var output = template.render(commData);
+							postInfo.comments = output;
+						});
 					});
 				};
 
-				$.ajax({
+				postProm.push($.ajax({
 					type: 'GET',
-					async: false,
 					url: '/api/user/' + v.uid
 				}).done(function (res) {
 					postInfo.fname = res.data.fname;
 					postInfo.lname = res.data.lname;
-				});
+				}));
 				postInfo.image = postInfo.image ? 'visibility:visible' : 'visibility:hidden';
 				data.list.push(postInfo);
 				console.log(data);
@@ -249,155 +247,174 @@ $(document).ready(function () {
 				return i < 20;
 			});
 
-			$.get("/temps/postTemp.hjs", function (post) {
-				data.list.reverse();
-				var template = Hogan.compile("{{#list}}" + post + "{{/list}}");
-				var output = template.render(data);
-				$('#posts').append(output);
+			$.when.apply($, postProm).then(function () {
+				$.get("/temps/postTemp.hjs", function (post) {
+					data.list.reverse();
+					var template = Hogan.compile("{{#list}}" + post + "{{/list}}");
+					var output = template.render(data);
+					$('#posts').append(output);
 
-				/****************
-				 * Post button
-				 *
-				 * @params: pid
-				 *
-				 * Functionality for post edit and delete buttons
-				 ****************/
+					/****************
+					 * Post button
+					 *
+					 * @params: pid
+					 *
+					 * Functionality for post edit and delete buttons
+					 ****************/
 
-				//Post delete button click functionality
-				$('.postDel').click(function () {
-					var p_id = $(this).parents('.postTemp').attr('id');
-					console.log("PID: " + p_id);
-					$.ajax({
-						method: 'DELETE',
-						url: '/api/post',
-						data: {
-							pid: p_id
-						}
-					}).done(function () {
-						$('#' + p_id).fadeOut('slow');
-						$('#' + p_id + ' *').fadeOut('fast');
-					}).fail(function () {
+					//Post delete button click functionality
+					$('.postDel').click(function () {
+						var p_id = $(this).parents('.postTemp').attr('id');
+						console.log("PID: " + p_id);
+						$.ajax({
+							method: 'DELETE',
+							url: '/api/post',
+							data: {
+								pid: p_id
+							}
+						}).done(function () {
+							$('#' + p_id).fadeOut('slow');
+							$('#' + p_id + ' *').fadeOut('fast');
+						}).fail(function () {
 
+						});
 					});
-				});
 
-				//Post edit button click functionality
-				$('.postEdit').click(function () {
-					var p_id = $(this).parents('.postTemp').attr('id');
-					console.log("PID: " + p_id);
-				});
+					//Post edit button click functionality
+					$('.postEdit').click(function () {
+						var p_id = $(this).parents('.postTemp').attr('id');
+						console.log("PID: " + p_id);
+					});
 
-				/****************
-				 * Comment button
-				 *
-				 * @params: pid
-				 *
-				 * Functionality for post edit and delete buttons
-				 ****************/
+					/****************
+					 * Comment button
+					 *
+					 * @params: pid
+					 *
+					 * Functionality for post edit and delete buttons
+					 ****************/
 
-				//Comment delete button click functionality
-				$('.commDel').click(function() {
-					var p_id = $(this).parents('.commTemp').attr('id');
-					console.log("PID: " + p_id);
-				});
+					//Comment delete button click functionality
+					$('.commDel').click(function () {
+						var c_id = $(this).parents('.commTemp').attr('id');
+						var p_id = $('#' + c_id).parents('.postTemp').attr('id');
+						console.log("PID: " + p_id);
+						$.ajax({
+							method: 'DELETE',
+							url: '/api/comment',
+							data: {
+								pid: p_id,
+								cid: c_id
+							}
+						}).done(function () {
+							$('#' + c_id).fadeOut('slow');
+							$('#' + c_id + ' *').fadeOut('fast');
+						}).fail(function () {
 
-				//Comment edit button click functionality
-				$('.commEdit').click(function() {
-					var p_id = $(this).parents('.commTemp').attr('id');
-					console.log("PID: " + p_id);
-				});
+						});
+					});
 
-				/******************
-				 * Comment box expansion
-				 *
-				 * @params: pid
-				 *
-				 * Expand and shrink the comment box in a post
-				 ******************/
+					//Comment edit button click functionality
+					$('.commEdit').click(function () {
+						var p_id = $(this).parents('.commTemp').attr('id');
+						console.log("PID: " + p_id);
+					});
 
-				//Expand textarea and div on focus
-				$(".commBox *").focus(function () {
+					/******************
+					 * Comment box expansion
+					 *
+					 * @params: pid
+					 *
+					 * Expand and shrink the comment box in a post
+					 ******************/
 
-					//Box is the commBox of interest
-					var box = $(this).parents('.commBox');
+					//Expand textarea and div on focus
+					$(".commBox *").focus(function () {
 
-					box.animate({
-						height: "110px"
-					}, 200);
-					$(".commText", box).animate({
-						height: "70px"
-					}, 200);
-				});
+						//Box is the commBox of interest
+						var box = $(this).parents('.commBox');
 
-				//Shrink textarea and div when focus is lost and there is no text inside.
-				$(".commBox *").focusout(function () {
+						box.animate({
+							height: "110px"
+						}, 200);
+						$(".commText", box).animate({
+							height: "70px"
+						}, 200);
+					});
 
-					//Box is the commBox of interest
-					var box = $(this).parents('.commBox');
+					//Shrink textarea and div when focus is lost and there is no text inside.
+					$(".commBox *").focusout(function () {
 
-					//Use a timeout to wait for focus to transfer to other children elements
-					window.setTimeout(function () {
-					//If there is no text in textarea, and a non child element of postBox was clicked: shrink.
-					if (!$.trim($("*", box).val()) && $('*:focus', box).length == 0) {
+						//Box is the commBox of interest
+						var box = $(this).parents('.commBox');
+
+						//Use a timeout to wait for focus to transfer to other children elements
+						window.setTimeout(function () {
+							//If there is no text in textarea, and a non child element of postBox was clicked: shrink.
+							if (!$.trim($("*", box).val()) && $('*:focus', box).length == 0) {
+								box.animate({
+									height: "30px"
+								}, 200);
+								$(".commText", box).animate({
+									height: "30px"
+								}, 200);
+							}
+						}, 50);
+					});
+
+					/*********************
+					 * Comment button
+					 *
+					 * @params: pid
+					 *
+					 * Functionality for comment buttons
+					 *********************/
+
+					//Comment clear button functionality
+					$('.commClear').click(function () {
+						//TODO: Add warning: Check if sure.
+						//Box is the commBox of interest
+						var box = $(this).parents('.commBox');
+
+						$(".commText", box).val(null);
+						//$("#postProgress").empty(); TODO: John can deal with this. Idk enough about it
 						box.animate({
 							height: "30px"
 						}, 200);
 						$(".commText", box).animate({
 							height: "30px"
 						}, 200);
-					}
-					}, 50);
-				});
+					});
 
-				/*********************
-				 * Comment button
-				 *
-				 * @params: pid
-				 *
-				 * Functionality for comment buttons
-				 *********************/
+					//Comment submit button functionality
+					$('.commSubmit').click(function () {
+						//TODO: Add warning: Check if sure.
+						//Box is the commBox of interest
+						var box = $(this).parents('.commBox');
+						//TODO: See if changing this p_id variable causes any errors.
+						var p_id = box.parents('.postTemp').attr('id');
 
-				//Comment clear button functionality
-				$('.commClear').click(function () {
-					//TODO: Add warning: Check if sure.
-					//Box is the commBox of interest
-					var box = $(this).parents('.commBox');
+						//NOTE: As of now no comments have images. TODO: add images to comments.
+						$.post('/api/comment', {
+								pid: p_id,
+								authorid: uid,
+								data: {
+									image: false,
+									text: $('.commText', box).val(),
+								}
+							})
+							.done(function (response) {
+								console.log(response);
+								$.when.apply($, blankProm).then(function () {
+									commAppend(response.data, p_id);
+								});
+							})
+							.fail(function (response) {
+								console.log(response);
+							})
 
-					$(".commText", box).val(null);
-					//$("#postProgress").empty(); TODO: John can deal with this. Idk enough about it
-					box.animate({
-						height: "30px"
-					}, 200);
-					$(".commText", box).animate({
-						height: "30px"
-					}, 200);
-				});
-
-				//Comment submit button functionality
-				$('.commSubmit').click(function () {
-					//TODO: Add warning: Check if sure.
-					//Box is the commBox of interest
-					var box = $(this).parents('.commBox');
-					//TODO: See if changing this p_id variable causes any errors.
-					var p_id = box.parents('.postTemp').attr('id');
-
-					//NOTE: As of now no comments have images. TODO: add images to comments.
-					$.post('/api/comment', {
-						pid: p_id,
-						authorid: uid,
-						data: {
-							image: false,
-							text: $('.commText', box).val(),
-						}
-					})
-					.done(function(response){
-						console.log(response);
-					})
-					.fail(function(response){
-						console.log(response);
-					})
-
-					$(".commClear", box).click();
+						$(".commClear", box).click();
+					});
 				});
 			});
 		})
@@ -437,23 +454,22 @@ $(document).ready(function () {
 			//TODO: Function on failures.
 		)
 
-		/*************
-		 * Button display
-		 * 
-		 * @params: uid
-		 * 
-		 * Display button based on user privilege
-		 ************/
+	/*************
+	 * Button display
+	 *
+	 * @params: uid
+	 *
+	 * Display button based on user privilege
+	 ************/
 
-		//Wait for uid to be grabbed first
-		$.when($, uidProm, groupProm).then(function() {
-			//If not your profile: show otherPr buttons. Else: show yourPr buttons.
-			console.log(cid);
-			if(!(uid==cid)){
-				$('#infoButton .notCr').show();
-			}
-			else {
-				$('#infoButton .groupCr').show();
-			}
-		});
+	//Wait for uid to be grabbed first
+	$.when($, uidProm, groupProm).then(function () {
+		//If not your profile: show otherPr buttons. Else: show yourPr buttons.
+		console.log(cid);
+		if (!(uid == cid)) {
+			$('#infoButton .notCr').show();
+		} else {
+			$('#infoButton .groupCr').show();
+		}
+	});
 });

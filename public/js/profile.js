@@ -119,7 +119,7 @@ $(document).ready(function () {
 				}
 			})
 			.done(function (response) {
-				var pid = response.data._id;
+				var p_id = response.data._id;
 
 
 				//If image is supplied. Store that image.
@@ -141,18 +141,13 @@ $(document).ready(function () {
 											value: percentComplete
 										});
 										if (percentComplete === 100) {
-											window.setTimeout(function () {
-												$("#clearPost").click();
-												window.setTimeout(function () {
-													location.reload();
-												}, 1000);
-											}, 1000);
+
 										}
 									}
 								}, false);
 								return xhr;
 							},
-							url: '/content/posts/' + pid + '/' + pid,
+							url: '/content/posts/' + p_id + '/' + p_id,
 							type: 'post',
 							data: picForm,
 							cache: false,
@@ -161,7 +156,9 @@ $(document).ready(function () {
 
 						}).done(function (response) {
 							console.log("image uploaded");
-
+							$.when.apply($, blankProm).then(function () {
+								postPrepend(response.data, p_id);
+							});
 						}).fail(function (err) {
 							$("#clearPost").click();
 							$("#postBox *").focusout(); //<- I dont think this works
@@ -170,7 +167,9 @@ $(document).ready(function () {
 							//Maybe we don't want to reload the page if something fails?
 						})
 				} else {
-					//Maybe do something else here instead
+					$.when.apply($, blankProm).then(function () {
+						postPrepend(response.data, p_id);
+					});
 				}
 			})
 			.fail();
@@ -195,18 +194,18 @@ $(document).ready(function () {
 			var data = {
 				"list": []
 			};
-
+			var postProm = [];
 			$.each(response.data, function (i, v) {
 
 				var postInfo = $.extend({}, v, v.history.slice(-1).pop());
 				postInfo.date = new Date(postInfo.date).toLocaleString();
 
 				//Grab all the comments, get the appropriate data and render them
-				if(!(typeof v.comments === 'undefined')){
+				if (!(typeof v.comments === 'undefined')) {
 					var commData = {
 						"list": []
 					};
-
+					commProm = [];
 					$.each(v.comments, function (j, u) {
 						//Grab all the info
 						var commInfo = $.extend({}, u, u.history.slice(-1).pop());
@@ -214,22 +213,23 @@ $(document).ready(function () {
 						commInfo.date = new Date(commInfo.date).toLocaleString();
 
 						//Get the appropriate username
-						$.ajax({
+						commProm.push($.ajax({
 							type: 'GET',
-							async: false,
 							url: '/api/user/' + u.authorid
 						}).done(function (res) {
 							commInfo.fname = res.data.fname;
 							commInfo.lname = res.data.lname;
-						});
+						}));
 
 						commData.list.push(commInfo);
 					});
 
-					$.get("/temps/commTemp.hjs", function(commTemp) {
-						var template = Hogan.compile("{{#list}}" + commTemp + "{{/list}}");
-						var output = template.render(commData);
-						postInfo.comments = output;
+					$.when.apply($, postProm).then(function () {
+						$.get("/temps/commTemp.hjs", function (commTemp) {
+							var template = Hogan.compile("{{#list}}" + commTemp + "{{/list}}");
+							var output = template.render(commData);
+							postInfo.comments = output;
+						});
 					});
 				};
 
@@ -256,49 +256,75 @@ $(document).ready(function () {
 
 				/****************
 				 * Post button
-				 * 
+				 *
 				 * @params: pid
-				 * 
+				 *
 				 * Functionality for post edit and delete buttons
 				 ****************/
 
 				//Post delete button click functionality
-				$('.postDel').click(function() {
+				$('.postDel').click(function () {
 					var p_id = $(this).parents('.postTemp').attr('id');
 					console.log("PID: " + p_id);
+					$.ajax({
+						method: 'DELETE',
+						url: '/api/post',
+						data: {
+							pid: p_id
+						}
+					}).done(function () {
+						$('#' + p_id).fadeOut('slow');
+						$('#' + p_id + ' *').fadeOut('fast');
+					}).fail(function () {
+
+					});
 				});
 
 				//Post edit button click functionality
-				$('.postEdit').click(function() {
+				$('.postEdit').click(function () {
 					var p_id = $(this).parents('.postTemp').attr('id');
 					console.log("PID: " + p_id);
 				});
 
 				/****************
 				 * Comment button
-				 * 
+				 *
 				 * @params: pid
-				 * 
+				 *
 				 * Functionality for post edit and delete buttons
 				 ****************/
 
 				//Comment delete button click functionality
-				$('.commDel').click(function() {
-					var p_id = $(this).parents('.commTemp').attr('id');
+				$('.commDel').click(function () {
+					var c_id = $(this).parents('.commTemp').attr('id');
+					var p_id = $('#' + c_id).parents('.postTemp').attr('id');
 					console.log("PID: " + p_id);
+					$.ajax({
+						method: 'DELETE',
+						url: '/api/comment',
+						data: {
+							pid: p_id,
+							cid: c_id
+						}
+					}).done(function () {
+						$('#' + c_id).fadeOut('slow');
+						$('#' + c_id + ' *').fadeOut('fast');
+					}).fail(function () {
+
+					});
 				});
 
 				//Comment edit button click functionality
-				$('.commEdit').click(function() {
+				$('.commEdit').click(function () {
 					var p_id = $(this).parents('.commTemp').attr('id');
 					console.log("PID: " + p_id);
 				});
 
 				/******************
 				 * Comment box expansion
-				 * 
+				 *
 				 * @params: pid
-				 * 
+				 *
 				 * Expand and shrink the comment box in a post
 				 ******************/
 
@@ -324,23 +350,23 @@ $(document).ready(function () {
 
 					//Use a timeout to wait for focus to transfer to other children elements
 					window.setTimeout(function () {
-					//If there is no text in textarea, and a non child element of postBox was clicked: shrink.
-					if (!$.trim($("*", box).val()) && $('*:focus', box).length == 0) {
-						box.animate({
-							height: "30px"
-						}, 200);
-						$(".commText", box).animate({
-							height: "30px"
-						}, 200);
-					}
+						//If there is no text in textarea, and a non child element of postBox was clicked: shrink.
+						if (!$.trim($("*", box).val()) && $('*:focus', box).length == 0) {
+							box.animate({
+								height: "30px"
+							}, 200);
+							$(".commText", box).animate({
+								height: "30px"
+							}, 200);
+						}
 					}, 50);
 				});
 
 				/*********************
 				 * Comment button
-				 * 
+				 *
 				 * @params: pid
-				 * 
+				 *
 				 * Functionality for comment buttons
 				 *********************/
 
@@ -370,19 +396,22 @@ $(document).ready(function () {
 
 					//NOTE: As of now no comments have images. TODO: add images to comments.
 					$.post('/api/comment', {
-						pid: p_id,
-						authorid: uid,
-						data: {
-							image: false,
-							text: $('.commText', box).val(),
-						}
-					})
-					.done(function(response){
-						console.log(response);
-					})
-					.fail(function(response){
-						console.log(response);
-					})
+							pid: p_id,
+							authorid: uid,
+							data: {
+								image: false,
+								text: $('.commText', box).val(),
+							}
+						})
+						.done(function (response) {
+							console.log(response);
+							$.when.apply($, blankProm).then(function () {
+								commAppend(response.data, p_id);
+							});
+						})
+						.fail(function (response) {
+							console.log(response);
+						})
 
 					$(".commClear", box).click();
 				});
@@ -395,49 +424,48 @@ $(document).ready(function () {
 
 	/************************
 	 * Profile button functionality
-	 * 
+	 *
 	 * @params: null
-	 * 
+	 *
 	 * Functionality for each of the profile infoBox buttons
 	 ************************/
 
 	//When resume button is clicked go to resume page.
 	$('#infoButton #resume').click(function () {
-		window.location.href = "/resume#"+id;
+		window.location.href = "/resume#" + id;
 	});
 
 	//When addFriend is clicked, send a friend request
-	$('#infoButton #addFriend').click(function() {
+	$('#infoButton #addFriend').click(function () {
 		$.post('/api/friend/request', {
-			uid: uid,
-			fid: id
-		})
-		.done( function(response) {
-			console.log(response);
-			//TODO: Add feedback! Popout or something!
-		})
-		.fail( function(response) {
-			console.log(response);
-		})
+				uid: uid,
+				fid: id
+			})
+			.done(function (response) {
+				console.log(response);
+				//TODO: Add feedback! Popout or something!
+			})
+			.fail(function (response) {
+				console.log(response);
+			})
 	});
 
 	/*****************
 	 * Show buttons
-	 * 
+	 *
 	 * @params: uid
-	 * 
+	 *
 	 * Show appropriate buttons based on user id
 	 ******************/
 
 	//If uid and id don't match, show add friend and send message buttons
 
 	//Wait for uid to be grabbed first
-	$.when.apply($, uidProm).then(function() {
+	$.when.apply($, uidProm).then(function () {
 		//If not your profile: show otherPr buttons. Else: show yourPr buttons.
-		if(!(uid==id)){
+		if (!(uid == id)) {
 			$('#infoButton .otherPr').show();
-		}
-		else {
+		} else {
 			$('#infoButton .yourPr').show();
 		}
 	});
@@ -467,9 +495,9 @@ $(document).ready(function () {
 
 	/*************
 	 * Profile button
-	 * 
+	 *
 	 * @params: id
-	 * 
+	 *
 	 * Profile button functionality
 	 **************/
 
