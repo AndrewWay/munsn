@@ -2,6 +2,7 @@ var postBoxMax = 140;
 var imgBool = false;
 
 $(document).ready(function () {
+
 	/******************
 	 * Post box expansion.
 	 *
@@ -40,9 +41,6 @@ $(document).ready(function () {
 		}, 50);
 
 	});
-
-
-
 	/****************************
 	 * Making post
 	 *
@@ -115,7 +113,7 @@ $(document).ready(function () {
 				}
 			})
 			.done(function (response) {
-				var pid = response.data._id;
+				var p_id = response.data._id;
 				//If image is supplied. Store that image.
 				//TODO: Figure out why done et al aren't firing. Reload timeline with new post!
 				if (imgBool) {
@@ -125,235 +123,48 @@ $(document).ready(function () {
 						height: (postBoxMax + 50) + "px"
 					}, 200);
 					$.ajax({
-							xhr: function () {
-								var xhr = new window.XMLHttpRequest();
-								xhr.upload.addEventListener("progress", function (evt) {
-									if (evt.lengthComputable) {
-										var percentComplete = evt.loaded / evt.total;
-										percentComplete = parseInt(percentComplete * 100);
-										$("#postProgress").progressbar({
-											value: percentComplete
-										});
-										if (percentComplete === 100) {
-											window.setTimeout(function () {
-												$("#clearPost").click();
-												window.setTimeout(function () {
-													location.reload();
-												}, 1000);
-											}, 1000);
-										}
+						xhr: function () {
+							var xhr = new window.XMLHttpRequest();
+							xhr.upload.addEventListener("progress", function (evt) {
+								if (evt.lengthComputable) {
+									var percentComplete = evt.loaded / evt.total;
+									percentComplete = parseInt(percentComplete * 100);
+									$("#postProgress").progressbar({
+										value: percentComplete
+									});
+									if (percentComplete === 100) {
+
 									}
-								}, false);
-								return xhr;
-							},
-							url: '/content/posts/' + pid + '/' + pid,
-							type: 'post',
-							data: picForm,
-							cache: false,
-							contentType: false,
-							processData: false
+								}
+							}, false);
+							return xhr;
+						},
+						url: '/content/posts/' + pid + '/' + pid,
+						type: 'post',
+						data: picForm,
+						cache: false,
+						contentType: false,
+						processData: false
 
-						}).done(function (response) {
-							$.get("/temps/postTemp.hjs", function (post) {
-								var template = Hogan.compile(post);
-								var output = template.render(postData);
-								$('#posts').append(output);
-							});
-							console.log("image uploaded");
-
-						}).fail(function (err) {
-							$("#clearPost").click();
-							$("#postBox *").focusout(); //<- I dont think this works
-						})
-						.always(function () {
-							//Maybe we don't want to reload the page if something fails?
-						})
-				} else {
-					var postProm = [];
-					var data = response.data;
-					var postData = $.extend({}, data, data.history.slice(-1).pop());
-					postData.date = new Date(postData.date).toLocaleString();
-					postProm.push($.ajax({
-						type: 'GET',
-						url: '/api/user/' + data.uid
-					}).done(function (res) {
-						postData.fname = res.data.fname;
-						postData.lname = res.data.lname;
-					}))
-					postData.image = postData.image ? 'visibility:visible' : 'visibility:hidden';
-
-					$.when.apply($, postProm).then(function () {
-						$.get("/temps/postTemp.hjs", function (post) {
-							var template = Hogan.compile(post);
-							var output = template.render(postData);
-							$(output).hide().prependTo('#posts').fadeIn('slow');
-							$("#clearPost").click();
-
-							/****************
-							 * Post button
-							 *
-							 * @params: pid
-							 *
-							 * Functionality for post edit and delete buttons
-							 ****************/
-
-							//Post delete button click functionality
-							$('.postDel').click(function () {
-								var p_id = $(this).parents('.postTemp').attr('id');
-								console.log("PID: " + p_id);
-								$.ajax({
-									method: 'DELETE',
-									url: '/api/post',
-									data: {
-										pid: p_id
-									}
-								}).done(function () {
-									$('#' + p_id).fadeOut('slow');
-									$('#' + p_id + ' *').fadeOut('fast');
-								}).fail(function () {
-
-								});
-							});
-
-							//Post edit button click functionality
-							$('.postEdit').click(function () {
-								var p_id = $(this).parents('.postTemp').attr('id');
-								console.log("PID: " + p_id);
-							});
-
-							/****************
-							 * Comment button
-							 *
-							 * @params: pid
-							 *
-							 * Functionality for post edit and delete buttons
-							 ****************/
-
-							//Comment delete button click functionality
-							$('.commDel').click(function () {
-								var c_id = $(this).parents('.commTemp').attr('id');
-								var p_id = $('#' + c_id).parents('.postTemp').attr('id');
-								console.log("PID: " + p_id);
-								$.ajax({
-									method: 'DELETE',
-									url: '/api/comment',
-									data: {
-										pid: p_id,
-										cid: c_id
-									}
-								}).done(function () {
-									$('#' + c_id).fadeOut('slow');
-									$('#' + c_id + ' *').fadeOut('fast');
-								}).fail(function () {
-
-								});
-							});
-
-							//Comment edit button click functionality
-							$('.commEdit').click(function () {
-								var c_id = $(this).parents('.commTemp').attr('id');
-								console.log("CID: " + c_id);
-							});
-
-							/******************
-							 * Comment box expansion
-							 *
-							 * @params: pid
-							 *
-							 * Expand and shrink the comment box in a post
-							 ******************/
-
-							//Expand textarea and div on focus
-							$(".commBox *").focus(function () {
-
-								//Box is the commBox of interest
-								var box = $(this).parents('.commBox');
-
-								box.animate({
-									height: "110px"
-								}, 200);
-								$(".commText", box).animate({
-									height: "70px"
-								}, 200);
-							});
-
-							//Shrink textarea and div when focus is lost and there is no text inside.
-							$(".commBox *").focusout(function () {
-
-								//Box is the commBox of interest
-								var box = $(this).parents('.commBox');
-
-								//Use a timeout to wait for focus to transfer to other children elements
-								window.setTimeout(function () {
-									//If there is no text in textarea, and a non child element of postBox was clicked: shrink.
-									if (!$.trim($("*", box).val()) && $('*:focus', box).length == 0) {
-										box.animate({
-											height: "30px"
-										}, 200);
-										$(".commText", box).animate({
-											height: "30px"
-										}, 200);
-									}
-								}, 50);
-							});
-
-							/*********************
-							 * Comment button
-							 *
-							 * @params: pid
-							 *
-							 * Functionality for comment buttons
-							 *********************/
-
-							//Comment clear button functionality
-							$('.commClear').click(function () {
-								//TODO: Add warning: Check if sure.
-								//Box is the commBox of interest
-								var box = $(this).parents('.commBox');
-
-								$(".commText", box).val(null);
-								//$("#postProgress").empty(); TODO: John can deal with this. Idk enough about it
-								box.animate({
-									height: "30px"
-								}, 200);
-								$(".commText", box).animate({
-									height: "30px"
-								}, 200);
-							});
-
-							//Comment submit button functionality
-							$('.commSubmit').click(function () {
-								//TODO: Add warning: Check if sure.
-								//Box is the commBox of interest
-								var box = $(this).parents('.commBox');
-								//TODO: See if changing this p_id variable causes any errors.
-								var p_id = box.parents('.postTemp').attr('id');
-
-								//NOTE: As of now no comments have images. TODO: add images to comments.
-								$.post('/api/comment', {
-										pid: p_id,
-										authorid: uid,
-										data: {
-											image: false,
-											text: $('.commText', box).val(),
-										}
-									})
-									.done(function (response) {
-										console.log(response);
-									})
-									.fail(function (response) {
-										console.log(response);
-									})
-
-								$(".commClear", box).click();
-							});
+					}).done(function (response) {
+						console.log("image uploaded");
+						$.when.apply($, blankProm).then(function () {
+							postPrepend(response.data, p_id);
 						});
+					}).fail(function (err) {
+						$("#clearPost").click();
+						$("#postBox *").focusout(); //<- I dont think this works
+					});
+				} else {
+					$.when.apply($, blankProm).then(function () {
+						postPrepend(response.data, p_id);
 					});
 					//Maybe do something else here instead
 				}
 			})
 			.fail();
 	});
+
 
 	$('.postDel').click(function () {
 		var p_id = $(this).parents('.postTemp').attr('id');
@@ -388,7 +199,7 @@ $(document).ready(function () {
 	//Get and display a number of posts.
 	//TODO: Get and display posts based on their type (poll, photo, text)
 	$(document).on('uidReady', function () {
-        $('#posts').html('<img src="/img/ring-alt.gif" width="50" height="auto" style="display: block; margin: auto; margin-top: 20%">');
+		$('#posts').html('<img src="/img/ring-alt.gif" width="50" height="auto" style="display: block; margin: auto; margin-top: 20%">');
 		$.ajax({
 				url: '/api/posts/portal',
 				type: 'GET',
@@ -454,9 +265,9 @@ $(document).ready(function () {
 					//Stop at 5 posts. Arbitrary
 					return i < 20;
 				});
-    			
-                $('#posts').html('');
-                
+
+				$('#posts').html('');
+
 				//Wait until all data is loaded for the posts.
 				$.when.apply($, postProm).then(function () {
 					$.get("/temps/postTemp.hjs", function (post) {
@@ -530,7 +341,6 @@ $(document).ready(function () {
 							var c_id = $(this).parents('.commTemp').attr('id');
 							console.log("CID: " + c_id);
 						});
-
 						/******************
 						 * Comment box expansion
 						 *
@@ -611,11 +421,15 @@ $(document).ready(function () {
 									authorid: uid,
 									data: {
 										image: false,
-										text: $('.commText', box).val(),
+										text: $('.commText', box).val()
 									}
 								})
 								.done(function (response) {
 									console.log(response);
+									var data = response.data;
+									$.when.apply($, blankProm).then(function () {
+										commAppend(data, p_id);
+									});
 								})
 								.fail(function (response) {
 									console.log(response);
