@@ -638,6 +638,8 @@ $(document).ready(function () {
 		$.get('/api/course/' + id)
 			.done(function (response) {
 
+				console.log(response);
+
 				//Setup variable to hold data for templates
 				var data = {
 					"list": []
@@ -653,7 +655,7 @@ $(document).ready(function () {
 				$('#prCoursePU').append("<h3> Courses </h3>");
 
 				//For each course in the array
-				if (!(typeof response.data == 'null') && !(typeof response.data[0] == 'undefined')) {
+				if (!(typeof response.data[0] == 'undefined')) {
 					$.each(response.data, function (j, u) {
 
 						//Push gets to array so next function waits.
@@ -664,7 +666,7 @@ $(document).ready(function () {
 						data.list.push(x);
 					});
 
-					//If no groups exist, display sad face
+					//If no courses exist, display sad face
 					if (!(data.list.length == 0)) {
 						$.get("/temps/searchTemp.hjs", function (result) {
 							var template = Hogan.compile("{{#list}}" + result + "{{/list}}");
