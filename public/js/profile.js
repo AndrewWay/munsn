@@ -537,6 +537,66 @@ $(document).ready(function () {
 			.fail()
 	});
 
+	//Group button functionality when clicked.
+	$('#prGroups').click(function () {
+		$('.prPopup').hide();
+
+		//Make sure div is empty
+		$('#prGroupPU').html('');
+
+		//Add loading gif and then show.
+		$('#prGroupPU').html('<img src="/img/ring-alt.gif">');
+		$('#prGroupPU').show();
+
+		//API call to get user friends
+		$.get('/api/groups/user/' + id)
+			.done(function (response) {
+
+				//Setup variable to hold data for templates
+				var data = {
+					"list": []
+				};
+
+				//Make array to hold promises.
+				var promises = [];
+
+				//Remove loading gif. TODO: Check if this is better placed somewhere else.
+				$('#prGroupPU').html('');
+
+				//Display group title
+				$('#prGroupPU').append("<h3> Groups </h3>");
+
+				//For each group in the array
+				if (!(typeof response.data[0] == 'undefined')) {
+					$.each(response.data, function (j, u) {
+
+						//Push gets to array so next function waits.
+						var x = $.extend({}, u, {
+							"title": "group"
+						})
+						x.image = u.creatorid && u.ownerid ? "/content/image/group/" + u._id : u.image;
+						data.list.push(x);
+					})
+
+					console.log(data.list);
+
+					//If no groups exist, display sad face
+					if (!(data.list.length == 0)) {
+						$.get("/temps/searchTemp.hjs", function (result) {
+							var template = Hogan.compile("{{#list}}" + result + "{{/list}}");
+							var output = template.render(data);
+							$('#prGroupPU').append(output);
+						});
+					}
+
+				} else {
+					//Display no groups
+					$('#groupPan').append("<h5> No groups to display =( </h5>");
+				}
+			})
+			.fail()
+	});
+
 	//If somewhere outside of the panel is clicked: Close the panel.
 	$("#infoButton *").focusout(function () {
 		//Use a timeout to wait for focus to transfer to other children elements
