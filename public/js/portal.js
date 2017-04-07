@@ -248,8 +248,6 @@ $(document).ready(function () {
 							commData.list.push(commInfo);
 						});
 
-    					$('#posts').html('');
-
 						$.get("/temps/commTemp.hjs", function (commTemp) {
 							var template = Hogan.compile("{{#list}}" + commTemp + "{{/list}}");
 							var output = template.render(commData);
@@ -271,7 +269,9 @@ $(document).ready(function () {
 					//Stop at 5 posts. Arbitrary
 					return i < 20;
 				});
-
+    			
+                $('#posts').html('');
+                
 				//Wait until all data is loaded for the posts.
 				$.when.apply($, postProm).then(function () {
 					$.get("/temps/postTemp.hjs", function (post) {
