@@ -617,7 +617,65 @@ $(document).ready(function () {
 
 				} else {
 					//Display no groups
-					$('#groupPan').append("<h5> No groups to display =( </h5>");
+					$('#prGroupPU').append("<h5> No groups to display =( </h5>");
+				}
+			})
+			.fail()
+	});
+
+	//Course button functionality when clicked.
+	$('#prCourses').click(function () {
+		$('.prPopup').hide();
+
+		//Make sure div is empty
+		$('#prCoursePU').html('');
+
+		//Add loading gif and then show.
+		$('#prCoursePU').html('<img src="/img/ring-alt.gif">');
+		$('#prCoursePU').show();
+
+		//API call to get user friends
+		$.get('/api/course/' + id)
+			.done(function (response) {
+
+				//Setup variable to hold data for templates
+				var data = {
+					"list": []
+				};
+
+				//Make array to hold promises.
+				var promises = [];
+
+				//Remove loading gif. TODO: Check if this is better placed somewhere else.
+				$('#prCoursePU').html('');
+
+				//Display course title
+				$('#prCoursePU').append("<h3> Courses </h3>");
+
+				//For each course in the array
+				if (!(typeof response.data == 'null') && !(typeof response.data[0] == 'undefined')) {
+					$.each(response.data, function (j, u) {
+
+						//Push gets to array so next function waits.
+						var x = $.extend({}, u, {
+							"title": "group"
+						})
+						x.image = u.creatorid && u.ownerid ? "/content/image/group/" + u._id : u.image;
+						data.list.push(x);
+					});
+
+					//If no groups exist, display sad face
+					if (!(data.list.length == 0)) {
+						$.get("/temps/searchTemp.hjs", function (result) {
+							var template = Hogan.compile("{{#list}}" + result + "{{/list}}");
+							var output = template.render(data);
+							$('#prCoursePU').append(output);
+						});
+					}
+
+				} else {
+					//Display no groups
+					$('#prCoursePU').append("<h5> No courses to display =( </h5>");
 				}
 			})
 			.fail()
