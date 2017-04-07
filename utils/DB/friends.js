@@ -189,9 +189,12 @@ module.exports = function (DBFriends, collectionFriends, collectionFriendRequest
 							users[fof[i].fof[0].friends[j]] = true;
 						}
 					}
+                    //TODO: remove this collection call if things break
                     //Trim users that are already friends with the specific user
                     var usersArr = Object.keys(users);
+                    var r;
                     collectionFriends.findOne({_id: req.UserID}, function(err, results) {
+                        r = results;
                         if (results) {
                             for (var i = 0; i < usersArr.length; i++) {
                                 for (var j = 0; j < results.friends.length; j++) {
@@ -206,7 +209,8 @@ module.exports = function (DBFriends, collectionFriends, collectionFriendRequest
 					callback({
 						session: req.session,
 						status: 'ok',
-						data: usersArr
+						data: usersArr,
+                        results: r
 					});
 				} else {
 					console.warn("[DBFriends] Suggest", "'None'->'" + req.UserID + "'");
