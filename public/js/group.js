@@ -6,6 +6,7 @@ window.onhashchange = function () {
 
 var postBoxMax = 140;
 var imgBool = false;
+var cid;
 
 $(document).ready(function () {
 
@@ -415,9 +416,9 @@ $(document).ready(function () {
 
 	//Get and display group info
 	//TODO: Add findGroupById in API. It's missing for some reason.
-	$.get('/api/group/' + id)
+	var groupProm = $.get('/api/group/' + id)
 		.done(function (response) {
-			console.log(response);
+			cid = response.data.creatorid;
 			response.data.created = new Date(response.data.created).toLocaleDateString();
 
 			$.get('/api/user/' + response.data.creatorid)
@@ -428,11 +429,31 @@ $(document).ready(function () {
 					$.get("/temps/groupInfo.hjs", function (info) {
 						var template = Hogan.compile(info);
 						var output = template.render(response.data);
-						$('#infoContainer').append(output);
+						$('#infoContainer').prepend(output);
 					});
 				});
 		})
 		.fail(
 			//TODO: Function on failures.
 		)
+
+		/*************
+		 * Button display
+		 * 
+		 * @params: uid
+		 * 
+		 * Display button based on user privilege
+		 ************/
+
+		//Wait for uid to be grabbed first
+		$.when($, uidProm, groupProm).then(function() {
+			//If not your profile: show otherPr buttons. Else: show yourPr buttons.
+			console.log(cid);
+			if(!(uid==cid)){
+				$('#infoButton .notCr').show();
+			}
+			else {
+				$('#infoButton .groupCr').show();
+			}
+		});
 });

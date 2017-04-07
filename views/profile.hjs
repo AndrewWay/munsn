@@ -169,15 +169,15 @@
 				<button id="prCourses">Courses</button>
 				<button id="resume">Resume</button>
 
-				<div class="prPopup" id="prFriendPU">
+				<div class="prPopup" id="prFriendPU" style="display: none;">
 
 				</div>
 
-				<div class="prPopup" id="prGroupPU">
+				<div class="prPopup" id="prGroupPU" style="display: none;">
 
 				</div>
 
-				<div class="prPopup" id="prCoursePU">
+				<div class="prPopup" id="prCoursePU" style="display: none;">
 
 				</div>
 			</div>

@@ -418,8 +418,6 @@ html.noscroll {
 	overflow-x: hidden;
 }
 
-#searchRes h3 {}
-
 #searchRes .searchItem {
 	border-top: 1px solid #000000;
 	border-bottom: 1px solid #000000;
@@ -459,16 +457,12 @@ html.noscroll {
 	border: 2px solid black;
 }
 
-#friendPan img {
+.menuPan img {
 	width: 20px;
 	height: 20px;
 }
 
-#friendPan :not(h3):not(h5):hover {
-	background-color: #7f1734;
-}
-
-.menuPan#groupPan :not(h3):not(h5):hover {
+.menuPan :not(h3):not(h5):hover {
 	background-color: #7f1734;
 }
 
