@@ -130,6 +130,10 @@
 	background-color: #7f1734;
 }
 
+#infoContainer .prPopup .searchItem {
+	display: block;
+}
+
 #chat {
 	position: fixed;
 	bottom: 0;

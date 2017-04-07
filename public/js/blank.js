@@ -551,7 +551,6 @@
 								event: evnt
 							})
 							.done(function (response) {
-								console.log(response);
 
 								//Empty all inputs
 								$('#coursePop *').val('');
@@ -683,15 +682,23 @@
 						"list": []
 					};
 
-
+					//Make array to hold promises.
+					var promises = [];
 
 					$.each(response.data, function (i, v) {
-						v = $.extend({}, v, {
-							"title": "profile"
-						});
-						data.list.push(v);
+						//Push gets to array so next function waits.
+						promises.push($.get('/api/user/' + v.userid)
+							.done(function (response) {
+								var x = $.extend({}, response.data, {
+									"title": "profile",
+								})
+								x.image = x.gender ? "/content/image/profile/" + x._id : x.image;
+								data.list.push(x);
+							})
+							.fail());
 					});
 
+				$.when.apply($, promises).then(function () {
 					//If no friend requests exist, skip rendering.
 					if (!(data.list.length == 0)) {
 						$.get("/temps/frireqTemp.hjs", function (result) {
@@ -701,6 +708,7 @@
 							$('#friendPan').append(output);
 						});
 					}
+				
 
 					//API call to get user friends
 					$.get('/api/friends/' + uid)
@@ -751,6 +759,7 @@
 
 						})
 						.fail()
+					});
 				})
 				.fail()
 		});

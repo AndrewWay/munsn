@@ -489,5 +489,20 @@ html.noscroll {
 	background-color: #7f1734;
 }
 
+.req a {
+	position: relative;
+	margin-left: 0;
+	font-family: Tahoma;
+	text-decoration: none;
+	font-size: 0.9em;
+	font-weight: bold;
+	color: #000000;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+}
 
+.req {
+	width: 100%;
+}
 /*End*/

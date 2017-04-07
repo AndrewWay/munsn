@@ -101,6 +101,32 @@
 	margin: auto;
 }
 
+.grPopup {
+	position: relative;
+	height: 500px;
+	width: 400px;
+	background: white;
+	margin: auto;
+	text-align: center;
+	overflow: scroll;
+	border: 2px solid black;
+
+	z-index: 1000;
+}
+
+.grPopup img {
+	width: 20px;
+	height: 20px;
+}
+
+.grPopup :not(h3):not(h5):hover {
+	background-color: #7f1734;
+}
+
+#infoContainer .grPopup .searchItem {
+	display: block;
+}
+
 #chatButton {
 	position: fixed;
 	bottom: 5px;

@@ -512,9 +512,6 @@ $(document).ready(function () {
 		$('#prFriendPU').html('<img src="/img/ring-alt.gif">');
 		$('#prFriendPU').show();
 
-		//Remove loading gif. TODO: Check if this is better placed somewhere else.
-		$('#prFriendPU').html('');
-
 		//API call to get user friends
 		$.get('/api/friends/' + id)
 			.done(function (response) {
@@ -527,15 +524,18 @@ $(document).ready(function () {
 				//Make array to hold promises.
 				var promises = [];
 
+				//Remove loading gif. TODO: Check if this is better placed somewhere else.
+				$('#prFriendPU').html('');
+
 				//Display friend title
 				$('#prFriendPU').append("<h3> Friends </h3>");
 
 				//For each friend in the friends array
 				if (!(typeof response.data[0] == 'undefined')) {
-					$.each(response.data[0].friends, function (j, u) {
+					$.each(response.data[0].friends, function (i, v) {
 
 						//Push gets to array so next function waits.
-						promises.push($.get('/api/user/' + u)
+						promises.push($.get('/api/user/' + v)
 							.done(function (response) {
 								var x = $.extend({}, response.data, {
 									"title": "profile"
@@ -563,5 +563,134 @@ $(document).ready(function () {
 				}
 			})
 			.fail()
+	});
+
+	//Group button functionality when clicked.
+	$('#prGroups').click(function () {
+		$('.prPopup').hide();
+
+		//Make sure div is empty
+		$('#prGroupPU').html('');
+
+		//Add loading gif and then show.
+		$('#prGroupPU').html('<img src="/img/ring-alt.gif">');
+		$('#prGroupPU').show();
+
+		//API call to get user friends
+		$.get('/api/groups/user/' + id)
+			.done(function (response) {
+
+				//Setup variable to hold data for templates
+				var data = {
+					"list": []
+				};
+
+				//Make array to hold promises.
+				var promises = [];
+
+				//Remove loading gif. TODO: Check if this is better placed somewhere else.
+				$('#prGroupPU').html('');
+
+				//Display group title
+				$('#prGroupPU').append("<h3> Groups </h3>");
+
+				//For each group in the array
+				if (!(typeof response.data[0] == 'undefined')) {
+					$.each(response.data, function (j, u) {
+
+						//Push gets to array so next function waits.
+						var x = $.extend({}, u, {
+							"title": "group"
+						})
+						x.image = u.creatorid && u.ownerid ? "/content/image/group/" + u._id : u.image;
+						data.list.push(x);
+					});
+
+					//If no groups exist, display sad face
+					if (!(data.list.length == 0)) {
+						$.get("/temps/searchTemp.hjs", function (result) {
+							var template = Hogan.compile("{{#list}}" + result + "{{/list}}");
+							var output = template.render(data);
+							$('#prGroupPU').append(output);
+						});
+					}
+
+				} else {
+					//Display no groups
+					$('#prGroupPU').append("<h5> No groups to display =( </h5>");
+				}
+			})
+			.fail()
+	});
+
+	//Course button functionality when clicked.
+	$('#prCourses').click(function () {
+		$('.prPopup').hide();
+
+		//Make sure div is empty
+		$('#prCoursePU').html('');
+
+		//Add loading gif and then show.
+		$('#prCoursePU').html('<img src="/img/ring-alt.gif">');
+		$('#prCoursePU').show();
+
+		//API call to get user friends
+		$.get('/api/course/' + id)
+			.done(function (response) {
+
+				//Setup variable to hold data for templates
+				var data = {
+					"list": []
+				};
+
+				//Make array to hold promises.
+				var promises = [];
+
+				//Remove loading gif. TODO: Check if this is better placed somewhere else.
+				$('#prCoursePU').html('');
+
+				//Display course title
+				$('#prCoursePU').append("<h3> Courses </h3>");
+
+				//For each course in the array
+				if (!(typeof response.data[0] == 'undefined')) {
+					$.each(response.data, function (j, u) {
+
+						//Push gets to array so next function waits.
+						var x = $.extend({}, u, {
+							"title": "group"
+						})
+						x.image = u.creatorid && u.ownerid ? "/content/image/group/" + u._id : u.image;
+						data.list.push(x);
+					});
+
+					//If no courses exist, display sad face
+					if (!(data.list.length == 0)) {
+						$.get("/temps/searchTemp.hjs", function (result) {
+							var template = Hogan.compile("{{#list}}" + result + "{{/list}}");
+							var output = template.render(data);
+							$('#prCoursePU').append(output);
+						});
+					}
+
+				} else {
+					//Display no groups
+					$('#prCoursePU').append("<h5> No courses to display =( </h5>");
+				}
+			})
+			.fail()
+	});
+
+	//If somewhere outside of the panel is clicked: Close the panel.
+	$("#infoButton *").focusout(function () {
+		//Use a timeout to wait for focus to transfer to other children elements
+		window.setTimeout(function () {
+			//If there are no elements focused: close the panel
+			if ($('#infoButton *:focus').length == 0) {
+				$('.prPopup').hide();
+				$('.prPopup').html('');
+			}
+		}, 50);
+
 	});
 });
