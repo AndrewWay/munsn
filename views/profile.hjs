@@ -168,6 +168,18 @@
 				<button id="prGroups">Groups</button>
 				<button id="prCourses">Courses</button>
 				<button id="resume">Resume</button>
+
+				<div class="prPopup" id="prFriendPU">
+
+				</div>
+
+				<div class="prPopup" id="prGroupPU">
+
+				</div>
+
+				<div class="prPopup" id="prCoursePU">
+
+				</div>
 			</div>
 
 		</div>

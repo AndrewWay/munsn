@@ -19,14 +19,16 @@
 				</div>
 				<div class="postComm">
 					{{{comments}}}
-				</div>
-			<div class="commBox">
-				<textarea class="commText" placeholder="Make a comment!"></textarea><button class="commSubmit">Submit</button>
 
-				<div class="commInfo">
-					<button class="commClear">Clear Comment</button>
+					<div class="commBox">
+						<textarea class="commText" placeholder="Make a comment!"></textarea><button class="commSubmit">Submit</button>
+
+						<div class="commInfo">
+							<button class="commClear">Clear Comment</button>
+						</div>
+					</div>
 				</div>
-			</div>
+			
 </div>
 
 <!--- Scripts for individual posts -->
