@@ -638,8 +638,6 @@ $(document).ready(function () {
 		$.get('/api/course/' + id)
 			.done(function (response) {
 
-				console.log(response);
-
 				//Setup variable to hold data for templates
 				var data = {
 					"list": []

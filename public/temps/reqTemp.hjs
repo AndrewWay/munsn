@@ -1,9 +1,7 @@
-<div class="req" id="{{_id}}"> 
-    <div class="reqHolder" style="display: block;">
-        <a href="/{{title}}#{{_id}}}"><img src="{{image}}" height="50px" width="50px"> {{fname}} {{lname}}</a>
-        <a id="acceptReq" href="javascript:void(0)" name="{{_id}}"> <img src="/img/checkmark_Green.png"> </a>
-        <a id="denyReq" href="javascript:void(0)" name="{{_id}}"> <img src="/img/xmark_Red.png"> </a>
-    </div>
+<div class="friReq" id="{{_id}}"> 
+    <a href="/{{title}}#{{userid}}">{{userid}}</a>
+    <a id="acceptReq" href="javascript:void(0)" name="{{userid}}"> <img src="/img/checkmark_Green.png"> </a>
+    <a id="denyReq" href="javascript:void(0)" name="{{userid}}"> <img src="/img/xmark_Red.png"> </a>
 </div>
 
 <script type="text/javascript">
@@ -18,7 +16,7 @@
             console.log(response);
         })
         .fail(function(response){
-            console.log(response);
+            console.log(resposne);
         })
 
     })
@@ -32,7 +30,7 @@
             console.log(response);
         })
         .fail(function(response){
-            console.log(response);
+            console.log(resposne);
         })
     })
 

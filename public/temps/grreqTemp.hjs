@@ -1,0 +1,38 @@
+<div class="req" id="{{gid}}"> 
+    <div class="reqHolder" style="display: block; width: 100%;">
+        <a href="/{{title}}#{{_id}}"><img src="{{image}}" height="50px" width="50px">{{fname}} {{lname}}</a>
+        <a id="acceptGrReq" href="javascript:void(0)" name="{{_id}}"> <img src="/img/checkmark_Green.png"> </a>
+        <a id="denyGrReq" href="javascript:void(0)" name="{{_id}}"> <img src="/img/xmark_Red.png"> </a>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $('#acceptGrReq').click(function(){
+        $.post('/api/groups/request/accept', {
+				gid: id,
+                uid: $(this).attr('name')
+		})
+        .done(function(response){
+            console.log(response);
+        })
+        .fail(function(response){
+            console.log(response);
+        })
+
+    })
+
+    $('#denyGrReq').click(function(){
+       $.post('/api/groups/request/deny', {
+				gid: id,
+                uid: $(this).attr('name')
+		})
+        .done(function(response){
+            console.log(response);
+        })
+        .fail(function(response){
+            console.log(response);
+        })
+    })
+
+</script>

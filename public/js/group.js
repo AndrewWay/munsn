@@ -465,7 +465,6 @@ $(document).ready(function () {
 	//Wait for uid to be grabbed first
 	$.when($, uidProm, groupProm).then(function () {
 		//If not your profile: show otherPr buttons. Else: show yourPr buttons.
-		console.log(cid);
 		if (!(uid == cid)) {
 			$('#infoButton .notCr').show();
 		} else {
@@ -492,7 +491,7 @@ $(document).ready(function () {
 		$('#grMembersPU').html('<img src="/img/ring-alt.gif">');
 		$('#grMembersPU').show();
 
-		//API call to get user friends
+		//API call to get group members
 		$.get('/api//groups/members/' + id)
 			.done(function (response) {
 
@@ -543,6 +542,70 @@ $(document).ready(function () {
 				}
 			})
 			.fail()
+	});
+
+	//Get group requests for admin/creator
+	$('#grRequest').click(function () {
+		$('.grPopup').hide();
+
+		//Make sure div is empty
+		$('#grRequestPU').html('');
+
+		//Add loading gif and then show.
+		$('#grRequestPU').html('<img src="/img/ring-alt.gif">');
+		$('#grRequestPU').show();
+
+		//API call to get group requests
+		$.get('/api/groups/requests/' + id)
+		.done(function(response) {
+			//Setup variable to hold data for templates
+				var data = {
+					"list": []
+				};
+
+				//Make array to hold promises.
+				var promises = [];
+
+				//Remove loading gif. TODO: Check if this is better placed somewhere else.
+				$('#grRequestPU').html('');
+
+				//Display friend title
+				$('#grRequestPU').append("<h3> Requests </h3>");
+
+				//For each friend in the friends array
+				if (!(typeof response.data[0] == 'undefined')) {
+					$.each(response.data[0].requests, function (i, v) {
+
+						//Push gets to array so next function waits.
+						promises.push($.get('/api/user/' + v)
+							.done(function (response) {
+								var x = $.extend({}, response.data, {
+									"title": "profile",
+									"gid" : id
+								})
+								x.image = x.gender ? "/content/image/profile/" + x._id : x.image;
+								data.list.push(x);
+							})
+							.fail());
+					})
+
+					//Waits until all data is loaded then displays friend list.
+					$.when.apply($, promises).then(function () {
+						//If no friends exist, display sad face
+						if (!(data.list.length == 0)) {
+							$.get("/temps/grreqTemp.hjs", function (result) {
+								var template = Hogan.compile("{{#list}}" + result + "{{/list}}");
+								var output = template.render(data);
+								$('#grRequestPU').append(output);
+							});
+						}
+					})
+				} else {
+					//Display no friends
+					$('#grRequestPU').append("<h5> No requests to display =( </h5>");
+				}
+		})
+		.fail()
 	});
 
 	//If somewhere outside of the panel is clicked: Close the panel.
