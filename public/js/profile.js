@@ -484,9 +484,6 @@ $(document).ready(function () {
 		$('#prFriendPU').html('<img src="/img/ring-alt.gif">');
 		$('#prFriendPU').show();
 
-		//Remove loading gif. TODO: Check if this is better placed somewhere else.
-		$('#prFriendPU').html('');
-
 		//API call to get user friends
 		$.get('/api/friends/' + id)
 			.done(function (response) {
@@ -499,15 +496,18 @@ $(document).ready(function () {
 				//Make array to hold promises.
 				var promises = [];
 
+				//Remove loading gif. TODO: Check if this is better placed somewhere else.
+				$('#prFriendPU').html('');
+
 				//Display friend title
 				$('#prFriendPU').append("<h3> Friends </h3>");
 
 				//For each friend in the friends array
 				if (!(typeof response.data[0] == 'undefined')) {
-					$.each(response.data[0].friends, function (j, u) {
+					$.each(response.data[0].friends, function (i, v) {
 
 						//Push gets to array so next function waits.
-						promises.push($.get('/api/user/' + u)
+						promises.push($.get('/api/user/' + v)
 							.done(function (response) {
 								var x = $.extend({}, response.data, {
 									"title": "profile"
@@ -535,5 +535,18 @@ $(document).ready(function () {
 				}
 			})
 			.fail()
+	});
+
+	//If somewhere outside of the panel is clicked: Close the panel.
+	$("#infoButton *").focusout(function () {
+		//Use a timeout to wait for focus to transfer to other children elements
+		window.setTimeout(function () {
+			//If there are no elements focused: close the panel
+			if ($('.prPopup *:focus').length == 0) {
+				$('.prPopup').hide();
+				$('.prPopup').html('');
+			}
+		}, 100);
+
 	});
 });
