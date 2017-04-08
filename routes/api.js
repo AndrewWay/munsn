@@ -1437,12 +1437,12 @@ router.delete(removeGroupAdmin, UserID, function (req, res, next) {
 	});
 });
 router.post(acceptGroupReq, UserID, function (req, res, next) {
-	DB.Groups.acceptGroupReq(req, res, function (result) {
+	DB.Groups.acceptRequest(req, res, function (result) {
 		res.json(result);
 	});
 });
 router.post(denyGroupReq, UserID, function (req, res, next) {
-	DB.Groups.denyGroupReq(req, res, function (result) {
+	DB.Groups.denyRequest(req, res, function (result) {
 		res.json(result);
 	});
 });
