@@ -268,11 +268,11 @@ $(document).ready(function () {
 					return i < 20;
 				});
 
-				$('#posts').html('');
 
 				//Wait until all data is loaded for the posts.
 				$.when.apply($, commProm).then(function () {
 					$.when.apply($, postProm).then(function () {
+						$('#posts').html('');
 						$.get("/temps/postTemp.hjs", function (post) {
 							var template = Hogan.compile("{{#list}}" + post + "{{/list}}");
 							var output = template.render(postData);
