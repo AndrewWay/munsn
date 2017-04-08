@@ -163,6 +163,18 @@
 				<button class="notCr" id="grJoin" style="display: none;"> Ask to Join </button>
 				<button id="grMembers"> Members </button>
 				<button id="grEvents"> Events </button>
+
+				<div class="grPopup" id="grRequestPU" style="display: none;">
+
+				</div>
+
+				<div class="grPopup" id="grMembersPU" style="display: none;">
+
+				</div>
+
+				<div class="grPopup" id="grEventsPU" style="display: none;">
+
+				</div>
 			</div>
 		</div>
 
