@@ -113,7 +113,8 @@ $(document).ready(function () {
 				}
 			})
 			.done(function (response) {
-				var p_id = response.data._id;
+				var res = response.data;
+				var p_id = res._id;
 				//If image is supplied. Store that image.
 				//TODO: Figure out why done et al aren't firing. Reload timeline with new post!
 				if (imgBool) {
@@ -139,7 +140,7 @@ $(document).ready(function () {
 							}, false);
 							return xhr;
 						},
-						url: '/content/posts/' + pid + '/' + pid,
+						url: '/content/posts/' + p_id + '/' + p_id,
 						type: 'post',
 						data: picForm,
 						cache: false,
@@ -149,7 +150,7 @@ $(document).ready(function () {
 					}).done(function (response) {
 						console.log("image uploaded");
 						$.when.apply($, blankProm).then(function () {
-							postPrepend(response.data, p_id);
+							postPrepend(res, p_id, "/temps/postTemp.hjs");
 						});
 					}).fail(function (err) {
 						$("#clearPost").click();
@@ -157,7 +158,7 @@ $(document).ready(function () {
 					});
 				} else {
 					$.when.apply($, blankProm).then(function () {
-						postPrepend(response.data, p_id);
+						postPrepend(response.data, p_id, "/temps/postTemp.hjs");
 					});
 					//Maybe do something else here instead
 				}
@@ -216,7 +217,9 @@ $(document).ready(function () {
 				var postProm = [];
 
 				$.each(response.data, function (i, v) {
-
+					if (v.type === 'lostfound') {
+						return true;
+					}
 					var postInfo = $.extend({}, v, v.history.slice(-1).pop());
 					postInfo.date = new Date(postInfo.date).toLocaleString();
 					//Grab all the comments, get the appropriate data and render them

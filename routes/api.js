@@ -1270,27 +1270,28 @@ router.get(findCourse, UserID, function (req, res, next) {
 	});
 });
 router.post(addLostFound, UserID, function (req, res, next) {
-	DB.LostFound.add(req, res, function (result) {
+	DB.Posts.add(req, res, function (result) {
 		res.json(result);
 	});
 });
 router.patch(updateLostFound, UserID, function (req, res, next) {
-	DB.LostFound.update(req, res, function (result) {
+	DB.Posts.update(req, res, function (result) {
 		res.json(result);
 	});
 });
 router.delete(removeLostFound, UserID, function (req, res, next) {
-	DB.LostFound.remove(req, res, function (result) {
+	DB.Posts.remove(req, res, function (result) {
 		res.json(result);
 	});
 });
 router.get(findLostFoundById, UserID, function (req, res, next) {
-	DB.LostFound.findById(req, res, function (result) {
+	throw Error('Not Implemented');
+	DB.Posts.findById(req, res, function (result) {
 		res.json(result);
 	});
 });
 router.get(findLostFound, UserID, function (req, res, next) {
-	DB.LostFound.find(req, res, function (result) {
+	DB.Posts.find(req, res, function (result) {
 		res.json(result);
 	});
 });

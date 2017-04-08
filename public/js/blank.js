@@ -7,8 +7,8 @@
 	 * Animates Posts and Comments
 	 *****************/
 	var postFunctionality = undefined;
-	blankProm.push(postFunctionality = function (postData, p_id) {
-		$.get("/temps/postTemp.hjs", function (post) {
+	blankProm.push(postFunctionality = function (postData, p_id, template) {
+		$.get(template, function (post) {
 			var template = Hogan.compile(post);
 			var output = template.render(postData);
 			$(output).hide().prependTo('#posts').fadeIn('slow');
@@ -143,7 +143,7 @@
 		});
 	});
 	var postPrepend = undefined;
-	blankProm.push(postPrepend = function (data, p_id) {
+	blankProm.push(postPrepend = function (data, p_id, template) {
 		var postProm = [];
 		var postData = $.extend({}, data, data.history.slice(-1).pop());
 		postData.date = new Date(postData.date).toLocaleString();
@@ -157,7 +157,7 @@
 		postData.image = postData.image ? 'visibility:visible' : 'visibility:hidden';
 
 		$.when.apply($, postProm).then(function () {
-			postFunctionality(postData, p_id);
+			postFunctionality(postData, p_id, template);
 		});
 	});
 	var commFunctionality = undefined;
@@ -698,67 +698,67 @@
 							.fail());
 					});
 
-				$.when.apply($, promises).then(function () {
-					//If no friend requests exist, skip rendering.
-					if (!(data.list.length == 0)) {
-						$.get("/temps/frireqTemp.hjs", function (result) {
-							$('#friendPan').append("<h3> Friend Requests </h3>");
-							var template = Hogan.compile("{{#list}}" + result + "{{/list}}");
-							var output = template.render(data);
-							$('#friendPan').append(output);
-						});
-					}
-				
+					$.when.apply($, promises).then(function () {
+						//If no friend requests exist, skip rendering.
+						if (!(data.list.length == 0)) {
+							$.get("/temps/frireqTemp.hjs", function (result) {
+								$('#friendPan').append("<h3> Friend Requests </h3>");
+								var template = Hogan.compile("{{#list}}" + result + "{{/list}}");
+								var output = template.render(data);
+								$('#friendPan').append(output);
+							});
+						}
 
-					//API call to get user friends
-					$.get('/api/friends/' + uid)
-						.done(function (response) {
 
-							//Setup variable to hold data for templates
-							var data = {
-								"list": []
-							};
+						//API call to get user friends
+						$.get('/api/friends/' + uid)
+							.done(function (response) {
 
-							//Make array to hold promises.
-							var promises = [];
+								//Setup variable to hold data for templates
+								var data = {
+									"list": []
+								};
 
-							//Display friend title
-							$('#friendPan').append("<h3> Friends </h3>");
+								//Make array to hold promises.
+								var promises = [];
 
-							//For each friend in the friends array
-							if (!(typeof response.data[0] == 'undefined')) {
-								$.each(response.data[0].friends, function (j, u) {
+								//Display friend title
+								$('#friendPan').append("<h3> Friends </h3>");
 
-									//Push gets to array so next function waits.
-									promises.push($.get('/api/user/' + u)
-										.done(function (response) {
-											var x = $.extend({}, response.data, {
-												"title": "profile"
+								//For each friend in the friends array
+								if (!(typeof response.data[0] == 'undefined')) {
+									$.each(response.data[0].friends, function (j, u) {
+
+										//Push gets to array so next function waits.
+										promises.push($.get('/api/user/' + u)
+											.done(function (response) {
+												var x = $.extend({}, response.data, {
+													"title": "profile"
+												})
+												x.image = x.gender ? "/content/image/profile/" + x._id : x.image;
+												data.list.push(x);
 											})
-											x.image = x.gender ? "/content/image/profile/" + x._id : x.image;
-											data.list.push(x);
-										})
-										.fail());
-								})
+											.fail());
+									})
 
-								//Waits until all data is loaded then displays friend list.
-								$.when.apply($, promises).then(function () {
-									//If no friends exist, display sad face
-									if (!(data.list.length == 0)) {
-										$.get("/temps/searchTemp.hjs", function (result) {
-											var template = Hogan.compile("{{#list}}" + result + "{{/list}}");
-											var output = template.render(data);
-											$('#friendPan').append(output);
-										});
-									}
-								})
-							} else {
-								//Display no friends
-								$('#friendPan').append("<h5> No friends to display =( </h5>");
-							}
+									//Waits until all data is loaded then displays friend list.
+									$.when.apply($, promises).then(function () {
+										//If no friends exist, display sad face
+										if (!(data.list.length == 0)) {
+											$.get("/temps/searchTemp.hjs", function (result) {
+												var template = Hogan.compile("{{#list}}" + result + "{{/list}}");
+												var output = template.render(data);
+												$('#friendPan').append(output);
+											});
+										}
+									})
+								} else {
+									//Display no friends
+									$('#friendPan').append("<h5> No friends to display =( </h5>");
+								}
 
-						})
-						.fail()
+							})
+							.fail()
 					});
 				})
 				.fail()
@@ -958,7 +958,9 @@
 				'top': $(this).scrollTop() + 50 //Use it later
 
 			});
-
+			$('#mapHolder').css({
+				'top': $(this).scrollTop()
+			})
 			$(".navbar").css({
 
 				'top': $(this).scrollTop()

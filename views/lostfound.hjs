@@ -82,7 +82,7 @@
 	<div class="popup" id="groupPop">
 			Create a new group:
 			<input class="popField" id="gName" type="text" name="gName" placeholder="Group Name"><br>
-			
+
 			<img id="grImgDisp" src="/img/SEAHAWK_SIL.jpg">
 			<input id="grImgUp" type="file" name="pic" accept="image/*" style="display: none;">
 			<div id="gButton">
@@ -157,15 +157,17 @@
 	<div class="timeline">
 
 		<div id="mapHolder"><div id="map"> </div></div>
+		<div class="posts" id="posts">
 
-		
+		</div>
+
 		</div>
 	</div>
 	<div class="sidebars" id="section-right">
 		<div class= "content-1">
 			<div id="choiceButtons">
-				<button id="lostChoice"> LOST </button>
-				<button id="foundChoice"> FOUND</button>
+				<button id="lostChoice">LOST</button>
+				<button id="foundChoice">FOUND</button>
 			</div>
 		</div>
 
@@ -177,8 +179,8 @@
 				<input type="file" id="lostImg" style="display: none;" accept="image/*" />
 			</div>
 			<div class="textDesc">
-				<!-- <textarea class="text" placeholder="Description..."></textarea>-->
-				<input type="text" name="desc" id="desc" placeholder="Description..."/>
+				<textarea class="text " placeholder="Description..."></textarea>
+				<!--<input type="text" name="desc" id="desc" placeholder="Description..."/>-->
 			</div>
 			<div class="lostClass" id="lostLocation">
 				<button class="mapToggle"> Map </button> <br>
@@ -190,23 +192,23 @@
 				<input type="text" name="locate" class="locate"/>
 
 				<label for="name">Contact Info</label>
-				<input class="contact" type="text" name="name" id="name" placeholder="Name"/>
-				<input class="contact" type="text" name="phone" id="phone" placeholder="Phone #"/>
-				<input class="contact" type="text" name="email" id="email" placeholder="E-Mail"/>
+				<input class="contact reset" type="text" name="name" id="name" placeholder="Name"/>
+				<input class="contact reset" type="text" name="phone" id="phone" placeholder="Phone #"/>
+				<input class="contact reset" type="text" name="email" id="email" placeholder="E-Mail"/>
 
 				<button class="submitLF" id="submitLost"> Submit Lost Item </button>
 			</div>
 		</div>
 
 		<div class="content-2" id="foundContent">
-			<div class="foundClass" id="lostImage">
-				<img id="lostImgDisp" src="/img/SEAHAWK_SIL.jpg">
-				<input type="file" id="lostImg" style="display: none;" accept="image/*" />
+			<div class="foundClass" id="foundImage">
+				<img id="foundImgDisp" src="/img/SEAHAWK_SIL.jpg">
+				<input type="file" id="foundImg" style="display: none;" accept="image/*" />
 			</div>
 			<div class="textDesc">
 				<textarea class="text" placeholder="Description..."></textarea>
 			</div>
-			<div class="foundClass" id="lostLocation">
+			<div class="foundClass" id="foundLocation">
 				<button class="mapToggle"> Map </button> <br>
 
 				<label for="long">Location</label>

@@ -121,7 +121,8 @@ $(document).ready(function () {
 				}
 			})
 			.done(function (response) {
-				var p_id = response.data._id;
+				var res = response.data;
+				var p_id = res._id;
 
 
 				//If image is supplied. Store that image.
@@ -159,7 +160,7 @@ $(document).ready(function () {
 					}).done(function (response) {
 						console.log("image uploaded");
 						$.when.apply($, blankProm).then(function () {
-							postPrepend(response.data, p_id);
+							postPrepend(res, p_id, "/temps/postTemp.hjs");
 						});
 					}).fail(function () {
 						$("#clearPost").click();
@@ -167,7 +168,7 @@ $(document).ready(function () {
 					});
 				} else {
 					$.when.apply($, blankProm).then(function () {
-						postPrepend(response.data, p_id);
+						postPrepend(response.data, p_id, "/temps/postTemp.hjs");
 					});
 				}
 			})
@@ -557,8 +558,8 @@ $(document).ready(function () {
 
 		//API call to get group requests
 		$.get('/api/groups/requests/' + id)
-		.done(function(response) {
-			//Setup variable to hold data for templates
+			.done(function (response) {
+				//Setup variable to hold data for templates
 				var data = {
 					"list": []
 				};
@@ -581,7 +582,7 @@ $(document).ready(function () {
 							.done(function (response) {
 								var x = $.extend({}, response.data, {
 									"title": "profile",
-									"gid" : id
+									"gid": id
 								})
 								x.image = x.gender ? "/content/image/profile/" + x._id : x.image;
 								data.list.push(x);
@@ -604,8 +605,8 @@ $(document).ready(function () {
 					//Display no friends
 					$('#grRequestPU').append("<h5> No requests to display =( </h5>");
 				}
-		})
-		.fail()
+			})
+			.fail()
 	});
 
 	//If somewhere outside of the panel is clicked: Close the panel.
