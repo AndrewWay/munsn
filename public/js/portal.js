@@ -215,7 +215,7 @@ $(document).ready(function () {
 				};
 
 				var postProm = [];
-
+				var commProm = [];
 				$.each(response.data, function (i, v) {
 					if (v.type === 'lostfound') {
 						return true;
@@ -235,14 +235,13 @@ $(document).ready(function () {
 							commInfo.date = new Date(commInfo.date).toLocaleString();
 
 							//Get the appropriate username
-							$.ajax({
+							commProm.push($.ajax({
 								type: 'GET',
-								async: false,
 								url: '/api/user/' + u.authorid
 							}).done(function (res) {
 								commInfo.fname = res.data.fname;
 								commInfo.lname = res.data.lname;
-							});
+							}));
 
 							commData.list.push(commInfo);
 						});
@@ -273,7 +272,6 @@ $(document).ready(function () {
 
 				//Wait until all data is loaded for the posts.
 				$.when.apply($, commProm).then(function () {
-
 					$.when.apply($, postProm).then(function () {
 						$.get("/temps/postTemp.hjs", function (post) {
 							var template = Hogan.compile("{{#list}}" + post + "{{/list}}");

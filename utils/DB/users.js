@@ -126,12 +126,12 @@ module.exports = function (DBUsers, DBAuth, collectionUsers) {
 					updates[k] = req.body[k];
 				}
 			});
-			collectionUsers.update({
+			collectionUsers.findAndModify({
 				_id: req.UserID
-			}, {
+			}, [], {
 				$set: updates
 			}, {
-				upsert: true
+				new: true
 			}, function (err, result) {
 				if (err) {
 					console.error("[DBUsers] Update", err.message);
@@ -140,6 +140,7 @@ module.exports = function (DBUsers, DBAuth, collectionUsers) {
 						status: 'fail'
 					});
 				} else {
+					req.session.user = result.value;
 					callback({
 						session: req.session,
 						status: 'ok'

@@ -196,6 +196,8 @@ $(document).ready(function () {
 			};
 
 			var postProm = [];
+			var commProm = [];
+
 			$.each(response.data, function (i, v) {
 
 				var postInfo = $.extend({}, v, v.history.slice(-1).pop());
@@ -206,7 +208,6 @@ $(document).ready(function () {
 					var commData = {
 						"list": []
 					};
-					commProm = [];
 					$.each(v.comments, function (j, u) {
 						//Grab all the info
 						var commInfo = $.extend({}, u, u.history.slice(-1).pop());
