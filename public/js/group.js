@@ -186,6 +186,8 @@ $(document).ready(function () {
 
 	//Get and display a number of posts.
 	//TODO: Get and display posts based on their type (poll, photo, text)
+	$('#posts').html('<img src="/img/ring-alt.gif" width="50" height="auto" style="display: block; margin: auto; margin-top: 20%">');
+
 	$.get('/api/post', {
 			visibility: 'public',
 			targetid: id
@@ -252,6 +254,7 @@ $(document).ready(function () {
 			$.when.apply($, commProm).then(function () {
 				$.when.apply($, postProm).then(function () {
 					$.get("/temps/postTemp.hjs", function (post) {
+						$('#posts').html('');
 						data.list.reverse();
 						var template = Hogan.compile("{{#list}}" + post + "{{/list}}");
 						var output = template.render(data);
