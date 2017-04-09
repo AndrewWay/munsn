@@ -234,7 +234,7 @@ $(document).ready(function () {
 						commData.list.push(commInfo);
 					});
 
-					$.when.apply($, postProm).then(function () {
+					$.when.apply($, commProm).then(function () {
 						var template = Hogan.compile("{{#list}}" + templates.commTemp + "{{/list}}");
 						var output = template.render(commData);
 						postInfo.comments = output;
