@@ -218,13 +218,14 @@ module.exports = function (DBCourses, collectionCourses, collectionUserCourses, 
 	};
 
 	DBCourses.addToUser = function (req, res, callback) {
-		console.log("[DBCourses] AddToUser", "'" + req.body.uid + "'->'" + req.body.cid + "'");
-		if (req.body.uid && req.body.cid) {
+		var body = Object.assign({}, req.body, req.query);
+		console.log("[DBCourses] AddToUser", "'" + body.uid + "'->'" + body.cid + "'");
+		if (body.uid && body.cid) {
 			collectionUserCourses.update({
-				_id: req.body.uid
+				_id: body.uid
 			}, {
 				$addToSet: {
-					courses: req.body.cid
+					courses: body.cid
 				}
 			}, {
 				upsert: true
@@ -238,6 +239,7 @@ module.exports = function (DBCourses, collectionCourses, collectionUserCourses, 
 				} else {
 					callback({
 						session: req.session,
+						data: result.ops[0],
 						status: 'ok'
 					});
 				}
