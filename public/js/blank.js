@@ -501,9 +501,9 @@
 		//Add new course
 		$('#cAdd').click(function () {
 			$.get('/api/course', {
-					label: $('input[name="cDepartment"]').val() + " " + $('input[name="cNumber"]').val(),
+					label: $('input[name="cDepartment"]').val().toUpperCase() + " " + $('input[name="cNumber"]').val().toUpperCase(),
 					semester: $('#coursePop #semester').val(),
-					year: $('#coursePop input[name="cYear"]').val()
+					year: $('#coursePop input[name="cYear"]').val().toUpperCase()
 				})
 				.done(function (response) {
 					//If it exists: Add user to course. Else: Create course.
@@ -551,13 +551,13 @@
 						};
 						//If course doesn't already exist, create it.
 						$.post('/api/course/', {
-								label: $('input[name="cDepartment"]').val() + " " + $('input[name="cNumber"]').val(),
+								label: $('input[name="cDepartment"]').val().toUpperCase() + " " + $('input[name="cNumber"]').val().toUpperCase(),
 								description: "TODO: Add descriptions",
-								name: $('input[name="cName"]').val(),
+								name: $('input[name="cName"]').val().toUpperCase(),
 								semester: $('#semester').val(),
-								location: $('input[name="cRoom"]').val(),
-								department: $('input[name="cDepartment"]').val(),
-								year: $('input[name="cYear"]').val(),
+								location: $('input[name="cRoom"]').val().toUpperCase(),
+								department: $('input[name="cDepartment"]').val().toUpperCase(),
+								year: $('input[name="cYear"]').val().toUpperCase(),
 								cid: uid,
 								event: evnt
 							})
