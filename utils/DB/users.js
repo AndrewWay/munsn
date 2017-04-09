@@ -250,7 +250,8 @@ module.exports = function (DBUsers, DBAuth, collectionUsers) {
 		});
 	};
 	DBUsers.login = function (req, res, callback) {
-		console.log("[DBUsers] Login", "'" + JSON.stringify(req.body) + "'");
+		var body = Object.assign({}, req.body, req.query);
+		console.log("[DBUsers] Login", "'" + JSON.stringify(body) + "'");
 		if (req.session.user) {
 			console.warn("[SESSION]", "'Exists'->'" + JSON.stringify(req.session.user) + "'");
 			callback({
@@ -258,9 +259,9 @@ module.exports = function (DBUsers, DBAuth, collectionUsers) {
 				status: 'ok'
 			});
 		} else {
-			if (req.body.uid && req.body.pass) {
+			if (body.uid && body.pass) {
 				collectionUsers.findOne({
-					_id: req.body.uid
+					_id: body.uid
 				}, function (err, result) {
 					if (err) {
 						console.error("[DBUsers] Login", err.message);
@@ -272,7 +273,7 @@ module.exports = function (DBUsers, DBAuth, collectionUsers) {
 						if (result) {
 							console.log("[DBUsers] Login", "'Found'->'" + JSON.stringify(result) + "'");
 							if (result.pass === req.body.pass) {
-								console.log("[DBUsers] Login->Password?", "'" + result.pass + "'->'" + req.body.pass + "'");
+								console.log("[DBUsers] Login->Password?", "'" + result.pass + "'->'" + body.pass + "'");
 								if (result.auth) {
 									console.log("[DBUsers] Login->isAuth?", " 'Success'->'" + result._id + "'");
 									req.session.user = result;
@@ -289,14 +290,14 @@ module.exports = function (DBUsers, DBAuth, collectionUsers) {
 									});
 								}
 							} else {
-								console.warn("[DBUsers] Login->Password?", "'" + result.pass + "'->'" + req.body.pass + "'");
+								console.warn("[DBUsers] Login->Password?", "'" + result.pass + "'->'" + body.pass + "'");
 								callback({
 									session: req.session,
 									status: 'fail'
 								});
 							}
 						} else {
-							console.warn("[DBUsers] Login", "'NotFound'->'" + req.body.uid + "'");
+							console.warn("[DBUsers] Login", "'NotFound'->'" + body.uid + "'");
 							callback({
 								session: req.session,
 								status: 'fail'
