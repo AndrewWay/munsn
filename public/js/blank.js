@@ -542,9 +542,9 @@
 						$('.cDays:checked').each(function (i, v) {
 							cDays.push(days[this.value]);
 						});
-						var sDTLen = $('#firstDay').val().length + $('#startTime').val().length;
-						var eDTLen = $('#firstDay').val() + $('#endTime').val().length;
-						var rDTLen = $('#lastDay').val().length;
+						var sDTLen = Number($('#firstDay').val().length + $('#startTime').val().length);
+						var eDTLen = Number($('#firstDay').val() + $('#endTime').val().length);
+						var rDTLen = Number($('#lastDay').val().length);
 						rule = new RRule({
 							freq: RRule.WEEKLY,
 							byweekday: cDays,
