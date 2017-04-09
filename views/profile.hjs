@@ -18,6 +18,9 @@
 	<script src="/js/nlp.js"></script>
 	<script src="/js/blank.js"></script>
 	<script src="/js/profile.js"></script>
+	<script>
+		var session = {{{session}}};
+	</script>
 
 </head>
 <body>
@@ -80,7 +83,7 @@
 	<div class="popup" id="groupPop">
 			Create a new group:
 			<input class="popField" id="gName" type="text" name="gName" placeholder="Group Name"><br>
-			
+
 			<img id="grImgDisp" src="/img/SEAHAWK_SIL.jpg">
 			<input id="grImgUp" type="file" name="pic" accept="image/*" style="display: none;">
 			<div id="gButton">

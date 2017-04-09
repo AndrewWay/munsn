@@ -488,13 +488,23 @@ $(document).ready(function () {
 	//TODO: Get and display posts based on their type (poll, photo, text)
 	$.get('/api/user/' + id)
 		.done(function (response) {
-			response.data.dob = new Date(response.data.dob).toLocaleDateString();
-
-			$.get("/temps/profInfo.hjs", function (info) {
-				var template = Hogan.compile(info);
-				var output = template.render(response.data);
-				$('#infoContainer').prepend(output);
-			});
+			switch (response.status) {
+				case 'ok':
+					response.data.dob = new Date(response.data.dob).toLocaleDateString();
+					$.get("/temps/profInfo.hjs", function (info) {
+						var template = Hogan.compile(info);
+						var output = template.render(response.data);
+						$('#infoContainer').prepend(output);
+					});
+					break;
+				case 'fail':
+					$.get("/temps/profInfo.hjs", function (info) {
+						var template = Hogan.compile(info);
+						var output = template.render(session.user);
+						$('#infoContainer').prepend(output);
+					});
+					break;
+			}
 		})
 		.fail(
 			//TODO: Function on failures.

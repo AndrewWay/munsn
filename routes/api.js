@@ -25,6 +25,21 @@ var session = "/session";
  * URL:
  * 		- %server%/api/login
  * Description:
+ *      - Logs user into the site as a guest
+ * Method:
+ *      - POST
+ * Params:
+ *      - none
+ * Returns:
+ *      - JSON user
+ */
+var loginGuest = "/guest";
+/**
+ * loginUser
+ *
+ * URL:
+ * 		- %server%/api/login
+ * Description:
  *      - Logs user into the site
  * Method:
  *      - POST
@@ -1131,6 +1146,11 @@ var search = "/search"; //GET
 //==========================================================================================
 router.get(session, function (req, res, next) {
 	res.json(req.session);
+});
+router.post(loginGuest, UserID, function (req, res, next) {
+	DB.Users.guest(req, res, function (result) {
+		res.json(result);
+	});
 });
 router.post(loginUser, UserID, function (req, res, next) {
 	DB.Users.login(req, res, function (result) {
