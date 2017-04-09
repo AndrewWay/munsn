@@ -135,7 +135,8 @@ module.exports = function (DBUsers, DBAuth, collectionUsers) {
 				visibility: undefined,
 				address: undefined,
 				gender: undefined,
-
+				fname: undefined,
+				lname: undefined
 			};
 			Object.keys(updates).forEach(k => {
 				if (req.body[k] === undefined) {
