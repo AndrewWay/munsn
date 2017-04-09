@@ -542,22 +542,23 @@
 						$('.cDays:checked').each(function (i, v) {
 							cDays.push(days[this.value]);
 						});
+						var sDTLen = $('#firstDay').val().length + $('#startTime').val().length;
+						var eDTLen = $('#firstDay').val() + $('#endTime').val().length;
+						var rDTLen = $('#lastDay').val().length;
 						rule = new RRule({
 							freq: RRule.WEEKLY,
 							byweekday: cDays,
-							until: new Date($('#lastDay').val() + ' ' + '23:59:59Z').toISOString().substr(0, 19)
+							until: rDTLen ? new Date($('#lastDay').val() + ' ' + '23:59:59Z').toISOString().substr(0, 19) : undefined
 						});
-						var sDTLen = $('#firstDay').val().length + $('#startTime').val().length;
-						var eDTLen = $('#firstDay').val() + $('#endTime').val().length;
 						var evnt = {
 							'start': {
 								//This substr is not a mistake, the time zone gets janked without it.
-								'dateTime': sDTLen && new Date($('#firstDay').val() + ' ' + $('#startTime').val() + 'Z').toISOString().substr(0, 19),
+								'dateTime': sDTLen ? new Date($('#firstDay').val() + ' ' + $('#startTime').val() + 'Z').toISOString().substr(0, 19) : undefined,
 								'timeZone': 'America/St_Johns'
 							},
 							'end': {
 								//This substr is not a mistake, the time zone gets janked without it.
-								'dateTime': eDTLen && new Date($('#firstDay').val() + ' ' + $('#endTime').val() + 'Z').toISOString().substr(0, 19),
+								'dateTime': eDTLen ? new Date($('#firstDay').val() + ' ' + $('#endTime').val() + 'Z').toISOString().substr(0, 19) : undefined,
 								'timeZone': 'America/St_Johns'
 							},
 							'recurrence': ['RRULE:' + rule.toString()],
