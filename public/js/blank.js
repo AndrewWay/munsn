@@ -10,6 +10,11 @@
 	var loaded = {
 		users: {}
 	};
+	blankProm.push($.get("/api/user", function (result) {
+		for (var k in result.data) {
+			loaded.users[result.data[k]._id] = result.data[k];
+		}
+	}));
 	blankProm.push($.get("/temps/commTemp.hjs", function (temp) {
 		templates.commTemp = temp;
 	}));
