@@ -14,7 +14,7 @@
 					</div>
 				</div>
 				<div class="postCont">
-					<img class="lfImage" src="/content/posts/{{_id}}/{{_id}}" style={{image}}>
+					<img class="lfImage" src="{{{image}}}">
 					<p>{{text}}</p>
 					<div class='lfMap'></div>
 				</div>
