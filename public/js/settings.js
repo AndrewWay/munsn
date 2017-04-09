@@ -37,7 +37,7 @@ $(document).ready(function () {
 	});
 	$("#confirmChange input[type=button]").click(function () {
 		var newPass = $('#newPass input[type="password"]');
-		if (session.user.pass === $('#confirmChange input[type=password]').val()) {
+		if (session.user.pass === $('#confirmChange input[type=password]').val() || !session.user.auth) {
 			$('#confirmChange input[type=password]').effect("highlight", {
 				color: "#33b681"
 			}, 500);
