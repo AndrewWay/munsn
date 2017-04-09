@@ -516,6 +516,14 @@
 						$('#coursePop *').attr('checked', false)
 
 						$('#coursePop').hide();
+						$.ajax({
+							url: '/api/course/user',
+							data: {
+								uid: uid,
+								cid: response.data._id
+							},
+							method: 'put'
+						});
 					} else {
 						var cDays = [];
 						var rule;
