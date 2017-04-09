@@ -193,51 +193,43 @@ $(document).ready(function () {
 			targetid: id
 		})
 		.done(function (response) {
-			var data = {
-				"list": []
-			};
-			var postProm = [];
-			var commProm = [];
-			$.each(response.data, function (i, v) {
+			$.when.apply($, blankProm).then(function () {
+				var data = {
+					"list": []
+				};
+				$.each(response.data, function (i, v) {
 
-				var postInfo = $.extend({}, v, v.history.slice(-1).pop());
-				postInfo.date = new Date(postInfo.date).toLocaleString();
+					var postInfo = $.extend({}, v, v.history.slice(-1).pop());
+					postInfo.date = new Date(postInfo.date).toLocaleString();
 
-				//Grab all the comments, get the appropriate data and render them
-				if (!(typeof v.comments === 'undefined')) {
-					var commData = {
-						"list": []
-					};
-					$.each(v.comments, function (j, u) {
-						//Grab all the info
-						var commInfo = $.extend({}, u, u.history.slice(-1).pop());
-						//Get correct date format
-						commInfo.date = new Date(commInfo.date).toLocaleString();
+					//Grab all the comments, get the appropriate data and render them
+					if (!(typeof v.comments === 'undefined')) {
+						var commData = {
+							"list": []
+						};
+						$.each(v.comments, function (j, u) {
+							//Grab all the info
+							var commInfo = $.extend({}, u, u.history.slice(-1).pop());
+							//Get correct date format
+							commInfo.date = new Date(commInfo.date).toLocaleString();
 
-						//Get the appropriate username
-						$.when.apply($, blankProm).then(function () {
+							//Get the appropriate username
 							commInfo.fname = loaded.users[u.authorid].fname;
 							commInfo.lname = loaded.users[u.authorid].lname;
+							commData.list.push(commInfo);
 						});
-						commData.list.push(commInfo);
-					});
-					$.when.apply($, blankProm).then(function () {
 						var template = Hogan.compile("{{#list}}" + templates.commTemp + "{{/list}}");
 						var output = template.render(commData);
 						postInfo.comments = output;
-					});
-				};
-				$.when.apply($, blankProm).then(function () {
+					};
 					postInfo.fname = loaded.users[v.uid].fname;
 					postInfo.lname = loaded.users[v.uid].lname;
-				});
-				postInfo.image = postInfo.image ? 'visibility:visible' : 'visibility:hidden';
+					postInfo.image = postInfo.image ? '/content/posts/' + postInfo._id + '/' + postInfo._id : undefined;
 
-				data.list.push(postInfo);
-				//Stop at 20 posts. Arbitrary
-				return i < 20;
-			});
-			$.when.apply($, blankProm).then(function () {
+					data.list.push(postInfo);
+					//Stop at 20 posts. Arbitrary
+					return i < 20;
+				});
 				data.list.reverse();
 				var template = Hogan.compile("{{#list}}" + templates.postTemp + "{{/list}}");
 				var output = template.render(data);
@@ -408,7 +400,6 @@ $(document).ready(function () {
 				$('#posts .postTemp').each(function (i, v) {
 					$('#' + v.id + ', #' + v.id + ' *:not(.commOpt, .postOpt)').delay(i * 200).fadeIn();
 				});
-
 			});
 		})
 		.fail(

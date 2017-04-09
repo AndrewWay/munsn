@@ -15,7 +15,7 @@
 					</div>
 				</div>
 				<div class="postCont">
-					<p> {{text}}</p><img src="/content/posts/{{_id}}/{{_id}}" style={{image}}>
+					<p>{{text}}</p><img src="{{{image}}}">
 				</div>
 				<div class="postComm">
 					<div class="commContainer">{{{comments}}}</div>

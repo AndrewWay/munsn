@@ -214,9 +214,6 @@ $(document).ready(function () {
 					var postData = {
 						"list": []
 					};
-
-					var postProm = [];
-					var commProm = [];
 					$.each(response.data, function (i, v) {
 						if (v.type === 'lostfound') {
 							return true;
@@ -245,7 +242,7 @@ $(document).ready(function () {
 						};
 						postInfo.fname = loaded.users[v.uid].fname;
 						postInfo.lname = loaded.users[v.uid].lname;
-						postInfo.image = postInfo.image ? 'visibility:visible' : 'visibility:hidden';
+						postInfo.image = postInfo.image ? '/content/posts/' + postInfo._id + '/' + postInfo._id : undefined;
 						postData.list.push(postInfo);
 
 						//Stop at 5 posts. Arbitrary
