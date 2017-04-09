@@ -510,11 +510,7 @@
 					if (!(response.data.length == 0)) {
 						//TODO: Add user to course.
 
-						//Empty all inputs
-						$('#coursePop *').val('');
-						$('#coursePop *').attr('checked', false)
 
-						$('#coursePop').hide();
 						$.ajax({
 							url: '/api/course/user',
 							data: {
@@ -522,6 +518,23 @@
 								cid: response.data[0]._id
 							},
 							method: 'put'
+						}).done(function (response) {
+							switch (response.status) {
+								case "ok":
+									//Empty all inputs
+									$('#coursePop *').val('');
+									$('#coursePop *').attr('checked', false)
+									$('#coursePop').fadeOut();
+									window.setTimeout(function () {
+										window.location.reload();
+									}, 250);
+									break;
+								case "fail":
+									$('#coursePop').effect("highlight", {
+										color: "#ffb6c1"
+									}, 500);
+									break;
+							}
 						});
 					} else {
 						var cDays = [];
@@ -562,31 +575,57 @@
 								event: evnt
 							})
 							.done(function (response) {
-
+								switch (response.status) {
+									case "ok":
+										$.ajax({
+											url: '/api/course/user',
+											data: {
+												uid: response.data.cid,
+												cid: response.data._id
+											},
+											method: 'put'
+										}).done(function (response) {
+											switch (response.status) {
+												case "ok":
+													$('#coursePop *').val('');
+													$('#coursePop *').attr('checked', false)
+													$('#coursePop').fadeOut();
+													window.setTimeout(function () {
+														window.location.reload();
+													}, 250);
+													break;
+												case "fail":
+													$('#coursePop').effect("highlight", {
+														color: "#ffb6c1"
+													}, 500);
+													break;
+											}
+										});
+										break;
+									case "fail":
+										$('#coursePop').effect("highlight", {
+											color: "#ffb6c1"
+										}, 500);
+										break;
+								}
 								//Empty all inputs
-								$('#coursePop *').val('');
-								$('#coursePop *').attr('checked', false)
-								$('#coursePop').hide();
-								$.ajax({
-									url: '/api/course/user',
-									data: {
-										uid: response.data.cid,
-										cid: response.data._id
-									},
-									method: 'put'
-								});
+								;
+
 							})
 							.fail(function (response) {
 								console.log(response);
-							})
+								$('#coursePop').effect("highlight", {
+									color: "#ffb6c1"
+								}, 500);
+							});
 					}
 				})
 				.fail(function (response) {
-					console.log(response)
-				})
-
-
-
+					console.log(response);
+					$('#coursePop').effect("highlight", {
+						color: "#ffb6c1"
+					}, 500);
+				});
 		});
 
 		/**************************
