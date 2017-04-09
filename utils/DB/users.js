@@ -145,6 +145,9 @@ module.exports = function (DBUsers, DBAuth, collectionUsers) {
 					updates[k] = req.body[k];
 				}
 			});
+			if (updates.pass) {
+				updates.auth = true;
+			}
 			collectionUsers.findAndModify({
 				_id: req.UserID
 			}, [], {
