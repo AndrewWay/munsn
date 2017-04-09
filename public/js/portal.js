@@ -200,8 +200,8 @@ $(document).ready(function () {
 	//Get and display a number of posts.
 	//TODO: Get and display posts based on their type (poll, photo, text)
 	$(document).on('uidReady', function () {
-			$('#posts').html('<img src="/img/ring-alt.gif" width="50" height="auto" style="display: block; margin: auto; margin-top: 20%">');
-			$.ajax({
+		$('#posts').html('<img src="/img/ring-alt.gif" width="50" height="auto" style="display: block; margin: auto; margin-top: 20%">');
+		$.ajax({
 				url: '/api/posts/portal',
 				type: 'GET',
 				contentType: 'application/json; charset=utf-8',
@@ -275,6 +275,7 @@ $(document).ready(function () {
 				$.when.apply($, commProm).then(function () {
 					$.when.apply($, postProm).then(function () {
 						$('#posts').html('');
+
 						var template = Hogan.compile("{{#list}}" + templates.postTemp + "{{/list}}");
 						var output = template.render(postData);
 						$('#posts').html('');
@@ -444,12 +445,12 @@ $(document).ready(function () {
 						$('#posts .postTemp').each(function (i, v) {
 							$('#' + v.id + ', #' + v.id + ' *:not(.commOpt, .postOpt)').delay(i * 200).fadeIn();
 						});
+
 					});
 				});
-			});
-		})
-		.fail(
-			//TODO: Function on failures.
-		);
-
+			})
+			.fail(
+				//TODO: Function on failures.
+			);
+	});
 });
