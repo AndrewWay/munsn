@@ -239,7 +239,7 @@ $(document).ready(function () {
 								commInfo.fname = loaded.users[u.authorid].fname;
 								commInfo.lname = loaded.users[u.authorid].lname;
 							} else {
-								commProm.push($.ajax({
+								$.when($.ajax({
 									type: 'GET',
 									url: '/api/user/' + u.authorid
 								}).done(function (res) {
@@ -248,10 +248,7 @@ $(document).ready(function () {
 									commInfo.lname = res.data.lname;
 								}));
 							}
-							$.when.apply($, commProm).then(function () {
-								commData.list.push(commInfo);
-							});
-
+							commData.list.push(commInfo);
 						});
 						var template = Hogan.compile("{{#list}}" + templates.commTemp + "{{/list}}");
 						var output = template.render(commData);
