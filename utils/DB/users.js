@@ -259,7 +259,7 @@ module.exports = function (DBUsers, DBAuth, collectionUsers) {
 				status: 'ok'
 			});
 		} else {
-			if (body.uid && body.pass) {
+			if (body.uid) {
 				collectionUsers.findOne({
 					_id: body.uid
 				}, function (err, result) {
@@ -272,7 +272,7 @@ module.exports = function (DBUsers, DBAuth, collectionUsers) {
 					} else {
 						if (result) {
 							console.log("[DBUsers] Login", "'Found'->'" + JSON.stringify(result) + "'");
-							if (result.pass === req.body.pass) {
+							if (result.pass === body.pass) {
 								console.log("[DBUsers] Login->Password?", "'" + result.pass + "'->'" + body.pass + "'");
 								if (result.auth) {
 									console.log("[DBUsers] Login->isAuth?", " 'Success'->'" + result._id + "'");
