@@ -519,7 +519,7 @@
 							url: '/api/course/user',
 							data: {
 								uid: uid,
-								cid: response.data._id
+								cid: response.data[0]._id
 							},
 							method: 'put'
 						});
