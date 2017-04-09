@@ -8,6 +8,8 @@
     - [Contents](#contents)
     - [1. Contributors](#1-contributors)
     - [2. Starting The Server](#2-starting-the-server)
+        - [2.1 Locally](#21-locally)
+        - [2.2 Production (Live)](#22-production-live)
     - [3. API](#3-api)
         - [3.1 GET](#31-get)
         - [3.2 POST](#32-post)
@@ -24,17 +26,35 @@ John Hollett - Web Tech Lead
 Karl Chiasson - Interface Design  
 
 
-## 2. Starting The Server
+## 2. Starting The Server   
 
-1. Start the mongod process:  
-  - Worth putting the following into a script  
-  `"C:\Program Files\MongoDB\Server\3.4\bin\mongod" --storageEngine="mmapv1" --dbpath="C:\Coding\4770_server\app\data"`  
-  Start the mongod process with that storage engine and point it towards where ever the database is (should be app/data).
-  
-2. Start the node server
-  - Two ways to start the server (doesn't matter which one, and also worth putting into scripts):
-    1. "npm start": Starts the server from the bin/.www file
-    2. "node app.js": Starts the server from the app.js file
+### 2.1 Locally
+
+1. **The Quick-Easy Method (Windows Only):**  
+  To start the server, navigate to the directory, and start `start.bat`. This will start the mongo process, and the a few seconds later start the Node server. If this doesn't work then resort to The Slower-Harder Method.
+
+2. **The Slower-Harder Method:**   
+  First we must start the MongoDB process. In a command shell (opened in the project directory) type:  
+
+   `mongod --port 27017 --nojournal --smallfiles  --dbpath="./data" -storageEngine="mmapv1"`  
+
+   This shall initialize and connect to the MongoDB database. Next we must start the Node server istelf using the following command (in a new command shell):  
+
+   `npm test`   
+
+   This will start Node on the correct port. To connect to the server, open a browser and navigate to <http://localhost:3000>
+
+### 2.2 Production (Live)
+
+  First we must start the MongoDB process. In a command shell (opened in the project directory) type:  
+
+  `mongod --nojournal --smallfiles  --dbpath="./data" -storageEngine="mmapv1" --port 27272`  
+
+  This shall initialize and connect to the MongoDB database. Next we must start the Node server istelf using the following command (in a new command shell):  
+
+  `npm start`   
+
+  This will start Node on the correct port. To connect to the server, open a browser and navigate to <http://sc-6.cs.mun.ca/>
 
 ## 3. API
 
