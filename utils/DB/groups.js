@@ -66,12 +66,20 @@ module.exports = function (DBGroups, collectionGroups, collectionGroupMembers, c
 						status: 'fail'
 					});
 				} else {
-					//Returns null if error occured
-					callback({
-						session: req.session,
-						status: 'ok',
-						data: result
-					});
+					if (!result) {
+						console.log("[DBGroups] FindByGroupID->Result", "'NO Results'");
+						callback({
+							session: req.session,
+							status: 'fail'
+						});
+					} else {
+						//Returns null if error occured
+						callback({
+							session: req.session,
+							status: 'ok',
+							data: result
+						});
+					}
 				}
 			});
 		} else {

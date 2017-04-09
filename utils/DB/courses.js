@@ -32,6 +32,7 @@ module.exports = function (DBCourses, collectionCourses, collectionUserCourses, 
 			} else {
 				callback({
 					session: req.session,
+					data: result.ops[0],
 					status: 'ok'
 				});
 			}
@@ -44,20 +45,45 @@ module.exports = function (DBCourses, collectionCourses, collectionUserCourses, 
 		if (req.UserID) {
 			collectionUserCourses.findOne({
 				_id: req.UserID
-			}, function (err, result) {
-				if (err) {
-					console.log("[DBCourses]", err.message);
+			}, function (fErr, fResult) {
+				if (fErr) {
+					console.log("[DBCourses] FindByUserID", fErr.message);
 					callback({
 						session: req.session,
 						status: 'fail'
 					});
 				} else {
-					//Returns null if error occured
-					callback({
-						session: req.session,
-						status: 'ok',
-						data: result
-					});
+					if (!fResult) {
+						console.log("[DBCourses] FindByUserID->Result", fErr.message);
+						callback({
+							session: req.session,
+							status: 'fail'
+						});
+					} else {
+						fResult.courses.forEach((v, i) => {
+							fResult.courses[i] = new ObjectID(v);
+						});
+						collectionCourses.find({
+							_id: {
+								$in: fResult.courses
+							}
+						}).toArray(function (cErr, cResult) {
+							if (cErr) {
+								console.log("[DBCourses] FindByUserID->Courses", cErr.message);
+								callback({
+									session: req.session,
+									status: 'fail'
+								});
+							} else {
+								callback({
+									session: req.session,
+									status: 'ok',
+									data: cResult
+								});
+							}
+						});
+
+					}
 				}
 			});
 		} else {
@@ -71,6 +97,7 @@ module.exports = function (DBCourses, collectionCourses, collectionUserCourses, 
 
 	//Find courses matching query
 	DBCourses.find = function (req, res, callback) {
+		var body = Object.assign({}, req.body, req.query);
 		var query = {
 			label: undefined,
 			description: undefined,
@@ -83,10 +110,10 @@ module.exports = function (DBCourses, collectionCourses, collectionUserCourses, 
 			event: undefined
 		};
 		Object.keys(query).forEach(k => {
-			if (!req.body[k]) {
+			if (!body[k]) {
 				delete query[k];
 			} else {
-				query[k] = req.body[k];
+				query[k] = body[k];
 			}
 		});
 		console.log("[DBCourses] Find", "'" + JSON.stringify(query) + "'");

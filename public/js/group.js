@@ -422,20 +422,27 @@ $(document).ready(function () {
 	//TODO: Add findGroupById in API. It's missing for some reason.
 	var groupProm = $.get('/api/group/' + id)
 		.done(function (response) {
-			cid = response.data.creatorid;
-			response.data.created = new Date(response.data.created).toLocaleDateString();
+			switch (response.status) {
+				case 'ok':
+					cid = response.data.creatorid;
+					response.data.created = new Date(response.data.created).toLocaleDateString();
 
-			$.get('/api/user/' + response.data.creatorid)
-				.done(function (res) {
-					response.data.fname = res.data.fname;
-					response.data.lname = res.data.lname;
+					$.get('/api/user/' + response.data.creatorid)
+						.done(function (res) {
+							response.data.fname = res.data.fname;
+							response.data.lname = res.data.lname;
 
-					$.get("/temps/groupInfo.hjs", function (info) {
-						var template = Hogan.compile(info);
-						var output = template.render(response.data);
-						$('#infoContainer').prepend(output);
-					});
-				});
+							$.get("/temps/groupInfo.hjs", function (info) {
+								var template = Hogan.compile(info);
+								var output = template.render(response.data);
+								$('#infoContainer').prepend(output);
+							});
+						});
+					break;
+				case 'fail':
+					break;
+			}
+
 		})
 		.fail(
 			//TODO: Function on failures.

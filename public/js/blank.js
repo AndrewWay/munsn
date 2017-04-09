@@ -561,6 +561,14 @@
 								$('#coursePop *').val('');
 								$('#coursePop *').attr('checked', false)
 								$('#coursePop').hide();
+								$.ajax({
+									url: '/api/course/user',
+									data: {
+										uid: response.data.cid,
+										cid: response.data._id
+									},
+									method: 'put'
+								});
 							})
 							.fail(function (response) {
 								console.log(response);
