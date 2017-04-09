@@ -14,7 +14,7 @@ module.exports = function (DBUsers, DBAuth, collectionUsers) {
 				address: req.body.address,
 				gender: req.body.gender,
 				email: req.body.email,
-				auth: Boolean(req.body.auth || false),
+				auth: false,
 				visibility: req.body.visibility ? req.body.visibility : "default",
 				_id: (req.body._id._bsontype ? req.body._id.toString() : req.body._id) || utils.EmailToID(req.body.email)
 			};
@@ -230,7 +230,7 @@ module.exports = function (DBUsers, DBAuth, collectionUsers) {
 			address: 'Nobody Street',
 			gender: 'Alien',
 			email: 'Alien@mun.ca',
-			auth: 'true',
+			auth: false,
 			visibility: "default",
 			_id: new ObjectID()
 		};

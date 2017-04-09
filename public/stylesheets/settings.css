@@ -62,3 +62,26 @@
 	position: absolute;
 	left: 120px;
 }
+
+#newName input {
+	position: absolute;
+	left: 120px;
+}
+
+#newEmail input {
+	position: absolute;
+	left: 120px;
+}
+
+.profImg {
+	right: 15px;
+	position: absolute;
+	top: 0px;
+}
+
+#profImgDisp {
+	display: block;
+	cursor: pointer;
+	width: 100px;
+	height: 100px;
+}

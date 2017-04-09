@@ -8,7 +8,8 @@ var DB = require('../utils/db');
 router.get('/', function (req, res, next) {
 	if (req.session.user) {
 		res.render('settings', {
-			session: JSON.stringify(req.session)
+			session: JSON.stringify(req.session),
+			user: req.session.user
 		});
 	} else {
 		//res.render('settings', {});

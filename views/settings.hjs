@@ -168,8 +168,21 @@
 				</div>
 				<br><br>
 				<div id="newAddr">
-					New Address: <input type="text" name="addr" placeholder="Example 123 Street"/>
+					New Address: <input type="text" name="addr" placeholder="{{user.address}}"/>
 				</div>
+				<br>
+				<div id="newName">
+					First Name: <input type="text" name="fName" placeholder="{{user.fname}}"/><br>
+					Last Name: <input type="text" name="lName" placeholder="{{user.lname}}"/>
+				</div>
+				<div id="newEmail">
+					New Email: <input type="text" name="email" placeholder="{{user.email}}"/>
+				</div>
+				<div class="profImg">
+					<img id="profImgDisp" src="/content/image/profile/{{user._id}}">
+				</div>
+				<input id="profImgUp"  type="file" name="pic" accept="image/*" style="display: none">
+				<div id="profImgProgress"></div>
 			</div>
 		</div>
 		<div class="settings" id="privacy"><div class="setTitle">Privacy Settings</div><div class="lists"></div></div>
