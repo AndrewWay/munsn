@@ -246,10 +246,12 @@ $(document).ready(function () {
 							commData.list.push(commInfo);
 						});
 
-						$.get("/temps/commTemp.hjs", function (commTemp) {
-							var template = Hogan.compile("{{#list}}" + commTemp + "{{/list}}");
-							var output = template.render(commData);
-							postInfo.comments = output;
+						$.when.apply($,commProm).then(function() {
+							$.get("/temps/commTemp.hjs", function (commTemp) {
+								var template = Hogan.compile("{{#list}}" + commTemp + "{{/list}}");
+								var output = template.render(commData);
+								postInfo.comments = output;
+							});
 						});
 					};
 
@@ -441,7 +443,7 @@ $(document).ready(function () {
 								$(".commClear", box).click();
 							});
 							$('#posts .postTemp').each(function (i, v) {
-								$('#' + v.id + ', #' + v.id + ' *').delay(i * 200).fadeIn();
+								$('#' + v.id + ', #' + v.id + ' *:not(.commOpt, .postOpt)').delay(i * 200).fadeIn();
 							});
 						});
 					});

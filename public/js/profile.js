@@ -419,7 +419,7 @@ $(document).ready(function () {
 							$(".commClear", box).click();
 						});
 						$('#posts .postTemp').each(function (i, v) {
-							$('#' + v.id + ', #' + v.id + ' *').delay(i * 200).fadeIn();
+							$('#' + v.id + ', #' + v.id + ' *:not(.commOpt, .postOpt)').delay(i * 200).fadeIn();
 						});
 					});
 				});
