@@ -547,15 +547,17 @@
 							byweekday: cDays,
 							until: new Date($('#lastDay').val() + ' ' + '23:59:59Z').toISOString().substr(0, 19)
 						});
+						var sDTLen = $('#firstDay').val().length + $('#startTime').val().length;
+						var eDTLen = $('#firstDay').val() + $('#endTime').val().length;
 						var evnt = {
 							'start': {
 								//This substr is not a mistake, the time zone gets janked without it.
-								'dateTime': new Date($('#firstDay').val() + ' ' + $('#startTime').val() + 'Z').toISOString().substr(0, 19),
+								'dateTime': sDTLen && new Date($('#firstDay').val() + ' ' + $('#startTime').val() + 'Z').toISOString().substr(0, 19),
 								'timeZone': 'America/St_Johns'
 							},
 							'end': {
 								//This substr is not a mistake, the time zone gets janked without it.
-								'dateTime': new Date($('#firstDay').val() + ' ' + $('#endTime').val() + 'Z').toISOString().substr(0, 19),
+								'dateTime': eDTLen && new Date($('#firstDay').val() + ' ' + $('#endTime').val() + 'Z').toISOString().substr(0, 19),
 								'timeZone': 'America/St_Johns'
 							},
 							'recurrence': ['RRULE:' + rule.toString()],
