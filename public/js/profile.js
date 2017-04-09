@@ -94,7 +94,7 @@ $(document).ready(function () {
 		$("#postBox #text").val('');
 		$("#postProgress").empty();
 		$("#imgDisp").attr("src", "#");
-		$("#newPostImg").attr("src", "#");
+		$("#newPostImg").attr("src", null);
 		$("#imgDisp").css({
 			display: 'none'
 		});
