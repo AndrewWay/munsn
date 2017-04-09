@@ -54,7 +54,7 @@ module.exports = function (DBCourses, collectionCourses, collectionUserCourses, 
 					});
 				} else {
 					if (!fResult) {
-						console.log("[DBCourses] FindByUserID->Result", fErr.message);
+						console.log("[DBCourses] FindByUserID->Result", "'NO Results'");
 						callback({
 							session: req.session,
 							status: 'fail'
