@@ -247,11 +247,9 @@ $(document).ready(function () {
 						});
 
 						$.when.apply($, commProm).then(function () {
-							$.get("/temps/commTemp.hjs", function (commTemp) {
-								var template = Hogan.compile("{{#list}}" + commTemp + "{{/list}}");
-								var output = template.render(commData);
-								postInfo.comments = output;
-							});
+							var template = Hogan.compile("{{#list}}" + templates.commTemp + "{{/list}}");
+							var output = template.render(commData);
+							postInfo.comments = output;
 						});
 					};
 
