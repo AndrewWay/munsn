@@ -215,7 +215,6 @@ $(document).ready(function () {
 				};
 
 				var postProm = [];
-				var commProm = [];
 				$.each(response.data, function (i, v) {
 					if (v.type === 'lostfound') {
 						return true;
@@ -229,6 +228,7 @@ $(document).ready(function () {
 						};
 
 						$.each(v.comments, function (j, u) {
+							var commProm = [];
 							//Grab all the info
 							var commInfo = $.extend({}, u, u.history.slice(-1).pop());
 							//Get correct date format
@@ -248,15 +248,15 @@ $(document).ready(function () {
 									commInfo.lname = res.data.lname;
 								}));
 							}
+							$.when.apply($, commProm).then(function () {
+								commData.list.push(commInfo);
+							});
 
-							commData.list.push(commInfo);
 						});
 
-						$.when.apply($, commProm).then(function () {
-							var template = Hogan.compile("{{#list}}" + templates.commTemp + "{{/list}}");
-							var output = template.render(commData);
-							postInfo.comments = output;
-						});
+						var template = Hogan.compile("{{#list}}" + templates.commTemp + "{{/list}}");
+						var output = template.render(commData);
+						postInfo.comments = output;
 					};
 					if (loaded.users[v.uid]) {
 						postInfo.fname = loaded.users[v.uid].fname;
