@@ -7,6 +7,9 @@
 	 * Animates Posts and Comments
 	 *****************/
 	var templates = {};
+	var loaded = {
+		users: {}
+	};
 	blankProm.push($.get("/temps/commTemp.hjs", function (temp) {
 		templates.commTemp = temp;
 	}));

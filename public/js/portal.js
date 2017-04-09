@@ -235,13 +235,19 @@ $(document).ready(function () {
 							commInfo.date = new Date(commInfo.date).toLocaleString();
 
 							//Get the appropriate username
-							commProm.push($.ajax({
-								type: 'GET',
-								url: '/api/user/' + u.authorid
-							}).done(function (res) {
-								commInfo.fname = res.data.fname;
-								commInfo.lname = res.data.lname;
-							}));
+							if (loaded.users[v.uid]) {
+								commInfo.fname = loaded.users[u.authorid].fname;
+								commInfo.lname = loaded.users[u.authorid].lname;
+							} else {
+								commProm.push($.ajax({
+									type: 'GET',
+									url: '/api/user/' + u.authorid
+								}).done(function (res) {
+									loaded.users[u.authorid] = res;
+									commInfo.fname = res.data.fname;
+									commInfo.lname = res.data.lname;
+								}));
+							}
 
 							commData.list.push(commInfo);
 						});
@@ -252,14 +258,19 @@ $(document).ready(function () {
 							postInfo.comments = output;
 						});
 					};
-
-					postProm.push($.ajax({
-						type: 'GET',
-						url: '/api/user/' + v.uid
-					}).done(function (res) {
-						postInfo.fname = res.data.fname;
-						postInfo.lname = res.data.lname;
-					}))
+					if (loaded.users[v.uid]) {
+						postInfo.fname = loaded.users[v.uid].fname;
+						postInfo.lname = loaded.users[v.uid].lname;
+					} else {
+						postProm.push($.ajax({
+							type: 'GET',
+							url: '/api/user/' + v.uid
+						}).done(function (res) {
+							loaded.users[v.uid] = res;
+							postInfo.fname = res.data.fname;
+							postInfo.lname = res.data.lname;
+						}))
+					}
 					postInfo.image = postInfo.image ? 'visibility:visible' : 'visibility:hidden';
 
 					postData.list.push(postInfo);
