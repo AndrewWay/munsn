@@ -237,7 +237,7 @@ module.exports = function (DBCourses, collectionCourses, collectionUserCourses, 
 						status: 'fail'
 					});
 				} else {
-					if (!result.length) {
+					if (!result) {
 						console.error("[DBCourses] AddToUser->Results", "'NO Results'");
 						callback({
 							session: req.session,
@@ -246,7 +246,6 @@ module.exports = function (DBCourses, collectionCourses, collectionUserCourses, 
 					} else {
 						callback({
 							session: req.session,
-							data: result.ops[0],
 							status: 'ok'
 						});
 					}
