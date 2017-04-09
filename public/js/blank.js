@@ -168,24 +168,10 @@
 		var postProm = [];
 		var postData = $.extend({}, data, data.history.slice(-1).pop());
 		postData.date = new Date(postData.date).toLocaleString();
-		if (loaded.users[data.uid]) {
-			postData.fname = loaded.users[data.uid].fname;
-			postData.lname = loaded.users[data.uid].lname;
-		} else {
-			postProm.push($.ajax({
-				type: 'GET',
-				url: '/api/user/' + data.uid
-			}).done(function (res) {
-				loaded.users[data.uid] = res.data;
-				postData.fname = res.data.fname;
-				postData.lname = res.data.lname;
-			}));
-		}
-		postData.image = postData.image ? 'visibility:visible' : 'visibility:hidden';
-
-		$.when.apply($, postProm).then(function () {
-			postFunctionality(postData, p_id, template);
-		});
+		postData.fname = loaded.users[data.uid].fname;
+		postData.lname = loaded.users[data.uid].lname;
+		postData.image = postData.image ? '/content/posts/' + postData._id + '/' + postData._id : undefined;
+		postFunctionality(postData, p_id, template);
 	});
 	var commFunctionality;
 	blankProm.push(commFunctionality = function (commData, p_id) {
@@ -226,26 +212,10 @@
 		var commData = $.extend({}, data, data.history.slice(-1).pop());
 		//Get correct date format
 		commData.date = new Date(commData.date).toLocaleString();
-
 		//Get the appropriate username
-
-		if (loaded.users[data.authorid]) {
-			commData.fname = loaded.users[data.authorid].fname;
-			commData.lname = loaded.users[data.authorid].lname;
-		} else {
-			commProm.push($.ajax({
-				type: 'GET',
-				url: '/api/user/' + data.authorid
-			}).done(function (res) {
-				loaded.users[data.authorid] = res.data;
-				commData.fname = res.data.fname;
-				commData.lname = res.data.lname;
-			}));
-		}
-
-		$.when.apply($, commProm).then(function () {
-			commFunctionality(commData, p_id);
-		});
+		commData.fname = loaded.users[data.authorid].fname;
+		commData.lname = loaded.users[data.authorid].lname;
+		commFunctionality(commData, p_id);
 	});
 
 	var suggOutput;
