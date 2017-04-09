@@ -223,7 +223,7 @@ $(document).ready(function () {
 					};
 					postInfo.fname = loaded.users[v.uid].fname;
 					postInfo.lname = loaded.users[v.uid].lname;
-					postInfo.image = postInfo.image ? 'visibility:visible' : 'visibility:hidden';
+					postInfo.image = postInfo.image ? '/content/posts/' + postInfo._id + '/' + postInfo._id : undefined;
 					data.list.push(postInfo);
 					console.log(data);
 					//Stop at 5 posts. Arbitrary
