@@ -501,7 +501,6 @@
 		//Add new course
 		$('#cAdd').click(function () {
 			$.get('/api/course', {
-					name: $('#coursePop input[name="cName"]').val(),
 					label: $('input[name="cDepartment"]').val() + " " + $('input[name="cNumber"]').val(),
 					semester: $('#coursePop #semester').val(),
 					year: $('#coursePop input[name="cYear"]').val()
