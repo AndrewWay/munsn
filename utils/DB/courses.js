@@ -237,11 +237,19 @@ module.exports = function (DBCourses, collectionCourses, collectionUserCourses, 
 						status: 'fail'
 					});
 				} else {
-					callback({
-						session: req.session,
-						data: result.ops[0],
-						status: 'ok'
-					});
+					if (!results.length) {
+						console.error("[DBCourses] AddToUser->Results", "'NO Results'");
+						callback({
+							session: req.session,
+							status: 'fail'
+						});
+					} else {
+						callback({
+							session: req.session,
+							data: result.ops[0],
+							status: 'ok'
+						});
+					}
 				}
 			});
 		} else {
