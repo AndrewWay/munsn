@@ -276,8 +276,8 @@ $(document).ready(function () {
 						$.get("/temps/postTemp.hjs", function (post) {
 							var template = Hogan.compile("{{#list}}" + post + "{{/list}}");
 							var output = template.render(postData);
-							$('#posts').append(output);
-
+							$('#posts').html('');
+							$(output).hide().appendTo('#posts');
 
 							/****************
 							 * Post button
@@ -439,6 +439,9 @@ $(document).ready(function () {
 									})
 
 								$(".commClear", box).click();
+							});
+							$('#posts .postTemp').each(function (i, v) {
+								$('#' + v.id + ', #' + v.id + ' *').delay(i * 200).fadeIn();
 							});
 						});
 					});

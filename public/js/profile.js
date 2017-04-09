@@ -251,11 +251,11 @@ $(document).ready(function () {
 			$.when.apply($, commProm).then(function () {
 				$.when.apply($, postProm).then(function () {
 					$.get("/temps/postTemp.hjs", function (post) {
-						$('#posts').html('');
 						data.list.reverse();
 						var template = Hogan.compile("{{#list}}" + post + "{{/list}}");
 						var output = template.render(data);
-						$('#posts').append(output);
+						$('#posts').html('');
+						$(output).hide().appendTo('#posts');
 
 						/****************
 						 * Post button
@@ -418,7 +418,9 @@ $(document).ready(function () {
 
 							$(".commClear", box).click();
 						});
-
+						$('#posts .postTemp').each(function (i, v) {
+							$('#' + v.id + ', #' + v.id + ' *').delay(i * 200).fadeIn();
+						});
 					});
 				});
 			});
