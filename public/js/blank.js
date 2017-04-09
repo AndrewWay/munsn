@@ -524,6 +524,9 @@
 									//Empty all inputs
 									$('#coursePop *').val('');
 									$('#coursePop *').attr('checked', false)
+									$('#coursePop').effect("highlight", {
+										color: "#33b681"
+									}, 500);
 									$('#coursePop').fadeOut();
 									window.setTimeout(function () {
 										window.location.reload();
@@ -592,6 +595,9 @@
 												case "ok":
 													$('#coursePop *').val('');
 													$('#coursePop *').attr('checked', false)
+													$('#coursePop').effect("highlight", {
+														color: "#33b681"
+													}, 500);
 													$('#coursePop').fadeOut();
 													window.setTimeout(function () {
 														window.location.reload();
