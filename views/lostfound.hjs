@@ -20,44 +20,28 @@
 	<script src="/js/nlp.js"></script>
 	<script src="/js/blank.js"></script>
 	<script src="/js/lostfound.js"></script>
-
 </head>
 <body>
 	<nav>
 	<div class="navbar">
-
 		<div class="menu">
-		<ul>
-            <li><a href="/">Home</a></li>
-            <li><a href="javascript:void(0)" id="groupButton">Groups</a></li>
-            <li><a href="javascript:void(0)" id="friendButton">Friends</a></li>
-        </ul>
-		<div class="menuPan" id="friendPan" style="display: none;">
-
-		</div>
-
-		<div class="menuPan" id="groupPan" style="display: none;">
-
-		</div>
+			<ul>
+				<li><a href="/">Home</a></li>
+				<li><a href="javascript:void(0)" id="groupButton">Groups</a></li>
+				<li><a href="javascript:void(0)" id="friendButton">Friends</a></li>
+			</ul>
+			<div class="menuPan" id="friendPan" style="display: none;"></div>
+			<div class="menuPan" id="groupPan" style="display: none;"></div>
         </div>
-
-
-
         <div class="search">
-			  	<input type="search" id="searchbar" placeholder="Search MunSN"><button id="searchbtn" class="searchbtn">Search</button>
-
-			<div class="search" id="searchRes" style="display: none;">
-
-			</div>
+			<input type="search" id="searchbar" placeholder="Search MunSN"/>
+			<button id="searchbtn" class="searchbtn">Search</button>
+			<div class="search" id="searchRes" style="display: none;"></div>
 		</div>
-
-
-
 		<div class="buttons">
 			<a href="javascript:void(0)"><img id="not" src="/img/notification-red.png"></a>
 			<a href="/api/logout"><img id="log" src="/img/logout.png"></a>
 			<a href="/settings"><img id="cog" src="/img/settings.png"></a>
-
 			<div id="not-center">
 				<a href="#"><div id="note">
 					{{NOT_INFO}}
@@ -73,30 +57,25 @@
 				</div></a>
 			</div>
 		</div>
-
 	</div>
 	</nav>
-
 	<div class="container">
-
-	<div class="popup" id="groupPop">
+		<div class="popup" id="groupPop">
 			Create a new group:
-			<input class="popField" id="gName" type="text" name="gName" placeholder="Group Name"><br>
-			
-			<img id="grImgDisp" src="/img/SEAHAWK_SIL.jpg">
-			<input id="grImgUp" type="file" name="pic" accept="image/*" style="display: none;">
+			<input class="popField" id="gName" type="text" name="gName" placeholder="Group Name"/><br>
+			<img id="grImgDisp" src="/img/SEAHAWK_SIL.jpg"/>
+			<input id="grImgUp" type="file" name="pic" accept="image/*" style="display: none;"/>
 			<div id="gButton">
 				<button class="popButton" id="gCreate"> CREATE </button>
 				<button class="popButton" id="gClose"> CLOSE </button>
 			</div>
-	</div>
-
-	<div class="popup" id="coursePop">
+		</div>
+		<div class="popup" id="coursePop">
 			Add a new course:
-			<input class="popField" type="text" name="cName" placeholder="Course Name">
-			<input class="popField" type="text" name="cDepartment" placeholder="Department" maxlength="4" style="width: 35%;">
-			<input class="popField" type="text" name="cNumber" placeholder="Course Number" maxlength="4" style="width: 35%;"><br>
-			<input class="popField" type="text" name="cRoom" placeholder="Course Room"><br>
+			<input class="popField" type="text" name="cName" placeholder="Course Name"/>
+			<input class="popField" type="text" name="cDepartment" placeholder="Department" maxlength="4" style="width: 35%;"/>
+			<input class="popField" type="text" name="cNumber" placeholder="Course Number" maxlength="4" style="width: 35%;"/><br>
+			<input class="popField" type="text" name="cRoom" placeholder="Course Room"/><br>
 			<select id="semester">
 				<option value="" disabled selected>Semester</option>
 				<option value="Fall">Fall</option>
@@ -106,121 +85,115 @@
 			</select>
 			<input class="popField" type="text" name="cYear" placeholder="Year" style="width: 40%;"><br>
 			Days: <div class='rrule' id='weekdays'>
-					<label><input type="checkbox" class="cDays" name="byweekday" value="0">Mon</label>
-                	<label><input type="checkbox" class="cDays"  name="byweekday" value="1">Tue</label>
-                	<label><input type="checkbox" class="cDays"  name="byweekday" value="2">Wed</label>
-                	<label><input type="checkbox" class="cDays"  name="byweekday" value="3">Thu</label>
-                	<label><input type="checkbox" class="cDays"  name="byweekday" value="4">Fri</label>
+					<label><input type="checkbox" class="cDays" name="byweekday" value="0"/>Mon</label>
+					<label><input type="checkbox" class="cDays"  name="byweekday" value="1"/>Tue</label>
+					<label><input type="checkbox" class="cDays"  name="byweekday" value="2"/>Wed</label>
+					<label><input type="checkbox" class="cDays"  name="byweekday" value="3"/>Thu</label>
+					<label><input type="checkbox" class="cDays"  name="byweekday" value="4"/>Fri</label>
 			</div>
 			<div id="times">
-			 	<input id="startTime" type="text" placeholder="Start Time"/>
+				<input id="startTime" type="text" placeholder="Start Time"/>
 				<input id="firstDay" type="text" placeholder="First Day"/>
 				<input id="endTime" type="text" placeholder="End Time"/>
 				<input id="lastDay" type="text" placeholder="Last Day"/>
 			</div>
-
 			<div id="cButton">
 				<button class="popButton" id="cAdd"> ADD </button>
 				<button class="popButton" id="cClose"> CLOSE </button>
 			</div>
-	</div>
-
-	<div class="sidebars" id="section-left">
-		<div class="userInfo" id="userPic">
-			<a href="/profile"><img src="/img/SEAHAWK_SIL.jpg" alt="GOTO Profile"></a>
 		</div>
-		<div class="userInfo" id="lists">
-			<div class="userLists" id="group">
-				<h5> GROUP LIST </h5>
-				<ul id="groupList">
-					<li><a id="createGroup" href="javascript:void(0)"> Create New Group </a></li>
-				</ul>
+		<div class="sidebars" id="section-left">
+			<div class="userInfo" id="userPic">
+				<a href="/profile"><img src="/img/SEAHAWK_SIL.jpg" alt="GOTO Profile"></a>
 			</div>
-
-			<div class="userLists" id="course">
-				<h5> COURSE LIST </h5>
-				<ul id="courseList">
-					<li><a id="createCourse" href="javascript:void(0)"> Add New Class </a></li>
-				</ul>
-			</div>
-
-			<div class="userLists" id="other">
-				<h5> OTHER LIST </h5>
-				<ul id="otherList">
-					<li><a href="/lostfound"> Lost & Found </a></li>
-					<li><a href="/schedule"> Schedule </a></li>
-				</ul>
-			</div>
-
-		</div>
-	</div>
-	<div class="timeline">
-
-		<div id="mapHolder"><div id="map"> </div></div>
-
-		
-		</div>
-	</div>
-	<div class="sidebars" id="section-right">
-		<div class= "content-1">
-			<div id="choiceButtons">
-				<button id="lostChoice"> LOST </button>
-				<button id="foundChoice"> FOUND</button>
+			<div class="userInfo" id="lists">
+				<div class="userLists" id="group">
+					<h5> GROUP LIST </h5>
+					<ul id="groupList">
+						<li><a id="createGroup" href="javascript:void(0)"> Create New Group </a></li>
+					</ul>
+				</div>
+				<div class="userLists" id="course">
+					<h5> COURSE LIST </h5>
+					<ul id="courseList">
+						<li><a id="createCourse" href="javascript:void(0)"> Add New Class </a></li>
+					</ul>
+				</div>
+				<div class="userLists" id="other">
+					<h5> OTHER LIST </h5>
+					<ul id="otherList">
+						<li><a href="/lostfound"> Lost & Found </a></li>
+						<li><a href="/schedule"> Schedule </a></li>
+					</ul>
+				</div>
 			</div>
 		</div>
-
-		<!-- TODO: Make consistent. Should these divs be classes or ids. Class seems superfluous, but seperate ids allow for specialization-->
-
-		<div class="content-2" id="lostContent">
-			<div class="lostClass" id="lostImage">
-				<img id="lostImgDisp" src="/img/SEAHAWK_SIL.jpg">
-				<input type="file" id="lostImg" style="display: none;" accept="image/*" />
+		<div class="timeline">
+			<div id="mapHolder">
+				<div id="map"></div>
 			</div>
-			<div class="textDesc">
-				<!-- <textarea class="text" placeholder="Description..."></textarea>-->
-				<input type="text" name="desc" id="desc" placeholder="Description..."/>
+			<div class="posts" id="posts"></div>
+		</div>
+		<div class="sidebars" id="section-right">
+			<div class= "content-1">
+				<div id="choiceButtons">
+					<button id="lostChoice">LOST</button>
+					<button id="foundChoice">FOUND</button>
+				</div>
 			</div>
-			<div class="lostClass" id="lostLocation">
-				<button class="mapToggle"> Map </button> <br>
-				<input type="hidden" name="lat" id="lat"/>
 
-				<input type="hidden" name="long" id="long"/>
+			<!-- TODO: Make consistent. Should these divs be classes or ids. Class seems superfluous, but seperate ids allow for specialization-->
 
-				<label for="long">Location</label>
-				<input type="text" name="locate" class="locate"/>
+			<div class="content-2" id="lostContent">
+				<div class="lostClass" id="lostImage">
+					<img id="lostImgDisp" src="/img/SEAHAWK_SIL.jpg">
+					<input type="file" id="lostImg" style="display: none;" accept="image/*" />
+				</div>
+				<div class="textDesc">
+					<textarea class="text " placeholder="Description..."></textarea>
+					<!--<input type="text" name="desc" id="desc" placeholder="Description..."/>-->
+				</div>
+				<div class="lostClass" id="lostLocation">
+					<button class="mapToggle"> Map </button> <br>
+					<input type="hidden" name="lat" id="lat"/>
 
-				<label for="name">Contact Info</label>
-				<input class="contact" type="text" name="name" id="name" placeholder="Name"/>
-				<input class="contact" type="text" name="phone" id="phone" placeholder="Phone #"/>
-				<input class="contact" type="text" name="email" id="email" placeholder="E-Mail"/>
+					<input type="hidden" name="long" id="long"/>
 
-				<button class="submitLF" id="submitLost"> Submit Lost Item </button>
+					<label for="long">Location</label>
+					<input type="text" name="locate" class="locate"/>
+
+					<label for="name">Contact Info</label>
+					<input class="contact reset" type="text" name="name" id="name" placeholder="Name"/>
+					<input class="contact reset" type="text" name="phone" id="phone" placeholder="Phone #"/>
+					<input class="contact reset" type="text" name="email" id="email" placeholder="E-Mail"/>
+
+					<button class="submitLF" id="submitLost"> Submit Lost Item </button>
+				</div>
+			</div>
+
+			<div class="content-2" id="foundContent">
+				<div class="foundClass" id="foundImage">
+					<img id="foundImgDisp" src="/img/SEAHAWK_SIL.jpg">
+					<input type="file" id="foundImg" style="display: none;" accept="image/*" />
+				</div>
+				<div class="textDesc">
+					<textarea class="text" placeholder="Description..."></textarea>
+				</div>
+				<div class="foundClass" id="foundLocation">
+					<button class="mapToggle"> Map </button> <br>
+
+					<label for="long">Location</label>
+					<input type="text" class="locate" name="locate"/>
+
+					<label for="name">Contact Info</label>
+					<input class="contact" type="text" name="name" id="name" placeholder="Name"/>
+					<input class="contact" type="text" name="phone" id="phone" placeholder="Phone #"/>
+					<input class="contact" type="text" name="email" id="email" placeholder="E-Mail"/>
+
+					<button class="submitLF" id="submitFound"> Submit Found Item </button>
+				</div>
 			</div>
 		</div>
-
-		<div class="content-2" id="foundContent">
-			<div class="foundClass" id="lostImage">
-				<img id="lostImgDisp" src="/img/SEAHAWK_SIL.jpg">
-				<input type="file" id="lostImg" style="display: none;" accept="image/*" />
-			</div>
-			<div class="textDesc">
-				<textarea class="text" placeholder="Description..."></textarea>
-			</div>
-			<div class="foundClass" id="lostLocation">
-				<button class="mapToggle"> Map </button> <br>
-
-				<label for="long">Location</label>
-				<input type="text" class="locate" name="locate"/>
-
-				<label for="name">Contact Info</label>
-				<input class="contact" type="text" name="name" id="name" placeholder="Name"/>
-				<input class="contact" type="text" name="phone" id="phone" placeholder="Phone #"/>
-				<input class="contact" type="text" name="email" id="email" placeholder="E-Mail"/>
-
-				<button class="submitLF" id="submitFound"> Submit Found Item </button>
-			</div>
-		</div>
-	</div>
 	</div>
 </body>
 </html>

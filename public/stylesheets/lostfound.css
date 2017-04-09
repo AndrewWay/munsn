@@ -35,6 +35,18 @@
 	border-radius: 10px;
 }
 
+#foundImage {
+	width: 100%;
+}
+
+#foundImgDisp {
+	width: 150px;
+	display: block;
+	margin: auto;
+	cursor: pointer;
+	border-radius: 10px;
+}
+
 .content-2 input {
 	width: 95%;
 	display: block;
@@ -54,9 +66,7 @@
 	height: 30px;
 }
 
-#lostContent {
-	
-}
+#lostContent {}
 
 #foundContent {
 	display: none;
@@ -75,20 +85,28 @@
 	width: 0px;
 	overflow: hidden;
 	right: 0;
-	
 	border: 1px solid #dddddd;
 	border-right: none;
 	border-top: none;
-	
 	z-index: 2;
 }
 
 #map {
-	height:500px;
+	height: 500px;
 	width: 500px;
 	margin: auto;
 	margin-top: 25px;
+}
 
+.lfMap {
+	height: 250px;
+	width: 100%;
+	margin: auto;
+	margin-top: 25px;
+}
+
+.lfImage {
+	margin-top: 25px;
 }
 
 .contact {

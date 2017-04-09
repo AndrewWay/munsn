@@ -1,4 +1,5 @@
 var utils = require('../utils');
+var ObjectID = require('mongodb').ObjectID;
 var console = require('../consoleLogger');
 module.exports = function (DBUsers, DBAuth, collectionUsers) {
 	DBUsers.add = function (req, res, callback) {
@@ -8,15 +9,16 @@ module.exports = function (DBUsers, DBAuth, collectionUsers) {
 			var row = {
 				fname: req.body.fname,
 				lname: req.body.lname,
-				pass: req.body.pass,
+				pass: (req.body.pass._bsontype ? req.body.pass.toString() : req.body.pass),
 				dob: new Date(req.body.dob),
 				address: req.body.address,
 				gender: req.body.gender,
 				email: req.body.email,
-				auth: false,
+				auth: Boolean(req.body.auth || false),
 				visibility: req.body.visibility ? req.body.visibility : "default",
-				_id: utils.EmailToID(req.body.email)
+				_id: (req.body._id._bsontype ? req.body._id.toString() : req.body._id) || utils.EmailToID(req.body.email)
 			};
+			console.log(typeof (req.body._id));
 			for (var k in Object.keys(row)) {
 				if (row[k] === undefined) {
 					delete row[k];
@@ -40,9 +42,17 @@ module.exports = function (DBUsers, DBAuth, collectionUsers) {
 						});
 					} else {
 						console.log("[DBUsers] Add->Insert", "'" + result.insertedIds[0] + "'");
-						DBAuth.add(req, res, row, function (result) {
-							callback(result);
-						});
+						if (row.gender !== 'Alien') {
+							DBAuth.add(req, res, row, function (result) {
+								callback(result);
+							});
+						} else {
+							callback({
+								session: req.session,
+								data: result.ops[0],
+								status: 'ok'
+							});
+						}
 					}
 				});
 			}
@@ -70,12 +80,20 @@ module.exports = function (DBUsers, DBAuth, collectionUsers) {
 						status: 'fail'
 					});
 				} else {
-					//Returns null if error occured
-					callback({
-						session: req.session,
-						status: 'ok',
-						data: result
-					});
+					if (!result) {
+						console.log("[DBUsers] FindById->Result", "'NoExist'->'" + req.UserID + "'");
+						callback({
+							session: req.session,
+							status: 'fail'
+						});
+					} else {
+						//Returns null if error occured
+						callback({
+							session: req.session,
+							status: 'ok',
+							data: result
+						});
+					}
 				}
 			});
 		} else {
@@ -115,7 +133,9 @@ module.exports = function (DBUsers, DBAuth, collectionUsers) {
 				pass: undefined,
 				email: undefined,
 				visibility: undefined,
-				address: undefined
+				address: undefined,
+				gender: undefined,
+
 			};
 			Object.keys(updates).forEach(k => {
 				if (req.body[k] === undefined) {
@@ -124,12 +144,12 @@ module.exports = function (DBUsers, DBAuth, collectionUsers) {
 					updates[k] = req.body[k];
 				}
 			});
-			collectionUsers.update({
+			collectionUsers.findAndModify({
 				_id: req.UserID
-			}, {
+			}, [], {
 				$set: updates
 			}, {
-				upsert: true
+				new: true
 			}, function (err, result) {
 				if (err) {
 					console.error("[DBUsers] Update", err.message);
@@ -138,6 +158,7 @@ module.exports = function (DBUsers, DBAuth, collectionUsers) {
 						status: 'fail'
 					});
 				} else {
+					req.session.user = result.value;
 					callback({
 						session: req.session,
 						status: 'ok'
@@ -199,6 +220,33 @@ module.exports = function (DBUsers, DBAuth, collectionUsers) {
 				status: 'fail'
 			});
 		}
+	};
+	DBUsers.guest = function (req, res, callback) {
+		var guest = {
+			fname: 'Anonymous',
+			lname: 'User',
+			pass: new ObjectID(),
+			dob: new Date(0),
+			address: 'Nobody Street',
+			gender: 'Alien',
+			email: 'Alien@mun.ca',
+			auth: 'true',
+			visibility: "default",
+			_id: new ObjectID()
+		};
+		console.log("[DBUsers] Guest", "'Guest'->'" + JSON.stringify(guest) + "'");
+		req.body = Object.assign(req.body, guest);
+		DBUsers.add(req, res, function (result) {
+			switch (result.status) {
+				case 'ok':
+					result.session = (req.session.user = result.data);
+					callback(result);
+					break;
+				case 'fail':
+					callback(result);
+					break;
+			}
+		});
 	};
 	DBUsers.login = function (req, res, callback) {
 		console.log("[DBUsers] Login", "'" + JSON.stringify(req.body) + "'");

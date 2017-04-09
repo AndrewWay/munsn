@@ -181,10 +181,10 @@
 			</div>
 
 		<!-- Will be filled with posts from server  -->
-
 		<div class="posts" id="posts">
 
 		</div>
+
 
 	</div>
 	<div class="sidebars" id="section-right">

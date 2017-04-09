@@ -53,7 +53,7 @@
 
 					<img src="/img/MUNLOGO.gif" alt="Provehito in Altum" title="Provehito in Altum">
 
-					<a href="/login" id="guestIn"> Sign in as Guest </a>
+					<a href="#" id="guestIn"> Sign in as Guest </a>
 				</form>
 				<form id="regFields" name="regForm" method="post" action="/api/user/register">
 					<input type="hidden" name="user">

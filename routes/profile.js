@@ -7,7 +7,9 @@ var DB = require('../utils/db');
 //Need to add templating in so that functionality changes based if the user is logged in or not
 router.get('/', function (req, res, next) {
 	if (req.session.user) {
-		res.render('profile', {});
+		res.render('profile', {
+			session: JSON.stringify(req.session)
+		});
 	} else {
 		//res.render('profile', {});
 		res.redirect('/');

@@ -1,4 +1,4 @@
-window.location.hash='';
+window.location.hash = '';
 
 //Initialized datepicker for registration form.
 $(function () {
@@ -256,7 +256,15 @@ $(document).ready(function () {
 
 	$('#guestIn').click(function () {
 		//TODO -- Implementation when integrated. Can't currently sign in this way.
-		$(location).attr('href', '/');
+		$.post('/api/guest', function (result) {
+			switch (result.status) {
+				case 'ok':
+					$(location).attr('href', '/');
+					break;
+				case 'fail':
+					break;
+			}
+		});
 	});
 
 	/***********************

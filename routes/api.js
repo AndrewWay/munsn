@@ -25,6 +25,21 @@ var session = "/session";
  * URL:
  * 		- %server%/api/login
  * Description:
+ *      - Logs user into the site as a guest
+ * Method:
+ *      - POST
+ * Params:
+ *      - none
+ * Returns:
+ *      - JSON user
+ */
+var loginGuest = "/guest";
+/**
+ * loginUser
+ *
+ * URL:
+ * 		- %server%/api/login
+ * Description:
  *      - Logs user into the site
  * Method:
  *      - POST
@@ -1132,6 +1147,11 @@ var search = "/search"; //GET
 router.get(session, function (req, res, next) {
 	res.json(req.session);
 });
+router.post(loginGuest, UserID, function (req, res, next) {
+	DB.Users.guest(req, res, function (result) {
+		res.json(result);
+	});
+});
 router.post(loginUser, UserID, function (req, res, next) {
 	DB.Users.login(req, res, function (result) {
 		res.json(result);
@@ -1270,27 +1290,28 @@ router.get(findCourse, UserID, function (req, res, next) {
 	});
 });
 router.post(addLostFound, UserID, function (req, res, next) {
-	DB.LostFound.add(req, res, function (result) {
+	DB.Posts.add(req, res, function (result) {
 		res.json(result);
 	});
 });
 router.patch(updateLostFound, UserID, function (req, res, next) {
-	DB.LostFound.update(req, res, function (result) {
+	DB.Posts.update(req, res, function (result) {
 		res.json(result);
 	});
 });
 router.delete(removeLostFound, UserID, function (req, res, next) {
-	DB.LostFound.remove(req, res, function (result) {
+	DB.Posts.remove(req, res, function (result) {
 		res.json(result);
 	});
 });
 router.get(findLostFoundById, UserID, function (req, res, next) {
-	DB.LostFound.findById(req, res, function (result) {
+	throw Error('Not Implemented');
+	DB.Posts.findById(req, res, function (result) {
 		res.json(result);
 	});
 });
 router.get(findLostFound, UserID, function (req, res, next) {
-	DB.LostFound.find(req, res, function (result) {
+	DB.Posts.find(req, res, function (result) {
 		res.json(result);
 	});
 });
@@ -1437,12 +1458,12 @@ router.delete(removeGroupAdmin, UserID, function (req, res, next) {
 	});
 });
 router.post(acceptGroupReq, UserID, function (req, res, next) {
-	DB.Groups.acceptGroupReq(req, res, function (result) {
+	DB.Groups.acceptRequest(req, res, function (result) {
 		res.json(result);
 	});
 });
 router.post(denyGroupReq, UserID, function (req, res, next) {
-	DB.Groups.denyGroupReq(req, res, function (result) {
+	DB.Groups.denyRequest(req, res, function (result) {
 		res.json(result);
 	});
 });

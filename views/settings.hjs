@@ -17,7 +17,10 @@
 	<script src="/js/nlp.js"></script>
 	<script src="/js/blank.js"></script>
 	<script src="/js/settings.js"></script>
-
+	<script>
+		console.log({{{session}}});
+		var session = {{{session}}};
+	</script>
 </head>
 <body>
 	<nav>
@@ -38,17 +41,17 @@
 		</div>
         </div>
 
-		
+
 
         <div class="search">
 			  	<input type="search" id="searchbar" placeholder="Search MunSN"><button id="searchbtn" class="searchbtn">Search</button>
 
 			<div class="search" id="searchRes" style="display: none;">
-			
+
 			</div>
 		</div>
 
-		
+
 
 		<div class="buttons">
 			<a href="javascript:void(0)"><img id="not" src="/img/notification-red.png"></a>
@@ -70,7 +73,7 @@
 				</div></a>
 			</div>
 		</div>
-		
+
 	</div>
 	</nav>
 
@@ -79,7 +82,7 @@
 	<div class="popup" id="groupPop">
 			Create a new group:
 			<input class="popField" id="gName" type="text" name="gName" placeholder="Group Name"><br>
-			
+
 			<img id="grImgDisp" src="/img/SEAHAWK_SIL.jpg">
 			<input id="grImgUp" type="file" name="pic" accept="image/*" style="display: none;">
 			<div id="gButton">
@@ -153,21 +156,32 @@
 	</div>
 	<div class="timeline">
 		<!-- RANDOM POSTS FOR TESTING -->
-		<div class="settings" id="account"><div class="setTitle">Account Settings</div><div class="lists">Gender:   <input type="radio" name="gender" value="male" checked> Male
-  <input type="radio" name="gender" value="female"> Female
-  <input type="radio" name="gender" value="other"> Other <br>
-  <div id="newPass">
-		New password: <input type="password" name="confPass" placeholder="New Password"><br>
+		<div class="settings" id="account">
+			<div class="setTitle">Account Settings</div>
+			<div class="lists">Gender:
+				<input type="radio" name="gender" value="male"> Male
+				<input type="radio" name="gender" value="female"> Female
+				<input type="radio" name="gender" value="other"> Other <br>
+  				<div id="newPass">
+					New Password: <input type="password" name="confPass" placeholder="New Password"><br>
 					<input type="password" name="confPass" placeholder="Confirm New Password">
-	</div>
-  </div></div>
+				</div>
+				<br><br>
+				<div id="newAddr">
+					New Address: <input type="text" name="addr" placeholder="Example 123 Street"/>
+				</div>
+			</div>
+		</div>
 		<div class="settings" id="privacy"><div class="setTitle">Privacy Settings</div><div class="lists"></div></div>
 		<div class="settings" id="other"><div class="setTitle">Other Settings</div><div class="lists"></div></div>
 
-		<div id="confirmChange"> Confirm changes: <input type="password" name="confPass" placeholder="Current Password">
-		<input type="button" value="Confirm"></div>
-
-
+		<div id="confirmChange">
+			<span class="confirmSpan">
+				<label>Confirm changes:</label>
+				<input type="password" name="confPass" placeholder="Current Password">
+				<input type="button" value="Confirm">
+			</span>
+		</div>
 	</div>
 	<div class="sidebars" id="section-right">
 		<div id= "content-1">
