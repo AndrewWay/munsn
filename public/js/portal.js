@@ -243,7 +243,7 @@ $(document).ready(function () {
 									type: 'GET',
 									url: '/api/user/' + u.authorid
 								}).done(function (res) {
-									loaded.users[u.authorid] = res;
+									loaded.users[u.authorid] = res.data;
 									commInfo.fname = res.data.fname;
 									commInfo.lname = res.data.lname;
 								}));
