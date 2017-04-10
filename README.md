@@ -29,6 +29,7 @@ Karl Chiasson - Interface Design
 ## 2. Starting The Server   
 
 ### 2.1 Locally
+0. Before doing anything, please run 'npm install' after cloning the the git repository. Ensure mongodb 3.2 and node 4.4.1 is being used on the hosting machine.
 
 1. **The Quick-Easy Method (Windows Only):**  
   To start the server, navigate to the directory, and start `start.bat`. This will start the mongo process, and the a few seconds later start the Node server. If this doesn't work then resort to The Slower-Harder Method.
