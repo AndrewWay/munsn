@@ -1,9 +1,6 @@
 var fs = require("fs-extra");
 var path = require("path");
 var mime = require("mime");
-var imagemin = require("imagemin");
-var imageminMozjpeg = require("imagemin-mozjpeg");
-var imageminPngquant = require("imagemin-pngquant");
 var console = require("./consoleLogger");
 /**
  * Extracts the ID from an emailstring
