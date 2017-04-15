@@ -692,7 +692,7 @@
 			format: 'H:i:s',
 			step: 30,
 			useCurrent: false,
-			defaultDate: new Date(new Date().toLocaleDateString())
+			defaultDate: new Date(0)
 		});
 
 		//Intialize start time
@@ -702,7 +702,7 @@
 			format: 'H:i:s',
 			step: 30,
 			useCurrent: false,
-			defaultDate: new Date(new Date().toLocaleDateString())
+			defaultDate: new Date(0)
 		});
 
 		$('#firstDay').datepicker({
