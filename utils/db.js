@@ -11,21 +11,19 @@ var dbURL = process.env.MONGO_URL || 'mongodb://localhost:27017/munsn';
 var MAX_VALIDATE_MINUTES = 5;
 
 //Collections
-var collectionUsers; //Good
-var collectionAuths; //Good
-var collectionFriends; //Good
-var collectionFriendRequests; //Good
-var collectionGroups; //Good
-var collectionGroupMembers; //Good
-var collectionGroupAdmins; //TODO: John, EVALUATE
+var collectionUsers;
+var collectionAuths;
+var collectionFriends;
+var collectionFriendRequests;
+var collectionGroups;
+var collectionGroupMembers;
 var collectionGroupRequests;
-var collectionPosts; //TODO: John, EVALUATE
+var collectionPosts;
 var collectionCalendar;
-var collectionComments; //TODO: John, EVALUATE
+var collectionComments;
 var collectionCourses;
 var collectionUserCourses;
 var collectionGroupCourses;
-var collectionLostFound;
 var collectionSocket;
 var collectionMessages;
 var DBAuth = {};
@@ -75,7 +73,7 @@ mongoClient.connect(dbURL, function (err, DB) {
 				}
 			}, {
 				email: {
-					$regex: /@mun\.ca$/
+					$regex: /@/
 				}
 			}, {
 				auth: {
@@ -132,7 +130,7 @@ mongoClient.connect(dbURL, function (err, DB) {
 		}
 	});
 
-	DB.createCollection('fRequests', {
+	DB.createCollection('friendRequests', {
 		validator: {
 			$and: [{
 				userid: {
@@ -175,18 +173,7 @@ mongoClient.connect(dbURL, function (err, DB) {
 		validationAction: 'error'
 	});
 
-	DB.createCollection('gMembers', {
-		validator: {
-			$and: [{
-				//Group _id
-				_id: {
-					$type: 'objectId'
-				}
-			}]
-		}
-	});
-
-	DB.createCollection('gAdmins', {
+	DB.createCollection('groupMembers', {
 		validator: {
 			$and: [{
 				//Group _id
@@ -306,37 +293,6 @@ mongoClient.connect(dbURL, function (err, DB) {
 		validationAction: 'error'
 	});
 
-	DB.createCollection('lostfound', {
-		validator: {
-			$and: [{
-					name: {
-						$type: 'string'
-					}
-				},
-				{
-					imagePath: {
-						$type: 'string'
-					}
-				},
-				{
-					description: {
-						$type: 'string'
-					}
-				},
-				{
-					long: {
-						$type: 'string'
-					}
-				},
-				{
-					lat: {
-						$type: 'string'
-					}
-				}
-			]
-		}
-	});
-
 	DB.createCollection('calendars', {
 		validator: {
 			$and: [{
@@ -384,19 +340,18 @@ mongoClient.connect(dbURL, function (err, DB) {
 	collectionCalendar = DB.collection('calendars');
 	collectionUsers = DB.collection('users');
 	collectionFriends = DB.collection('friends');
-	collectionFriendRequests = DB.collection('fRequests');
+	collectionFriendRequests = DB.collection('friendRequests');
 	collectionGroups = DB.collection('groups');
-	collectionGroupMembers = DB.collection('gMembers');
-	collectionGroupAdmins = DB.collection('gAdmins');
-	collectionGroupRequests = DB.collection('gRequests');
+	collectionGroupMembers = DB.collection('groupMembers');
+	collectionGroupAdmins = DB.collection('groupAdmins');
+	collectionGroupRequests = DB.collection('groupRequests');
 	collectionPosts = DB.collection('posts');
 	collectionComments = DB.collection('comments');
 	collectionCourses = DB.collection('courses');
-	collectionLostFound = DB.collection('lost');
 	collectionSocket = DB.collection('socket');
 	collectionMessages = DB.collection('messages');
-	collectionUserCourses = DB.collection('cUsers');
-	collectionGroupCourses = DB.collection('cGroups');
+	collectionUserCourses = DB.collection('userCourses');
+	collectionGroupCourses = DB.collection('groupCourses');
 	require('./DB/users')(DBUsers, DBAuth, collectionUsers);
 	require('./DB/auths')(DBAuth, collectionAuths, collectionUsers, MAX_VALIDATE_MINUTES);
 	require('./DB/friends')(DBFriends, collectionFriends, collectionFriendRequests, collectionUsers);
@@ -406,7 +361,6 @@ mongoClient.connect(dbURL, function (err, DB) {
 	require('./DB/posts')(DBPosts, collectionPosts, collectionFriends);
 	require('./DB/comments')(DBComments, collectionComments);
 	require('./DB/courses')(DBCourses, collectionCourses, collectionUserCourses, collectionGroupCourses);
-	require('./DB/lostfound')(DBLostFound, collectionLostFound);
 	require('./DB/calendar')(DBCalendar, collectionCalendar);
 	require('./DB/socket')(DBSocket, collectionSocket, collectionMessages);
 	require('./DB/search')(DBSearch, collectionUsers, collectionGroups, collectionCourses);
@@ -424,7 +378,6 @@ module.exports = {
 	GroupAdmins: DBGroupAdmins,
 	Comments: DBComments,
 	Courses: DBCourses,
-	LostFound: DBLostFound,
 	Socket: DBSocket,
 	Search: DBSearch,
 	DB_URL: dbURL,

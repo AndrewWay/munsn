@@ -343,6 +343,11 @@ html.noscroll {
 	margin-top: 1em;
 }
 
+.postPic img,
+.commPic img {
+	height: 100%;
+}
+
 #grImgProgress {
 	position: relative;
 	width: 300px;
@@ -505,4 +510,6 @@ html.noscroll {
 .req {
 	width: 100%;
 }
+
+
 /*End*/

@@ -31,7 +31,9 @@ var Hogan = {};
 
   Hogan.Template.prototype = {
     // render: replaced by generated code.
-    r: function (context, partials, indent) { return ''; },
+    r: function (context, partials, indent) {
+      return '';
+    },
 
     // variable escaping
     v: hoganEscape,
@@ -49,7 +51,7 @@ var Hogan = {};
     },
 
     // ensurePartial
-    ep: function(symbol, partials) {
+    ep: function (symbol, partials) {
       var partial = this.partials[symbol];
 
       // check to see that if we've instantiated this partial before
@@ -89,7 +91,7 @@ var Hogan = {};
     },
 
     // tries to find a partial in the current scope and render it
-    rp: function(symbol, context, partials, indent) {
+    rp: function (symbol, context, partials, indent) {
       var partial = this.ep(symbol, partials);
       if (!partial) {
         return '';
@@ -99,7 +101,7 @@ var Hogan = {};
     },
 
     // render a section
-    rs: function(context, partials, section) {
+    rs: function (context, partials, section) {
       var tail = context[context.length - 1];
 
       if (!isArray(tail)) {
@@ -115,7 +117,7 @@ var Hogan = {};
     },
 
     // maybe start a section
-    s: function(val, ctx, partials, inverted, start, end, tags) {
+    s: function (val, ctx, partials, inverted, start, end, tags) {
       var pass;
 
       if (isArray(val) && val.length === 0) {
@@ -136,12 +138,12 @@ var Hogan = {};
     },
 
     // find values with dotted names
-    d: function(key, ctx, partials, returnFound) {
+    d: function (key, ctx, partials, returnFound) {
       var found,
-          names = key.split('.'),
-          val = this.f(names[0], ctx, partials, returnFound),
-          doModelGet = this.options.modelGet,
-          cx = null;
+        names = key.split('.'),
+        val = this.f(names[0], ctx, partials, returnFound),
+        doModelGet = this.options.modelGet,
+        cx = null;
 
       if (key === '.' && isArray(ctx[ctx.length - 2])) {
         val = ctx[ctx.length - 1];
@@ -171,11 +173,11 @@ var Hogan = {};
     },
 
     // find values with normal names
-    f: function(key, ctx, partials, returnFound) {
+    f: function (key, ctx, partials, returnFound) {
       var val = false,
-          v = null,
-          found = false,
-          doModelGet = this.options.modelGet;
+        v = null,
+        found = false,
+        doModelGet = this.options.modelGet;
 
       for (var i = ctx.length - 1; i >= 0; i--) {
         v = ctx[i];
@@ -198,7 +200,7 @@ var Hogan = {};
     },
 
     // higher order templates
-    ls: function(func, cx, partials, text, tags) {
+    ls: function (func, cx, partials, text, tags) {
       var oldTags = this.options.delimiters;
 
       this.options.delimiters = tags;
@@ -209,7 +211,7 @@ var Hogan = {};
     },
 
     // compile text
-    ct: function(text, cx, partials) {
+    ct: function (text, cx, partials) {
       if (this.options.disableLambda) {
         throw new Error('Lambda features disabled.');
       }
@@ -217,15 +219,21 @@ var Hogan = {};
     },
 
     // template result buffering
-    b: function(s) { this.buf += s; },
+    b: function (s) {
+      this.buf += s;
+    },
 
-    fl: function() { var r = this.buf; this.buf = ''; return r; },
+    fl: function () {
+      var r = this.buf;
+      this.buf = '';
+      return r;
+    },
 
     // method replace section
-    ms: function(func, ctx, partials, inverted, start, end, tags) {
+    ms: function (func, ctx, partials, inverted, start, end, tags) {
       var textSource,
-          cx = ctx[ctx.length - 1],
-          result = func.call(cx);
+        cx = ctx[ctx.length - 1],
+        result = func.call(cx);
 
       if (typeof result == 'function') {
         if (inverted) {
@@ -240,7 +248,7 @@ var Hogan = {};
     },
 
     // method replace variable
-    mv: function(func, ctx, partials) {
+    mv: function (func, ctx, partials) {
       var cx = ctx[ctx.length - 1];
       var result = func.call(cx);
 
@@ -251,7 +259,7 @@ var Hogan = {};
       return result;
     },
 
-    sub: function(name, context, partials, indent) {
+    sub: function (name, context, partials, indent) {
       var f = this.subs[name];
       if (f) {
         this.activeSub = name;
@@ -271,7 +279,7 @@ var Hogan = {};
       if (scope[key] != null) {
         val = scope[key];
 
-      // try lookup with get for backbone or similar model data
+        // try lookup with get for backbone or similar model data
       } else if (doModelGet && scope.get && typeof scope.get == 'function') {
         val = scope.get(key);
       }
@@ -283,12 +291,13 @@ var Hogan = {};
   function createSpecializedPartial(instance, subs, partials, stackSubs, stackPartials, stackText) {
     function PartialTemplate() {};
     PartialTemplate.prototype = instance;
+
     function Substitutions() {};
     Substitutions.prototype = instance.subs;
     var key;
     var partial = new PartialTemplate();
     partial.subs = new Substitutions();
-    partial.subsText = {};  //hehe. substext.
+    partial.subsText = {}; //hehe. substext.
     partial.buf = '';
 
     stackSubs = stackSubs || {};
@@ -314,11 +323,11 @@ var Hogan = {};
   }
 
   var rAmp = /&/g,
-      rLt = /</g,
-      rGt = />/g,
-      rApos = /\'/g,
-      rQuot = /\"/g,
-      hChars = /[&<>\"\']/;
+    rLt = /</g,
+    rGt = />/g,
+    rApos = /\'/g,
+    rQuot = /\"/g,
+    hChars = /[&<>\"\']/;
 
   function coerceToString(val) {
     return String((val === null || val === undefined) ? '' : val);
@@ -328,15 +337,15 @@ var Hogan = {};
     str = coerceToString(str);
     return hChars.test(str) ?
       str
-        .replace(rAmp, '&amp;')
-        .replace(rLt, '&lt;')
-        .replace(rGt, '&gt;')
-        .replace(rApos, '&#39;')
-        .replace(rQuot, '&quot;') :
+      .replace(rAmp, '&amp;')
+      .replace(rLt, '&lt;')
+      .replace(rGt, '&gt;')
+      .replace(rApos, '&#39;')
+      .replace(rQuot, '&quot;') :
       str;
   }
 
-  var isArray = Array.isArray || function(a) {
+  var isArray = Array.isArray || function (a) {
     return Object.prototype.toString.call(a) === '[object Array]';
   };
 
@@ -348,36 +357,48 @@ var Hogan = {};
   // Setup regex  assignments
   // remove whitespace according to Mustache spec
   var rIsWhitespace = /\S/,
-      rQuot = /\"/g,
-      rNewline =  /\n/g,
-      rCr = /\r/g,
-      rSlash = /\\/g;
+    rQuot = /\"/g,
+    rNewline = /\n/g,
+    rCr = /\r/g,
+    rSlash = /\\/g;
 
   Hogan.tags = {
-    '#': 1, '^': 2, '<': 3, '$': 4,
-    '/': 5, '!': 6, '>': 7, '=': 8, '_v': 9,
-    '{': 10, '&': 11, '_t': 12
+    '#': 1,
+    '^': 2,
+    '<': 3,
+    '$': 4,
+    '/': 5,
+    '!': 6,
+    '>': 7,
+    '=': 8,
+    '_v': 9,
+    '{': 10,
+    '&': 11,
+    '_t': 12
   };
 
   Hogan.scan = function scan(text, delimiters) {
     var len = text.length,
-        IN_TEXT = 0,
-        IN_TAG_TYPE = 1,
-        IN_TAG = 2,
-        state = IN_TEXT,
-        tagType = null,
-        tag = null,
-        buf = '',
-        tokens = [],
-        seenTag = false,
-        i = 0,
-        lineStart = 0,
-        otag = '{{',
-        ctag = '}}';
+      IN_TEXT = 0,
+      IN_TAG_TYPE = 1,
+      IN_TAG = 2,
+      state = IN_TEXT,
+      tagType = null,
+      tag = null,
+      buf = '',
+      tokens = [],
+      seenTag = false,
+      i = 0,
+      lineStart = 0,
+      otag = '{{',
+      ctag = '}}';
 
     function addBuf() {
       if (buf.length > 0) {
-        tokens.push({tag: '_t', text: new String(buf)});
+        tokens.push({
+          tag: '_t',
+          text: new String(buf)
+        });
         buf = '';
       }
     }
@@ -402,7 +423,7 @@ var Hogan = {};
       if (haveSeenTag && lineIsWhitespace()) {
         for (var j = lineStart, next; j < tokens.length; j++) {
           if (tokens[j].text) {
-            if ((next = tokens[j+1]) && next.tag == '>') {
+            if ((next = tokens[j + 1]) && next.tag == '>') {
               // set indent to token value
               next.indent = tokens[j].text.toString()
             }
@@ -410,7 +431,9 @@ var Hogan = {};
           }
         }
       } else if (!noNewLine) {
-        tokens.push({tag:'\n'});
+        tokens.push({
+          tag: '\n'
+        });
       }
 
       seenTag = false;
@@ -419,10 +442,10 @@ var Hogan = {};
 
     function changeDelimiters(text, index) {
       var close = '=' + ctag,
-          closeIndex = text.indexOf(close, index),
-          delimiters = trim(
-            text.substring(text.indexOf('=', index) + 1, closeIndex)
-          ).split(' ');
+        closeIndex = text.indexOf(close, index),
+        delimiters = trim(
+          text.substring(text.indexOf('=', index) + 1, closeIndex)
+        ).split(' ');
 
       otag = delimiters[0];
       ctag = delimiters[delimiters.length - 1];
@@ -465,8 +488,13 @@ var Hogan = {};
         seenTag = i;
       } else {
         if (tagChange(ctag, text, i)) {
-          tokens.push({tag: tagType, n: trim(buf), otag: otag, ctag: ctag,
-                       i: (tagType == '/') ? seenTag - otag.length : i + ctag.length});
+          tokens.push({
+            tag: tagType,
+            n: trim(buf),
+            otag: otag,
+            ctag: ctag,
+            i: (tagType == '/') ? seenTag - otag.length : i + ctag.length
+          });
           buf = '';
           i += ctag.length - 1;
           state = IN_TEXT;
@@ -517,13 +545,18 @@ var Hogan = {};
   }
 
   // the tags allowed inside super templates
-  var allowedInSuper = {'_t': true, '\n': true, '$': true, '/': true};
+  var allowedInSuper = {
+    '_t': true,
+    '\n': true,
+    '$': true,
+    '/': true
+  };
 
   function buildTree(tokens, kind, stack, customTags) {
     var instructions = [],
-        opener = null,
-        tail = null,
-        token = null;
+      opener = null,
+      tail = null,
+      token = null;
 
     tail = stack[stack.length - 1];
 
@@ -594,14 +627,18 @@ var Hogan = {};
     return "partials: {" + partials.join(",") + "}, subs: " + stringifySubstitutions(codeObj.subs);
   }
 
-  Hogan.stringify = function(codeObj, text, options) {
-    return "{code: function (c,p,i) { " + Hogan.wrapMain(codeObj.code) + " }," + stringifyPartials(codeObj) +  "}";
+  Hogan.stringify = function (codeObj, text, options) {
+    return "{code: function (c,p,i) { " + Hogan.wrapMain(codeObj.code) + " }," + stringifyPartials(codeObj) + "}";
   }
 
   var serialNo = 0;
-  Hogan.generate = function(tree, text, options) {
+  Hogan.generate = function (tree, text, options) {
     serialNo = 0;
-    var context = { code: '', subs: {}, partials: {} };
+    var context = {
+      code: '',
+      subs: {},
+      partials: {}
+    };
     Hogan.walk(tree, context);
 
     if (options.asString) {
@@ -611,20 +648,24 @@ var Hogan = {};
     return this.makeTemplate(context, text, options);
   }
 
-  Hogan.wrapMain = function(code) {
+  Hogan.wrapMain = function (code) {
     return 'var t=this;t.b(i=i||"");' + code + 'return t.fl();';
   }
 
   Hogan.template = Hogan.Template;
 
-  Hogan.makeTemplate = function(codeObj, text, options) {
+  Hogan.makeTemplate = function (codeObj, text, options) {
     var template = this.makePartials(codeObj);
     template.code = new Function('c', 'p', 'i', this.wrapMain(codeObj.code));
     return new this.template(template, text, this, options);
   }
 
-  Hogan.makePartials = function(codeObj) {
-    var key, template = {subs: {}, partials: codeObj.partials, name: codeObj.name};
+  Hogan.makePartials = function (codeObj) {
+    var key, template = {
+      subs: {},
+      partials: codeObj.partials,
+      name: codeObj.name
+    };
     for (key in template.partials) {
       template.partials[key] = this.makePartials(template.partials[key]);
     }
@@ -636,9 +677,9 @@ var Hogan = {};
 
   function esc(s) {
     return s.replace(rSlash, '\\\\')
-            .replace(rQuot, '\\\"')
-            .replace(rNewline, '\\n')
-            .replace(rCr, '\\r');
+      .replace(rQuot, '\\\"')
+      .replace(rNewline, '\\n')
+      .replace(rCr, '\\r');
   }
 
   function chooseMethod(s) {
@@ -648,37 +689,50 @@ var Hogan = {};
   function createPartial(node, context) {
     var prefix = "<" + (context.prefix || "");
     var sym = prefix + node.n + serialNo++;
-    context.partials[sym] = {name: node.n, partials: {}};
-    context.code += 't.b(t.rp("' +  esc(sym) + '",c,p,"' + (node.indent || '') + '"));';
+    context.partials[sym] = {
+      name: node.n,
+      partials: {}
+    };
+    context.code += 't.b(t.rp("' + esc(sym) + '",c,p,"' + (node.indent || '') + '"));';
     return sym;
   }
 
   Hogan.codegen = {
-    '#': function(node, context) {
+    '#': function (node, context) {
       context.code += 'if(t.s(t.' + chooseMethod(node.n) + '("' + esc(node.n) + '",c,p,1),' +
-                      'c,p,0,' + node.i + ',' + node.end + ',"' + node.otag + " " + node.ctag + '")){' +
-                      't.rs(c,p,' + 'function(c,p,t){';
+        'c,p,0,' + node.i + ',' + node.end + ',"' + node.otag + " " + node.ctag + '")){' +
+        't.rs(c,p,' + 'function(c,p,t){';
       Hogan.walk(node.nodes, context);
       context.code += '});c.pop();}';
     },
 
-    '^': function(node, context) {
+    '^': function (node, context) {
       context.code += 'if(!t.s(t.' + chooseMethod(node.n) + '("' + esc(node.n) + '",c,p,1),c,p,1,0,0,"")){';
       Hogan.walk(node.nodes, context);
       context.code += '};';
     },
 
     '>': createPartial,
-    '<': function(node, context) {
-      var ctx = {partials: {}, code: '', subs: {}, inPartial: true};
+    '<': function (node, context) {
+      var ctx = {
+        partials: {},
+        code: '',
+        subs: {},
+        inPartial: true
+      };
       Hogan.walk(node.nodes, ctx);
       var template = context.partials[createPartial(node, context)];
       template.subs = ctx.subs;
       template.partials = ctx.partials;
     },
 
-    '$': function(node, context) {
-      var ctx = {subs: {}, code: '', partials: context.partials, prefix: node.n};
+    '$': function (node, context) {
+      var ctx = {
+        subs: {},
+        code: '',
+        partials: context.partials,
+        prefix: node.n
+      };
       Hogan.walk(node.nodes, ctx);
       context.subs[node.n] = ctx.code;
       if (!context.inPartial) {
@@ -686,15 +740,15 @@ var Hogan = {};
       }
     },
 
-    '\n': function(node, context) {
+    '\n': function (node, context) {
       context.code += write('"\\n"' + (node.last ? '' : ' + i'));
     },
 
-    '_v': function(node, context) {
+    '_v': function (node, context) {
       context.code += 't.b(t.v(t.' + chooseMethod(node.n) + '("' + esc(node.n) + '",c,p,0)));';
     },
 
-    '_t': function(node, context) {
+    '_t': function (node, context) {
       context.code += write('"' + esc(node.text) + '"');
     },
 
@@ -711,7 +765,7 @@ var Hogan = {};
     return 't.b(' + s + ');';
   }
 
-  Hogan.walk = function(nodelist, context) {
+  Hogan.walk = function (nodelist, context) {
     var func;
     for (var i = 0, l = nodelist.length; i < l; i++) {
       func = Hogan.codegen[nodelist[i].tag];
@@ -720,18 +774,18 @@ var Hogan = {};
     return context;
   }
 
-  Hogan.parse = function(tokens, text, options) {
+  Hogan.parse = function (tokens, text, options) {
     options = options || {};
     return buildTree(tokens, '', [], options.sectionTags || []);
   }
 
   Hogan.cache = {};
 
-  Hogan.cacheKey = function(text, options) {
+  Hogan.cacheKey = function (text, options) {
     return [text, !!options.asString, !!options.disableLambda, options.delimiters, !!options.modelGet].join('||');
   }
 
-  Hogan.compile = function(text, options) {
+  Hogan.compile = function (text, options) {
     options = options || {};
     var key = Hogan.cacheKey(text, options);
     var template = this.cache[key];
@@ -748,4 +802,3 @@ var Hogan = {};
     return this.cache[key] = template;
   }
 })(typeof exports !== 'undefined' ? exports : Hogan);
-
